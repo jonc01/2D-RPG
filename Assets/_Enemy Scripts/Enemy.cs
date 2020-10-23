@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviour
         enCanAttack = true;
         //AI aggro
         rb = GetComponent<Rigidbody2D>();
-        enAnimator.SetBool("Move", false);
+        enAnimator.SetBool("move", false);
         //enController.enAnimator.SetBool("isRunning", false);
         //enController.enFacingRight = false; //start facing left (towards player start)
         isAttacking = false;
@@ -102,7 +102,7 @@ public class Enemy : MonoBehaviour
     {
         enAnimator.SetBool("inCombat", true);
         enCanMove = true;
-        enAnimator.SetBool("Move", true);
+        enAnimator.SetBool("move", true);
         if (transform.position.x < player.position.x) //player is right
         {
             playerToRight = true;
@@ -150,7 +150,7 @@ public class Enemy : MonoBehaviour
     void StopChase()
     {
         rb.velocity = new Vector2(0, 0);
-        enAnimator.SetBool("Move", false);
+        enAnimator.SetBool("move", false);
         //enAnimator.SetBool("inCombat", true);
         enCanMove = false;
     }
@@ -181,7 +181,7 @@ public class Enemy : MonoBehaviour
             enAnimator.SetBool("isAttacking", true);
             enAnimator.SetTrigger("Attack");
             //enAnimator.SetBool("inCombat", true);
-            enAnimator.SetBool("Move", false);
+            enAnimator.SetBool("move", false);
             //
             enCanAttack = false;
             enCanMove = false;
