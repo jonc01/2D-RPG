@@ -8,6 +8,8 @@ public class PlayerState
     protected PlayerStateMachine stateMachine;
     protected PlayerData playerData;
 
+    protected bool isAnimationFinished;
+
     protected float startTime; //tracking how much time is spent in a specific state
 
     private string animBoolName;
@@ -23,12 +25,15 @@ public class PlayerState
     public virtual void Enter()
     {
         DoChecks();
+        player.Anim.SetBool(animBoolName, true);
         startTime = Time.time;
+        Debug.Log(animBoolName);
+        isAnimationFinished = false;
     }
 
     public virtual void Exit()
     {
-
+        player.Anim.SetBool(animBoolName, false);
     }
 
     public virtual void LogicUpdate()
@@ -45,4 +50,8 @@ public class PlayerState
     {
 
     }
+
+    public virtual void AnimationTrigger() { }
+
+    public virtual void AnimationFinishTrigger() => isAnimationFinished = true;
 }
