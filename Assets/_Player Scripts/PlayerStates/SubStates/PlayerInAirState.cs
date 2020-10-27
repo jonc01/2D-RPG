@@ -6,6 +6,10 @@ public class PlayerInAirState : PlayerState
 {
     private int xInput;
     private bool isGrounded;
+    private bool jumpInput;
+    private bool jumpInputStop;
+    private bool coyoteTime; //allow for midair jump at beginning of fall
+    private bool isJumping;
 
     public PlayerInAirState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
@@ -32,11 +36,21 @@ public class PlayerInAirState : PlayerState
     {
         base.LogicUpdate();
 
-        xInput = player.InputHandler.NormInputX;
+        CheckCoyoteTime();
 
-        if(isGrounded && player.CurrentVelocity.y < 0.01f)
+        xInput = player.InputHandler.NormInputX;
+        jumpInput = player.InputHandler.JumpInput;
+        jumpInputStop = player.InputHandler.JumpInputStop;
+
+        CheckJumpMultiplier();
+
+        if (isGrounded && player.CurrentVelocity.y < 0.01f)
         {
             stateMachine.ChangeState(player.LandState);
+        }
+        else if (jumpInput && player.JumpState.CanJump())
+        {
+            stateMachine.ChangeState(player.JumpState);
         }
         else
         {
@@ -52,4 +66,33 @@ public class PlayerInAirState : PlayerState
     {
         base.PhysicsUpdate();
     }
+
+    private void CheckJumpMultiplier()
+    {
+        if (isJumping)
+        {
+            if (jumpInputStop)
+            {
+                player.SetVelocityY(player.CurrentVelocity.y * playerData.variableJumpHeightMultiplier);
+                isJumping = false;
+            }
+            else if (player.CurrentVelocity.y <= 0f) //y velocity decreasing, player is falling
+            {
+                isJumping = false;
+            }
+        }
+    }
+
+    private void CheckCoyoteTime()
+    {
+        if(coyoteTime && Time.time > startTime + playerData.coyoteTime)
+        {
+            coyoteTime = false;
+            player.JumpState.DecreaseAmountOfJumpsLeft();
+        }
+    }
+
+    public void StartCoyoteTime() => coyoteTime = true;
+
+    public void SetIsJumping() => isJumping = true;
 }

@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("canMove: " + enCanMove + ", canAttack: " + enCanAttack);
+        //Debug.Log("canMove: " + enCanMove + ", canAttack: " + enCanAttack);
         if (rb != null && enController != null && isAlive && playerCombat.isAlive) //check if object has rigidbody
         {
             //checking distance to player for aggro range

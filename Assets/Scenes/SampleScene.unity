@@ -1252,7 +1252,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65ddfd04341f90547b2763423b2c5298, type: 3}
   m_Name: 
@@ -4773,6 +4773,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d610a30f28e72e843abd6ca672e53dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputHoldTime: 0.2
 --- !u!114 &1456559027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4802,8 +4803,8 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 5
-  m_Material: {fileID: 0}
+  m_GravityScale: 4
+  m_Material: {fileID: 6200000, guid: dcaf6b4472119234ab446e14877541de, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
