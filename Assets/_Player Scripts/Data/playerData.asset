@@ -15,6 +15,13 @@ MonoBehaviour:
   movementVelocity: 5
   jumpVelocity: 10
   amountOfJumps: 1
+  coyoteTime: 0.02
+  variableJumpHeightMultiplier: 0.5
+  dashCooldown: 1
+  dashTime: 0.08
+  dashVelocity: 30
+  dashEndYMultiplier: 0.2
+  distBetweenAfterImages: 0.5
   groundCheckRadius: 0.3
   whatIsGround:
     serializedVersion: 2

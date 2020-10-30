@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public PlayerJumpState JumpState { get; private set; }
     public PlayerInAirState InAirState { get; private set; }
     public PlayerLandState LandState { get; private set; }
-
+    public PlayerDashState DashState { get; private set; }
 
     [SerializeField]
     private PlayerData playerData;
@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
     public Vector2 CurrentVelocity { get; private set; }
     public int FacingDirection { get; private set; }
 
-    private Vector2 workspace;
+    private Vector2 tempVec2;
     #endregion
 
     #region Unity Callback Functions
@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
         JumpState = new PlayerJumpState(this, StateMachine, playerData, "inAir");
         InAirState = new PlayerInAirState(this, StateMachine, playerData, "inAir");
         LandState = new PlayerLandState(this, StateMachine, playerData, "land");
+        DashState = new PlayerDashState(this, StateMachine, playerData, "inAir");
     }
 
     private void Start()
@@ -74,18 +75,26 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Set Functions
+
+    public void SetVelocity(float velocity, Vector2 direction)
+    {
+        tempVec2 = direction * velocity;
+        RB.velocity = tempVec2;
+        CurrentVelocity = tempVec2;
+    }
+
     public void SetVelocityX(float velocity)
     {
-        workspace.Set(velocity, CurrentVelocity.y);
-        RB.velocity = workspace;
-        CurrentVelocity = workspace;
+        tempVec2.Set(velocity, CurrentVelocity.y);
+        RB.velocity = tempVec2;
+        CurrentVelocity = tempVec2;
     }
 
     public void SetVelocityY(float velocity)
     {
-        workspace.Set(CurrentVelocity.x, velocity);
-        RB.velocity = workspace;
-        CurrentVelocity = workspace;
+        tempVec2.Set(CurrentVelocity.x, velocity);
+        RB.velocity = tempVec2;
+        CurrentVelocity = tempVec2;
     }
 
     #endregion
@@ -96,7 +105,7 @@ public class Player : MonoBehaviour
     {
         return Physics2D.OverlapCircle(groundCheck.position, playerData.groundCheckRadius, playerData.whatIsGround);
     }
-    public void CheckIfShouldFlip(int xInput)
+    public void CheckIfShouldFlip(int xInput) //flipping character sprite/player elements to face move direction
     {
         if(xInput != 0 && xInput != FacingDirection)
         {

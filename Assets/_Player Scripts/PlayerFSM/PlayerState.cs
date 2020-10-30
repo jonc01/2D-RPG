@@ -9,6 +9,7 @@ public class PlayerState
     protected PlayerData playerData;
 
     protected bool isAnimationFinished;
+    protected bool isExitingState;
 
     protected float startTime; //tracking how much time is spent in a specific state
 
@@ -29,11 +30,13 @@ public class PlayerState
         startTime = Time.time;
         Debug.Log(animBoolName);
         isAnimationFinished = false;
+        isExitingState = false;
     }
 
     public virtual void Exit()
     {
         player.Anim.SetBool(animBoolName, false);
+        isExitingState = true;
     }
 
     public virtual void LogicUpdate()
