@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
     public int FacingDirection { get; private set; }
 
     private Vector2 tempVec2;
+
+    private bool canFlip;
     #endregion
 
     #region Unity Callback Functions
@@ -60,6 +62,8 @@ public class Player : MonoBehaviour
         FacingDirection = 1;
 
         StateMachine.Initialize(IdleState);
+        canFlip = true;
+        //playerData.dashCooldown = 0f; //TODO: everything off cooldown at level spawn
     }
 
     private void Update()
@@ -107,7 +111,7 @@ public class Player : MonoBehaviour
     }
     public void CheckIfShouldFlip(int xInput) //flipping character sprite/player elements to face move direction
     {
-        if(xInput != 0 && xInput != FacingDirection)
+        if(Mathf.Abs(xInput) != 0 && xInput != FacingDirection)
         {
             Flip();
         }
@@ -120,10 +124,25 @@ public class Player : MonoBehaviour
     private void AnimationTrigger() => StateMachine.CurrentState.AnimationTrigger();
 
     private void AnimationFinishTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
+
+    public void DisableFlip()
+    {
+        canFlip = false;
+    }
+    
+    public void EnableFlip()
+    {
+        canFlip = true;
+    }
+
     private void Flip()
     {
-        FacingDirection *= -1;
-        transform.Rotate(0.0f, 180.0f, 0.0f);
+        if (canFlip)
+        {
+            FacingDirection *= -1;
+            transform.Rotate(0.0f, 180.0f, 0.0f);
+        }
+        
     }
     #endregion
 }

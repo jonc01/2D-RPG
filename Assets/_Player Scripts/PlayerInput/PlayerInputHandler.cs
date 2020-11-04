@@ -99,4 +99,11 @@ public class PlayerInputHandler : MonoBehaviour
             DashInput = false;
         }
     }
+
+    public void OnAttackInput(InputAction.CallbackContext context)
+    {
+        //TODO: attackInputs in PlayerInputHandler
+        Debug.Log("attack input");
+        //start Attack CD here, or in CombatController
+    }
 }

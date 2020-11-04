@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -59,6 +60,7 @@ public class PlayerCombat : MonoBehaviour
 
     void Start()
     {
+        //var keyboard = Keyboard.current; //temp workaround
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         isAlive = true;

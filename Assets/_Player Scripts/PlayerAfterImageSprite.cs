@@ -40,7 +40,7 @@ public class PlayerAfterImageSprite : MonoBehaviour
 
         if(Time.time >= (timeActivated + activeTime))
         {
-            //TODO add back pool
+            PlayerAfterImagePool.Instance.AddToPool(gameObject);
         }
     }
 }

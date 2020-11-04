@@ -20,9 +20,8 @@ public class PlayerDashState : PlayerAbilityState
 
         CanDash = false; //just dashed  //TODO: can replace with startCooldown //Time.time
         player.InputHandler.UseDashInput();
-
+        
         dashDirection = Vector2.right * player.FacingDirection;
-
     }
 
     public override void Exit()
@@ -36,6 +35,9 @@ public class PlayerDashState : PlayerAbilityState
 
         if (!isExitingState)    //only adding dash velocity while dashing, prevents sliding
         {
+            player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
+            player.Anim.SetFloat("xVelocity", Mathf.Abs(player.CurrentVelocity.x));
+
             PlaceAfterImage();
 
             player.SetVelocity(playerData.dashVelocity, dashDirection);
@@ -60,7 +62,6 @@ public class PlayerDashState : PlayerAbilityState
 
     private void PlaceAfterImage()
     {
-        //TODO: 10/29 finish after image
         PlayerAfterImagePool.Instance.GetFromPool();
         lastAfterImagePos = player.transform.position;
     }
