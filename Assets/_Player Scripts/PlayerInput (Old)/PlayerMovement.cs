@@ -1,17 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float m_rollForce = 4.0f;
+    [SerializeField] float m_rollForce = 5.0f;
     public CharacterController2D controller;
     public Animator animator;
 
     public float defaultRunSpeed = 40f;
     public float runSpeed = 40f;
     public Rigidbody2D rb;
-    //private Sensor_HeroKnight m_groundSensor;
     public PlayerCombat playerCombat;
     public GameObject player;
 
@@ -41,11 +41,13 @@ public class PlayerMovement : MonoBehaviour
         //m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();
         canMove = true;
         m_facingDirection = 1;
+        controller.canFlip = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //var keyboard = Keyboard.current; //temp workaround
         //timer for attack combo
         //m_timeSinceAttack += Time.deltaTime;
         if (canMove == true)
@@ -55,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
         }
         
 
-        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+        animator.SetFloat("Speed", Mathf.Abs(horizontalMove)); //greater than 0 -> play run anim, less than -> play idle
         //animator.SetBool("Grounded", true);
 
         if (horizontalMove > 0)
@@ -76,6 +78,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (Input.GetButtonDown("Jump") && rb.velocity.y == 0)
+        //if (keyboard.spaceKey.isPressed && rb.velocity.y == 0)
         {
             if(canMove)
                 rb.AddForce(Vector2.up * 100f);
@@ -111,6 +114,7 @@ public class PlayerMovement : MonoBehaviour
         if (Time.time > allowDodge && canMove)
         {
             if (Input.GetButtonDown("Dodge") && !m_rolling && isGrounded) //prevent dodging midair
+            //if (keyboard.leftShiftKey.isPressed && !m_rolling && isGrounded) //prevent dodging midair
             {
                 StartCoroutine(DodgeRoll());
                 canMove = false;
