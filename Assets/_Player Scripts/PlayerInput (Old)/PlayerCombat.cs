@@ -187,7 +187,7 @@ public class PlayerCombat : MonoBehaviour
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
-        //testing health bar, hurt, and death animations
+        //TODO: testing health bar, hurt, and death animations
         if (Input.GetKeyDown(KeyCode.Q))
         {
             RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%

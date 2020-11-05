@@ -22,10 +22,14 @@ public class EnemyController : MonoBehaviour
     public Transform HealthBar;
     public Transform TextPopups;
 
+    private bool enCanFlip;
+    public bool enCanMove;
+
     // Use this for initialization
     void Start()
     {
-        
+        enCanFlip = true;
+        enCanMove = true;
     }
 
     // Update is called once per frame
@@ -36,7 +40,7 @@ public class EnemyController : MonoBehaviour
 
     public void Flip()
     {
-        
+
 
 
         // Switch the way the enemy is labelled as facing.
@@ -44,25 +48,46 @@ public class EnemyController : MonoBehaviour
 
         // Multiply the enemy's x local scale by -1.
         //.Vector3 theScale = transform.localScale;
-        
-        if (enFacingRight)
-        {
-            transform.localRotation = Quaternion.Euler(0, 180, 0);
-            //theScale.y = 180; //negative x now faces 
-            //transform.localScale = theScale;
-            /*Vector3 childScale = child.transform.localScale;
-            childScale.x *= -1;
-            child.transform.localScale = childScale;*/
-            HealthBar.localRotation = Quaternion.Euler(0, 180, 0);
-            //TextPopups.localRotation = Quaternion.Euler(0, 0, 0); //works without
-        }
-        else
-        {
-            transform.localRotation = Quaternion.Euler(0, 0, 0);
-            HealthBar.localRotation = Quaternion.Euler(0, 0, 0);
+        if (enCanFlip) {
+            if (enFacingRight)
+            {
+                transform.localRotation = Quaternion.Euler(0, 180, 0);
+                //theScale.y = 180; //negative x now faces 
+                //transform.localScale = theScale;
+                /*Vector3 childScale = child.transform.localScale;
+                childScale.x *= -1;
+                child.transform.localScale = childScale;*/
+                HealthBar.localRotation = Quaternion.Euler(0, 180, 0);
+                //TextPopups.localRotation = Quaternion.Euler(0, 0, 0); //works without
+            }
+            else
+            {
+                transform.localRotation = Quaternion.Euler(0, 0, 0);
+                HealthBar.localRotation = Quaternion.Euler(0, 0, 0);
 
-            //theScale.y = 0; //faces left by default
-            //TextPopups.localRotation = Quaternion.Euler(0, 180, 0); //
+                //theScale.y = 0; //faces left by default
+                //TextPopups.localRotation = Quaternion.Euler(0, 180, 0); //
+            }
         }
+    }
+
+    public void EnDisableFlip()
+    {
+        enCanFlip = false;
+    }
+
+    public void EnEnableFlip()
+    {
+        enCanFlip = true;
+    }
+
+    public void EnDisableMove()
+    {
+        enCanMove = false;
+    }
+
+    public void EnEnableMove()
+    {
+        enCanMove = true;
     }
 }

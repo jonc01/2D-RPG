@@ -142,6 +142,7 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator DodgeRoll()
     {
+        playerCombat.canAttack = false;
         m_rolling = true;
         animator.SetTrigger("Roll");
         animator.SetBool("isRolling", true);
@@ -150,6 +151,7 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dodgeTime);
         canMove = true;
         animator.SetBool("isRolling", false);
+        playerCombat.canAttack = true;
     }
 
     void AE_ResetRoll()

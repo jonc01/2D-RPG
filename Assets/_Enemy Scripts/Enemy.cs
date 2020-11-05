@@ -35,11 +35,12 @@ public class Enemy : MonoBehaviour
     public float enAttackAnimSpeed = .4f; //lower value for shorter animations
 
     [SerializeField]
-    bool enCanMove = true;
+    //bool enCanMove = true;
     bool enCanAttack = true;
     bool isAttacking; //for parry()
     bool playerToRight;
     bool aggroStarted;
+    bool enIsHurt;
 
     void Start()
     {
@@ -47,7 +48,7 @@ public class Enemy : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         isAlive = true;
-        enCanMove = true;
+        //enController.enCanMove = true;
         enCanAttack = true;
         //AI aggro
         rb = GetComponent<Rigidbody2D>();
@@ -56,6 +57,7 @@ public class Enemy : MonoBehaviour
         //enController.enFacingRight = false; //start facing left (towards player start)
         isAttacking = false;
         aggroStarted = false;
+        enIsHurt = false;
     }
 
     void Update()
@@ -67,12 +69,12 @@ public class Enemy : MonoBehaviour
             float distToPlayer = Vector2.Distance(transform.position, player.position);
 
             //range <= 3
-            if(distToPlayer <= aggroRange && enCanMove)
+            if(distToPlayer <= aggroRange && enController.enCanMove)
             {
                 aggroStarted = true;
                 //chase player
                 //
-                enCanMove = true;
+                //enController.enCanMove = true;
                 StartChase();
                 /*if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
                 {
@@ -81,7 +83,7 @@ public class Enemy : MonoBehaviour
                     //StartCoroutine
                 }*/
             }
-            else if(aggroStarted && enCanMove)
+            else if(aggroStarted && enController.enCanMove)
             {
                 StartChase();
                 //StopChase(); //currently keep chasing forever, or if player outruns aggro range stop chase
@@ -101,42 +103,51 @@ public class Enemy : MonoBehaviour
     void StartChase()
     {
         enAnimator.SetBool("inCombat", true);
-        enCanMove = true;
+        //enController.enCanMove = true;
         enAnimator.SetBool("move", true);
-        if (transform.position.x < player.position.x) //player is right
-        {
-            playerToRight = true;
-            //player is to right, move right
-            rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
-                                                                  //Facing right, flip sprite to face right
-            enController.enFacingRight = true;
-            enController.Flip();
-            if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
-            {
-                //Attack();
-                //enAnimator.SetTrigger("Attack");
-                StartCoroutine(IsAttacking());
-            }
-            //if(enCanMove)
-                //enController.Flip();
-        }
-        else if (transform.position.x > player.position.x) //player is left
-        {
-            playerToRight = false;
-            //player is to left, move left
-            rb.velocity = new Vector2(-enController.moveSpeed, 0);
 
-            enController.enFacingRight = false;
-            //if (enCanMove)
-            enController.Flip();
-            if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
+        if (enController.enCanMove)
+        {
+            if (transform.position.x < player.position.x) //player is right
             {
-                //Attack();
-                StartCoroutine(IsAttacking());
-                //enAnimator.SetBool("inCombat", true);
+                playerToRight = true;
+                //player is to right, move right
+                
+                rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
+                
+                
+                //Facing right, flip sprite to face right
+                enController.enFacingRight = true;
+                enController.Flip();
+                if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
+                {
+                    //Attack();
+                    //enAnimator.SetTrigger("Attack");
+                    StartCoroutine(IsAttacking());
+                }
+                //if(enCanMove)
+                //enController.Flip();
             }
-            //if(enCanMove)
-               // enController.Flip();
+            else if (transform.position.x > player.position.x) //player is left
+            {
+                playerToRight = false;
+                //player is to left, move left
+                
+                rb.velocity = new Vector2(-enController.moveSpeed, 0);
+                
+
+                enController.enFacingRight = false;
+                //if (enCanMove)
+                enController.Flip();
+                if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
+                {
+                    //Attack();
+                    StartCoroutine(IsAttacking());
+                    //enAnimator.SetBool("inCombat", true);
+                }
+                //if(enCanMove)
+                // enController.Flip();
+            }
         }
 
         if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
@@ -152,13 +163,15 @@ public class Enemy : MonoBehaviour
         rb.velocity = new Vector2(0, 0);
         enAnimator.SetBool("move", false);
         //enAnimator.SetBool("inCombat", true);
-        enCanMove = false;
+        enController.enCanMove = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //
     }
+
+
 
     void Attack()
     {
@@ -184,7 +197,7 @@ public class Enemy : MonoBehaviour
             enAnimator.SetBool("move", false);
             //
             enCanAttack = false;
-            enCanMove = false;
+            enController.enCanMove = false;
             rb.velocity = new Vector2(0, 0);
             yield return new WaitForSeconds(enAttackAnimSpeed); //time when damage actually registers
             
@@ -192,15 +205,14 @@ public class Enemy : MonoBehaviour
             Attack();
             //enCanMove = true; //might cause enemy to slide while attacking is player moves
             yield return new WaitForSeconds(.5f);
-            enCanMove = true;
+            enController.enCanMove = true;
             yield return new WaitForSeconds(enAttackSpeed); //cooldown between attacks
             enAnimator.SetBool("isAttacking", false);
             enCanAttack = true;
-            //enCanMove = true;
             //enAnimator.SetBool("isAttacking", false);
             //enAnimator.SetTrigger("Attack");
         }
-        enCanMove = true;
+        enController.enCanMove = true;
     }
 
 
@@ -265,6 +277,16 @@ public class Enemy : MonoBehaviour
             showDmg.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
         /*if (enController.enFacingRight) //player facing right by default
             showDmg.transform.Rotate(0f, 0f, 0f);*/
+    }
+
+    public void EnIsHurtStart()
+    {
+        enIsHurt = true;
+    }
+
+    public void EnIsHurtEnd()
+    {
+        enIsHurt = false;
     }
 
     public void GiveExperience(int experiencePoints){
