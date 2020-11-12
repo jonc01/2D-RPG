@@ -1334,6 +1334,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65ddfd04341f90547b2763423b2c5298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerTransform: {fileID: 982059460}
+  smoothSpeed: 10
+  offset: {x: 0, y: 0, z: 0}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -1864,18 +1867,26 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   playerCombat: {fileID: 982059469}
+  hitPrefabToRight: {fileID: 2630982711930720759, guid: 0da0552efade60a42abeec6a8eeb0b7f, type: 3}
+  hitPrefabToLeft: {fileID: 7508974481244418147, guid: 8d45e883450c75c4ca42078c4e0e65cc, type: 3}
+  deathParticlePrefab: {fileID: 8672885270232752092, guid: cc5039bc71745cf47bcfded07b4f6516, type: 3}
   maxHealth: 100
   healthBar: {fileID: 1570457975}
   experiencePoints: 10
   enAnimator: {fileID: 651008874}
   isAlive: 0
   rb: {fileID: 651008868}
+  aggroRange: 3
+  enAttackRange: 0.3
   enAttackPoint: {fileID: 1977534915}
   enController: {fileID: 651008875}
   enAttackDamage: 5
-  enAttackSpeed: 0.6
+  enAttackSpeed: 1.1
   enAttackAnimSpeed: 0.4
   enCanAttack: 1
+  isAttacking: 0
+  playerToRight: 0
+  aggroStarted: 0
 --- !u!61 &651008871
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2688,7 +2699,6 @@ GameObject:
   - component: {fileID: 982059469}
   - component: {fileID: 982059465}
   - component: {fileID: 982059461}
-  - component: {fileID: 982059463}
   - component: {fileID: 982059462}
   - component: {fileID: 982059466}
   m_Layer: 10
@@ -2719,7 +2729,7 @@ MonoBehaviour:
     m_Bits: 16384
   m_GroundCheck: {fileID: 1478519005}
   m_CeilingCheck: {fileID: 619630039}
-  m_CrouchDisableCollider: {fileID: 982059463}
+  m_CrouchDisableCollider: {fileID: 0}
   m_FacingRight: 1
   canFlip: 0
   TextPopups: {fileID: 5457053112608264869, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
@@ -2829,7 +2839,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 982059457}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 6200000, guid: dcaf6b4472119234ab446e14877541de, type: 2}
   m_IsTrigger: 0
@@ -2838,32 +2848,6 @@ CircleCollider2D:
   m_Offset: {x: -0.0366171, y: 0.5}
   serializedVersion: 2
   m_Radius: 0.42736638
---- !u!61 &982059463
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 982059457}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 6200000, guid: dcaf6b4472119234ab446e14877541de, type: 2}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.031124115, y: 0.9354391}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 3.125, y: 1.71875}
-    newSize: {x: 3.125, y: 1.71875}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.8192291, y: 0.7610426}
-  m_EdgeRadius: 0
 --- !u!114 &982059464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2908,32 +2892,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!61 &982059466
-BoxCollider2D:
+--- !u!70 &982059466
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 982059457}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 6200000, guid: dcaf6b4472119234ab446e14877541de, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.05972004, y: 0.32262826}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 3.125, y: 1.71875}
-    newSize: {x: 3.125, y: 1.71875}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.80361176, y: 0.5167556}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0, y: 0.7}
+  m_Size: {x: 0.78, y: 1.25}
+  m_Direction: 0
 --- !u!114 &982059469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2961,7 +2935,6 @@ MonoBehaviour:
   wepDamage: 10
   wepRange: 0.5
   attackPoint: {fileID: 1289604727}
-  hitEnemies: []
   canAttack: 1
   attackTime: 0.25
   enemyLayers:
@@ -3285,7 +3258,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1102801876}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.113, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 402572173}
@@ -3705,6 +3678,9 @@ MonoBehaviour:
   enemyLayers:
     serializedVersion: 2
     m_Bits: 4096
+  HitToRight: {fileID: 2630982711930720759, guid: 0da0552efade60a42abeec6a8eeb0b7f, type: 3}
+  HitToLeft: {fileID: 7508974481244418147, guid: 8d45e883450c75c4ca42078c4e0e65cc, type: 3}
+  deathParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
   maxHealth: 100
   healthBar: {fileID: 1112290498}
   enAnimator: {fileID: 0}
@@ -5519,7 +5495,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4099098413966716, guid: 2b206c0d2afb3604183d9210be1d84ce, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.6
+      value: -2.672
       objectReference: {fileID: 0}
     - target: {fileID: 4099098413966716, guid: 2b206c0d2afb3604183d9210be1d84ce, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5543,7 +5519,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4398685856442922, guid: 2b206c0d2afb3604183d9210be1d84ce, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.6
+      value: -2.672
       objectReference: {fileID: 0}
     - target: {fileID: 4398685856442922, guid: 2b206c0d2afb3604183d9210be1d84ce, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5611,7 +5587,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4978767138036468, guid: 2b206c0d2afb3604183d9210be1d84ce, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.6
+      value: -2.672
       objectReference: {fileID: 0}
     - target: {fileID: 4978767138036468, guid: 2b206c0d2afb3604183d9210be1d84ce, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6206,7 +6182,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1977534914}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.59, y: 0.81, z: 0}
+  m_LocalPosition: {x: -0.689, y: 0.741, z: 0}
   m_LocalScale: {x: 0.9, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 651008867}

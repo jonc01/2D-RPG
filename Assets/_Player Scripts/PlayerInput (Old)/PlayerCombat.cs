@@ -31,7 +31,6 @@ public class PlayerCombat : MonoBehaviour
     float attackDamageLight;
     float attackDamageHeavy;
     float attackDamageHeavyMultiplier;
-    public Collider2D[] hitEnemies;
     public bool canAttack = true;
 
     public float attackTime = 0.25f; //0.25 seems good, give or take .1 seconds
@@ -187,7 +186,7 @@ public class PlayerCombat : MonoBehaviour
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
-        //TODO: testing health bar, hurt, and death animations
+        //TODO: testing healing and death animations, delete after player respawn is added
         if (Input.GetKeyDown(KeyCode.Q))
         {
             RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
@@ -221,7 +220,7 @@ public class PlayerCombat : MonoBehaviour
     void Attack()
     {
         //Attack range, detect enemies in range
-        hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
         //movement.rb.AddForce(Vector2.right * 10f);
         //damage enemies
@@ -231,7 +230,7 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy>() != null)
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(knockback);
+                enemy.GetComponent<Enemy>().GetKnockback(knockback/2);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
@@ -243,7 +242,7 @@ public class PlayerCombat : MonoBehaviour
     void AttackHeavy()
     {
         //animator.SetTrigger("Attack3");
-        hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
         //Collider2D[] hitEnemies = Physics2D.OverlapAreaAll(attackPoint.position, attackHeavyRange, enemyLayers);
         
         Vector3 changeLocation = playerLocation.position;
@@ -310,6 +309,16 @@ public class PlayerCombat : MonoBehaviour
             altHitEnemies = Physics2D.OverlapBoxAll(newAttackPoint, new Vector3(wepRange * 3, 1, 0), 0, enemyLayers);
         }
 
+        if (altHitEnemies.Length > 1)
+        {
+            Debug.Log("altHitEnemies: " + altHitEnemies.Length);
+        }
+        else
+        {
+            Debug.Log("nope");
+            Debug.Log("altHitEnemies: " + altHitEnemies.Length);
+        }
+        
 
         //might have to manually flip //attackPoint.position or -attackPoint.position
             //might not need to, it might just initiate Collider2D when we attack, and face in correct direction
@@ -327,11 +336,11 @@ public class PlayerCombat : MonoBehaviour
         if (controller.m_FacingRight)
         {
             //push backwards to left
-            movement.rb.AddForce(Vector2.left * 10f);
+            movement.rb.AddForce(Vector2.left * 30f);
         }
         else
         {
-            movement.rb.AddForce(Vector2.right * 10f);
+            movement.rb.AddForce(Vector2.right * 30f);
         }
         foreach (Collider2D enemy in altHitEnemies) //loop through enemies hit
         {
@@ -357,6 +366,7 @@ public class PlayerCombat : MonoBehaviour
 
         Vector3 newAttackPoint = attackPoint.position; //this could easily get out of hand if weapons have too much range
 
+        //player position and c center of "cube"
         // [    player c           ] //vs  player[          c           ]  //should probably just use a raycast
         //newAttackPoint
         if (controller.m_FacingRight)
@@ -389,7 +399,11 @@ public class PlayerCombat : MonoBehaviour
     }
     void ShowTextPopup(float damageAmount)
     {
-        var showDmg = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
+        Vector3 tempTransform = transform.position; //randomize damage number position
+        tempTransform.x += Random.Range(-.1f, .1f);
+        tempTransform.y += Random.Range(-.9f, .1f);
+
+        var showDmg = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
         showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
         tempShowDmg = showDmg;
 
@@ -435,7 +449,11 @@ public class PlayerCombat : MonoBehaviour
 
     void ShowTextPopupHeal(float healAmount)
     {
-        var showHeal = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
+        Vector3 tempTransform = transform.position; //randomize damage number position
+        tempTransform.x += Random.Range(-.1f, .1f);
+        tempTransform.y += Random.Range(-.9f, .2f);
+
+        var showHeal = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
         showHeal.GetComponent<TextMeshPro>().text = healAmount.ToString();
         showHeal.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
         tempShowDmg = showHeal;

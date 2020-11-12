@@ -70,21 +70,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: EnDisableMove
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0
     functionName: EnDisableFlip
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0
-    functionName: EnIsHurtStart
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -92,20 +78,6 @@ AnimationClip:
     messageOptions: 0
   - time: 0.125
     functionName: EnEnableFlip
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.125
-    functionName: EnEnableMove
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.125
-    functionName: EnIsHurtEnd
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
