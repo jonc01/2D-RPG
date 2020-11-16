@@ -148,7 +148,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isRolling", true);
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
         allowDodge = Time.time + dodgeCD;
-        yield return new WaitForSeconds(dodgeTime);
+        yield return new WaitForSeconds(dodgeTime); //dodge duration
         canMove = true;
         animator.SetBool("isRolling", false);
         playerCombat.canAttack = true;

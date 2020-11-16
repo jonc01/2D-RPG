@@ -155,11 +155,12 @@ public class StationaryEnemy : MonoBehaviour
                 showPart.GetComponent<ParticleSystem>().Emit(50); //values might not be noticeable
             }*/
 
-            
+            Vector3 changeLocation = GetComponent<Transform>().position;
 
-            
-            
-            
+            Vector3 tempLocation = changeLocation;
+            //tempLocation.y += .0f; //y offset
+            Instantiate(HitToLeft, tempLocation, Quaternion.identity);
+
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
@@ -181,14 +182,22 @@ public class StationaryEnemy : MonoBehaviour
 
     void ShowTextPopup(float damageAmount)
     {
-        var showDmg = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
+        Vector3 tempTransform = GetComponent<Transform>().position;
+        tempTransform.y -= 1.5f; //doesn't work
+        //Transform test = GetComponent<Transform>();
+        //Vector3 tempTest = test.position;
+        //tempTest.y += 0.8f;
+        //test.position = tempTest;
+
+        var showDmg = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
         showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
+
+
 
         /*if (enController.enFacingRight) //player facing right by default
             showDmg.transform.Rotate(0f, 0f, 0f);*/
-        
+
         //Instantiate(HitToRight, transform.position, Quaternion.identity);
-        Debug.Log("showing hit");
     }
 
     public void GiveExperience(int experiencePoints)

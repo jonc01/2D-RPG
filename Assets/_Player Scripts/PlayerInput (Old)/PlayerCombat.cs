@@ -76,7 +76,7 @@ public class PlayerCombat : MonoBehaviour
         attackDamageLight = wepDamage;
         attackDamageHeavy = wepDamage*attackDamageHeavyMultiplier;
 
-
+        
         //movement.canMove = true;
         canAttack = true;
         AltAttacking = false;
@@ -189,12 +189,13 @@ public class PlayerCombat : MonoBehaviour
         //TODO: testing healing and death animations, delete after player respawn is added
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
+            //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
+            controller.RespawnPlayerResetLevel();
         }
 
         if (Input.GetKeyDown(KeyCode.H))
         {
-            HealPlayer(50f); //how much health to heal
+            HealPlayer(25f); //how much health to heal
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -309,15 +310,15 @@ public class PlayerCombat : MonoBehaviour
             altHitEnemies = Physics2D.OverlapBoxAll(newAttackPoint, new Vector3(wepRange * 3, 1, 0), 0, enemyLayers);
         }
 
-        if (altHitEnemies.Length > 1)
+        /*if (altHitEnemies.Length > 1)
         {
             Debug.Log("altHitEnemies: " + altHitEnemies.Length);
         }
         else
         {
-            Debug.Log("nope");
+            Debug.Log("no enemies hit");
             Debug.Log("altHitEnemies: " + altHitEnemies.Length);
-        }
+        }*/
         
 
         //might have to manually flip //attackPoint.position or -attackPoint.position
@@ -399,11 +400,15 @@ public class PlayerCombat : MonoBehaviour
     }
     void ShowTextPopup(float damageAmount)
     {
-        Vector3 tempTransform = transform.position; //randomize damage number position
-        tempTransform.x += Random.Range(-.1f, .1f);
-        tempTransform.y += Random.Range(-.9f, .1f);
 
-        var showDmg = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
+        //Vector3 tempTransform = transform.position; //randomize damage number position
+        Vector3 tempPos = transform.position;
+        tempPos.x += Random.Range(-.1f, .1f);
+        tempPos.y += Random.Range(-.9f, .1f);
+        //tempTransform = screenPosition; //have numbers float in place, don't follow object
+
+
+        var showDmg = Instantiate(TextPopupsPrefab, tempPos, Quaternion.identity, transform);
         showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
         tempShowDmg = showDmg;
 
@@ -501,7 +506,7 @@ public class PlayerCombat : MonoBehaviour
         //kill player
     }
 
-    void RevivePlayer(float spawnHpPercentage)
+    void RevivePlayer(float spawnHpPercentage) //no use right now, 
     {
         isAlive = true;
         movement.canMove = true;

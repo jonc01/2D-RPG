@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Enemy : MonoBehaviour
+public class Enemy2 : MonoBehaviour
 {
     public GameObject TextPopupsPrefab;
     private GameObject tempShowDmg; //to flip damage popup as they are created
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
     public Rigidbody2D rb;
     [SerializeField]
     float aggroRange = 3f; //when to start chasing player
-                        //might extend to aggro to player before enemy enters screen
+                           //might extend to aggro to player before enemy enters screen
     [SerializeField]
     float enAttackRange = .5f; //when to start attacking player, stop enemy from clipping into player
     public Transform enAttackPoint;
@@ -81,7 +81,7 @@ public class Enemy : MonoBehaviour
             float distToPlayer = Vector2.Distance(transform.position, player.position);
 
             //range <= 3
-            if(distToPlayer <= aggroRange && enController.enCanMove) //how to start aggro
+            if (distToPlayer <= aggroRange && enController.enCanMove) //how to start aggro
             {
                 aggroStarted = true;
                 //chase player
@@ -93,7 +93,7 @@ public class Enemy : MonoBehaviour
                     //StartCoroutine
                 }*/
             }
-            else if(aggroStarted && enController.enCanMove) //now that we have aggro
+            else if (aggroStarted && enController.enCanMove) //now that we have aggro
             {
                 StartChase();
                 //StopChase(); //if player outruns aggro range stop chase, currently keep chasing forever
@@ -122,10 +122,10 @@ public class Enemy : MonoBehaviour
             {
                 playerToRight = true;
                 //player is to right, move right
-                
+
                 rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
-                
-                
+
+
                 //Facing right, flip sprite to face right
                 enController.enFacingRight = true;
                 enController.Flip();
@@ -143,9 +143,9 @@ public class Enemy : MonoBehaviour
             {
                 playerToRight = false;
                 //player is to left, move left
-                
+
                 rb.velocity = new Vector2(-enController.moveSpeed, 0);
-                
+
 
                 enController.enFacingRight = false;
                 //if (enCanMove)
@@ -185,7 +185,7 @@ public class Enemy : MonoBehaviour
     void Attack()
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayers);
-        
+
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
@@ -200,13 +200,13 @@ public class Enemy : MonoBehaviour
         {
             attackStopped = false;
             isAttacking = true;
-            
+
             enAnimator.SetTrigger("Attack");
-            
+
             enAnimator.SetBool("inCombat", true);
             enAnimator.SetBool("isAttacking", true);
             enAnimator.SetBool("move", false);
-            
+
             enCanAttack = false;
             enController.enCanMove = false;
             rb.velocity = new Vector2(0, 0);
@@ -250,13 +250,13 @@ public class Enemy : MonoBehaviour
             {
                 ShowTextPopup(damage);
             }
-            
+
             //hurt animation
             if (enAnimator != null && damage > 0) //took damage, not heal
             {
                 //stopping coroutine
                 attackStopped = true;
-                
+
                 enIsHurt = true;
                 enAnimator.SetTrigger("Hurt");
                 StartCoroutine(StunEnemy(1f));
@@ -274,7 +274,8 @@ public class Enemy : MonoBehaviour
 
     public void GetKnockback(float knockbackAmount)
     {
-        if (rb != null) {
+        if (rb != null)
+        {
             Vector3 changeLocation = GetComponent<Transform>().position;
 
             Vector3 tempLocation = changeLocation;
@@ -417,7 +418,8 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void GiveExperience(int experiencePoints){
+    public void GiveExperience(int experiencePoints)
+    {
         Debug.Log("Give player " + experiencePoints + " XP");
         //give xp
         //
@@ -426,7 +428,7 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         //Die animation
-        if(enAnimator != null)
+        if (enAnimator != null)
         {
             enAnimator.SetTrigger("Death");
         }
@@ -440,7 +442,7 @@ public class Enemy : MonoBehaviour
         //disable enemy object
         isAlive = false;
 
-        if(deathParticlePrefab != null)
+        if (deathParticlePrefab != null)
         {
             Vector3 changeLocation = GetComponent<Transform>().position;
             Vector3 tempLocation = changeLocation;
