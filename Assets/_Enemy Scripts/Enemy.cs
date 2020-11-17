@@ -40,6 +40,8 @@ public class Enemy : MonoBehaviour
     public float enAttackDamage = 5f;
     public float enAttackSpeed = 1.1f; //lower value for lower delays between attacks
     public float enAttackAnimSpeed = .4f; //lower value for shorter animations
+    [Range(0f, 1.0f)]
+    public float stunResist = 0f; //0f takes full stun duration, 1.0f complete stun resist
 
     [SerializeField]
     //bool enCanMove = true;
@@ -48,7 +50,6 @@ public class Enemy : MonoBehaviour
     bool playerToRight, aggroStarted;
     bool enIsHurt;
     bool enStunned;
-    bool attackStopped;
 
 
 
@@ -69,7 +70,6 @@ public class Enemy : MonoBehaviour
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
-        attackStopped = false;
     }
 
     void Update()
@@ -198,7 +198,7 @@ public class Enemy : MonoBehaviour
     {//TODO: this is a mess, lots of variables that can be combined
         if (enCanAttack && !isAttacking)
         {
-            attackStopped = false;
+            enStunned = false; //attackStopped = false;
             isAttacking = true;
             
             enAnimator.SetTrigger("Attack");
@@ -212,7 +212,7 @@ public class Enemy : MonoBehaviour
             rb.velocity = new Vector2(0, 0);
             yield return new WaitForSeconds(enAttackAnimSpeed); //time when damage is dealt based on animation
 
-            if (attackStopped)
+            if (enStunned) //attackStopped
             {
                 yield break;
             }
@@ -255,11 +255,11 @@ public class Enemy : MonoBehaviour
             if (enAnimator != null && damage > 0) //took damage, not heal
             {
                 //stopping coroutine
-                attackStopped = true;
+                //attackStopped = true;
                 
                 enIsHurt = true;
                 enAnimator.SetTrigger("Hurt");
-                StartCoroutine(StunEnemy(1f));
+                //GetStunned(1f);
                 enCanAttack = true;
                 enAnimator.SetBool("isAttacking", false);
                 //attackStopped = false;
@@ -351,7 +351,7 @@ public class Enemy : MonoBehaviour
 
             Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
             GetComponent<Transform>().position = changeLocation;
-            StartCoroutine(StunEnemy(.1f));
+            //StartCoroutine(StunEnemy(.1f));
         }
 
         /*var showKnockback = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
@@ -395,6 +395,14 @@ public class Enemy : MonoBehaviour
     public void EnIsHurtEnd()
     {
         enIsHurt = false;
+    }
+
+    public void GetStunned(float duration) //allow player to call this function
+    {
+        float fullDuration = 1f;
+        fullDuration -= stunResist; //getting percentage of stun based on stunResist
+        duration *= fullDuration;
+        StartCoroutine(StunEnemy(duration));
     }
 
     IEnumerator StunEnemy(float stunDuration)
@@ -452,7 +460,7 @@ public class Enemy : MonoBehaviour
         //StartCoroutine(DeleteEnemyObject());
     }
 
-    /*IEnumerator DeleteEnemyObject()
+    /*IEnumerator DeleteEnemyObject() //only using if we want to use enemy death animation, currently just exploding object
     {
         yield return new WaitForSeconds(3f);
         Destroy(this.gameObject);

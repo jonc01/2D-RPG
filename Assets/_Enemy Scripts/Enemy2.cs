@@ -40,6 +40,8 @@ public class Enemy2 : MonoBehaviour
     public float enAttackDamage = 5f;
     public float enAttackSpeed = 1.1f; //lower value for lower delays between attacks
     public float enAttackAnimSpeed = .4f; //lower value for shorter animations
+    [Range(0f, 1.0f)]
+    public float stunResist = .5f; //0f takes full stun duration, 1.0f complete stun resist
 
     [SerializeField]
     //bool enCanMove = true;
@@ -48,7 +50,6 @@ public class Enemy2 : MonoBehaviour
     bool playerToRight, aggroStarted;
     bool enIsHurt;
     bool enStunned;
-    bool attackStopped;
 
 
 
@@ -69,7 +70,6 @@ public class Enemy2 : MonoBehaviour
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
-        attackStopped = false;
     }
 
     void Update()
@@ -198,7 +198,7 @@ public class Enemy2 : MonoBehaviour
     {//TODO: this is a mess, lots of variables that can be combined
         if (enCanAttack && !isAttacking)
         {
-            attackStopped = false;
+            enStunned = false;
             isAttacking = true;
 
             enAnimator.SetTrigger("Attack");
@@ -212,7 +212,7 @@ public class Enemy2 : MonoBehaviour
             rb.velocity = new Vector2(0, 0);
             yield return new WaitForSeconds(enAttackAnimSpeed); //time when damage is dealt based on animation
 
-            if (attackStopped)
+            if (enStunned)
             {
                 yield break;
             }
@@ -239,12 +239,22 @@ public class Enemy2 : MonoBehaviour
     {
         if (isAlive == true)
         {
-
             currentHealth -= damage;
             healthBar.SetHealth(currentHealth);
             if (currentHealth > maxHealth)
                 currentHealth = maxHealth;
 
+
+            
+
+
+
+            //temp knockback
+            Vector3 tempLocation = GetComponent<Transform>().position;
+            tempLocation.y += .5f;
+            //
+
+            Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
@@ -255,11 +265,10 @@ public class Enemy2 : MonoBehaviour
             if (enAnimator != null && damage > 0) //took damage, not heal
             {
                 //stopping coroutine
-                attackStopped = true;
+                //attackStopped = true;
 
                 enIsHurt = true;
                 enAnimator.SetTrigger("Hurt");
-                StartCoroutine(StunEnemy(1f));
                 enCanAttack = true;
                 enAnimator.SetBool("isAttacking", false);
                 //attackStopped = false;
@@ -278,8 +287,6 @@ public class Enemy2 : MonoBehaviour
         {
             Vector3 changeLocation = GetComponent<Transform>().position;
 
-            Vector3 tempLocation = changeLocation;
-            tempLocation.y += .5f;
 
             //testing
             /*
@@ -349,10 +356,9 @@ public class Enemy2 : MonoBehaviour
                 changeLocation.x += .1f;
                 //rb.AddForce(Vector2.left * knockbackAmount);
             }
-
-            Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
+            
             GetComponent<Transform>().position = changeLocation;
-            StartCoroutine(StunEnemy(.1f));
+            //StartCoroutine(StunEnemy(0f));
         }
 
         /*var showKnockback = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
@@ -396,6 +402,15 @@ public class Enemy2 : MonoBehaviour
     public void EnIsHurtEnd()
     {
         enIsHurt = false;
+    }
+
+    public void GetStunned(float duration) //allow player to call this function
+    {
+        float fullDuration = 1f;
+        fullDuration -= stunResist; //getting percentage of stun based on stunResist
+        duration *= fullDuration;
+        enAnimator.SetTrigger("enStunned");
+        StartCoroutine(StunEnemy(duration));
     }
 
     IEnumerator StunEnemy(float stunDuration)

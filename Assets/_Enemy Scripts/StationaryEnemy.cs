@@ -14,10 +14,8 @@ public class StationaryEnemy : MonoBehaviour
     public LayerMask enemyLayers;
     public GameObject HitToRight;
     public GameObject HitToLeft;
+    public GameObject HitEffect;
     public GameObject deathParticlePrefab;
-
-    //public GameObject testParticlePrefab;
-
 
     public float maxHealth = 100;
     float currentHealth;
@@ -76,7 +74,6 @@ public class StationaryEnemy : MonoBehaviour
             if (rb != null)
                 rb.velocity = new Vector2(0, 0);
         }
-
     }
 
 
@@ -89,6 +86,8 @@ public class StationaryEnemy : MonoBehaviour
         {
             if(enemy != null && enemy.GetComponent<Enemy>() != null)
                 enemy.GetComponent<Enemy>().TakeDamage(-enAttackDamage); //negative damage for healing don't need Heal() function
+
+
         }
     }
 
@@ -133,33 +132,20 @@ public class StationaryEnemy : MonoBehaviour
             currentHealth -= damage;
             healthBar.SetHealth(currentHealth);
 
-            /* //TODO: reuse for armored enemies, # of particles based on how much damage percentage-wise is being dealt
-            //particle
-            float damagePerMax = damage / maxHealth; //change to maxHealth
-            
-            Vector3 changeLocation = GetComponent<Transform>().position;
-            Vector3 tempLocation = changeLocation;
-            tempLocation.y += .1f;
-            var showPart = Instantiate(testParticlePrefab, tempLocation, Quaternion.identity);
-
-            if(damagePerMax < .25)
-            {
-                showPart.GetComponent<ParticleSystem>().Emit(10);
-            }
-            else if(damagePerMax < .5)
-            {
-                showPart.GetComponent<ParticleSystem>().Emit(30);
-            }
-            else
-            {
-                showPart.GetComponent<ParticleSystem>().Emit(50); //values might not be noticeable
-            }*/
-
             Vector3 changeLocation = GetComponent<Transform>().position;
 
             Vector3 tempLocation = changeLocation;
             //tempLocation.y += .0f; //y offset
-            Instantiate(HitToLeft, tempLocation, Quaternion.identity);
+            if(player.position.x > transform.position.x) //player to right of enemy
+            {
+                Instantiate(HitToLeft, tempLocation, Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(HitToRight, tempLocation, Quaternion.identity);
+            }
+            
+            Instantiate(HitEffect, tempLocation, Quaternion.identity);
 
             //show damage/heal numbers
             if (TextPopupsPrefab)

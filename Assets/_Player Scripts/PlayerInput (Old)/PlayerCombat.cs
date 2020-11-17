@@ -32,6 +32,7 @@ public class PlayerCombat : MonoBehaviour
     float attackDamageHeavy;
     float attackDamageHeavyMultiplier;
     public bool canAttack = true;
+    public float stunStrength = 1f;
 
     public float attackTime = 0.25f; //0.25 seems good, give or take .1 seconds
     //bool canMove = true;
@@ -228,7 +229,7 @@ public class PlayerCombat : MonoBehaviour
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
             //Debug.Log("We Hit " + enemy.name);
-            if (enemy.GetComponent<Enemy>() != null)
+            if (enemy.GetComponent<Enemy>() != null) //TODO: better way to do this? have to manually update for each new enemy
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback/2);
@@ -236,6 +237,13 @@ public class PlayerCombat : MonoBehaviour
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
                 enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight);
+
+
+            if (enemy.GetComponent<Enemy2>() != null)
+            {
+                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy2>().GetKnockback(knockback/3);
+            }
             
         }
     }
@@ -268,10 +276,18 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback*2);
+                enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
             
             if (enemy.GetComponent<StationaryEnemy>() != null)
                 enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy);
+
+            if (enemy.GetComponent<Enemy2>() != null)
+            {
+                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy2>().GetKnockback(knockback * 2);
+                enemy.GetComponent<Enemy2>().GetStunned(stunStrength);
+            }
         }
     }
     IEnumerator AltAttack()
@@ -350,10 +366,17 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.GetComponent<Enemy>().TakeDamage(altDamage); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback*4f);
+                enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
                 enemy.GetComponent<StationaryEnemy>().TakeDamage(altDamage);
+
+            if(enemy.GetComponent<Enemy2>() != null)
+            {
+                enemy.GetComponent<Enemy2>().TakeDamage(altDamage);
+                enemy.GetComponent<Enemy2>().GetStunned(stunStrength);
+            }
         }
     }
 
@@ -407,6 +430,7 @@ public class PlayerCombat : MonoBehaviour
         tempPos.y += Random.Range(-.9f, .1f);
         //tempTransform = screenPosition; //have numbers float in place, don't follow object
 
+        
 
         var showDmg = Instantiate(TextPopupsPrefab, tempPos, Quaternion.identity, transform);
         showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
