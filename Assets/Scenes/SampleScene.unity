@@ -5976,6 +5976,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeavyBandit
       objectReference: {fileID: 0}
+    - target: {fileID: 2544641450227346098, guid: 692deb4e5d458c74686c751e0d09b17f, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544641450227346098, guid: 692deb4e5d458c74686c751e0d09b17f, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544641450227346098, guid: 692deb4e5d458c74686c751e0d09b17f, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544641450227346098, guid: 692deb4e5d458c74686c751e0d09b17f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 2544641450227346099, guid: 692deb4e5d458c74686c751e0d09b17f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.519

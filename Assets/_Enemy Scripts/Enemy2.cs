@@ -15,6 +15,7 @@ public class Enemy2 : MonoBehaviour
     public GameObject hitParticlePrefab;
     public GameObject deathParticlePrefab;
 
+
     public float maxHealth = 100;
     float currentHealth;
     public HealthBar healthBar;
@@ -70,6 +71,7 @@ public class Enemy2 : MonoBehaviour
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
+
     }
 
     void Update()
@@ -243,10 +245,6 @@ public class Enemy2 : MonoBehaviour
             healthBar.SetHealth(currentHealth);
             if (currentHealth > maxHealth)
                 currentHealth = maxHealth;
-
-
-            
-
 
 
             //temp knockback

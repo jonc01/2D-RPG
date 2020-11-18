@@ -402,6 +402,7 @@ public class Enemy : MonoBehaviour
         float fullDuration = 1f;
         fullDuration -= stunResist; //getting percentage of stun based on stunResist
         duration *= fullDuration;
+        enAnimator.SetTrigger("enStunned");
         StartCoroutine(StunEnemy(duration));
     }
 
