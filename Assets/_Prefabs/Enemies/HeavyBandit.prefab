@@ -159,6 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_speed: 4
   m_jumpForce: 7.5
+  rb: {fileID: 2544641450227346124}
   enAnimator: {fileID: 2544641450227346127}
   enFacingRight: 0
   moveSpeed: 1
@@ -185,6 +186,8 @@ MonoBehaviour:
   playerCombat: {fileID: 0}
   hitParticlePrefab: {fileID: 2220763889826497924, guid: 72d62d380e21c5844881424a40b710dc, type: 3}
   deathParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
+  stunLParticlePrefab: {fileID: 0}
+  stunRParticlePrefab: {fileID: 0}
   maxHealth: 100
   healthBar: {fileID: 7395836740150739542}
   experiencePoints: 10
@@ -198,6 +201,7 @@ MonoBehaviour:
   enAttackDamage: 5
   enAttackSpeed: 1.1
   enAttackAnimSpeed: 0.4
+  stunResist: 0.5
   enCanAttack: 1
   isAttacking: 0
   playerToRight: 0

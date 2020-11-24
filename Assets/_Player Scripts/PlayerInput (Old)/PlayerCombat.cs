@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
 {
+    public GameObject camera;
+
     public Animator animator;
     [SerializeField] bool m_noBlood = false;
     public PlayerMovement movement;
@@ -36,6 +38,9 @@ public class PlayerCombat : MonoBehaviour
 
     public float attackTime = 0.25f; //0.25 seems good, give or take .1 seconds
     //bool canMove = true;
+
+    //armor stats
+    public float playerArmor; //temp
 
     //Block check
     //private const float minBlockDuration = 0.25f;
@@ -213,6 +218,7 @@ public class PlayerCombat : MonoBehaviour
         movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         //yield return new WaitForSeconds(attackTime);
         yield return new WaitForSeconds(0.3f);
+
         movement.canMove = true;
         animator.SetBool("isAttacking", false);
         //movement.canMove = true;
@@ -242,9 +248,9 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy2>() != null)
             {
                 enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy2>().GetKnockback(knockback/3);
+                enemy.GetComponent<Enemy2>().GetKnockback(knockback / 3);
             }
-            
+
         }
     }
 
@@ -286,7 +292,7 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy2>().GetKnockback(knockback * 2);
-                enemy.GetComponent<Enemy2>().GetStunned(stunStrength);
+                enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
             }
         }
     }
@@ -311,7 +317,7 @@ public class PlayerCombat : MonoBehaviour
         //range increase to around 15f-20f
         //hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
 
-        Vector3 newAttackPoint = attackPoint.position; //this could easily get out of hand if weapons have too much range
+        Vector3 newAttackPoint = attackPoint.position; //this is based on weapon stats, may have to change if weapons have too much range?
         //newAttackPoint.x += (wepRange * 3) / 2;
         Collider2D[] altHitEnemies;
 
@@ -408,9 +414,17 @@ public class PlayerCombat : MonoBehaviour
     public void TakeDamage(float damage)
     {
         if (currentHealth > 0) {
-            currentHealth -= damage;
+            if(animator.GetBool("isRolling")) //damage dodged
+            {
+                damage = 0;
+            }
+            currentHealth -= (damage);
             healthBar.SetHealth(currentHealth);
-            animator.SetTrigger("Hurt");
+            if(damage > 0)
+            {
+                animator.SetTrigger("Hurt");
+            }
+
             if (TextPopupsPrefab) {
                 ShowTextPopup(damage);
             }
@@ -430,10 +444,18 @@ public class PlayerCombat : MonoBehaviour
         tempPos.y += Random.Range(-.9f, .1f);
         //tempTransform = screenPosition; //have numbers float in place, don't follow object
 
-        
 
         var showDmg = Instantiate(TextPopupsPrefab, tempPos, Quaternion.identity, transform);
-        showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
+        
+        if (damageAmount > 0)
+        {
+            showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
+        }
+        else
+        {
+            showDmg.GetComponent<TextMeshPro>().text = "Dodged";
+        }
+        
         tempShowDmg = showDmg;
 
         if (controller.m_FacingRight)
@@ -478,11 +500,15 @@ public class PlayerCombat : MonoBehaviour
 
     void ShowTextPopupHeal(float healAmount)
     {
-        Vector3 tempTransform = transform.position; //randomize damage number position
-        tempTransform.x += Random.Range(-.1f, .1f);
-        tempTransform.y += Random.Range(-.9f, .2f);
+        Vector3 tempPos = transform.position; //randomize damage number position
+        tempPos.x += Random.Range(-.1f, .1f);
+        tempPos.y += Random.Range(-.9f, .2f);
 
-        var showHeal = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
+        //var showHeal = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
+        Transform temp = transform;
+
+        var showHeal = Instantiate(TextPopupsPrefab, camera.transform, false);
+
         showHeal.GetComponent<TextMeshPro>().text = healAmount.ToString();
         showHeal.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
         tempShowDmg = showHeal;

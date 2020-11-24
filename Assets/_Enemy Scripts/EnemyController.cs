@@ -8,7 +8,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] float m_jumpForce = 7.5f;
 
     
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private bool m_grounded = false;
     private bool m_combatIdle = false;
     private bool m_isDead = false;
@@ -22,6 +22,7 @@ public class EnemyController : MonoBehaviour
     public Transform HealthBar;
     public Transform TextPopups;
 
+    [SerializeField]
     private bool enCanFlip;
     public bool enCanMove;
 
@@ -36,6 +37,18 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         //child = GameObject.Find("HealthBarCanvas");
+        if (enCanMove)
+        {
+            if (rb.velocity.x > 0) //moving right
+            {
+                enFacingRight = true;
+            }
+            else //moving left hopefully
+            {
+                enFacingRight = false;
+            }
+        }
+
     }
 
     public void Flip()
@@ -51,6 +64,7 @@ public class EnemyController : MonoBehaviour
         if (enCanFlip) {
             if (enFacingRight)
             {
+                Debug.Log("flipping rotation 1");
                 transform.localRotation = Quaternion.Euler(0, 180, 0);
                 //theScale.y = 180; //negative x now faces 
                 //transform.localScale = theScale;
@@ -62,6 +76,7 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
+                Debug.Log("flipping rotation 2");
                 transform.localRotation = Quaternion.Euler(0, 0, 0);
                 HealthBar.localRotation = Quaternion.Euler(0, 0, 0);
 

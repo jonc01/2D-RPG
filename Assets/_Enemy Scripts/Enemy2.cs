@@ -14,6 +14,8 @@ public class Enemy2 : MonoBehaviour
     //public GameObject hitPrefabToLeft;
     public GameObject hitParticlePrefab;
     public GameObject deathParticlePrefab;
+    public GameObject stunLParticlePrefab;
+    public GameObject stunRParticlePrefab;
 
 
     public float maxHealth = 100;
@@ -43,6 +45,8 @@ public class Enemy2 : MonoBehaviour
     public float enAttackAnimSpeed = .4f; //lower value for shorter animations
     [Range(0f, 1.0f)]
     public float stunResist = .5f; //0f takes full stun duration, 1.0f complete stun resist
+    public float allowStun = 0f;
+    public float allowStunCD = 5f; //how often enemy can be stunned
 
     [SerializeField]
     //bool enCanMove = true;
@@ -186,6 +190,22 @@ public class Enemy2 : MonoBehaviour
 
     void Attack()
     {
+        Vector3 changeLocation = transform.position;
+        if (enController.enFacingRight)
+        {
+            //go right
+            changeLocation.x += .3f;
+            transform.position = changeLocation;
+            //movement.rb.AddForce(Vector2.right * 10f);
+        }
+        else
+        {
+            //go left
+            changeLocation.x -= .3f;
+            transform.position = changeLocation;
+            //movement.rb.AddForce(Vector2.left * 10f);
+        }
+
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayers);
 
         //damage enemies
@@ -212,6 +232,7 @@ public class Enemy2 : MonoBehaviour
             enCanAttack = false;
             enController.enCanMove = false;
             rb.velocity = new Vector2(0, 0);
+
             yield return new WaitForSeconds(enAttackAnimSpeed); //time when damage is dealt based on animation
 
             if (enStunned)
@@ -239,6 +260,11 @@ public class Enemy2 : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        /*if (TextPopupsPrefab)
+        {
+            ShowTextPopup(damage);
+        }*/
+
         if (isAlive == true)
         {
             currentHealth -= damage;
@@ -258,6 +284,7 @@ public class Enemy2 : MonoBehaviour
             {
                 ShowTextPopup(damage);
             }
+
 
             //hurt animation
             if (enAnimator != null && damage > 0) //took damage, not heal
@@ -284,65 +311,6 @@ public class Enemy2 : MonoBehaviour
         if (rb != null)
         {
             Vector3 changeLocation = GetComponent<Transform>().position;
-
-
-            //testing
-            /*
-            if(enController.enFacingRight && hitPrefabToRight != null)
-            {
-                Debug.Log("enFacingRight = true" + enController.enFacingRight);
-                Instantiate(hitPrefabToLeft, tempLocation, Quaternion.identity);
-            }
-            else if (!enController.enFacingRight && hitPrefabToLeft != null)
-            {
-                Debug.Log("enFacingRight = false" + enController.enFacingRight);
-                Instantiate(hitPrefabToRight, tempLocation, Quaternion.identity);
-            }
-            else
-            {
-                Debug.Log("we cry");
-            }*/
-
-
-            //if (hitPrefabToLeft != null && hitPrefabToRight != null){
-            /*
-            if (playerToRight)
-            {
-                if (!enController.enFacingRight)//back facing player
-                {
-                    Debug.Log("1particles to the left");
-                    Instantiate(hitPrefabToLeft, tempLocation, Quaternion.identity);
-                    //changeLocation.x -= .1f; //knockback
-                }
-                else
-                {
-                    Debug.Log("1 else + why: " + enController.enFacingRight);
-                    Instantiate(hitPrefabToLeft, tempLocation, Quaternion.identity);
-                    //changeLocation.x -= .1f; //knockback
-                }
-                changeLocation.x -= .1f; //knockback
-
-            }//rb.AddForce(Vector2.left * knockbackAmount);
-            else 
-            {
-                if(enController.enFacingRight) //back facing player
-                {
-                    Debug.Log("2particles to the right");
-                    Instantiate(hitPrefabToRight, tempLocation, Quaternion.identity);
-                    //changeLocation.x += .1f;
-                }
-                else
-                {
-                    Debug.Log("2 else + why: " + enController.enFacingRight);
-                    Instantiate(hitPrefabToRight, tempLocation, Quaternion.identity);
-                    //changeLocation.x += .1f;
-                }
-                changeLocation.x += .1f;
-            }*/
-
-            //rb.AddForce(Vector2.right * knockbackAmount);
-            //}
-
 
             if (playerToRight)
             {
@@ -378,6 +346,8 @@ public class Enemy2 : MonoBehaviour
         /*if (enController.enFacingRight) //player facing right by default
             showDmg.transform.Rotate(0f, 0f, 0f);*/
 
+
+
         if (enController.enFacingRight)
         {
             FlipTextAgain(180);
@@ -404,11 +374,14 @@ public class Enemy2 : MonoBehaviour
 
     public void GetStunned(float duration) //allow player to call this function
     {
-        float fullDuration = 1f;
-        fullDuration -= stunResist; //getting percentage of stun based on stunResist
-        duration *= fullDuration;
-        enAnimator.SetTrigger("enStunned");
-        StartCoroutine(StunEnemy(duration));
+        if (Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
+        {
+            float fullDuration = 1f;
+            fullDuration -= stunResist; //getting percentage of stun based on stunResist
+            duration *= fullDuration;
+            enAnimator.SetTrigger("en2Stunned");
+            StartCoroutine(StunEnemy(duration));
+        }
     }
 
     IEnumerator StunEnemy(float stunDuration)
@@ -420,14 +393,37 @@ public class Enemy2 : MonoBehaviour
             enCanAttack = false;
             enController.enCanMove = false;
 
-            //var showDmg = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-            //showDmg.GetComponent<TextMeshPro>().text = "?"; 
+            if (stunLParticlePrefab != null && stunRParticlePrefab != null)
+            {
+                Vector3 changeLocation = GetComponent<Transform>().position;
+                Vector3 tempLocation = changeLocation;
+                tempLocation.y += .5f;
+
+                if (enController.enFacingRight)
+                {
+                    Instantiate(stunLParticlePrefab, tempLocation, Quaternion.identity, transform);
+                }
+                else
+                {
+                    Instantiate(stunRParticlePrefab, tempLocation, Quaternion.identity, transform);
+                }
+            }
+
+            if (isAlive)
+            {
+                var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
+                showStunned.GetComponent<TextMeshPro>().text = "\n*Stun*"; //temp fix to offset not working (anchors)
+            }
 
             yield return new WaitForSeconds(stunDuration);
 
+            enAnimator.SetTrigger("en2StunRecover");
+            yield return new WaitForSeconds(.5f); //time for recover animation
             enCanAttack = true;
             enController.enCanMove = true;
+            enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
             enStunned = false;
+            allowStun = Time.time + allowStunCD;
         }
     }
 
@@ -463,18 +459,20 @@ public class Enemy2 : MonoBehaviour
             Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
         }
 
-        DeleteEnemyObject();
-        //StartCoroutine(DeleteEnemyObject());
+        //DeleteEnemyObject();
+        StartCoroutine(DeleteEnemyObject());
     }
 
-    /*IEnumerator DeleteEnemyObject()
+    IEnumerator DeleteEnemyObject()
     {
-        yield return new WaitForSeconds(3f);
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponentInChildren<Canvas>().enabled = false;
+        yield return new WaitForSeconds(2f);
+        Destroy(this.gameObject);
+    }
+
+    /*private void DeleteEnemyObject()
+    {
         Destroy(this.gameObject);
     }*/
-
-    private void DeleteEnemyObject()
-    {
-        Destroy(this.gameObject);
-    }
 }

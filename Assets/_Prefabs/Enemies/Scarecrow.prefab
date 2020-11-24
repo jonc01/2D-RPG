@@ -259,6 +259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_speed: 4
   m_jumpForce: 7.5
+  rb: {fileID: 7005934251955113191}
   enAnimator: {fileID: 0}
   enFacingRight: 0
   moveSpeed: 1
@@ -288,6 +289,7 @@ MonoBehaviour:
     m_Bits: 4096
   HitToRight: {fileID: 2364812712255308896, guid: e78f3d8bc471d344fa16c1502ca0ce4c, type: 3}
   HitToLeft: {fileID: 2364812712255308896, guid: e78f3d8bc471d344fa16c1502ca0ce4c, type: 3}
+  HitEffect: {fileID: 0}
   deathParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
   maxHealth: 100
   healthBar: {fileID: 2650719859469918885}
