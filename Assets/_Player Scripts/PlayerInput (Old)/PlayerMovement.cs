@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     //private int m_currentAttack = 0;
     //private float m_timeSinceAttack = 0.0f;
     public int m_facingDirection = 1;
-    private bool m_rolling = false;
+    public bool m_rolling = false;
     private bool m_grounded = false;
     float horizontalMove = 0f;
     bool jump = false;
@@ -142,14 +142,18 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator DodgeRoll()
     {
+        playerCombat.canAttack = false;
         m_rolling = true;
         animator.SetTrigger("Roll");
         animator.SetBool("isRolling", true);
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
         allowDodge = Time.time + dodgeCD;
-        yield return new WaitForSeconds(dodgeTime);
+        //playerCombat.playerArmor = 100; //temp or dodge invulnerability
+        yield return new WaitForSeconds(dodgeTime); //dodge duration
+        //playerCombat.playerArmor = 0; //temp
         canMove = true;
         animator.SetBool("isRolling", false);
+        playerCombat.canAttack = true;
     }
 
     void AE_ResetRoll()

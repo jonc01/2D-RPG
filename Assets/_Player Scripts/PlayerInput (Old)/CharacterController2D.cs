@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using TMPro;
-//Brackeys' script (modified)
 public class CharacterController2D : MonoBehaviour
 {
 	[SerializeField] private float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
@@ -15,6 +15,7 @@ public class CharacterController2D : MonoBehaviour
 	[SerializeField] private Transform m_CeilingCheck;                          // A position marking where to check for ceilings
 	[SerializeField] private Collider2D m_CrouchDisableCollider;                // A collider that will be disabled when crouching
 
+	public int CurrentGameLevel;
 
 	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 	private bool m_Grounded;            // Whether or not the player is grounded.
@@ -183,5 +184,12 @@ public class CharacterController2D : MonoBehaviour
 			FacingDirection *= -1;
 			transform.Rotate(0.0f, 180.0f, 0.0f);
 		}*/
+	}
+
+	//RevivePlayer in PlayerCombat
+	public void RespawnPlayerResetLevel()
+    {
+		CurrentGameLevel = SceneManager.GetActiveScene().buildIndex;
+		SceneManager.LoadScene(CurrentGameLevel);
 	}
 }

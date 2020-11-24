@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
 {
+    public GameObject camera;
+
     public Animator animator;
     [SerializeField] bool m_noBlood = false;
     public PlayerMovement movement;
@@ -31,11 +33,14 @@ public class PlayerCombat : MonoBehaviour
     float attackDamageLight;
     float attackDamageHeavy;
     float attackDamageHeavyMultiplier;
-    public Collider2D[] hitEnemies;
     public bool canAttack = true;
+    public float stunStrength = 1f;
 
     public float attackTime = 0.25f; //0.25 seems good, give or take .1 seconds
     //bool canMove = true;
+
+    //armor stats
+    public float playerArmor; //temp
 
     //Block check
     //private const float minBlockDuration = 0.25f;
@@ -77,7 +82,7 @@ public class PlayerCombat : MonoBehaviour
         attackDamageLight = wepDamage;
         attackDamageHeavy = wepDamage*attackDamageHeavyMultiplier;
 
-
+        
         //movement.canMove = true;
         canAttack = true;
         AltAttacking = false;
@@ -187,15 +192,16 @@ public class PlayerCombat : MonoBehaviour
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
-        //testing health bar, hurt, and death animations
+        //TODO: testing healing and death animations, delete after player respawn is added
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
+            //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
+            controller.RespawnPlayerResetLevel();
         }
 
         if (Input.GetKeyDown(KeyCode.H))
         {
-            HealPlayer(50f); //how much health to heal
+            HealPlayer(25f); //how much health to heal
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -212,6 +218,7 @@ public class PlayerCombat : MonoBehaviour
         movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         //yield return new WaitForSeconds(attackTime);
         yield return new WaitForSeconds(0.3f);
+
         movement.canMove = true;
         animator.SetBool("isAttacking", false);
         //movement.canMove = true;
@@ -221,29 +228,36 @@ public class PlayerCombat : MonoBehaviour
     void Attack()
     {
         //Attack range, detect enemies in range
-        hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
         //movement.rb.AddForce(Vector2.right * 10f);
         //damage enemies
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
             //Debug.Log("We Hit " + enemy.name);
-            if (enemy.GetComponent<Enemy>() != null)
+            if (enemy.GetComponent<Enemy>() != null) //TODO: better way to do this? have to manually update for each new enemy
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(knockback);
+                enemy.GetComponent<Enemy>().GetKnockback(knockback/2);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
                 enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight);
-            
+
+
+            if (enemy.GetComponent<Enemy2>() != null)
+            {
+                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy2>().GetKnockback(knockback / 3);
+            }
+
         }
     }
 
     void AttackHeavy()
     {
         //animator.SetTrigger("Attack3");
-        hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
         //Collider2D[] hitEnemies = Physics2D.OverlapAreaAll(attackPoint.position, attackHeavyRange, enemyLayers);
         
         Vector3 changeLocation = playerLocation.position;
@@ -268,10 +282,18 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback*2);
+                enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
             
             if (enemy.GetComponent<StationaryEnemy>() != null)
                 enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy);
+
+            if (enemy.GetComponent<Enemy2>() != null)
+            {
+                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy2>().GetKnockback(knockback * 2);
+                enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
+            }
         }
     }
     IEnumerator AltAttack()
@@ -295,7 +317,7 @@ public class PlayerCombat : MonoBehaviour
         //range increase to around 15f-20f
         //hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
 
-        Vector3 newAttackPoint = attackPoint.position; //this could easily get out of hand if weapons have too much range
+        Vector3 newAttackPoint = attackPoint.position; //this is based on weapon stats, may have to change if weapons have too much range?
         //newAttackPoint.x += (wepRange * 3) / 2;
         Collider2D[] altHitEnemies;
 
@@ -310,6 +332,16 @@ public class PlayerCombat : MonoBehaviour
             altHitEnemies = Physics2D.OverlapBoxAll(newAttackPoint, new Vector3(wepRange * 3, 1, 0), 0, enemyLayers);
         }
 
+        /*if (altHitEnemies.Length > 1)
+        {
+            Debug.Log("altHitEnemies: " + altHitEnemies.Length);
+        }
+        else
+        {
+            Debug.Log("no enemies hit");
+            Debug.Log("altHitEnemies: " + altHitEnemies.Length);
+        }*/
+        
 
         //might have to manually flip //attackPoint.position or -attackPoint.position
             //might not need to, it might just initiate Collider2D when we attack, and face in correct direction
@@ -327,11 +359,11 @@ public class PlayerCombat : MonoBehaviour
         if (controller.m_FacingRight)
         {
             //push backwards to left
-            movement.rb.AddForce(Vector2.left * 10f);
+            movement.rb.AddForce(Vector2.left * 30f);
         }
         else
         {
-            movement.rb.AddForce(Vector2.right * 10f);
+            movement.rb.AddForce(Vector2.right * 30f);
         }
         foreach (Collider2D enemy in altHitEnemies) //loop through enemies hit
         {
@@ -340,10 +372,17 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.GetComponent<Enemy>().TakeDamage(altDamage); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback*4f);
+                enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
                 enemy.GetComponent<StationaryEnemy>().TakeDamage(altDamage);
+
+            if(enemy.GetComponent<Enemy2>() != null)
+            {
+                enemy.GetComponent<Enemy2>().TakeDamage(altDamage);
+                enemy.GetComponent<Enemy2>().GetStunned(stunStrength);
+            }
         }
     }
 
@@ -357,6 +396,7 @@ public class PlayerCombat : MonoBehaviour
 
         Vector3 newAttackPoint = attackPoint.position; //this could easily get out of hand if weapons have too much range
 
+        //player position and c center of "cube"
         // [    player c           ] //vs  player[          c           ]  //should probably just use a raycast
         //newAttackPoint
         if (controller.m_FacingRight)
@@ -374,9 +414,17 @@ public class PlayerCombat : MonoBehaviour
     public void TakeDamage(float damage)
     {
         if (currentHealth > 0) {
-            currentHealth -= damage;
+            if(animator.GetBool("isRolling")) //damage dodged
+            {
+                damage = 0;
+            }
+            currentHealth -= (damage);
             healthBar.SetHealth(currentHealth);
-            animator.SetTrigger("Hurt");
+            if(damage > 0)
+            {
+                animator.SetTrigger("Hurt");
+            }
+
             if (TextPopupsPrefab) {
                 ShowTextPopup(damage);
             }
@@ -389,8 +437,25 @@ public class PlayerCombat : MonoBehaviour
     }
     void ShowTextPopup(float damageAmount)
     {
-        var showDmg = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-        showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
+
+        //Vector3 tempTransform = transform.position; //randomize damage number position
+        Vector3 tempPos = transform.position;
+        tempPos.x += Random.Range(-.1f, .1f);
+        tempPos.y += Random.Range(-.9f, .1f);
+        //tempTransform = screenPosition; //have numbers float in place, don't follow object
+
+
+        var showDmg = Instantiate(TextPopupsPrefab, tempPos, Quaternion.identity, transform);
+        
+        if (damageAmount > 0)
+        {
+            showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
+        }
+        else
+        {
+            showDmg.GetComponent<TextMeshPro>().text = "Dodged";
+        }
+        
         tempShowDmg = showDmg;
 
         if (controller.m_FacingRight)
@@ -435,7 +500,15 @@ public class PlayerCombat : MonoBehaviour
 
     void ShowTextPopupHeal(float healAmount)
     {
-        var showHeal = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
+        Vector3 tempPos = transform.position; //randomize damage number position
+        tempPos.x += Random.Range(-.1f, .1f);
+        tempPos.y += Random.Range(-.9f, .2f);
+
+        //var showHeal = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
+        Transform temp = transform;
+
+        var showHeal = Instantiate(TextPopupsPrefab, camera.transform, false);
+
         showHeal.GetComponent<TextMeshPro>().text = healAmount.ToString();
         showHeal.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
         tempShowDmg = showHeal;
@@ -483,7 +556,7 @@ public class PlayerCombat : MonoBehaviour
         //kill player
     }
 
-    void RevivePlayer(float spawnHpPercentage)
+    void RevivePlayer(float spawnHpPercentage) //no use right now, 
     {
         isAlive = true;
         movement.canMove = true;

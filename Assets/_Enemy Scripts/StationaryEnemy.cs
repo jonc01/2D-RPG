@@ -12,6 +12,10 @@ public class StationaryEnemy : MonoBehaviour
     public LayerMask playerLayers;
     public Transform enemyAllies;
     public LayerMask enemyLayers;
+    public GameObject HitToRight;
+    public GameObject HitToLeft;
+    public GameObject HitEffect;
+    public GameObject deathParticlePrefab;
 
     public float maxHealth = 100;
     float currentHealth;
@@ -70,7 +74,6 @@ public class StationaryEnemy : MonoBehaviour
             if (rb != null)
                 rb.velocity = new Vector2(0, 0);
         }
-
     }
 
 
@@ -83,6 +86,8 @@ public class StationaryEnemy : MonoBehaviour
         {
             if(enemy != null && enemy.GetComponent<Enemy>() != null)
                 enemy.GetComponent<Enemy>().TakeDamage(-enAttackDamage); //negative damage for healing don't need Heal() function
+
+
         }
     }
 
@@ -126,6 +131,22 @@ public class StationaryEnemy : MonoBehaviour
         {
             currentHealth -= damage;
             healthBar.SetHealth(currentHealth);
+
+            Vector3 changeLocation = GetComponent<Transform>().position;
+
+            Vector3 tempLocation = changeLocation;
+            //tempLocation.y += .0f; //y offset
+            if(player.position.x > transform.position.x) //player to right of enemy
+            {
+                Instantiate(HitToLeft, tempLocation, Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(HitToRight, tempLocation, Quaternion.identity);
+            }
+            
+            Instantiate(HitEffect, tempLocation, Quaternion.identity);
+
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
@@ -136,6 +157,7 @@ public class StationaryEnemy : MonoBehaviour
             if (enAnimator != null)
             {
                 enAnimator.SetTrigger("Hurt");
+
             }
             if (currentHealth <= 0)
             {
@@ -146,12 +168,22 @@ public class StationaryEnemy : MonoBehaviour
 
     void ShowTextPopup(float damageAmount)
     {
-        var showDmg = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
+        Vector3 tempTransform = GetComponent<Transform>().position;
+        tempTransform.y -= 1.5f; //doesn't work
+        //Transform test = GetComponent<Transform>();
+        //Vector3 tempTest = test.position;
+        //tempTest.y += 0.8f;
+        //test.position = tempTest;
+
+        var showDmg = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
         showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
+
+
 
         /*if (enController.enFacingRight) //player facing right by default
             showDmg.transform.Rotate(0f, 0f, 0f);*/
 
+        //Instantiate(HitToRight, transform.position, Quaternion.identity);
     }
 
     public void GiveExperience(int experiencePoints)
@@ -178,12 +210,27 @@ public class StationaryEnemy : MonoBehaviour
         //disable enemy object
         isAlive = false;
 
-        StartCoroutine(DeleteEnemyObject());
+        if (deathParticlePrefab != null)
+        {
+            Vector3 changeLocation = GetComponent<Transform>().position;
+            Vector3 tempLocation = changeLocation;
+            tempLocation.y -= .1f;
+            Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
+        }
+
+        DeleteEnemyObject();
+
+        //StartCoroutine(DeleteEnemyObject());
     }
 
-    IEnumerator DeleteEnemyObject()
+    /*IEnumerator DeleteEnemyObject()
     {
         yield return new WaitForSeconds(3f);
+        Destroy(this.gameObject);
+    }*/
+
+    private void DeleteEnemyObject()
+    {
         Destroy(this.gameObject);
     }
 }
