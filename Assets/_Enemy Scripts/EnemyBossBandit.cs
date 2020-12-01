@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Enemy2 : MonoBehaviour
+public class EnemyBossBandit : MonoBehaviour
 {
     public GameObject TextPopupsPrefab;
     private GameObject tempShowDmg; //to flip damage popup as they are created
@@ -18,7 +18,8 @@ public class Enemy2 : MonoBehaviour
     public GameObject stunRParticlePrefab;
 
 
-    public float maxHealth = 100;
+    public GameObject HealthBarCanvas;
+    public float maxHealth = 1000;
     float currentHealth;
     public HealthBar healthBar;
 
@@ -33,14 +34,14 @@ public class Enemy2 : MonoBehaviour
     [SerializeField]
     public Rigidbody2D rb;
     [SerializeField]
-    float aggroRange = 3f; //when to start chasing player
+    float aggroRange = 5f; //when to start chasing player
                            //might extend to aggro to player before enemy enters screen
     [SerializeField]
     float enAttackRange = .5f; //when to start attacking player, stop enemy from clipping into player
     public Transform enAttackPoint;
     public EnemyController enController;
     [Space]
-    public float enAttackDamage = 5f;
+    public float enAttackDamage = 10f;
     public float enAttackSpeed = 1.1f; //lower value for lower delays between attacks
     public float enAttackAnimSpeed = .4f; //lower value for shorter animations
     [Range(0f, 1.0f)]
@@ -67,8 +68,7 @@ public class Enemy2 : MonoBehaviour
         enCanAttack = true;
         //AI aggro
         rb = GetComponent<Rigidbody2D>();
-        enAnimator.SetBool("move", false);
-        //enController.enAnimator.SetBool("isRunning", false);
+        enAnimator.SetBool("Move", false);
         //enController.enFacingRight = false; //start facing left (towards player start)
         isAttacking = false;
         aggroStarted = false;
@@ -116,9 +116,9 @@ public class Enemy2 : MonoBehaviour
     //AI aggro
     void StartChase()
     {
-        enAnimator.SetBool("inCombat", false);
-        //enController.enCanMove = true;
-        enAnimator.SetBool("move", true);
+        ShowHealthBar();
+
+        enAnimator.SetBool("Move", true);
 
         if (enController.enCanMove)
         {
@@ -135,13 +135,9 @@ public class Enemy2 : MonoBehaviour
                 enController.Flip();
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
                 {
-                    //Attack();
-                    //enAnimator.SetTrigger("Attack");
                     StartCoroutine(IsAttacking());
                     isAttacking = false;
                 }
-                //if(enCanMove)
-                //enController.Flip();
             }
             else if (transform.position.x > player.position.x) //player is left
             {
@@ -160,30 +156,30 @@ public class Enemy2 : MonoBehaviour
                     StartCoroutine(IsAttacking());
                     isAttacking = false;
                 }
-                //if(enCanMove)
-                // enController.Flip();
             }
         }
 
         if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
         {
             StopChase(); //stop moving, don't clip into player just to attack
-                         //Attack //when in attack range
-                         //StartCoroutine
         }
     }
 
     void StopChase()
     {
         rb.velocity = new Vector2(0, 0);
-        enAnimator.SetBool("move", false);
-        //enAnimator.SetBool("inCombat", true);
+        enAnimator.SetBool("Move", false);
         enController.enCanMove = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void ShowHealthBar()
     {
-        //
+        if(healthBar != null && HealthBarCanvas != null)
+        {
+            HealthBarCanvas.GetComponentInChildren<Canvas>().enabled = true;
+            healthBar.GetComponentInChildren<SpriteRenderer>().enabled = true;
+            healthBar.SetHealth(currentHealth);
+        }
     }
 
     void Attack()
@@ -192,15 +188,15 @@ public class Enemy2 : MonoBehaviour
         if (enController.enFacingRight)
         {
             //go right
-            changeLocation.x += .3f;
-            transform.position = changeLocation;
+            //changeLocation.x += .3f;
+            //transform.position = changeLocation;
             //movement.rb.AddForce(Vector2.right * 10f);
         }
         else
         {
             //go left
-            changeLocation.x -= .3f;
-            transform.position = changeLocation;
+            //changeLocation.x -= .3f;
+            //transform.position = changeLocation;
             //movement.rb.AddForce(Vector2.left * 10f);
         }
 
@@ -221,11 +217,11 @@ public class Enemy2 : MonoBehaviour
             enStunned = false;
             isAttacking = true;
 
-            enAnimator.SetTrigger("Attack");
+            enAnimator.SetTrigger("Attack1"); //TODO: Alternate between two attacks
 
-            enAnimator.SetBool("inCombat", true);
+            //enAnimator.SetBool("inCombat", true);
             enAnimator.SetBool("isAttacking", true);
-            enAnimator.SetBool("move", false);
+            enAnimator.SetBool("Move", false);
 
             enCanAttack = false;
             enController.enCanMove = false;
@@ -259,11 +255,6 @@ public class Enemy2 : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        /*if (TextPopupsPrefab)
-        {
-            ShowTextPopup(damage);
-        }*/
-
         if (isAlive == true)
         {
             currentHealth -= damage;
@@ -274,7 +265,7 @@ public class Enemy2 : MonoBehaviour
 
             //temp knockback
             Vector3 tempLocation = GetComponent<Transform>().position;
-            tempLocation.y += .5f;
+            tempLocation.y -= .0f;
             //
 
             Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
@@ -321,7 +312,7 @@ public class Enemy2 : MonoBehaviour
                 changeLocation.x += .1f;
                 //rb.AddForce(Vector2.left * knockbackAmount);
             }
-            
+
             GetComponent<Transform>().position = changeLocation;
             //StartCoroutine(StunEnemy(0f));
         }
@@ -378,7 +369,7 @@ public class Enemy2 : MonoBehaviour
             float fullDuration = 1f;
             fullDuration -= stunResist; //getting percentage of stun based on stunResist
             duration *= fullDuration;
-            enAnimator.SetTrigger("en2Stunned");
+            //enAnimator.SetTrigger("en2Stunned");
             StartCoroutine(StunEnemy(duration));
         }
     }
@@ -416,7 +407,6 @@ public class Enemy2 : MonoBehaviour
 
             yield return new WaitForSeconds(stunDuration);
 
-            enAnimator.SetTrigger("en2StunRecover");
             yield return new WaitForSeconds(.5f); //time for recover animation
             enCanAttack = true;
             enController.enCanMove = true;
@@ -435,11 +425,6 @@ public class Enemy2 : MonoBehaviour
 
     void Die()
     {
-        //Die animation
-        if (enAnimator != null)
-        {
-            enAnimator.SetTrigger("Death");
-        }
 
         //give player exp
         GiveExperience(experiencePoints);
@@ -454,7 +439,7 @@ public class Enemy2 : MonoBehaviour
         {
             Vector3 changeLocation = GetComponent<Transform>().position;
             Vector3 tempLocation = changeLocation;
-            tempLocation.y += .5f;
+            //tempLocation.y += .5f;
             Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
         }
 
@@ -464,9 +449,27 @@ public class Enemy2 : MonoBehaviour
 
     IEnumerator DeleteEnemyObject()
     {
-        GetComponent<SpriteRenderer>().enabled = false;
-        GetComponentInChildren<Canvas>().enabled = false;
+
+        Vector3 changeLocation = GetComponent<Transform>().position;
+        Vector3 tempLocation = changeLocation;
+        //tempLocation.y += .5f;
+        enAnimator.SetTrigger("Hurt");
+        Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
+        yield return new WaitForSeconds(.5f);
+
+        enAnimator.SetTrigger("Hurt");
+        Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
+        yield return new WaitForSeconds(.5f);
+
+        if (enAnimator != null)
+        {
+            enAnimator.SetTrigger("Death");
+        }
         yield return new WaitForSeconds(2f);
+        
+        Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
+
+        yield return new WaitForSeconds(.1f);
         Destroy(this.gameObject);
     }
 

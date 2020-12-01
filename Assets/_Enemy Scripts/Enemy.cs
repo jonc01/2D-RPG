@@ -52,8 +52,7 @@ public class Enemy : MonoBehaviour
     public float kbTime;
 
     [SerializeField]
-    //bool enCanMove = true;
-    bool enCanAttack = true, isAttacking; //for parry()
+    bool enCanAttack, isAttacking; //for parry()
     [SerializeField]
     bool playerToRight, aggroStarted;
     bool enIsHurt;
@@ -176,7 +175,7 @@ public class Enemy : MonoBehaviour
         rb.velocity = new Vector2(0, 0);
         enAnimator.SetBool("move", false);
         //enAnimator.SetBool("inCombat", true);
-        enController.enCanMove = false;
+        //enController.enCanMove = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -213,6 +212,7 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(enAttackAnimSpeed); 
         if (enStunned) //attackStopped
         {
+            isAttacking = false; //prevent enemy from getting stuck on "isAttacking" since it is never set to false
             yield break;
         }
 
@@ -252,7 +252,7 @@ public class Enemy : MonoBehaviour
             }
             
             //hurt animation
-            if (enAnimator != null && damage > 0) //took damage, not heal
+            if (enAnimator != null && damage > 0) //took damage, not heal 
             {
                 //stopping coroutine
                 //attackStopped = true;
@@ -286,6 +286,7 @@ public class Enemy : MonoBehaviour
             StartCoroutine(KnockbackEnemy());
 
             Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
+
         }
     }
 
@@ -357,7 +358,6 @@ public class Enemy : MonoBehaviour
             StopChase();
             enCanAttack = false;
             enController.enCanMove = false;
-
             if (stunLParticlePrefab != null && stunRParticlePrefab != null)
             {
                 Vector3 changeLocation = GetComponent<Transform>().position;
@@ -383,13 +383,14 @@ public class Enemy : MonoBehaviour
             yield return new WaitForSeconds(stunDuration);
 
             enAnimator.SetTrigger("enStunRecover");
-            yield return new WaitForSeconds(.5f); //time for recover animation 
+            yield return new WaitForSeconds(.5f); //time for recover animation
             enCanAttack = true;
             enController.enCanMove = true;
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
             enStunned = false;
             allowStun = Time.time + allowStunCD;
         }
+        
     }
 
     public void GiveExperience(int experiencePoints){

@@ -251,6 +251,8 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<Enemy2>().GetKnockback(knockback / 3);
             }
 
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight);
         }
     }
 
@@ -294,6 +296,9 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<Enemy2>().GetKnockback(knockback * 2);
                 enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
             }
+
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy);
         }
     }
     IEnumerator AltAttack()
@@ -383,6 +388,9 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<Enemy2>().TakeDamage(altDamage);
                 enemy.GetComponent<Enemy2>().GetStunned(stunStrength);
             }
+
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(altDamage);
         }
     }
 
