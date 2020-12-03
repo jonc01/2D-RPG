@@ -6,6 +6,9 @@ using TMPro;
 public class Enemy2 : MonoBehaviour
 {
     public GameObject TextPopupsPrefab;
+    [SerializeField]
+    private Transform TextPopupOffset;
+
     private GameObject tempShowDmg; //to flip damage popup as they are created
     public Transform player;
     public LayerMask playerLayers;
@@ -49,17 +52,22 @@ public class Enemy2 : MonoBehaviour
     public float allowStunCD = 5f; //how often enemy can be stunned
 
     [SerializeField]
-    //bool enCanMove = true;
     bool enCanAttack = true, isAttacking; //for parry()
     [SerializeField]
     bool playerToRight, aggroStarted;
     bool enIsHurt;
     bool enStunned;
 
-
+    SpriteRenderer sr;
+    [SerializeField]
+    private Material mWhiteFlash;
+    private Material mDefault;
 
     void Start()
     {
+        sr = GetComponent<SpriteRenderer>();
+        mDefault = sr.material;
+
         //Stats
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -80,7 +88,6 @@ public class Enemy2 : MonoBehaviour
 
     void Update()
     {
-        //Debug.Log("canMove: " + enCanMove + ", canAttack: " + enCanAttack);
         if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
         {
             //checking distance to player for aggro range
@@ -237,6 +244,7 @@ public class Enemy2 : MonoBehaviour
 
             if (enStunned)
             {
+                isAttacking = false; //prevent enemy from getting stuck on "isAttacking" since it is never set to false
                 yield break;
             }
 
@@ -297,6 +305,9 @@ public class Enemy2 : MonoBehaviour
                 enCanAttack = true;
                 enAnimator.SetBool("isAttacking", false);
                 //attackStopped = false;
+
+                sr.material = mWhiteFlash; //flashing enemy sprite
+                Invoke("ResetMaterial", .1f);
             }
 
             if (currentHealth <= 0)
@@ -304,6 +315,11 @@ public class Enemy2 : MonoBehaviour
                 Die();
             }
         }
+    }
+
+    void ResetMaterial()
+    {
+        sr.material = mDefault;
     }
 
     public void GetKnockback(float knockbackAmount)
@@ -338,7 +354,7 @@ public class Enemy2 : MonoBehaviour
         tempTransform.y += Random.Range(-.9f, .1f);
 
 
-        var showDmg = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
+        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
         showDmg.GetComponent<TextMeshPro>().text = Mathf.Abs(damageAmount).ToString();
         tempShowDmg = showDmg;
         if (damageAmount < 0)

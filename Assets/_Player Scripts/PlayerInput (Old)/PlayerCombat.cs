@@ -63,8 +63,16 @@ public class PlayerCombat : MonoBehaviour
     //weapon specific
     public float knockback = 50f;
 
+    SpriteRenderer sr;
+    [SerializeField]
+    private Material mWhiteFlash;
+    private Material mDefault;
+
     void Start()
     {
+        sr = GetComponent<SpriteRenderer>();
+        mDefault = sr.material;
+
         //var keyboard = Keyboard.current; //temp workaround
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -251,6 +259,8 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<Enemy2>().GetKnockback(knockback / 3);
             }
 
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight);
         }
     }
 
@@ -294,6 +304,9 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<Enemy2>().GetKnockback(knockback * 2);
                 enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
             }
+
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy);
         }
     }
     IEnumerator AltAttack()
@@ -383,6 +396,9 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<Enemy2>().TakeDamage(altDamage);
                 enemy.GetComponent<Enemy2>().GetStunned(stunStrength);
             }
+
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(altDamage);
         }
     }
 
@@ -423,6 +439,8 @@ public class PlayerCombat : MonoBehaviour
             if(damage > 0)
             {
                 animator.SetTrigger("Hurt");
+                sr.material = mWhiteFlash; //flashing enemy sprite
+                Invoke("ResetMaterial", .1f);
             }
 
             if (TextPopupsPrefab) {
@@ -435,6 +453,12 @@ public class PlayerCombat : MonoBehaviour
             Die();
         }
     }
+
+    void ResetMaterial()
+    {
+        sr.material = mDefault;
+    }
+
     void ShowTextPopup(float damageAmount)
     {
 
@@ -500,14 +524,18 @@ public class PlayerCombat : MonoBehaviour
 
     void ShowTextPopupHeal(float healAmount)
     {
+        Debug.Log("healing showing up");
         Vector3 tempPos = transform.position; //randomize damage number position
         tempPos.x += Random.Range(-.1f, .1f);
         tempPos.y += Random.Range(-.9f, .2f);
 
-        //var showHeal = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
-        Transform temp = transform;
 
-        var showHeal = Instantiate(TextPopupsPrefab, camera.transform, false);
+
+
+        var showHeal = Instantiate(TextPopupsPrefab, tempPos, Quaternion.identity, transform);
+        //Transform temp = transform;
+
+        //var showHeal = Instantiate(TextPopupsPrefab, tempPos, false);
 
         showHeal.GetComponent<TextMeshPro>().text = healAmount.ToString();
         showHeal.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);

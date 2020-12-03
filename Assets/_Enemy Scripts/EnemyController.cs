@@ -4,7 +4,7 @@ using System.Collections;
 public class EnemyController : MonoBehaviour
 {
 
-    [SerializeField] float m_speed = 4.0f;
+    //[SerializeField] float m_speed = 4.0f;
     [SerializeField] float m_jumpForce = 7.5f;
 
     
