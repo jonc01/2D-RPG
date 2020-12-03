@@ -6,6 +6,9 @@ using TMPro;
 public class Enemy2 : MonoBehaviour
 {
     public GameObject TextPopupsPrefab;
+    [SerializeField]
+    private Transform TextPopupOffset;
+
     private GameObject tempShowDmg; //to flip damage popup as they are created
     public Transform player;
     public LayerMask playerLayers;
@@ -55,10 +58,16 @@ public class Enemy2 : MonoBehaviour
     bool enIsHurt;
     bool enStunned;
 
-
+    SpriteRenderer sr;
+    [SerializeField]
+    private Material mWhiteFlash;
+    private Material mDefault;
 
     void Start()
     {
+        sr = GetComponent<SpriteRenderer>();
+        mDefault = sr.material;
+
         //Stats
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -296,6 +305,9 @@ public class Enemy2 : MonoBehaviour
                 enCanAttack = true;
                 enAnimator.SetBool("isAttacking", false);
                 //attackStopped = false;
+
+                sr.material = mWhiteFlash; //flashing enemy sprite
+                Invoke("ResetMaterial", .1f);
             }
 
             if (currentHealth <= 0)
@@ -303,6 +315,11 @@ public class Enemy2 : MonoBehaviour
                 Die();
             }
         }
+    }
+
+    void ResetMaterial()
+    {
+        sr.material = mDefault;
     }
 
     public void GetKnockback(float knockbackAmount)
@@ -337,7 +354,7 @@ public class Enemy2 : MonoBehaviour
         tempTransform.y += Random.Range(-.9f, .1f);
 
 
-        var showDmg = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
+        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
         showDmg.GetComponent<TextMeshPro>().text = Mathf.Abs(damageAmount).ToString();
         tempShowDmg = showDmg;
         if (damageAmount < 0)

@@ -6,6 +6,9 @@ using TMPro;
 public class EnemyBossBandit : MonoBehaviour
 {
     public GameObject TextPopupsPrefab;
+    [SerializeField]
+    private Transform TextPopupOffset;
+
     private GameObject tempShowDmg; //to flip damage popup as they are created
     public Transform player;
     public LayerMask playerLayers;
@@ -16,6 +19,7 @@ public class EnemyBossBandit : MonoBehaviour
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
+
 
 
     public GameObject HealthBarCanvas;
@@ -37,8 +41,11 @@ public class EnemyBossBandit : MonoBehaviour
     float aggroRange = 5f; //when to start chasing player
                            //might extend to aggro to player before enemy enters screen
     [SerializeField]
-    float enAttackRange = .5f; //when to start attacking player, stop enemy from clipping into player
+    float enAttackRange1 = .5f; //when to start attacking player, stop enemy from clipping into player
     public Transform enAttackPoint;
+    float enAttackRange2 = .8f;
+    public Transform enAttackPoint2;
+
     public EnemyController enController;
     [Space]
     public float enAttackDamage = 10f;
@@ -56,10 +63,17 @@ public class EnemyBossBandit : MonoBehaviour
     bool enIsHurt;
     bool enStunned;
 
-
+    SpriteRenderer sr;
+    [SerializeField]
+    private Material mWhiteFlash;
+    private Material mDefault;
 
     void Start()
     {
+
+        sr = GetComponent<SpriteRenderer>();
+        mDefault = sr.material;
+
         //Stats
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -133,7 +147,7 @@ public class EnemyBossBandit : MonoBehaviour
                 //Facing right, flip sprite to face right
                 enController.enFacingRight = true;
                 enController.Flip();
-                if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
+                if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
                 {
                     StartCoroutine(IsAttacking());
                     isAttacking = false;
@@ -150,7 +164,7 @@ public class EnemyBossBandit : MonoBehaviour
                 enController.enFacingRight = false;
                 //if (enCanMove)
                 enController.Flip();
-                if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
+                if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
                 {
                     //Attack();
                     StartCoroutine(IsAttacking());
@@ -159,7 +173,7 @@ public class EnemyBossBandit : MonoBehaviour
             }
         }
 
-        if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
+        if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
         {
             StopChase(); //stop moving, don't clip into player just to attack
         }
@@ -200,7 +214,44 @@ public class EnemyBossBandit : MonoBehaviour
             //movement.rb.AddForce(Vector2.left * 10f);
         }
 
-        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayers);
+        /*
+         * 
+         * m_timeSinceAttack += Time.deltaTime;
+        //Attack Animations //&& (blockIsHeld == false) 
+        if (Input.GetButtonDown("Fire1") && m_timeSinceAttack > 0.25f && canAttack)
+        {
+            m_currentAttack++;
+
+            // Loop back to one after third attack
+            if (m_currentAttack > 3)
+                m_currentAttack = 1;
+
+            // Reset Attack combo if time since last attack is too large
+            if (m_timeSinceAttack > 1.0f)
+                m_currentAttack = 1;
+
+            // Call one of two attack animations "Attack1", "Attack2"
+            animator.SetTrigger("Attack" + m_currentAttack);
+
+            if (m_currentAttack == 3) {
+                AttackHeavy(); //can add parameter to Attack(10), for additional 10 damage on top of player damage
+                StartCoroutine(IsAttacking());
+            }
+            else
+            {
+                //movement.canMove = false;
+                Attack();
+                StartCoroutine(IsAttacking());
+                //Attack();
+            }
+                // Reset timer
+                m_timeSinceAttack = 0.0f;
+                //
+        }
+         * 
+         */
+
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange1, playerLayers);
 
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
@@ -250,7 +301,12 @@ public class EnemyBossBandit : MonoBehaviour
         if (enAttackPoint == null)
             return;
 
-        Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);
+        Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange1);
+
+        if (enAttackPoint2 == null)
+            return;
+
+        Gizmos.DrawWireSphere(enAttackPoint2.position, enAttackRange2);
     }
 
     public void TakeDamage(float damage)
@@ -287,6 +343,9 @@ public class EnemyBossBandit : MonoBehaviour
                 enCanAttack = true;
                 enAnimator.SetBool("isAttacking", false);
                 //attackStopped = false;
+
+                sr.material = mWhiteFlash; //flashing enemy sprite
+                Invoke("ResetMaterial", .1f);
             }
 
             if (currentHealth <= 0)
@@ -294,6 +353,11 @@ public class EnemyBossBandit : MonoBehaviour
                 Die();
             }
         }
+    }
+
+    void ResetMaterial()
+    {
+        sr.material = mDefault;
     }
 
     public void GetKnockback(float knockbackAmount)
@@ -328,7 +392,7 @@ public class EnemyBossBandit : MonoBehaviour
         tempTransform.y += Random.Range(-.9f, .1f);
 
 
-        var showDmg = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
+        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
         showDmg.GetComponent<TextMeshPro>().text = Mathf.Abs(damageAmount).ToString();
         tempShowDmg = showDmg;
         if (damageAmount < 0)

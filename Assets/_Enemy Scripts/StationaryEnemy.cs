@@ -8,6 +8,9 @@ public class StationaryEnemy : MonoBehaviour
     //this is for support stationary enemies, can make non-support stationary separate
     //this script only targets enemies that are "friendly" to this object, and heals them
     public GameObject TextPopupsPrefab;
+    [SerializeField]
+    private Transform TextPopupOffset;
+
     public Transform player;
     public LayerMask playerLayers;
     public Transform enemyAllies;
@@ -25,6 +28,8 @@ public class StationaryEnemy : MonoBehaviour
     public Animator enAnimator;
     public bool isAlive;
 
+    
+
     [SerializeField]
     public Rigidbody2D rb;
     float aggroRange = 3f; //when to start chasing player //might extend to aggro to player before enemy enters screen
@@ -38,8 +43,16 @@ public class StationaryEnemy : MonoBehaviour
     public float enAttackAnimSpeed = .7f; //lower value for shorter animations
     bool enCanAttack = true;
 
+    SpriteRenderer sr;
+    [SerializeField]
+    private Material mWhiteFlash;
+    private Material mDefault;
+
     void Start()
     {
+        sr = GetComponent<SpriteRenderer>();
+        mDefault = sr.material;
+
         //Stats
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -147,6 +160,9 @@ public class StationaryEnemy : MonoBehaviour
             
             Instantiate(HitEffect, tempLocation, Quaternion.identity);
 
+            sr.material = mWhiteFlash; //flashing enemy sprite
+            Invoke("ResetMaterial", .1f);
+
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
@@ -166,16 +182,25 @@ public class StationaryEnemy : MonoBehaviour
         }
     }
 
+    void ResetMaterial()
+    {
+        sr.material = mDefault;
+    }
+
     void ShowTextPopup(float damageAmount)
     {
-        Vector3 tempTransform = GetComponent<Transform>().position;
-        tempTransform.y -= 1.5f; //doesn't work
+        //Vector3 tempTransform = GetComponent<Transform>().position;
+        //tempTransform.y -= 1.5f; //doesn't work
         //Transform test = GetComponent<Transform>();
         //Vector3 tempTest = test.position;
         //tempTest.y += 0.8f;
         //test.position = tempTest;
 
-        var showDmg = Instantiate(TextPopupsPrefab, tempTransform, Quaternion.identity, transform);
+        //Transform newTransform = TextPopupOffset;
+
+
+
+        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
         showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
 
 
