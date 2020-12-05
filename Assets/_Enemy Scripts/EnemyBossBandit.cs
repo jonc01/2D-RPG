@@ -166,7 +166,6 @@ public class EnemyBossBandit : MonoBehaviour
                 enController.Flip();
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
                 {
-                    //Attack();
                     StartCoroutine(IsAttacking());
                     isAttacking = false;
                 }
@@ -241,8 +240,6 @@ public class EnemyBossBandit : MonoBehaviour
             {
                 //movement.canMove = false;
                 Attack();
-                StartCoroutine(IsAttacking());
-                //Attack();
             }
                 // Reset timer
                 m_timeSinceAttack = 0.0f;
@@ -268,7 +265,10 @@ public class EnemyBossBandit : MonoBehaviour
             enStunned = false;
             isAttacking = true;
 
+            Debug.Log("Setting Trigger1");
             enAnimator.SetTrigger("Attack1"); //TODO: Alternate between two attacks
+            Debug.Log("Trigger Set");
+
 
             //enAnimator.SetBool("inCombat", true);
             enAnimator.SetBool("isAttacking", true);
@@ -517,23 +517,25 @@ public class EnemyBossBandit : MonoBehaviour
         Vector3 changeLocation = GetComponent<Transform>().position;
         Vector3 tempLocation = changeLocation;
         //tempLocation.y += .5f;
-        enAnimator.SetTrigger("Hurt");
-        Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
-        yield return new WaitForSeconds(.5f);
 
-        enAnimator.SetTrigger("Hurt");
-        Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
-        yield return new WaitForSeconds(.5f);
+        int numLoops = 3;
+
+        for(int i=0; i<numLoops; i++)
+        {
+            enAnimator.SetTrigger("startDeath");
+            Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
+            yield return new WaitForSeconds(.5f);
+        }
 
         if (enAnimator != null)
         {
-            enAnimator.SetTrigger("Death");
+            //enAnimator.SetTrigger("Death");
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(.5f);
         
         Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
 
-        yield return new WaitForSeconds(.1f);
+        //yield return new WaitForSeconds(.1f);
         Destroy(this.gameObject);
     }
 

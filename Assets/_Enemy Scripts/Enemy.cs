@@ -214,7 +214,7 @@ public class Enemy : MonoBehaviour
         enAnimator.SetBool("inCombat", true);
         enAnimator.SetBool("isAttacking", true);
         enAnimator.SetBool("move", false);
-            
+        
         enCanAttack = false;
         enController.enCanMove = false;
         rb.velocity = new Vector2(0, 0);

@@ -14,6 +14,9 @@ public class PlayerCombat : MonoBehaviour
     public GameObject TextPopupsPrefab;
     public Transform playerLocation;
 
+    [SerializeField]
+    private Transform TextPopupOffset;
+
     //textPopups for referencce in PlayerMovement
     public GameObject tempShowDmg;
 
@@ -469,7 +472,7 @@ public class PlayerCombat : MonoBehaviour
         //tempTransform = screenPosition; //have numbers float in place, don't follow object
 
 
-        var showDmg = Instantiate(TextPopupsPrefab, tempPos, Quaternion.identity, transform);
+        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
         
         if (damageAmount > 0)
         {
@@ -525,14 +528,13 @@ public class PlayerCombat : MonoBehaviour
     void ShowTextPopupHeal(float healAmount)
     {
         Debug.Log("healing showing up");
-        Vector3 tempPos = transform.position; //randomize damage number position
+        /*Vector3 tempPos = TextPopupOffset.position; //randomize damage number position
         tempPos.x += Random.Range(-.1f, .1f);
-        tempPos.y += Random.Range(-.9f, .2f);
+        tempPos.y += Random.Range(-.9f, .2f);*/
 
 
 
-
-        var showHeal = Instantiate(TextPopupsPrefab, tempPos, Quaternion.identity, transform);
+        var showHeal = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
         //Transform temp = transform;
 
         //var showHeal = Instantiate(TextPopupsPrefab, tempPos, false);
