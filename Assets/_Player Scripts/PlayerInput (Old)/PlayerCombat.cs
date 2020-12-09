@@ -527,11 +527,9 @@ public class PlayerCombat : MonoBehaviour
 
     void ShowTextPopupHeal(float healAmount)
     {
-        Debug.Log("healing showing up");
         /*Vector3 tempPos = TextPopupOffset.position; //randomize damage number position
         tempPos.x += Random.Range(-.1f, .1f);
         tempPos.y += Random.Range(-.9f, .2f);*/
-
 
 
         var showHeal = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);

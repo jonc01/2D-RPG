@@ -259,15 +259,13 @@ public class EnemyBossBandit : MonoBehaviour
     }
 
     IEnumerator IsAttacking()
-    {//TODO: this is a mess, lots of variables that can be combined
+    {//TODO: combine redundant variables
         if (enCanAttack && !isAttacking)
         {
             enStunned = false;
             isAttacking = true;
 
-            Debug.Log("Setting Trigger1");
             enAnimator.SetTrigger("Attack1"); //TODO: Alternate between two attacks
-            Debug.Log("Trigger Set");
 
 
             //enAnimator.SetBool("inCombat", true);

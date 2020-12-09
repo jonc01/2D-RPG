@@ -53,9 +53,6 @@ public class EnemyController : MonoBehaviour
 
     public void Flip()
     {
-
-
-
         // Switch the way the enemy is labelled as facing.
         //enFacingRight = !enFacingRight;
 
@@ -64,7 +61,6 @@ public class EnemyController : MonoBehaviour
         if (enCanFlip) {
             if (enFacingRight)
             {
-                Debug.Log("flipping rotation 1");
                 transform.localRotation = Quaternion.Euler(0, 180, 0);
                 //theScale.y = 180; //negative x now faces 
                 //transform.localScale = theScale;
@@ -76,7 +72,6 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                Debug.Log("flipping rotation 2");
                 transform.localRotation = Quaternion.Euler(0, 0, 0);
                 HealthBar.localRotation = Quaternion.Euler(0, 0, 0);
 

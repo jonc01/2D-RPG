@@ -224,7 +224,7 @@ public class Enemy2 : MonoBehaviour
     }
 
     IEnumerator IsAttacking()
-    {//TODO: this is a mess, lots of variables that can be combined
+    {//TODO: combine redundant variables
         if (enCanAttack && !isAttacking)
         {
             enStunned = false;
