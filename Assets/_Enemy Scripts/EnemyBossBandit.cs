@@ -190,7 +190,7 @@ public class EnemyBossBandit : MonoBehaviour
         if(healthBar != null && HealthBarCanvas != null)
         {
             HealthBarCanvas.GetComponentInChildren<Canvas>().enabled = true;
-            healthBar.GetComponentInChildren<SpriteRenderer>().enabled = true;
+            //healthBar.GetComponentInChildren<SpriteRenderer>().enabled = true;
             healthBar.SetHealth(currentHealth);
         }
     }

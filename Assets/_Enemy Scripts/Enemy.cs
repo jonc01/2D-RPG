@@ -10,8 +10,8 @@ public class Enemy : MonoBehaviour
     private Transform TextPopupOffset;
 
     private GameObject tempShowDmg; //to flip damage popup as they are created
-    public Transform player;
     public LayerMask playerLayers;
+    public Transform player;
     public PlayerCombat playerCombat;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
@@ -71,9 +71,17 @@ public class Enemy : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
+        TextPopupOffset = GameObject.Find("DamagePopupOffset").GetComponent<Transform>();
+        player = GameObject.Find("Player").transform;
+        playerCombat = player.GetComponent<PlayerCombat>();
+
         //Stats
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+        if(healthBar != null)
+        {
+            healthBar.SetMaxHealth(maxHealth);
+        }
+        
         isAlive = true;
         //enController.enCanMove = true;
         enCanAttack = true;
@@ -345,7 +353,8 @@ public class Enemy : MonoBehaviour
     }
     public void FlipTextAgain(float rotateAgain) //gets called in PlayerMovement to flip with player
     {
-        tempShowDmg.GetComponent<TextPopups>().FlipText(rotateAgain);
+        if(tempShowDmg != null)
+            tempShowDmg.GetComponent<TextPopups>().FlipText(rotateAgain);
     }
     public void EnIsHurtStart()
     {

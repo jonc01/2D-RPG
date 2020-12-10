@@ -39,7 +39,9 @@ public class HealthBar : MonoBehaviour
             trail.value = slider.value;
 
             if (damageTakenRecent == false)
-                DamageTaken(); 
+                Invoke("DamageTaken", .1f);
+                //DamageTaken();
+                //StartCoroutine(DamageTakenDelay());
         }
     }
 

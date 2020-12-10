@@ -68,9 +68,17 @@ public class Enemy2 : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
+        TextPopupOffset = GameObject.Find("DamagePopupOffset").GetComponent<Transform>();
+        player = GameObject.Find("Player").transform;
+        playerCombat = player.GetComponent<PlayerCombat>();
+
         //Stats
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+        if (healthBar != null)
+        {
+            healthBar.SetMaxHealth(maxHealth);
+        }
+
         isAlive = true;
         //enController.enCanMove = true;
         enCanAttack = true;

@@ -9,9 +9,6 @@ public class EnemyController : MonoBehaviour
 
     
     public Rigidbody2D rb;
-    private bool m_grounded = false;
-    private bool m_combatIdle = false;
-    private bool m_isDead = false;
 
     public Animator enAnimator;
     public bool enFacingRight = false;
@@ -29,6 +26,9 @@ public class EnemyController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        
+            //HealthBar = GameObject.Find("HealthBar").transform;
+
         enCanFlip = true;
         enCanMove = true;
     }
@@ -43,7 +43,7 @@ public class EnemyController : MonoBehaviour
             {
                 enFacingRight = true;
             }
-            else //moving left hopefully
+            else //moving left
             {
                 enFacingRight = false;
             }
@@ -62,12 +62,12 @@ public class EnemyController : MonoBehaviour
             if (enFacingRight)
             {
                 transform.localRotation = Quaternion.Euler(0, 180, 0);
+                HealthBar.localRotation = Quaternion.Euler(0, 180, 0);
                 //theScale.y = 180; //negative x now faces 
                 //transform.localScale = theScale;
                 /*Vector3 childScale = child.transform.localScale;
                 childScale.x *= -1;
                 child.transform.localScale = childScale;*/
-                HealthBar.localRotation = Quaternion.Euler(0, 180, 0);
                 //TextPopups.localRotation = Quaternion.Euler(0, 0, 0); //works without
             }
             else

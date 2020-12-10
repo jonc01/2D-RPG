@@ -53,9 +53,17 @@ public class StationaryEnemy : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
+        TextPopupOffset = GameObject.Find("DamagePopupOffset").GetComponent<Transform>();
+        player = GameObject.Find("Player").transform;
+        //playerCombat = player.GetComponent<PlayerCombat>();
+
         //Stats
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+        if (healthBar != null)
+        {
+            healthBar.SetMaxHealth(maxHealth);
+        }
+
         isAlive = true;
         enCanAttack = true;
         //AI aggro
