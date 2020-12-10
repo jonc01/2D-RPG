@@ -12,9 +12,10 @@ public class HealthBar : MonoBehaviour
     public float maxHealth;
     public TextMeshProUGUI healthNumbers;
 
-    private float trailDelayTimer = .5f; //delay after taking damage to start trailing
+    private float trailDelay = 1.0f; //delay after taking damage to start trailing
     private float trailDiff; //difference of trail value and main health bar value
     private bool damageTakenRecent = false;
+    private float trailDelayTimer = 0.0f;
 
     public void SetMaxHealth(float health)
     {
@@ -66,7 +67,7 @@ public class HealthBar : MonoBehaviour
     IEnumerator DamageTakenDelay()
     {
         damageTakenRecent = true;
-        yield return new WaitForSeconds(trailDelayTimer); //if no damage is taken within this time, start trail
+        yield return new WaitForSeconds(trailDelay); //if no damage is taken within this time, start trail
         damageTakenRecent = false;
     }
 

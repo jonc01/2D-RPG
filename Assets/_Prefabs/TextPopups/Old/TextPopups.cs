@@ -17,7 +17,7 @@ public class TextPopups : MonoBehaviour
         
         /*RectTransform rt = gameObject.GetComponent<RectTransform>();
         rt.anchoredPosition = new Vector3 (0, 2, 0);*/
-
+        
     }
 
     public void FlipText(float rotate)
