@@ -26,9 +26,6 @@ public class EnemyController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        
-            //HealthBar = GameObject.Find("HealthBar").transform;
-
         enCanFlip = true;
         enCanMove = true;
     }

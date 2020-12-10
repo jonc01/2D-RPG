@@ -21,7 +21,6 @@ public class EnemyBossBandit : MonoBehaviour
     public GameObject stunRParticlePrefab;
 
 
-
     public GameObject HealthBarCanvas;
     public float maxHealth = 1000;
     float currentHealth;

@@ -353,8 +353,7 @@ public class Enemy : MonoBehaviour
     }
     public void FlipTextAgain(float rotateAgain) //gets called in PlayerMovement to flip with player
     {
-        if(tempShowDmg != null)
-            tempShowDmg.GetComponent<TextPopups>().FlipText(rotateAgain);
+        tempShowDmg.GetComponent<TextPopups>().FlipText(rotateAgain);
     }
     public void EnIsHurtStart()
     {
