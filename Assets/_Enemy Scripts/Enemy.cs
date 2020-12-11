@@ -8,8 +8,8 @@ public class Enemy : MonoBehaviour
     public GameObject TextPopupsPrefab;
     [SerializeField]
     private Transform TextPopupOffset;
-
     private GameObject tempShowDmg; //to flip damage popup as they are created
+    
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;

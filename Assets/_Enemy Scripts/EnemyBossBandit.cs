@@ -8,10 +8,10 @@ public class EnemyBossBandit : MonoBehaviour
     public GameObject TextPopupsPrefab;
     [SerializeField]
     private Transform TextPopupOffset;
-
     private GameObject tempShowDmg; //to flip damage popup as they are created
-    public Transform player;
+
     public LayerMask playerLayers;
+    public Transform player;
     public PlayerCombat playerCombat;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
@@ -69,7 +69,6 @@ public class EnemyBossBandit : MonoBehaviour
 
     void Start()
     {
-
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 

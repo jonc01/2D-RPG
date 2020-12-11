@@ -379,10 +379,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TextPopupsPrefab: {fileID: 1686926603870342776, guid: 019dbc8afd6c5354dacf44f0223e87a6, type: 3}
   TextPopupOffset: {fileID: 924586130}
-  player: {fileID: 982059460}
   playerLayers:
     serializedVersion: 2
     m_Bits: 1024
+  player: {fileID: 982059460}
   playerCombat: {fileID: 982059469}
   hitParticlePrefab: {fileID: 1673159072164422025, guid: f4d963718e7979947bc7717ad6993df3, type: 3}
   deathParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
@@ -1539,7 +1539,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.239
+      value: 4.9
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6663,7 +6663,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.36
+      value: 7.16
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.y

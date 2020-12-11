@@ -8,10 +8,10 @@ public class Enemy2 : MonoBehaviour
     public GameObject TextPopupsPrefab;
     [SerializeField]
     private Transform TextPopupOffset;
-
     private GameObject tempShowDmg; //to flip damage popup as they are created
-    public Transform player;
+    
     public LayerMask playerLayers;
+    public Transform player;
     public PlayerCombat playerCombat;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
@@ -19,7 +19,6 @@ public class Enemy2 : MonoBehaviour
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
-
 
     public float maxHealth = 100;
     float currentHealth;

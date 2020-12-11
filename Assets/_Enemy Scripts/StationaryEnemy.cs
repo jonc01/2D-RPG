@@ -11,8 +11,8 @@ public class StationaryEnemy : MonoBehaviour
     [SerializeField]
     private Transform TextPopupOffset;
 
-    public Transform player;
     public LayerMask playerLayers;
+    public Transform player;
     public Transform enemyAllies;
     public LayerMask enemyLayers;
     public GameObject HitToRight;
