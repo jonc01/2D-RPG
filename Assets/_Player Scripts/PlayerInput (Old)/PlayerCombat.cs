@@ -56,7 +56,7 @@ public class PlayerCombat : MonoBehaviour
     private int m_currentAttack = 0;
     private float m_timeSinceAttack = 0.0f;
 
-    //ability cooldown
+    //ability cooldowns
     //public float dodgeCD = 1;
     public float altAttackCD = 3f;
     bool AltAttacking;
@@ -82,7 +82,6 @@ public class PlayerCombat : MonoBehaviour
         isAlive = true;
 
         //weapons stats
-        
 
         attackRange = wepRange;
         attackHeavyRange = wepRange*1.15f;
@@ -98,6 +97,7 @@ public class PlayerCombat : MonoBehaviour
         canAttack = true;
         AltAttacking = false;
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -250,6 +250,7 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback/2);
+                enemy.GetComponent<Enemy>().GetStunned(.3f);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
@@ -415,7 +416,7 @@ public class PlayerCombat : MonoBehaviour
 
         Vector3 newAttackPoint = attackPoint.position; //this could easily get out of hand if weapons have too much range
 
-        //player position and c center of "cube"
+        //player position and c center of wire cube
         // [    player c           ] //vs  player[          c           ]  //should probably just use a raycast
         //newAttackPoint
         if (controller.m_FacingRight)

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 245630209313134797}
   - component: {fileID: 245630209313134784}
   m_Layer: 12
-  m_Name: Bandit (2)
+  m_Name: Bandit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,7 +215,7 @@ MonoBehaviour:
   enAttackAnimSpeed: 0.4
   stunResist: 0
   allowStun: 0
-  allowStunCD: 3
+  allowStunCD: 1
   kbThrust: 0
   kbTime: 0
   enCanAttack: 1

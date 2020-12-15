@@ -48,7 +48,7 @@ public class Enemy : MonoBehaviour
     [Range(0f, 1.0f)]
     public float stunResist = 0f; //0f takes full stun duration, 1.0f complete stun resist
     public float allowStun = 0f;
-    public float allowStunCD = 3f; //how often enemy can be stunned
+    public float allowStunCD = 1f; //how often enemy can be stunned
     
     [Space] //knockback
     public float kbThrust;
@@ -247,7 +247,7 @@ public class Enemy : MonoBehaviour
     {
         if (enAttackPoint == null)
             return;
-
+        
         Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);
     }
 
@@ -275,6 +275,7 @@ public class Enemy : MonoBehaviour
                 
                 enIsHurt = true;
                 enAnimator.SetTrigger("Hurt");
+
                 //GetStunned(1f);
                 enCanAttack = true;
                 enAnimator.SetBool("isAttacking", false);
@@ -368,14 +369,33 @@ public class Enemy : MonoBehaviour
     {
         if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
         {
-            float fullDuration = 1f;
-            fullDuration -= stunResist; //getting percentage of stun based on stunResist
-            duration *= fullDuration;
-            enAnimator.SetTrigger("enStunned");
-            StartCoroutine(StunEnemy(duration));
+            if(duration <= .5f)
+            {
+                enAnimator.SetTrigger("enLightStun");
+                StartCoroutine(LightStunEnemy(duration));
+            }
+            else
+            {
+                float fullDuration = 1f;
+                fullDuration -= stunResist; //getting percentage of stun based on stunResist
+                duration *= fullDuration;
+                enAnimator.SetTrigger("enStunned");
+                StartCoroutine(StunEnemy(duration));
+            }
         }
     }
 
+    IEnumerator LightStunEnemy(float lightStunDuration)
+    {
+        StopChase();
+        enCanAttack = false;
+        enController.enCanMove = false;
+        yield return new WaitForSeconds(lightStunDuration);
+        enCanAttack = true;
+        enController.enCanMove = true;
+        enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
+        allowStun = Time.time + allowStunCD;
+    }
     IEnumerator StunEnemy(float stunDuration)
     {
         if (!enStunned)

@@ -13,14 +13,17 @@ public class HealthBar : MonoBehaviour
     public TextMeshProUGUI healthNumbers;
 
     private float trailDelay = 1.0f; //delay after taking damage to start trailing
-    private float trailDiff; //difference of trail value and main health bar value
     private bool damageTakenRecent = false;
     private float trailDelayTimer = 0.0f;
+    private float trailProp;
+    private float trailRate = 2f; //lower values = faster trail, higher values = slower trail
 
     public void SetMaxHealth(float health)
     {
         slider.maxValue = health;
         slider.value = health;
+        trailProp = trailRate / trail.maxValue; //trail will move at rate proportional to max hp of object
+
         if (healthNumbers != null) //option to show numbers
             maxHealth = slider.maxValue;
 
@@ -37,12 +40,7 @@ public class HealthBar : MonoBehaviour
         if (trail != null)
         {
             if (slider.value > trail.value)
-            trail.value = slider.value;
-
-            if (damageTakenRecent == false)
-                Invoke("DamageTaken", .1f);
-                //DamageTaken();
-                //StartCoroutine(DamageTakenDelay());
+                trail.value = slider.value;
         }
     }
 
@@ -52,39 +50,26 @@ public class HealthBar : MonoBehaviour
         {
             if (trail.value > slider.value)
             {
-                trailDiff = trail.value - slider.value;
-                if (damageTakenRecent == false)
+                //trailDiff = trail.value - slider.value; //to show individual sections of damage
+                if(Time.time > trailDelayTimer && damageTakenRecent == false)
+                {
                     StartCoroutine(TrailHealth());
+                }
             }
         }
-    }
-    
-    void DamageTaken()
-    {
-        StartCoroutine(DamageTakenDelay());
-    }
-
-    IEnumerator DamageTakenDelay()
-    {
-        damageTakenRecent = true;
-        yield return new WaitForSeconds(trailDelay); //if no damage is taken within this time, start trail
-        damageTakenRecent = false;
     }
 
     IEnumerator TrailHealth()
     {
-        while(trail.value > slider.value)
+        damageTakenRecent = true; //prevent coroutine being called multiple times
+        trailDelayTimer = Time.time + trailDelay;
+
+        while (trail.value > slider.value)
         {
-            for(int i=0; i<trailDiff; i++)
-            {
-                trail.value--;
-                yield return new WaitForSeconds(.5f); //speed of trailing
-                if(damageTakenRecent == true)
-                {
-                    yield break; //damage was taken, break out of loop/coroutine
-                }
-            }
-            yield break; //break out of coroutine if loop ends
+            trail.value--; //keep decrement at 1 for smooth trail, only increase trail rate
+            yield return new WaitForSeconds(trailProp); //speed of trailing
         }
+        damageTakenRecent = false;
+        yield break; //break out of coroutine when loop ends
     }
 }

@@ -384,7 +384,7 @@ MonoBehaviour:
     m_Bits: 1024
   player: {fileID: 982059460}
   playerCombat: {fileID: 982059469}
-  hitParticlePrefab: {fileID: 1673159072164422025, guid: f4d963718e7979947bc7717ad6993df3, type: 3}
+  hitParticlePrefab: {fileID: 700457851483736615, guid: b8200dfe666711243a75357e072e03dc, type: 3}
   deathParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
   stunLParticlePrefab: {fileID: 7508974481244418147, guid: 8d45e883450c75c4ca42078c4e0e65cc, type: 3}
   stunRParticlePrefab: {fileID: 2630982711930720759, guid: 0da0552efade60a42abeec6a8eeb0b7f, type: 3}
@@ -1533,13 +1533,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1189371403}
     m_Modifications:
+    - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: allowStunCD
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 245630209313134788, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_Name
       value: Bandit
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.9
+      value: 4.99
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4997,6 +5001,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1189371403}
     m_Modifications:
+    - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: allowStunCD
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: maxHealth
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: stunResist
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 245630209313134788, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_Name
       value: Bandit (1)
@@ -5052,6 +5068,10 @@ PrefabInstance:
     - target: {fileID: 2962372095434930982, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8088764730442182552, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8088764731424746103, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_AnchorMax.x
@@ -5324,7 +5344,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1787122239}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 47.689995, y: 0, z: 0}
+  m_LocalPosition: {x: -1.94, y: -0.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 524071898}
@@ -6657,6 +6677,10 @@ PrefabInstance:
       propertyPath: playerCombat
       value: 
       objectReference: {fileID: 982059469}
+    - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: allowStunCD
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 245630209313134788, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_Name
       value: Bandit (2)
@@ -6979,7 +7003,7 @@ RectTransform:
   m_GameObject: {fileID: 5040420503328431209}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 1.3, z: 0}
+  m_LocalScale: {x: 3.375, y: 1.51125, z: 0}
   m_Children:
   - {fileID: 5040420503317046405}
   - {fileID: 1821877153}
