@@ -214,7 +214,7 @@ public class EnemyBossBandit : MonoBehaviour
         /*
          * 
          * m_timeSinceAttack += Time.deltaTime;
-        //Attack Animations //&& (blockIsHeld == false) 
+        //Attack Animations //&& (blockIsHeld == false)
         if (Input.GetButtonDown("Fire1") && m_timeSinceAttack > 0.25f && canAttack)
         {
             m_currentAttack++;
@@ -266,7 +266,6 @@ public class EnemyBossBandit : MonoBehaviour
             enAnimator.SetTrigger("Attack1"); //TODO: Alternate between two attacks
 
 
-            //enAnimator.SetBool("inCombat", true);
             enAnimator.SetBool("isAttacking", true);
             enAnimator.SetBool("Move", false);
 

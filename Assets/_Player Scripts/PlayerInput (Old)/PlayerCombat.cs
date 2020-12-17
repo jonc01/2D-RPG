@@ -573,30 +573,28 @@ public class PlayerCombat : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("Player died.");
         //Die animation
         isAlive = false;
         animator.SetBool("noBlood", m_noBlood);
         animator.SetTrigger("Death");
-        movement.rb.velocity = new Vector2(0, 0); //stop player from moving
+        movement.rb.velocity = new Vector2(0, 0); //prevent player from moving
         movement.canMove = false;
         canAttack = false;
-        //disable player object
         //kill player
     }
 
-    void RevivePlayer(float spawnHpPercentage) //no use right now, 
+    void RevivePlayer(float spawnHpPercentage) //no use right now
     {
         isAlive = true;
         movement.canMove = true;
         canAttack = true;
-        currentHealth = (spawnHpPercentage * maxHealth);
+        currentHealth = (spawnHpPercentage * maxHealth); //spawnHpPercentage 1.0 = 100%
         if (isAlive && currentHealth > 0)
         {
             healthBar.SetHealth(currentHealth);
             if (TextPopupsPrefab)
             {
-                ShowTextPopupHeal(spawnHpPercentage);
+                ShowTextPopupHeal(spawnHpPercentage); //respawn player with x percentage of health
             }
             if (currentHealth > maxHealth)
             {

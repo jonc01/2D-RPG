@@ -74,6 +74,15 @@ public class Enemy : MonoBehaviour
         player = GameObject.Find("Player").transform;
         playerCombat = player.GetComponent<PlayerCombat>();
 
+        if (transform.position.x > player.transform.position.x)
+        {
+            playerToRight = false;
+        }
+        else
+        {
+            playerToRight = true;
+        }
+
         //Stats
         currentHealth = maxHealth;
         if(healthBar != null)
@@ -190,6 +199,7 @@ public class Enemy : MonoBehaviour
     {
         rb.velocity = new Vector2(0, 0);
         enAnimator.SetBool("move", false);
+        enController.enCanMove = false;
         //enAnimator.SetBool("inCombat", true);
         //enController.enCanMove = true;
     }
@@ -304,10 +314,22 @@ public class Enemy : MonoBehaviour
             Vector3 tempLocation = changeLocation; //for particle instantiate
             tempLocation.y += .5f;
 
-            Vector2 difference = (transform.position - player.transform.position);
-            difference = difference.normalized * kbThrust;
-            rb.AddForce(difference, ForceMode2D.Impulse);
+            float enToPlayer = transform.position.x - player.transform.position.x;
+            //if +, enemy is to right of player, -, enemy is to left of player //0 use direction of last position
 
+            //TODO: knockback with transform instead of velocity
+            if(enToPlayer > 0) //to right of player
+            {
+                //knockback to left
+            }
+            else //to left of player
+            {
+                //knockback to right
+            }
+            
+
+
+            //Invoke("Knockback", 0f);
             StartCoroutine(KnockbackEnemy());
 
             Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
@@ -315,13 +337,23 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void Knockback()
+    {
+        rb.velocity = new Vector2(10, 0);
+    }
+
     IEnumerator KnockbackEnemy()
     {
+        rb.velocity = new Vector2(10, 0);
+        yield return new WaitForSeconds(.05f);
         enController.enCanMove = false;
-        rb.velocity = Vector2.zero;
+        //enController.enCanMove = false;
+        //rb.velocity = Vector3.zero;
+        StopChase();
 
-        yield return new WaitForSeconds(kbTime);
+        yield return new WaitForSeconds(1.0f);
         enController.enCanMove = true;
+        //enController.enCanMove = true;
     }
 
     void ShowTextPopup(float damageAmount)
@@ -455,7 +487,7 @@ public class Enemy : MonoBehaviour
 
         //give player exp
         GiveExperience(experiencePoints);
-
+        //playerCombat.HealPlayer(10);
         //hide hp bar
 
 

@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     //dodge cooldown
     public float dodgeCD = 1;
     private float allowDodge = 0;
-    public float dodgeTime = .5f;
+    public float dodgeTime = .75f;
 
     //private int m_currentAttack = 0;
     //private float m_timeSinceAttack = 0.0f;
@@ -144,8 +144,8 @@ public class PlayerMovement : MonoBehaviour
     {
         playerCombat.canAttack = false;
         m_rolling = true;
-        animator.SetTrigger("Roll");
         animator.SetBool("isRolling", true);
+        animator.SetTrigger("Roll");
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
         allowDodge = Time.time + dodgeCD;
         //playerCombat.playerArmor = 100; //temp or dodge invulnerability
