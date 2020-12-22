@@ -8,10 +8,10 @@ public class EnemyBossBandit : MonoBehaviour
     public GameObject TextPopupsPrefab;
     [SerializeField]
     private Transform TextPopupOffset;
-
     private GameObject tempShowDmg; //to flip damage popup as they are created
-    public Transform player;
+
     public LayerMask playerLayers;
+    public Transform player;
     public PlayerCombat playerCombat;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
@@ -19,7 +19,6 @@ public class EnemyBossBandit : MonoBehaviour
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
-
 
 
     public GameObject HealthBarCanvas;
@@ -70,7 +69,6 @@ public class EnemyBossBandit : MonoBehaviour
 
     void Start()
     {
-
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
@@ -166,7 +164,6 @@ public class EnemyBossBandit : MonoBehaviour
                 enController.Flip();
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
                 {
-                    //Attack();
                     StartCoroutine(IsAttacking());
                     isAttacking = false;
                 }
@@ -191,66 +188,13 @@ public class EnemyBossBandit : MonoBehaviour
         if(healthBar != null && HealthBarCanvas != null)
         {
             HealthBarCanvas.GetComponentInChildren<Canvas>().enabled = true;
-            healthBar.GetComponentInChildren<SpriteRenderer>().enabled = true;
+            //healthBar.GetComponentInChildren<SpriteRenderer>().enabled = true;
             healthBar.SetHealth(currentHealth);
         }
     }
 
     void Attack()
     {
-        Vector3 changeLocation = transform.position;
-        if (enController.enFacingRight)
-        {
-            //go right
-            //changeLocation.x += .3f;
-            //transform.position = changeLocation;
-            //movement.rb.AddForce(Vector2.right * 10f);
-        }
-        else
-        {
-            //go left
-            //changeLocation.x -= .3f;
-            //transform.position = changeLocation;
-            //movement.rb.AddForce(Vector2.left * 10f);
-        }
-
-        /*
-         * 
-         * m_timeSinceAttack += Time.deltaTime;
-        //Attack Animations //&& (blockIsHeld == false) 
-        if (Input.GetButtonDown("Fire1") && m_timeSinceAttack > 0.25f && canAttack)
-        {
-            m_currentAttack++;
-
-            // Loop back to one after third attack
-            if (m_currentAttack > 3)
-                m_currentAttack = 1;
-
-            // Reset Attack combo if time since last attack is too large
-            if (m_timeSinceAttack > 1.0f)
-                m_currentAttack = 1;
-
-            // Call one of two attack animations "Attack1", "Attack2"
-            animator.SetTrigger("Attack" + m_currentAttack);
-
-            if (m_currentAttack == 3) {
-                AttackHeavy(); //can add parameter to Attack(10), for additional 10 damage on top of player damage
-                StartCoroutine(IsAttacking());
-            }
-            else
-            {
-                //movement.canMove = false;
-                Attack();
-                StartCoroutine(IsAttacking());
-                //Attack();
-            }
-                // Reset timer
-                m_timeSinceAttack = 0.0f;
-                //
-        }
-         * 
-         */
-
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange1, playerLayers);
 
         //damage enemies
@@ -262,35 +206,55 @@ public class EnemyBossBandit : MonoBehaviour
     }
 
     IEnumerator IsAttacking()
-    {//TODO: this is a mess, lots of variables that can be combined
+    {//TODO: combine redundant variables
         if (enCanAttack && !isAttacking)
         {
-            enStunned = false;
-            isAttacking = true;
+            Debug.Log("Starting switch");
 
-            enAnimator.SetTrigger("Attack1"); //TODO: Alternate between two attacks
+            int atkSequence = Random.Range(1, 3);
 
-            //enAnimator.SetBool("inCombat", true);
-            enAnimator.SetBool("isAttacking", true);
-            enAnimator.SetBool("Move", false);
+            Debug.Log("atkSequence rand: " + atkSequence);
 
-            enCanAttack = false;
-            enController.enCanMove = false;
-            rb.velocity = new Vector2(0, 0);
-
-            yield return new WaitForSeconds(enAttackAnimSpeed); //time when damage is dealt based on animation
-
-            if (enStunned)
+            switch (atkSequence) 
             {
-                isAttacking = false; //prevent enemy from getting stuck on "isAttacking" since it is never set to false
-                yield break;
-            }
+                case 1:
+                    enStunned = false;
+                    isAttacking = true;
 
-            rb.velocity = new Vector2(0, 0); //stop enemy from moving
-            Attack();
-            yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
-            enAnimator.SetBool("isAttacking", false);
+                    enAnimator.SetTrigger("Attack1"); //TODO: Alternate between two attacks
+
+                    enAnimator.SetBool("isAttacking", true);
+                    enAnimator.SetBool("Move", false);
+
+                    enCanAttack = false;
+                    enController.enCanMove = false;
+                    rb.velocity = new Vector2(0, 0);
+
+                    yield return new WaitForSeconds(enAttackAnimSpeed); //time when damage is dealt based on animation
+
+                    if (enStunned)
+                    {
+                        isAttacking = false; //prevent enemy from getting stuck on "isAttacking" since it is never set to false
+                        yield break;
+                    }
+
+                    rb.velocity = new Vector2(0, 0); //stop enemy from moving
+                    Attack();
+                    yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
+                    enAnimator.SetBool("isAttacking", false);
+                    break;
+                case 2:
+                    Debug.Log("case 2");
+                    yield return new WaitForSeconds(enAttackSpeed);
+                    break;
+                default:
+                    yield return new WaitForSeconds(0.01f); 
+                    Debug.Log("Default case");
+                    break;
+            }
         }
+
+
         enController.enCanMove = true;
         enCanAttack = true;
     }
@@ -399,7 +363,6 @@ public class EnemyBossBandit : MonoBehaviour
             showDmg.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
         /*if (enController.enFacingRight) //player facing right by default
             showDmg.transform.Rotate(0f, 0f, 0f);*/
-
 
 
         if (enController.enFacingRight)
@@ -517,23 +480,25 @@ public class EnemyBossBandit : MonoBehaviour
         Vector3 changeLocation = GetComponent<Transform>().position;
         Vector3 tempLocation = changeLocation;
         //tempLocation.y += .5f;
-        enAnimator.SetTrigger("Hurt");
-        Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
-        yield return new WaitForSeconds(.5f);
 
-        enAnimator.SetTrigger("Hurt");
-        Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
-        yield return new WaitForSeconds(.5f);
+        int numLoops = 3;
+
+        for(int i=0; i<numLoops; i++)
+        {
+            enAnimator.SetTrigger("startDeath");
+            Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
+            yield return new WaitForSeconds(.5f);
+        }
 
         if (enAnimator != null)
         {
-            enAnimator.SetTrigger("Death");
+            //enAnimator.SetTrigger("Death");
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(.5f);
         
         Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
 
-        yield return new WaitForSeconds(.1f);
+        //yield return new WaitForSeconds(.1f);
         Destroy(this.gameObject);
     }
 

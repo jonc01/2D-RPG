@@ -8,10 +8,10 @@ public class Enemy2 : MonoBehaviour
     public GameObject TextPopupsPrefab;
     [SerializeField]
     private Transform TextPopupOffset;
-
     private GameObject tempShowDmg; //to flip damage popup as they are created
-    public Transform player;
+    
     public LayerMask playerLayers;
+    public Transform player;
     public PlayerCombat playerCombat;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
@@ -19,7 +19,6 @@ public class Enemy2 : MonoBehaviour
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
-
 
     public float maxHealth = 100;
     float currentHealth;
@@ -68,9 +67,16 @@ public class Enemy2 : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
+        player = GameObject.Find("Player").transform;
+        playerCombat = player.GetComponent<PlayerCombat>();
+
         //Stats
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+        if (healthBar != null)
+        {
+            healthBar.SetMaxHealth(maxHealth);
+        }
+
         isAlive = true;
         //enController.enCanMove = true;
         enCanAttack = true;
@@ -224,7 +230,7 @@ public class Enemy2 : MonoBehaviour
     }
 
     IEnumerator IsAttacking()
-    {//TODO: this is a mess, lots of variables that can be combined
+    {//TODO: combine redundant variables
         if (enCanAttack && !isAttacking)
         {
             enStunned = false;

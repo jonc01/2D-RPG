@@ -8,10 +8,10 @@ public class Enemy : MonoBehaviour
     public GameObject TextPopupsPrefab;
     [SerializeField]
     private Transform TextPopupOffset;
-
     private GameObject tempShowDmg; //to flip damage popup as they are created
-    public Transform player;
+    
     public LayerMask playerLayers;
+    public Transform player;
     public PlayerCombat playerCombat;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
@@ -48,7 +48,7 @@ public class Enemy : MonoBehaviour
     [Range(0f, 1.0f)]
     public float stunResist = 0f; //0f takes full stun duration, 1.0f complete stun resist
     public float allowStun = 0f;
-    public float allowStunCD = 3f; //how often enemy can be stunned
+    public float allowStunCD = 1f; //how often enemy can be stunned
     
     [Space] //knockback
     public float kbThrust;
@@ -71,9 +71,25 @@ public class Enemy : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
+        player = GameObject.Find("Player").transform;
+        playerCombat = player.GetComponent<PlayerCombat>();
+
+        if (transform.position.x > player.transform.position.x)
+        {
+            playerToRight = false;
+        }
+        else
+        {
+            playerToRight = true;
+        }
+
         //Stats
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+        if(healthBar != null)
+        {
+            healthBar.SetMaxHealth(maxHealth);
+        }
+        
         isAlive = true;
         //enController.enCanMove = true;
         enCanAttack = true;
@@ -158,7 +174,6 @@ public class Enemy : MonoBehaviour
                 //player is to left, move left
                 
                 rb.velocity = new Vector2(-enController.moveSpeed, 0);
-                
 
                 enController.enFacingRight = false;
                 //if (enCanMove)
@@ -183,6 +198,7 @@ public class Enemy : MonoBehaviour
     {
         rb.velocity = new Vector2(0, 0);
         enAnimator.SetBool("move", false);
+        enController.enCanMove = false;
         //enAnimator.SetBool("inCombat", true);
         //enController.enCanMove = true;
     }
@@ -205,7 +221,7 @@ public class Enemy : MonoBehaviour
     }
 
     IEnumerator IsAttacking()
-    {//TODO: this is a mess, lots of variables that can be combined
+    {//TODO: combine redundant variables    
         enStunned = false; //attackStopped = false;
         isAttacking = true;
             
@@ -214,7 +230,7 @@ public class Enemy : MonoBehaviour
         enAnimator.SetBool("inCombat", true);
         enAnimator.SetBool("isAttacking", true);
         enAnimator.SetBool("move", false);
-            
+        
         enCanAttack = false;
         enController.enCanMove = false;
         rb.velocity = new Vector2(0, 0);
@@ -240,7 +256,7 @@ public class Enemy : MonoBehaviour
     {
         if (enAttackPoint == null)
             return;
-
+        
         Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);
     }
 
@@ -268,6 +284,7 @@ public class Enemy : MonoBehaviour
                 
                 enIsHurt = true;
                 enAnimator.SetTrigger("Hurt");
+
                 //GetStunned(1f);
                 enCanAttack = true;
                 enAnimator.SetBool("isAttacking", false);
@@ -296,10 +313,20 @@ public class Enemy : MonoBehaviour
             Vector3 tempLocation = changeLocation; //for particle instantiate
             tempLocation.y += .5f;
 
-            Vector2 difference = (transform.position - player.transform.position);
-            difference = difference.normalized * kbThrust;
-            rb.AddForce(difference, ForceMode2D.Impulse);
+            float enToPlayer = transform.position.x - player.transform.position.x;
+            //if >0, enemy is to right of player, <0, enemy is to left of player //0 use direction of last position
 
+            //TODO: if knockback with transform instead of velocity
+            if(enToPlayer > 0) //to right of player
+            {
+                //knockback to left
+            }
+            else //to left of player
+            {
+                //knockback to right
+            }
+
+            //Invoke("Knockback", 0f);
             StartCoroutine(KnockbackEnemy());
 
             Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
@@ -307,13 +334,23 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void Knockback()
+    {
+        rb.velocity = new Vector2(10, 0);
+    }
+
     IEnumerator KnockbackEnemy()
     {
+        rb.velocity = new Vector2(10, 0);
+        yield return new WaitForSeconds(.05f);
         enController.enCanMove = false;
-        rb.velocity = Vector2.zero;
+        //enController.enCanMove = false;
+        //rb.velocity = Vector3.zero;
+        StopChase();
 
-        yield return new WaitForSeconds(kbTime);
+        yield return new WaitForSeconds(1.0f);
         enController.enCanMove = true;
+        //enController.enCanMove = true;
     }
 
     void ShowTextPopup(float damageAmount)
@@ -361,14 +398,33 @@ public class Enemy : MonoBehaviour
     {
         if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
         {
-            float fullDuration = 1f;
-            fullDuration -= stunResist; //getting percentage of stun based on stunResist
-            duration *= fullDuration;
-            enAnimator.SetTrigger("enStunned");
-            StartCoroutine(StunEnemy(duration));
+            if(duration <= .5f)
+            {
+                enAnimator.SetTrigger("enLightStun");
+                StartCoroutine(LightStunEnemy(duration));
+            }
+            else
+            {
+                float fullDuration = 1f;
+                fullDuration -= stunResist; //getting percentage of stun based on stunResist
+                duration *= fullDuration;
+                enAnimator.SetTrigger("enStunned");
+                StartCoroutine(StunEnemy(duration));
+            }
         }
     }
 
+    IEnumerator LightStunEnemy(float lightStunDuration)
+    {
+        StopChase();
+        enCanAttack = false;
+        enController.enCanMove = false;
+        yield return new WaitForSeconds(lightStunDuration);
+        enCanAttack = true;
+        enController.enCanMove = true;
+        enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
+        allowStun = Time.time + allowStunCD;
+    }
     IEnumerator StunEnemy(float stunDuration)
     {
         if (!enStunned)
@@ -428,7 +484,7 @@ public class Enemy : MonoBehaviour
 
         //give player exp
         GiveExperience(experiencePoints);
-
+        //playerCombat.HealPlayer(10);
         //hide hp bar
 
 

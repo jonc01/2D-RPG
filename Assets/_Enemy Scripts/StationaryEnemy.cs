@@ -11,8 +11,8 @@ public class StationaryEnemy : MonoBehaviour
     [SerializeField]
     private Transform TextPopupOffset;
 
-    public Transform player;
     public LayerMask playerLayers;
+    public Transform player;
     public Transform enemyAllies;
     public LayerMask enemyLayers;
     public GameObject HitToRight;
@@ -53,9 +53,16 @@ public class StationaryEnemy : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
+        player = GameObject.Find("Player").transform;
+        //playerCombat = player.GetComponent<PlayerCombat>();
+
         //Stats
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+        if (healthBar != null)
+        {
+            healthBar.SetMaxHealth(maxHealth);
+        }
+
         isAlive = true;
         enCanAttack = true;
         //AI aggro

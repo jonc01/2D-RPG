@@ -14,6 +14,9 @@ public class PlayerCombat : MonoBehaviour
     public GameObject TextPopupsPrefab;
     public Transform playerLocation;
 
+    [SerializeField]
+    private Transform TextPopupOffset;
+
     //textPopups for referencce in PlayerMovement
     public GameObject tempShowDmg;
 
@@ -53,7 +56,7 @@ public class PlayerCombat : MonoBehaviour
     private int m_currentAttack = 0;
     private float m_timeSinceAttack = 0.0f;
 
-    //ability cooldown
+    //ability cooldowns
     //public float dodgeCD = 1;
     public float altAttackCD = 3f;
     bool AltAttacking;
@@ -79,7 +82,6 @@ public class PlayerCombat : MonoBehaviour
         isAlive = true;
 
         //weapons stats
-        
 
         attackRange = wepRange;
         attackHeavyRange = wepRange*1.15f;
@@ -95,6 +97,7 @@ public class PlayerCombat : MonoBehaviour
         canAttack = true;
         AltAttacking = false;
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -247,6 +250,7 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback/2);
+                enemy.GetComponent<Enemy>().GetStunned(.3f);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
@@ -287,12 +291,16 @@ public class PlayerCombat : MonoBehaviour
         }
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
-            //Debug.Log("We Hit " + enemy.name);
+            if(enemy.GetComponent<EnemyController>() != null)
+            {
+                //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
+            }
+
             if (enemy.GetComponent<Enemy>() != null)
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback*2);
-                enemy.GetComponent<Enemy>().GetStunned(stunStrength);
+                //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
             
             if (enemy.GetComponent<StationaryEnemy>() != null)
@@ -309,7 +317,7 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy);
         }
     }
-    IEnumerator AltAttack()
+    IEnumerator AltAttack() //TODO: adjust hitbox closer to player
     {
         if (movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
@@ -412,7 +420,7 @@ public class PlayerCombat : MonoBehaviour
 
         Vector3 newAttackPoint = attackPoint.position; //this could easily get out of hand if weapons have too much range
 
-        //player position and c center of "cube"
+        //player position and c center of wire cube
         // [    player c           ] //vs  player[          c           ]  //should probably just use a raycast
         //newAttackPoint
         if (controller.m_FacingRight)
@@ -469,7 +477,7 @@ public class PlayerCombat : MonoBehaviour
         //tempTransform = screenPosition; //have numbers float in place, don't follow object
 
 
-        var showDmg = Instantiate(TextPopupsPrefab, tempPos, Quaternion.identity, transform);
+        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
         
         if (damageAmount > 0)
         {
@@ -524,15 +532,12 @@ public class PlayerCombat : MonoBehaviour
 
     void ShowTextPopupHeal(float healAmount)
     {
-        Debug.Log("healing showing up");
-        Vector3 tempPos = transform.position; //randomize damage number position
+        /*Vector3 tempPos = TextPopupOffset.position; //randomize damage number position
         tempPos.x += Random.Range(-.1f, .1f);
-        tempPos.y += Random.Range(-.9f, .2f);
+        tempPos.y += Random.Range(-.9f, .2f);*/
 
 
-
-
-        var showHeal = Instantiate(TextPopupsPrefab, tempPos, Quaternion.identity, transform);
+        var showHeal = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
         //Transform temp = transform;
 
         //var showHeal = Instantiate(TextPopupsPrefab, tempPos, false);
@@ -572,30 +577,28 @@ public class PlayerCombat : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("Player died.");
         //Die animation
         isAlive = false;
         animator.SetBool("noBlood", m_noBlood);
         animator.SetTrigger("Death");
-        movement.rb.velocity = new Vector2(0, 0); //stop player from moving
+        movement.rb.velocity = new Vector2(0, 0); //prevent player from moving
         movement.canMove = false;
         canAttack = false;
-        //disable player object
         //kill player
     }
 
-    void RevivePlayer(float spawnHpPercentage) //no use right now, 
+    void RevivePlayer(float spawnHpPercentage) //no use right now
     {
         isAlive = true;
         movement.canMove = true;
         canAttack = true;
-        currentHealth = (spawnHpPercentage * maxHealth);
+        currentHealth = (spawnHpPercentage * maxHealth); //spawnHpPercentage 1.0 = 100%
         if (isAlive && currentHealth > 0)
         {
             healthBar.SetHealth(currentHealth);
             if (TextPopupsPrefab)
             {
-                ShowTextPopupHeal(spawnHpPercentage);
+                ShowTextPopupHeal(spawnHpPercentage); //respawn player with x percentage of health
             }
             if (currentHealth > maxHealth)
             {

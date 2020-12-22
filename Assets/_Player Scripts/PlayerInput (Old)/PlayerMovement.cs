@@ -15,15 +15,18 @@ public class PlayerMovement : MonoBehaviour
     public PlayerCombat playerCombat;
     public GameObject player;
 
-    //dodge cooldown
+    //dodge/dash cooldown
     public float dodgeCD = 1;
     private float allowDodge = 0;
-    public float dodgeTime = .5f;
+    public float dodgeTime = .75f;
+    private float allowDash = 0; //TODO: delete me if combining dash with dodge CD
+
 
     //private int m_currentAttack = 0;
     //private float m_timeSinceAttack = 0.0f;
     public int m_facingDirection = 1;
     public bool m_rolling = false;
+    public bool m_dashing = false;
     private bool m_grounded = false;
     float horizontalMove = 0f;
     bool jump = false;
@@ -113,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
         //Dodge Roll
         if (Time.time > allowDodge && canMove)
         {
-            if (Input.GetButtonDown("Dodge") && !m_rolling && isGrounded) //prevent dodging midair
+            if (Input.GetButtonDown("Dodge") && !m_rolling && !m_dashing && isGrounded) //prevent dodging midair
             //if (keyboard.leftShiftKey.isPressed && !m_rolling && isGrounded) //prevent dodging midair
             {
                 StartCoroutine(DodgeRoll());
@@ -122,6 +125,14 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         m_rolling = false;
+
+        //Dash (mid-air dodge)
+        /*if(Time.time > allowDash && canMove) //TODO: can just move this into Dodge ^^^^ just switching between both depending on "isGrounded"
+        {
+            if(Input.GetButtonDown("Dodge") && !m_rolling && !isGrounded){
+                
+            }
+        }*/
 
     }
 
@@ -144,8 +155,8 @@ public class PlayerMovement : MonoBehaviour
     {
         playerCombat.canAttack = false;
         m_rolling = true;
-        animator.SetTrigger("Roll");
         animator.SetBool("isRolling", true);
+        animator.SetTrigger("Roll");
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
         allowDodge = Time.time + dodgeCD;
         //playerCombat.playerArmor = 100; //temp or dodge invulnerability
@@ -156,9 +167,10 @@ public class PlayerMovement : MonoBehaviour
         playerCombat.canAttack = true;
     }
 
+
+
     void AE_ResetRoll()
     {
         m_rolling = false;
-        crouch = false;
     }
 }

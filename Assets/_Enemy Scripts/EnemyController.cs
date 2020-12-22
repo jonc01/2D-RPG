@@ -9,9 +9,6 @@ public class EnemyController : MonoBehaviour
 
     
     public Rigidbody2D rb;
-    private bool m_grounded = false;
-    private bool m_combatIdle = false;
-    private bool m_isDead = false;
 
     public Animator enAnimator;
     public bool enFacingRight = false;
@@ -43,7 +40,7 @@ public class EnemyController : MonoBehaviour
             {
                 enFacingRight = true;
             }
-            else //moving left hopefully
+            else //moving left
             {
                 enFacingRight = false;
             }
@@ -53,9 +50,6 @@ public class EnemyController : MonoBehaviour
 
     public void Flip()
     {
-
-
-
         // Switch the way the enemy is labelled as facing.
         //enFacingRight = !enFacingRight;
 
@@ -64,19 +58,17 @@ public class EnemyController : MonoBehaviour
         if (enCanFlip) {
             if (enFacingRight)
             {
-                Debug.Log("flipping rotation 1");
                 transform.localRotation = Quaternion.Euler(0, 180, 0);
+                HealthBar.localRotation = Quaternion.Euler(0, 180, 0);
                 //theScale.y = 180; //negative x now faces 
                 //transform.localScale = theScale;
                 /*Vector3 childScale = child.transform.localScale;
                 childScale.x *= -1;
                 child.transform.localScale = childScale;*/
-                HealthBar.localRotation = Quaternion.Euler(0, 180, 0);
                 //TextPopups.localRotation = Quaternion.Euler(0, 0, 0); //works without
             }
             else
             {
-                Debug.Log("flipping rotation 2");
                 transform.localRotation = Quaternion.Euler(0, 0, 0);
                 HealthBar.localRotation = Quaternion.Euler(0, 0, 0);
 
