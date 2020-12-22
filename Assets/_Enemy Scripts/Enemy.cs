@@ -174,7 +174,6 @@ public class Enemy : MonoBehaviour
                 //player is to left, move left
                 
                 rb.velocity = new Vector2(-enController.moveSpeed, 0);
-                
 
                 enController.enFacingRight = false;
                 //if (enCanMove)
@@ -315,9 +314,9 @@ public class Enemy : MonoBehaviour
             tempLocation.y += .5f;
 
             float enToPlayer = transform.position.x - player.transform.position.x;
-            //if +, enemy is to right of player, -, enemy is to left of player //0 use direction of last position
+            //if >0, enemy is to right of player, <0, enemy is to left of player //0 use direction of last position
 
-            //TODO: knockback with transform instead of velocity
+            //TODO: if knockback with transform instead of velocity
             if(enToPlayer > 0) //to right of player
             {
                 //knockback to left
@@ -326,8 +325,6 @@ public class Enemy : MonoBehaviour
             {
                 //knockback to right
             }
-            
-
 
             //Invoke("Knockback", 0f);
             StartCoroutine(KnockbackEnemy());

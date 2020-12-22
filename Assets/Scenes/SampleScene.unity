@@ -427,7 +427,7 @@ MonoBehaviour:
   rb: {fileID: 57842443}
   enAnimator: {fileID: 57842445}
   enFacingRight: 0
-  moveSpeed: 2
+  moveSpeed: 1.5
   HealthBar: {fileID: 5040420503057490420}
   TextPopups: {fileID: 5725727964921090324, guid: 019dbc8afd6c5354dacf44f0223e87a6, type: 3}
   enCanFlip: 0
@@ -1599,6 +1599,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8088764731424746103, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8088764731826395037, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: slowTrail
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2979,8 +2983,8 @@ MonoBehaviour:
   m_rollForce: 5
   controller: {fileID: 982059458}
   animator: {fileID: 982059465}
-  defaultRunSpeed: 20
-  runSpeed: 20
+  defaultRunSpeed: 15
+  runSpeed: 15
   rb: {fileID: 982059461}
   playerCombat: {fileID: 982059469}
   player: {fileID: 982059457}
@@ -2988,6 +2992,7 @@ MonoBehaviour:
   dodgeTime: 0.5
   m_facingDirection: 1
   m_rolling: 0
+  m_dashing: 0
   canMove: 1
   isGrounded: 1
 --- !u!95 &982059465
@@ -3702,6 +3707,7 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 0
   healthNumbers: {fileID: 1204694269}
+  slowTrail: 1
 --- !u!114 &1177505293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4044,7 +4050,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286921183}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.146, y: -0.077, z: 0}
+  m_LocalPosition: {x: -0.27, y: -0.077, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 57842441}
@@ -4171,6 +4177,7 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 0
   healthNumbers: {fileID: 0}
+  slowTrail: 1
 --- !u!114 &1356687768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5023,7 +5030,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.36
+      value: -8.321
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5083,6 +5090,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8088764731424746103, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8088764731826395037, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: slowTrail
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -6749,6 +6760,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8088764731826395037, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: slowTrail
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
 --- !u!4 &3952643468970519434 stripped
@@ -7039,6 +7054,7 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 0
   healthNumbers: {fileID: 485657637}
+  slowTrail: 0
 --- !u!1 &5040420503991574912
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,11 +18,22 @@ public class HealthBar : MonoBehaviour
     private float trailProp;
     private float trailRate = 2f; //lower values = faster trail, higher values = slower trail
 
+    public bool slowTrail = false;
+
     public void SetMaxHealth(float health)
     {
         slider.maxValue = health;
         slider.value = health;
-        trailProp = trailRate / trail.maxValue; //trail will move at rate proportional to max hp of object
+
+        if (slowTrail)
+        {
+            trailProp = 4 / trail.maxValue;
+        }
+        else
+        {
+            trailProp = trailRate / trail.maxValue; //trail will move at rate proportional to max hp of object
+        }
+        
 
         if (healthNumbers != null) //option to show numbers
             maxHealth = slider.maxValue;

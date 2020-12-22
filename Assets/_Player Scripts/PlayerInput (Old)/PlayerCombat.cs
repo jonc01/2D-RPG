@@ -291,12 +291,16 @@ public class PlayerCombat : MonoBehaviour
         }
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
-            //Debug.Log("We Hit " + enemy.name);
+            if(enemy.GetComponent<EnemyController>() != null)
+            {
+                //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
+            }
+
             if (enemy.GetComponent<Enemy>() != null)
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback*2);
-                enemy.GetComponent<Enemy>().GetStunned(stunStrength);
+                //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
             
             if (enemy.GetComponent<StationaryEnemy>() != null)
@@ -313,7 +317,7 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy);
         }
     }
-    IEnumerator AltAttack()
+    IEnumerator AltAttack() //TODO: adjust hitbox closer to player
     {
         if (movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
