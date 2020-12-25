@@ -53,14 +53,14 @@ public class EnemyController : MonoBehaviour
         // Switch the way the enemy is labelled as facing.
         //enFacingRight = !enFacingRight;
 
-        // Multiply the enemy's x local scale by -1.
+        // Multiply the enemy's x local scale by -1
         //.Vector3 theScale = transform.localScale;
         if (enCanFlip) {
             if (enFacingRight)
             {
                 transform.localRotation = Quaternion.Euler(0, 180, 0);
                 HealthBar.localRotation = Quaternion.Euler(0, 180, 0);
-                //theScale.y = 180; //negative x now faces 
+                //theScale.y = 180; //negative x now faces
                 //transform.localScale = theScale;
                 /*Vector3 childScale = child.transform.localScale;
                 childScale.x *= -1;

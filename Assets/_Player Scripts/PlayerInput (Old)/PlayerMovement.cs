@@ -167,8 +167,6 @@ public class PlayerMovement : MonoBehaviour
         playerCombat.canAttack = true;
     }
 
-
-
     void AE_ResetRoll()
     {
         m_rolling = false;

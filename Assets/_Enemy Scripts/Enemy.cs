@@ -63,8 +63,8 @@ public class Enemy : MonoBehaviour
 
     SpriteRenderer sr;
     [SerializeField]
-    private Material mWhiteFlash;
-    private Material mDefault;
+    private Material mWhiteFlash; //material to flash to on hit
+    private Material mDefault; //default material to switch back to
 
     void Start()
     {
@@ -313,21 +313,43 @@ public class Enemy : MonoBehaviour
             Vector3 tempLocation = changeLocation; //for particle instantiate
             tempLocation.y += .5f;
 
-            float enToPlayer = transform.position.x - player.transform.position.x;
+            float distToPlayer = transform.position.x - player.transform.position.x;
             //if >0, enemy is to right of player, <0, enemy is to left of player //0 use direction of last position
 
+
+
+            //////////////////////////// knockback in-progress ///////////////////////////////
+            float knockbackThrust = 3.0f;
+            float knockbackDist = 5.0f; //or duration
+
+            Vector3 tempOffset = transform.position;
+            tempOffset.x += knockbackDist;
+
+            Vector3 tempOffset2 = gameObject.transform.position; //can implement knockup with y offset
+            //tempOffset2.x += knockbackDist;
+
+
+            //Vector3 temp = transform.position + offset;
+
             //TODO: if knockback with transform instead of velocity
-            if(enToPlayer > 0) //to right of player
+            if(distToPlayer > 0) //to right of player
             {
                 //knockback to left
+                tempOffset2.x += knockbackDist;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset2, knockbackThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
             }
             else //to left of player
             {
                 //knockback to right
+                tempOffset2.x -= knockbackDist;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset2, knockbackThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
             }
 
             //Invoke("Knockback", 0f);
-            StartCoroutine(KnockbackEnemy());
+
+            //StartCoroutine(KnockbackEnemy()); //TODO: reenable if we end up using this 
 
             Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
 
@@ -358,9 +380,6 @@ public class Enemy : MonoBehaviour
         Vector3 tempTransform = transform.position; //randomize damage number position
         tempTransform.x += Random.Range(-.1f, .1f);
         tempTransform.y += Random.Range(-.9f, .1f);
-
-
-
 
         var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
         showDmg.GetComponent<TextMeshPro>().text = Mathf.Abs(damageAmount).ToString();
@@ -507,7 +526,7 @@ public class Enemy : MonoBehaviour
     {
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponentInChildren<Canvas>().enabled = false;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
         Destroy(this.gameObject);
     }
 

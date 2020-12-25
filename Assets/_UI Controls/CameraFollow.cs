@@ -12,13 +12,11 @@ public class CameraFollow : MonoBehaviour
     public float smoothSpeed = 0.125f;
     public Vector3 offset;
 
-
     // Start is called before the first frame update
     void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
-
 
     // Update is called once per frame
     void FixedUpdate()
