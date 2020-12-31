@@ -209,19 +209,17 @@ public class EnemyBossBandit : MonoBehaviour
     {//TODO: combine redundant variables
         if (enCanAttack && !isAttacking)
         {
-            Debug.Log("Starting switch");
-
-            int atkSequence = Random.Range(1, 3);
+            int atkSequence = Random.Range(1, 4);
 
             Debug.Log("atkSequence rand: " + atkSequence);
 
+            enStunned = false;
+            isAttacking = true;
+
             switch (atkSequence) 
             {
-                case 1:
-                    enStunned = false;
-                    isAttacking = true;
-
-                    enAnimator.SetTrigger("Attack1"); //TODO: Alternate between two attacks
+                case 1: //Attack1
+                    enAnimator.SetTrigger("Attack1Slow"); //TODO: Alternate between two attacks
 
                     enAnimator.SetBool("isAttacking", true);
                     enAnimator.SetBool("Move", false);
@@ -230,7 +228,7 @@ public class EnemyBossBandit : MonoBehaviour
                     enController.enCanMove = false;
                     rb.velocity = new Vector2(0, 0);
 
-                    yield return new WaitForSeconds(enAttackAnimSpeed); //time when damage is dealt based on animation
+                    yield return new WaitForSeconds(0.7f); //time until damage is dealt based on animation
 
                     if (enStunned)
                     {
@@ -243,17 +241,36 @@ public class EnemyBossBandit : MonoBehaviour
                     yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
                     enAnimator.SetBool("isAttacking", false);
                     break;
-                case 2:
-                    Debug.Log("case 2");
+                case 2: //Attack2
+                    enAnimator.SetTrigger("Attack2Slow");
+                    enAnimator.SetBool("isAttacking", true);
+                    enAnimator.SetBool("Move", false);
+
+
+
+                    rb.velocity = new Vector2(0, 0);
+                    Attack();
                     yield return new WaitForSeconds(enAttackSpeed);
+                    enAnimator.SetBool("isAttacking", false);
+                    break;
+                case 3: //Attack1 + Attack2
+                    enAnimator.SetTrigger("Attack1SlowStartCombo");
+                    enAnimator.SetBool("isAttacking", true);
+                    enAnimator.SetBool("Move", false);
+
+
+
+                    rb.velocity = new Vector2(0, 0);
+                    Attack();
+
+                    yield return new WaitForSeconds(enAttackSpeed);
+                    enAnimator.SetBool("isAttacking", false);
                     break;
                 default:
-                    yield return new WaitForSeconds(0.01f); 
-                    Debug.Log("Default case");
+                    yield return new WaitForSeconds(0.01f);
                     break;
             }
         }
-
 
         enController.enCanMove = true;
         enCanAttack = true;
@@ -452,12 +469,8 @@ public class EnemyBossBandit : MonoBehaviour
 
     void Die()
     {
-
         //give player exp
         GiveExperience(experiencePoints);
-
-        //hide hp bar
-
 
         //disable enemy object
         isAlive = false;
@@ -470,12 +483,12 @@ public class EnemyBossBandit : MonoBehaviour
             Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
         }
 
-        //DeleteEnemyObject();
         StartCoroutine(DeleteEnemyObject());
     }
 
     IEnumerator DeleteEnemyObject()
     {
+        HealthBarCanvas.GetComponent<Canvas>().enabled = false;
 
         Vector3 changeLocation = GetComponent<Transform>().position;
         Vector3 tempLocation = changeLocation;
@@ -501,9 +514,4 @@ public class EnemyBossBandit : MonoBehaviour
         //yield return new WaitForSeconds(.1f);
         Destroy(this.gameObject);
     }
-
-    /*private void DeleteEnemyObject()
-    {
-        Destroy(this.gameObject);
-    }*/
 }

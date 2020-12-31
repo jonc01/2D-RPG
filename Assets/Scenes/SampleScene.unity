@@ -2988,11 +2988,14 @@ MonoBehaviour:
   rb: {fileID: 982059461}
   playerCombat: {fileID: 982059469}
   player: {fileID: 982059457}
-  dodgeCD: 1
+  dodgeCD: 2
   dodgeTime: 0.5
+  dashCD: 2
+  dashTime: 0.1
+  dashSpeed: 15
+  distanceBetweenImages: 0.1
   m_facingDirection: 1
   m_rolling: 0
-  m_dashing: 0
   canMove: 1
   isGrounded: 1
 --- !u!95 &982059465
@@ -5019,6 +5022,10 @@ PrefabInstance:
     - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: stunResist
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: kbThrust
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134787, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_Materials.Array.data[0]

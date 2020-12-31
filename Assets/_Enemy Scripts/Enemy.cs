@@ -51,8 +51,9 @@ public class Enemy : MonoBehaviour
     public float allowStunCD = 1f; //how often enemy can be stunned
     
     [Space] //knockback
-    public float kbThrust;
-    public float kbTime;
+    public float kbThrust = 3.0f;
+    public float kbDuration = 5.0f; //or duration
+
 
     [SerializeField]
     bool enCanAttack, isAttacking; //for parry()
@@ -313,17 +314,15 @@ public class Enemy : MonoBehaviour
             Vector3 tempLocation = changeLocation; //for particle instantiate
             tempLocation.y += .5f;
 
-            float distToPlayer = transform.position.x - player.transform.position.x;
-            //if >0, enemy is to right of player, <0, enemy is to left of player //0 use direction of last position
+            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //0 use direction of last position
 
+            //float knockbackThrust = 3.0f;
+            //float knockbackDist = 5.0f; 
+            //float kbThrust = 3.0f;
+            //float kbDuration = 5.0f;
 
-
-            //////////////////////////// knockback in-progress ///////////////////////////////
-            float knockbackThrust = 3.0f;
-            float knockbackDist = 5.0f; //or duration
-
-            Vector3 tempOffset = transform.position;
-            tempOffset.x += knockbackDist;
+    Vector3 tempOffset = transform.position;
+            tempOffset.x += kbDuration;
 
             Vector3 tempOffset2 = gameObject.transform.position; //can implement knockup with y offset
             //tempOffset2.x += knockbackDist;
@@ -331,42 +330,30 @@ public class Enemy : MonoBehaviour
 
             //Vector3 temp = transform.position + offset;
 
-            //TODO: if knockback with transform instead of velocity
             if(distToPlayer > 0) //to right of player
             {
                 //knockback to left
-                tempOffset2.x += knockbackDist;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset2, knockbackThrust * Time.fixedDeltaTime);
+                tempOffset2.x += kbDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset2, kbThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
             else //to left of player
             {
                 //knockback to right
-                tempOffset2.x -= knockbackDist;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset2, knockbackThrust * Time.fixedDeltaTime);
+                tempOffset2.x -= kbDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset2, kbThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
 
-            //Invoke("Knockback", 0f);
-
-            //StartCoroutine(KnockbackEnemy()); //TODO: reenable if we end up using this 
-
             Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
-
         }
     }
 
-    void Knockback()
-    {
-        rb.velocity = new Vector2(10, 0);
-    }
-
-    IEnumerator KnockbackEnemy()
+    IEnumerator KnockbackEnemy() //
     {
         rb.velocity = new Vector2(10, 0);
         yield return new WaitForSeconds(.05f);
         enController.enCanMove = false;
-        //enController.enCanMove = false;
         //rb.velocity = Vector3.zero;
         StopChase();
 
