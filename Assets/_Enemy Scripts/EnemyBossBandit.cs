@@ -48,7 +48,7 @@ public class EnemyBossBandit : MonoBehaviour
     public EnemyController enController;
     [Space]
     public float enAttackDamage = 10f;
-    public float enAttackSpeed = 1.1f; //lower value for lower delays between attacks
+    public float enAttackSpeed = 2f; //lower value for lower delays between attacks
     public float enAttackAnimSpeed = .4f; //lower value for shorter animations
     [Range(0f, 1.0f)]
     public float stunResist = .5f; //0f takes full stun duration, 1.0f complete stun resist
@@ -200,7 +200,6 @@ public class EnemyBossBandit : MonoBehaviour
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            //Debug.Log("Enemy Hit " + player.name);
             player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
         }
     }
@@ -209,7 +208,8 @@ public class EnemyBossBandit : MonoBehaviour
     {//TODO: combine redundant variables
         if (enCanAttack && !isAttacking)
         {
-            int atkSequence = Random.Range(1, 4);
+            //int atkSequence = Random.Range(1, 5);
+            int atkSequence = Random.Range(3, 5); //TODO: DEBUGGING revert to above
 
             Debug.Log("atkSequence rand: " + atkSequence);
 
@@ -218,7 +218,7 @@ public class EnemyBossBandit : MonoBehaviour
 
             switch (atkSequence) 
             {
-                case 1: //Attack1
+                case 1: //Attack1 //can be parried
                     enAnimator.SetTrigger("Attack1Slow"); //TODO: Alternate between two attacks
 
                     enAnimator.SetBool("isAttacking", true);
@@ -245,26 +245,34 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetTrigger("Attack2Slow");
                     enAnimator.SetBool("isAttacking", true);
                     enAnimator.SetBool("Move", false);
-
-
-
                     rb.velocity = new Vector2(0, 0);
+
+                    yield return new WaitForSeconds(0.6f);
                     Attack();
+
                     yield return new WaitForSeconds(enAttackSpeed);
                     enAnimator.SetBool("isAttacking", false);
                     break;
                 case 3: //Attack1 + Attack2
-                    enAnimator.SetTrigger("Attack1SlowStartCombo");
                     enAnimator.SetBool("isAttacking", true);
                     enAnimator.SetBool("Move", false);
-
-
-
                     rb.velocity = new Vector2(0, 0);
+
+                    enAnimator.SetTrigger("Attack1SlowStartCombo");
+                    yield return new WaitForSeconds(0.6f);
                     Attack();
 
-                    yield return new WaitForSeconds(enAttackSpeed);
+                    enAnimator.SetTrigger("Attack2Slow");
+                    yield return new WaitForSeconds(0.6f); //maybe faster start up variation for this combo
+                    Attack();
+
+                    yield return new WaitForSeconds(enAttackSpeed*2f);
                     enAnimator.SetBool("isAttacking", false);
+                    break;
+                case 4: //Attack1+2 x 3 //can not flip, no parry
+                    //TODO: finish adding Attack1/2 Combo 1/2/3 
+
+                    yield return new WaitForSeconds(enAttackSpeed * 2f); //long delay before attacking again since we have a long attack sequence
                     break;
                 default:
                     yield return new WaitForSeconds(0.01f);
