@@ -245,8 +245,14 @@ public class PlayerCombat : MonoBehaviour
         //damage enemies
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
-            //Debug.Log("We Hit " + enemy.name);
-            if (enemy.GetComponent<Enemy>() != null) //TODO: better way to do this? have to manually update for each new enemy
+            /*if(enemy.GetComponent<EnemyController>() != null)
+            {
+                enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
+                enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
+                enemy.GetComponent<EnemyController>().GetStunned(.3f);
+            }*/
+
+            if (enemy.GetComponent<Enemy>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback/2);

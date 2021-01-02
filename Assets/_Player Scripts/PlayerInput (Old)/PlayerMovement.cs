@@ -18,15 +18,23 @@ public class PlayerMovement : MonoBehaviour
     //dodge/dash cooldown
     public float dodgeCD = 1;
     private float allowDodge = 0;
-    public float dodgeTime = .75f;
+    public float dodgeTime = .5f;
+
+    public float dashCD = 2;
     private float allowDash = 0; //TODO: delete me if combining dash with dodge CD
+    public float dashTime = .75f;
+    private float dashTimeLeft;
+    public float dashSpeed;
+    public float distanceBetweenImages;
+    private float lastImageXpos;
+    private float lastDash = -100f;
 
 
     //private int m_currentAttack = 0;
     //private float m_timeSinceAttack = 0.0f;
     public int m_facingDirection = 1;
     public bool m_rolling = false;
-    public bool m_dashing = false;
+    private bool isDashing = false;
     private bool m_grounded = false;
     float horizontalMove = 0f;
     bool jump = false;
@@ -116,23 +124,22 @@ public class PlayerMovement : MonoBehaviour
         //Dodge Roll
         if (Time.time > allowDodge && canMove)
         {
-            if (Input.GetButtonDown("Dodge") && !m_rolling && !m_dashing && isGrounded) //prevent dodging midair
-            //if (keyboard.leftShiftKey.isPressed && !m_rolling && isGrounded) //prevent dodging midair
+            if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && isGrounded) //prevent dodging midair
             {
                 StartCoroutine(DodgeRoll());
                 canMove = false;
-                //crouch = true; can set later, or just disable hitbox, not collider
             }
         }
-        m_rolling = false;
 
         //Dash (mid-air dodge)
-        /*if(Time.time > allowDash && canMove) //TODO: can just move this into Dodge ^^^^ just switching between both depending on "isGrounded"
+        if(Time.time > allowDash && canMove) //TODO: can just move this into Dodge ^^^^ just switching between both depending on "isGrounded"
         {
-            if(Input.GetButtonDown("Dodge") && !m_rolling && !isGrounded){
-                
+            if(Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && !isGrounded)
+            {
+                Dash();
             }
-        }*/
+        }
+        CheckDash();
 
     }
 
@@ -148,7 +155,6 @@ public class PlayerMovement : MonoBehaviour
             runSpeed = 0f;
 
         jump = false;
-        //animator.SetBool("Jumping", false);
     }
 
     IEnumerator DodgeRoll()
@@ -159,18 +165,56 @@ public class PlayerMovement : MonoBehaviour
         animator.SetTrigger("Roll");
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
         allowDodge = Time.time + dodgeCD;
-        //playerCombat.playerArmor = 100; //temp or dodge invulnerability
         yield return new WaitForSeconds(dodgeTime); //dodge duration
-        //playerCombat.playerArmor = 0; //temp
         canMove = true;
         animator.SetBool("isRolling", false);
         playerCombat.canAttack = true;
+        m_rolling = false;
     }
-
-
-
+    
     void AE_ResetRoll()
     {
         m_rolling = false;
     }
+
+    private void Dash()
+    {
+        isDashing = true;
+        dashTimeLeft = dashTime;
+        lastDash = Time.time;
+        allowDash = Time.time + dodgeCD;
+
+        PlayerAfterImagePool.Instance.GetFromPool();
+        lastImageXpos = transform.position.x;
+    }
+
+    private void CheckDash()
+    {
+        if(isDashing)
+        {
+            if (dashTimeLeft > 0)
+            {
+                canMove = false;
+                controller.canFlip = false;
+                rb.velocity = new Vector2(dashSpeed * m_facingDirection, rb.velocity.y);
+                dashTimeLeft -= Time.deltaTime;
+
+                if(Mathf.Abs(transform.position.x - lastImageXpos) > distanceBetweenImages)
+                {
+                    PlayerAfterImagePool.Instance.GetFromPool();
+                    lastImageXpos = transform.position.x;
+                }
+            }
+
+            if(dashTimeLeft <= 0)
+            {
+                isDashing = false;
+                canMove = true;
+                controller.canFlip = true;
+            }
+        }
+    }
+
+
+
 }
