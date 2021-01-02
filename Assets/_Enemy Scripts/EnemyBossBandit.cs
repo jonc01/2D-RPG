@@ -42,9 +42,9 @@ public class EnemyBossBandit : MonoBehaviour
     [SerializeField]
     float enAttackRange1 = .5f; //when to start attacking player, stop enemy from clipping into player
     public Transform enAttackPoint;
-    float enAttackRange2 = .8f;
-    public Transform enAttackPoint2;
-
+    public Transform enAttackPoint2; //used as PointA for OverlapAreaAll
+    [SerializeField]
+    Vector2 enAttackRange2 = new Vector2(2f, 0.2f);
     public EnemyController enController;
     [Space]
     public float enAttackDamage = 10f;
@@ -81,11 +81,11 @@ public class EnemyBossBandit : MonoBehaviour
         //AI aggro
         rb = GetComponent<Rigidbody2D>();
         enAnimator.SetBool("Move", false);
-        //enController.enFacingRight = false; //start facing left (towards player start)
         isAttacking = false;
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
+
 
     }
 
@@ -193,14 +193,24 @@ public class EnemyBossBandit : MonoBehaviour
         }
     }
 
-    void Attack()
+    void Attack(float damageMultiplier)
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange1, playerLayers);
 
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
+            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
+        }
+    }
+
+    void Attack2(float damageMultiplier)
+    {
+        Collider2D[] hitPlayer = Physics2D.OverlapBoxAll(enAttackPoint2.position, enAttackRange2, 180, playerLayers);
+
+        foreach (Collider2D player in hitPlayer) //loop through enemies hit
+        {
+            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
         }
     }
 
@@ -209,17 +219,17 @@ public class EnemyBossBandit : MonoBehaviour
         if (enCanAttack && !isAttacking)
         {
             //int atkSequence = Random.Range(1, 5);
-            int atkSequence = Random.Range(3, 5); //TODO: DEBUGGING revert to above
+            int atkSequence = Random.Range(2, 3); //TODO: DEBUGGING revert to above
 
             Debug.Log("atkSequence rand: " + atkSequence);
 
-            enStunned = false;
-            isAttacking = true;
 
-            switch (atkSequence) 
+            switch (atkSequence)
             {
                 case 1: //Attack1 //can be parried
-                    enAnimator.SetTrigger("Attack1Slow"); //TODO: Alternate between two attacks
+                    enStunned = false;
+                    isAttacking = true;
+                    enAnimator.SetTrigger("Attack1Slow");
 
                     enAnimator.SetBool("isAttacking", true);
                     enAnimator.SetBool("Move", false);
@@ -233,46 +243,51 @@ public class EnemyBossBandit : MonoBehaviour
                     if (enStunned)
                     {
                         isAttacking = false; //prevent enemy from getting stuck on "isAttacking" since it is never set to false
-                        yield break;
+                        //yield break;
+                        break;
                     }
 
                     rb.velocity = new Vector2(0, 0); //stop enemy from moving
-                    Attack();
+                    Attack(1.5f);
                     yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
                     enAnimator.SetBool("isAttacking", false);
                     break;
                 case 2: //Attack2
+                    enStunned = false;
+                    isAttacking = true;
                     enAnimator.SetTrigger("Attack2Slow");
                     enAnimator.SetBool("isAttacking", true);
                     enAnimator.SetBool("Move", false);
                     rb.velocity = new Vector2(0, 0);
 
                     yield return new WaitForSeconds(0.6f);
-                    Attack();
+                    Attack2(1f);
 
                     yield return new WaitForSeconds(enAttackSpeed);
                     enAnimator.SetBool("isAttacking", false);
                     break;
                 case 3: //Attack1 + Attack2
+                    enStunned = false;
+                    isAttacking = true;
                     enAnimator.SetBool("isAttacking", true);
                     enAnimator.SetBool("Move", false);
                     rb.velocity = new Vector2(0, 0);
 
                     enAnimator.SetTrigger("Attack1SlowStartCombo");
                     yield return new WaitForSeconds(0.6f);
-                    Attack();
+                    Attack(1.5f);
 
                     enAnimator.SetTrigger("Attack2Slow");
                     yield return new WaitForSeconds(0.6f); //maybe faster start up variation for this combo
-                    Attack();
+                    Attack(1f);
 
-                    yield return new WaitForSeconds(enAttackSpeed*2f);
+                    yield return new WaitForSeconds(enAttackSpeed * 2f);
                     enAnimator.SetBool("isAttacking", false);
                     break;
                 case 4: //Attack1+2 x 3 //can not flip, no parry
-                    //TODO: finish adding Attack1/2 Combo 1/2/3 
+                    //TODO: finish adding Attack1/2 Combo 1/2/3
 
-                    yield return new WaitForSeconds(enAttackSpeed * 2f); //long delay before attacking again since we have a long attack sequence
+                    yield return new WaitForSeconds(enAttackSpeed * 3f); //long delay before attacking again since we have a long attack sequence
                     break;
                 default:
                     yield return new WaitForSeconds(0.01f);
@@ -289,13 +304,16 @@ public class EnemyBossBandit : MonoBehaviour
     {
         if (enAttackPoint == null)
             return;
-
+        
+        //Attack1
         Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange1);
 
         if (enAttackPoint2 == null)
             return;
 
-        Gizmos.DrawWireSphere(enAttackPoint2.position, enAttackRange2);
+        //Attack2
+        Gizmos.DrawWireCube(enAttackPoint2.position, new Vector3(enAttackRange2.x, enAttackRange2.y, 0f));
+        
     }
 
     public void TakeDamage(float damage)

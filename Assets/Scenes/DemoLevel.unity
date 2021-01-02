@@ -249,7 +249,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 57842440}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.35, y: -0.035, z: 0}
+  m_LocalPosition: {x: -2.316, y: -0.04, z: 0}
   m_LocalScale: {x: 1.15, y: 1, z: 1}
   m_Children:
   - {fileID: 1393327037}
@@ -271,8 +271,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.06810187, y: -0.15689874}
-  m_Size: {x: 0.27905396, y: 0.81928396}
+  m_Offset: {x: 0.05, y: -0.15689874}
+  m_Size: {x: 0.34, y: 0.85}
   m_Direction: 0
 --- !u!50 &57842443
 Rigidbody2D:
@@ -396,11 +396,12 @@ MonoBehaviour:
   isAlive: 0
   rb: {fileID: 57842443}
   aggroRange: 3
-  enAttackRange1: 0.5
+  enAttackRange1: 0.74
   enAttackPoint: {fileID: 1393327037}
   enAttackPoint2: {fileID: 1286921184}
+  enAttackRange2: {x: 2, y: 0.2}
   enController: {fileID: 57842447}
-  enAttackDamage: 5
+  enAttackDamage: 10
   enAttackSpeed: 2
   enAttackAnimSpeed: 0.2
   stunResist: 0.5
@@ -3908,7 +3909,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286921183}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.27, y: -0.077, z: 0}
+  m_LocalPosition: {x: 0.064, y: -0.146, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 57842441}
@@ -4142,7 +4143,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1393327036}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.365, y: -0.051, z: 0}
+  m_LocalPosition: {x: -0.287, y: -0.035, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 57842441}

@@ -27,7 +27,7 @@ public class HealthBar : MonoBehaviour
 
         if (slowTrail)
         {
-            trailProp = 4 / trail.maxValue;
+            trailProp = 6f / trail.maxValue;
         }
         else
         {
