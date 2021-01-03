@@ -49,7 +49,6 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        //m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();
         canMove = true;
         m_facingDirection = 1;
         controller.canFlip = true;
@@ -58,16 +57,12 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //var keyboard = Keyboard.current; //temp workaround
-        //timer for attack combo
-        //m_timeSinceAttack += Time.deltaTime;
         if (canMove == true)
         {
             runSpeed = defaultRunSpeed;
             horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
         }
         
-
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove)); //greater than 0 -> play run anim, less than -> play idle
         //animator.SetBool("Grounded", true);
 

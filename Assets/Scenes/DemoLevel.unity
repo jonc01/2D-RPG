@@ -399,7 +399,7 @@ MonoBehaviour:
   enAttackRange1: 0.74
   enAttackPoint: {fileID: 1393327037}
   enAttackPoint2: {fileID: 1286921184}
-  enAttackRange2: {x: 2, y: 0.2}
+  enAttackRange2: {x: 1.85, y: 0.4}
   enController: {fileID: 57842447}
   enAttackDamage: 10
   enAttackSpeed: 2

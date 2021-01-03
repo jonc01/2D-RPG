@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
     public Transform TextPopups;
 
     [SerializeField]
-    private bool enCanFlip;
+    public bool enCanFlip;
     public bool enCanMove;
 
     // Use this for initialization

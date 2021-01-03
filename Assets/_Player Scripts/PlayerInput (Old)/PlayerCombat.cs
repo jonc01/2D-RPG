@@ -214,7 +214,6 @@ public class PlayerCombat : MonoBehaviour
         {
             HealPlayer(25f); //how much health to heal
         }
-
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
     }
@@ -441,6 +440,33 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+void GetKnockback(float kbThrust = 3f, float kbDuration = 5f) //defaults
+{
+    //lungeThrust - velocity of lunge movement
+    //lungeDuration - how long to maintain thrust velocity
+
+    //TODO: instead of distance to player, need to get distance of enemy dealing damage to player, knockback away from them
+    float distToPlayer = transform.position.x - transform.position.x; //getting player direction to enemy //if 0 will use last direction
+
+    Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+
+    if (distToPlayer < 0) //player hit from right
+    {
+        //knockback to right
+        tempOffset.x += kbDuration;
+        Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+        transform.position = smoothPosition;
+    }
+    else //player hit from left
+    {
+        //knockback to left
+        tempOffset.x -= kbDuration;
+        Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+        transform.position = smoothPosition;
+    }
+
+}
+
     public void TakeDamage(float damage)
     {
         if (currentHealth > 0) {
@@ -454,6 +480,7 @@ public class PlayerCombat : MonoBehaviour
             {
                 animator.SetTrigger("Hurt");
                 sr.material = mWhiteFlash; //flashing enemy sprite
+                GetKnockback(); //
                 Invoke("ResetMaterial", .1f);
             }
 

@@ -44,7 +44,7 @@ public class EnemyBossBandit : MonoBehaviour
     public Transform enAttackPoint;
     public Transform enAttackPoint2; //used as PointA for OverlapAreaAll
     [SerializeField]
-    Vector2 enAttackRange2 = new Vector2(2f, 0.2f);
+    Vector2 enAttackRange2 = new Vector2(1.85f, 0.4f);
     public EnemyController enController;
     [Space]
     public float enAttackDamage = 10f;
@@ -219,7 +219,7 @@ public class EnemyBossBandit : MonoBehaviour
         if (enCanAttack && !isAttacking)
         {
             //int atkSequence = Random.Range(1, 5);
-            int atkSequence = Random.Range(2, 3); //TODO: DEBUGGING revert to above
+            int atkSequence = Random.Range(1, 1); //TODO: DEBUGGING revert to above
 
             Debug.Log("atkSequence rand: " + atkSequence);
 
@@ -252,7 +252,7 @@ public class EnemyBossBandit : MonoBehaviour
                     yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
                     enAnimator.SetBool("isAttacking", false);
                     break;
-                case 2: //Attack2
+                case 2: //Attack2 //can be parried
                     enStunned = false;
                     isAttacking = true;
                     enAnimator.SetTrigger("Attack2Slow");
@@ -266,7 +266,7 @@ public class EnemyBossBandit : MonoBehaviour
                     yield return new WaitForSeconds(enAttackSpeed);
                     enAnimator.SetBool("isAttacking", false);
                     break;
-                case 3: //Attack1 + Attack2
+                case 3: //Attack1 + Attack2 //Attack1 can be parried
                     enStunned = false;
                     isAttacking = true;
                     enAnimator.SetBool("isAttacking", true);
@@ -278,19 +278,63 @@ public class EnemyBossBandit : MonoBehaviour
                     Attack(1.5f);
 
                     enAnimator.SetTrigger("Attack2Slow");
-                    yield return new WaitForSeconds(0.6f); //maybe faster start up variation for this combo
-                    Attack(1f);
+                    yield return new WaitForSeconds(0.5f); //maybe faster start up variation for this combo
+                    Attack2(1f);
 
                     yield return new WaitForSeconds(enAttackSpeed * 2f);
                     enAnimator.SetBool("isAttacking", false);
                     break;
                 case 4: //Attack1+2 x 3 //can not flip, no parry
-                    //TODO: finish adding Attack1/2 Combo 1/2/3
+                    enStunned = false;
+                    isAttacking = true;
+                    enAnimator.SetBool("isAttacking", true);
+                    enAnimator.SetBool("Move", false);
+                    rb.velocity = new Vector2(0, 0);
 
-                    yield return new WaitForSeconds(enAttackSpeed * 3f); //long delay before attacking again since we have a long attack sequence
+                    enAnimator.SetTrigger("Attack1SlowStartCombo"); //Attack1
+                    yield return new WaitForSeconds(.6f);
+                    LungeOnAttack();
+                    Attack(1.2f);
+                    yield return new WaitForSeconds(.4f);
+
+                    enAnimator.SetTrigger("Attack2SlowStartCombo"); //Attack2
+                    yield return new WaitForSeconds(.4f);
+                    LungeOnAttack();
+                    Attack2(1f);
+                    yield return new WaitForSeconds(.3f);
+
+                    enAnimator.SetTrigger("Attack1SlowStartCombo2"); //Attack1
+                    yield return new WaitForSeconds(.3f);
+                    LungeOnAttack();
+                    Attack(1.3f);
+                    yield return new WaitForSeconds(.2f);
+
+                    enAnimator.SetTrigger("Attack2SlowStartCombo2"); //Attack2
+                    yield return new WaitForSeconds(.2f);
+                    LungeOnAttack();
+                    Attack2(1f);
+                    yield return new WaitForSeconds(.2f);
+
+                    enAnimator.SetTrigger("Attack1SlowStartCombo3"); //Attack1
+                    yield return new WaitForSeconds(.2f);
+                    LungeOnAttack();
+                    Attack(1.5f);
+                    yield return new WaitForSeconds(.2f);
+
+                    enAnimator.SetTrigger("Attack2SlowStartCombo3"); //Attack2
+                    yield return new WaitForSeconds(.2f);
+                    LungeOnAttack();
+                    Attack2(1f);
+
+                    yield return new WaitForSeconds(.2f); //short delay so the Attack2 anim doesn't get cut off
+                    enAnimator.SetTrigger("IdleLong"); //longer slow idle animation
+                    yield return new WaitForSeconds(1f);
+
+                    yield return new WaitForSeconds(enAttackSpeed * 2f); //long delay before attacking again since we have a long attack sequence
+                    enAnimator.SetBool("isAttacking", false);
                     break;
                 default:
-                    yield return new WaitForSeconds(0.01f);
+                    yield return new WaitForSeconds(0.01f); //
                     break;
             }
         }
@@ -299,6 +343,33 @@ public class EnemyBossBandit : MonoBehaviour
         enCanAttack = true;
     }
 
+    void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f) //defaults
+    {
+        //lungeThrust - velocity of lunge movement
+        //lungeDuration - how long to maintain thrust velocity
+
+        float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
+
+        Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+
+        if (enController.enCanFlip)
+        {
+            if (distToPlayer < 0) //to right of player //swapped > to < from knockback, moving towards player instead of away
+            {
+                //lunge to right
+                tempOffset.x += lungeDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
+            }
+            else //to left of player
+            {
+                //lunge to left
+                tempOffset.x -= lungeDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
+            }
+        }
+    }
 
     private void OnDrawGizmosSelected()
     {
@@ -307,7 +378,7 @@ public class EnemyBossBandit : MonoBehaviour
         
         //Attack1
         Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange1);
-
+        
         if (enAttackPoint2 == null)
             return;
 

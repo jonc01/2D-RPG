@@ -52,7 +52,7 @@ public class Enemy : MonoBehaviour
     
     [Space] //knockback
     public float kbThrust = 3.0f;
-    public float kbDuration = 5.0f; //or duration
+    public float kbDuration = 5.0f;
 
 
     [SerializeField]
@@ -107,6 +107,18 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        if(rb != null)
+        {
+            if (rb.velocity.x == 0)
+            {
+                enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while 
+            }
+            else
+            {
+                enAnimator.SetBool("move", true);
+            }
+        }
+
         if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
         {
             //checking distance to player for aggro range
@@ -147,7 +159,6 @@ public class Enemy : MonoBehaviour
     {
         enAnimator.SetBool("inCombat", false);
         //enController.enCanMove = true;
-        enAnimator.SetBool("move", true);
 
         if (enController.enCanMove)
         {
@@ -307,41 +318,31 @@ public class Enemy : MonoBehaviour
         sr.material = mDefault;
     }
 
-    public void GetKnockback(float knockbackAmount)
+    public void GetKnockback(float knockbackAmount) //boss has implementation of taking kbThrust and kbDuration as params with defaults instead
     {
-        if (rb != null) {
+        if (rb != null)
+        {
             Vector3 changeLocation = GetComponent<Transform>().position;
             Vector3 tempLocation = changeLocation; //for particle instantiate
             tempLocation.y += .5f;
 
-            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //0 use direction of last position
+            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
 
-            //float knockbackThrust = 3.0f;
-            //float knockbackDist = 5.0f; 
-            //float kbThrust = 3.0f;
-            //float kbDuration = 5.0f;
-
-    Vector3 tempOffset = transform.position;
-            tempOffset.x += kbDuration;
-
-            Vector3 tempOffset2 = gameObject.transform.position; //can implement knockup with y offset
+            Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
             //tempOffset2.x += knockbackDist;
 
-
-            //Vector3 temp = transform.position + offset;
-
-            if(distToPlayer > 0) //to right of player
+            if (distToPlayer > 0) //to right of player
             {
                 //knockback to left
-                tempOffset2.x += kbDuration;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset2, kbThrust * Time.fixedDeltaTime);
+                tempOffset.x += kbDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
             else //to left of player
             {
                 //knockback to right
-                tempOffset2.x -= kbDuration;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset2, kbThrust * Time.fixedDeltaTime);
+                tempOffset.x -= kbDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
 
