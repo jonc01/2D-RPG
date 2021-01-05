@@ -219,7 +219,7 @@ public class EnemyBossBandit : MonoBehaviour
         if (enCanAttack && !isAttacking)
         {
             //int atkSequence = Random.Range(1, 5);
-            int atkSequence = Random.Range(1, 1); //TODO: DEBUGGING revert to above
+            int atkSequence = Random.Range(4, 4); //TODO: DEBUGGING revert to above
 
             Debug.Log("atkSequence rand: " + atkSequence);
 
@@ -328,9 +328,9 @@ public class EnemyBossBandit : MonoBehaviour
 
                     yield return new WaitForSeconds(.2f); //short delay so the Attack2 anim doesn't get cut off
                     enAnimator.SetTrigger("IdleLong"); //longer slow idle animation
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(1.6f);
 
-                    yield return new WaitForSeconds(enAttackSpeed * 2f); //long delay before attacking again since we have a long attack sequence
+                    yield return new WaitForSeconds(enAttackSpeed); //long delay before attacking again since we have a long attack sequence
                     enAnimator.SetBool("isAttacking", false);
                     break;
                 default:
@@ -568,6 +568,8 @@ public class EnemyBossBandit : MonoBehaviour
     {
         //give player exp
         GiveExperience(experiencePoints);
+
+        StopAllCoroutines(); //stops attack coroutine if dead
 
         //disable enemy object
         isAlive = false;

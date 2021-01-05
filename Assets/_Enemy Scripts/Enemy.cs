@@ -322,11 +322,13 @@ public class Enemy : MonoBehaviour
     {
         if (rb != null)
         {
+            //offset for particle instantiate
             Vector3 changeLocation = GetComponent<Transform>().position;
-            Vector3 tempLocation = changeLocation; //for particle instantiate
+            Vector3 tempLocation = changeLocation;
             tempLocation.y += .5f;
 
-            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
+            //getting player direction to enemy 
+            float distToPlayer = transform.position.x - player.transform.position.x;
 
             Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
             //tempOffset2.x += knockbackDist;

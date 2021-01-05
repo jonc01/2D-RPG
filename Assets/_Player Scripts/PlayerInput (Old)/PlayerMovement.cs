@@ -40,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     bool jump = false;
     bool crouch = false;
 
+
     public bool canMove = true;
 
     //created new separate from CharacterController2D
@@ -86,8 +87,9 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && rb.velocity.y == 0)
         //if (keyboard.spaceKey.isPressed && rb.velocity.y == 0)
         {
-            if(canMove)
+            if (canMove)
                 rb.AddForce(Vector2.up * 100f);
+                
             //jump = true;
             //animator.SetBool("Grounded", false);
             //animator.SetBool("Jumping", true);

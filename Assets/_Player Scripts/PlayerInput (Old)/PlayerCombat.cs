@@ -67,8 +67,7 @@ public class PlayerCombat : MonoBehaviour
     public float knockback = 50f;
 
     SpriteRenderer sr;
-    [SerializeField]
-    private Material mWhiteFlash;
+    [SerializeField] private Material mWhiteFlash;
     private Material mDefault;
 
     void Start()
@@ -96,12 +95,12 @@ public class PlayerCombat : MonoBehaviour
         //movement.canMove = true;
         canAttack = true;
         AltAttacking = false;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
         m_timeSinceAttack += Time.deltaTime;
         //Attack Animations //&& (blockIsHeld == false) 
         if (Input.GetButtonDown("Fire1") && m_timeSinceAttack > 0.25f && canAttack)
@@ -119,20 +118,10 @@ public class PlayerCombat : MonoBehaviour
             // Call one of three attack animations "Attack1", "Attack2", "Attack3"
             animator.SetTrigger("Attack" + m_currentAttack);
 
-            if (m_currentAttack == 3) {
-                AttackHeavy(); //can add parameter to Attack(10), for additional 10 damage on top of player damage
-                StartCoroutine(IsAttacking());
-            }
-            else
-            {
-                //movement.canMove = false;
-                Attack();
-                StartCoroutine(IsAttacking());
-                //Attack();
-            }
-                // Reset timer
-                m_timeSinceAttack = 0.0f;
-                //
+            StartCoroutine(IsAttacking(m_currentAttack));
+            
+            // Reset timer
+            m_timeSinceAttack = 0.0f;
         }
 
         //Block/Alt attack
@@ -140,9 +129,7 @@ public class PlayerCombat : MonoBehaviour
         {
             if (Input.GetButtonDown("Fire2") && canAttack && !AltAttacking)
             {
-                /*private const float minBlockDuration = 0.25f;
-                private float currentBlockDuration = 0f;
-                */
+                
                 //currentBlockDuration = Time.timeSinceLevelLoad;
                 //blockIsHeld = true;
 
@@ -218,18 +205,42 @@ public class PlayerCombat : MonoBehaviour
         /////////////////////////////////////////////////////////////////////////////////////////////
     }
 
-    IEnumerator IsAttacking()
+    IEnumerator IsAttacking(int attackNum)
     {
         if(movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
-        //Attack();
-        movement.rb.velocity = new Vector2(0, 0); //stop player from moving
+        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //maintaining y velocity, instead of making player float
+
+        switch (attackNum)
+        {
+            case 1:
+                yield return new WaitForSeconds(0.1f);
+                Attack(); //Attack functions determine damage and attack hitbox
+                //yield return
+                break;
+            case 2:
+                yield return new WaitForSeconds(0.1f);
+                Attack();
+                //yield return
+                break;
+            case 3:
+                yield return new WaitForSeconds(0.2f);
+                AttackHeavy();
+                //yield return
+                break;
+            default:
+                yield return new WaitForSeconds(0.01f); //
+                break;
+        }
+
+        //movement.rb.velocity = new Vector2(0, 0); //stop player from moving
+        
         //yield return new WaitForSeconds(attackTime);
         yield return new WaitForSeconds(0.3f);
-
         movement.canMove = true;
+        
         animator.SetBool("isAttacking", false);
         //movement.canMove = true;
         //movement.runSpeed = movement.defaultRunSpeed;
@@ -240,11 +251,10 @@ public class PlayerCombat : MonoBehaviour
         //Attack range, detect enemies in range
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
-        //movement.rb.AddForce(Vector2.right * 10f);
         //damage enemies
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
-            /*if(enemy.GetComponent<EnemyController>() != null)
+            /*if(enemy.GetComponent<EnemyController>() != null) //after migrating below functions into EnemyController
             {
                 enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
                 enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
@@ -279,21 +289,8 @@ public class PlayerCombat : MonoBehaviour
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
         //Collider2D[] hitEnemies = Physics2D.OverlapAreaAll(attackPoint.position, attackHeavyRange, enemyLayers);
         
-        Vector3 changeLocation = playerLocation.position;
-        if (controller.m_FacingRight)
-        {
-            //go right
-            changeLocation.x += .1f;
-            playerLocation.position = changeLocation;
-            //movement.rb.AddForce(Vector2.right * 10f);
-        }
-        else
-        {
-            //go left
-            changeLocation.x -= .1f;
-            playerLocation.position = changeLocation;
-            //movement.rb.AddForce(Vector2.left * 10f);
-        }
+        //LungeOnAttack();
+
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
             if(enemy.GetComponent<EnemyController>() != null)
@@ -343,7 +340,7 @@ public class PlayerCombat : MonoBehaviour
         //range increase to around 15f-20f
         //hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
 
-        Vector3 newAttackPoint = attackPoint.position; //this is based on weapon stats, may have to change if weapons have too much range?
+        Vector3 newAttackPoint = attackPoint.position;
         //newAttackPoint.x += (wepRange * 3) / 2;
         Collider2D[] altHitEnemies;
 
@@ -357,29 +354,10 @@ public class PlayerCombat : MonoBehaviour
             newAttackPoint.x += -(wepRange * 3) / 2;
             altHitEnemies = Physics2D.OverlapBoxAll(newAttackPoint, new Vector3(wepRange * 3, 1, 0), 0, enemyLayers);
         }
-
-        /*if (altHitEnemies.Length > 1)
-        {
-            Debug.Log("altHitEnemies: " + altHitEnemies.Length);
-        }
-        else
-        {
-            Debug.Log("no enemies hit");
-            Debug.Log("altHitEnemies: " + altHitEnemies.Length);
-        }*/
-        
-
-        //might have to manually flip //attackPoint.position or -attackPoint.position
-            //might not need to, it might just initiate Collider2D when we attack, and face in correct direction
-        
         
         Vector2 altRangeSize = new Vector2(2, altRange);
         //Collider2D[] altHitEnemies = Physics2D.OverlapBoxAll(newAttackPoint, new Vector3(wepRange * 3, 1, 0), 180, enemyLayers);
 
-
-
-        //Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, altRangeSize, 180, enemyLayers);
-        //Collider2D[] hitEnemies = Physics2D.OverlapAreaAll(attackPoint.position, attackHeavyRange, enemyLayers);
         //damage enemies
         Vector3 changeLocation = playerLocation.position; //for movement with attack use
         if (controller.m_FacingRight)
@@ -413,6 +391,41 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<EnemyBossBandit>() != null)
                 enemy.GetComponent<EnemyBossBandit>().TakeDamage(altDamage);
         }
+    }
+
+    void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f, bool lunge = true) //defaults, set "lunge" to false for knockback
+    {
+        //lungeThrust - velocity of lunge movement
+        //lungeDuration - how long to maintain thrust velocity
+
+        //float distToPlayer = transform.position.x - transform.position.x; //getting player direction to enemy
+
+        Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+
+        if (lunge)
+        {
+            if (controller.m_FacingRight) //lunge towards facing direction
+            {
+                tempOffset.x += lungeDuration; //lunge to right
+            }
+            else //to left of player
+            {
+                tempOffset.x -= lungeDuration; //lunge to left
+            }
+        }
+        else
+        {
+            if (controller.m_FacingRight) //knockback away from facing direction
+            {
+                tempOffset.x -= lungeDuration; //knockback to left
+            }
+            else //to left of player
+            {
+                tempOffset.x += lungeDuration; //knockback to right
+            }
+        }
+        Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeThrust * Time.fixedDeltaTime);
+        transform.position = smoothPosition;
     }
 
     private void OnDrawGizmosSelected()
