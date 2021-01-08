@@ -5,20 +5,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
 {
-    public GameObject camera;
+    //public GameObject camera;
 
     public Animator animator;
     [SerializeField] bool m_noBlood = false;
     public PlayerMovement movement;
     public CharacterController2D controller;
-    public GameObject TextPopupsPrefab;
     public Transform playerLocation;
 
-    [SerializeField]
-    private Transform TextPopupOffset;
-
-    //textPopups for referencce in PlayerMovement
-    public GameObject tempShowDmg;
+    //Text Popups
+    public GameObject TextPopupsPrefab;
+    public TextPopupsHandler TextPopupsHandler;
 
     public float maxHealth = 100;
     public float currentHealth;
@@ -67,8 +64,7 @@ public class PlayerCombat : MonoBehaviour
     public float knockback = 50f;
 
     SpriteRenderer sr;
-    [SerializeField]
-    private Material mWhiteFlash;
+    [SerializeField] private Material mWhiteFlash;
     private Material mDefault;
 
     void Start()
@@ -96,12 +92,12 @@ public class PlayerCombat : MonoBehaviour
         //movement.canMove = true;
         canAttack = true;
         AltAttacking = false;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
         m_timeSinceAttack += Time.deltaTime;
         //Attack Animations //&& (blockIsHeld == false) 
         if (Input.GetButtonDown("Fire1") && m_timeSinceAttack > 0.25f && canAttack)
@@ -119,20 +115,10 @@ public class PlayerCombat : MonoBehaviour
             // Call one of three attack animations "Attack1", "Attack2", "Attack3"
             animator.SetTrigger("Attack" + m_currentAttack);
 
-            if (m_currentAttack == 3) {
-                AttackHeavy(); //can add parameter to Attack(10), for additional 10 damage on top of player damage
-                StartCoroutine(IsAttacking());
-            }
-            else
-            {
-                //movement.canMove = false;
-                Attack();
-                StartCoroutine(IsAttacking());
-                //Attack();
-            }
-                // Reset timer
-                m_timeSinceAttack = 0.0f;
-                //
+            StartCoroutine(IsAttacking(m_currentAttack));
+            
+            // Reset timer
+            m_timeSinceAttack = 0.0f;
         }
 
         //Block/Alt attack
@@ -140,9 +126,7 @@ public class PlayerCombat : MonoBehaviour
         {
             if (Input.GetButtonDown("Fire2") && canAttack && !AltAttacking)
             {
-                /*private const float minBlockDuration = 0.25f;
-                private float currentBlockDuration = 0f;
-                */
+                
                 //currentBlockDuration = Time.timeSinceLevelLoad;
                 //blockIsHeld = true;
 
@@ -200,6 +184,18 @@ public class PlayerCombat : MonoBehaviour
         //animator.SetBool("IdleBlock", false);
         //}
 
+        if (movement.m_rolling)
+        {
+            //StopCoroutine(AttackCo)
+            Debug.Log("ROLLLINGGGG");
+        }
+
+        if (movement.isDashing)
+        {
+            //StopCoroutine(
+            Debug.Log("DASSSHHIINNGGG");
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,23 +210,46 @@ public class PlayerCombat : MonoBehaviour
         {
             HealPlayer(25f); //how much health to heal
         }
-
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
     }
 
-    IEnumerator IsAttacking()
+    IEnumerator IsAttacking(int attackNum)
     {
         if(movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
-        //Attack();
-        movement.rb.velocity = new Vector2(0, 0); //stop player from moving
+        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //maintaining y velocity, instead of making player float
+
+        switch (attackNum)
+        {
+            case 1:
+                yield return new WaitForSeconds(0.1f);
+                Attack(); //Attack functions determine damage and attack hitbox
+                //yield return
+                break;
+            case 2:
+                yield return new WaitForSeconds(0.1f);
+                Attack();
+                //yield return
+                break;
+            case 3:
+                yield return new WaitForSeconds(0.2f);
+                AttackHeavy();
+                //yield return
+                break;
+            default:
+                yield return new WaitForSeconds(0.01f); //
+                break;
+        }
+
+        //movement.rb.velocity = new Vector2(0, 0); //stop player from moving
+        
         //yield return new WaitForSeconds(attackTime);
         yield return new WaitForSeconds(0.3f);
-
         movement.canMove = true;
+        
         animator.SetBool("isAttacking", false);
         //movement.canMove = true;
         //movement.runSpeed = movement.defaultRunSpeed;
@@ -241,11 +260,10 @@ public class PlayerCombat : MonoBehaviour
         //Attack range, detect enemies in range
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
-        //movement.rb.AddForce(Vector2.right * 10f);
         //damage enemies
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
-            /*if(enemy.GetComponent<EnemyController>() != null)
+            /*if(enemy.GetComponent<EnemyController>() != null) //after migrating below functions into EnemyController
             {
                 enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
                 enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
@@ -256,12 +274,11 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback/2);
-                enemy.GetComponent<Enemy>().GetStunned(.3f);
+                enemy.GetComponent<Enemy>().GetStunned(.3f, false);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
                 enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight);
-
 
             if (enemy.GetComponent<Enemy2>() != null)
             {
@@ -280,21 +297,8 @@ public class PlayerCombat : MonoBehaviour
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
         //Collider2D[] hitEnemies = Physics2D.OverlapAreaAll(attackPoint.position, attackHeavyRange, enemyLayers);
         
-        Vector3 changeLocation = playerLocation.position;
-        if (controller.m_FacingRight)
-        {
-            //go right
-            changeLocation.x += .1f;
-            playerLocation.position = changeLocation;
-            //movement.rb.AddForce(Vector2.right * 10f);
-        }
-        else
-        {
-            //go left
-            changeLocation.x -= .1f;
-            playerLocation.position = changeLocation;
-            //movement.rb.AddForce(Vector2.left * 10f);
-        }
+        //LungeOnAttack();
+
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
             if(enemy.GetComponent<EnemyController>() != null)
@@ -344,7 +348,7 @@ public class PlayerCombat : MonoBehaviour
         //range increase to around 15f-20f
         //hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
 
-        Vector3 newAttackPoint = attackPoint.position; //this is based on weapon stats, may have to change if weapons have too much range?
+        Vector3 newAttackPoint = attackPoint.position;
         //newAttackPoint.x += (wepRange * 3) / 2;
         Collider2D[] altHitEnemies;
 
@@ -358,29 +362,10 @@ public class PlayerCombat : MonoBehaviour
             newAttackPoint.x += -(wepRange * 3) / 2;
             altHitEnemies = Physics2D.OverlapBoxAll(newAttackPoint, new Vector3(wepRange * 3, 1, 0), 0, enemyLayers);
         }
-
-        /*if (altHitEnemies.Length > 1)
-        {
-            Debug.Log("altHitEnemies: " + altHitEnemies.Length);
-        }
-        else
-        {
-            Debug.Log("no enemies hit");
-            Debug.Log("altHitEnemies: " + altHitEnemies.Length);
-        }*/
-        
-
-        //might have to manually flip //attackPoint.position or -attackPoint.position
-            //might not need to, it might just initiate Collider2D when we attack, and face in correct direction
-        
         
         Vector2 altRangeSize = new Vector2(2, altRange);
         //Collider2D[] altHitEnemies = Physics2D.OverlapBoxAll(newAttackPoint, new Vector3(wepRange * 3, 1, 0), 180, enemyLayers);
 
-
-
-        //Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, altRangeSize, 180, enemyLayers);
-        //Collider2D[] hitEnemies = Physics2D.OverlapAreaAll(attackPoint.position, attackHeavyRange, enemyLayers);
         //damage enemies
         Vector3 changeLocation = playerLocation.position; //for movement with attack use
         if (controller.m_FacingRight)
@@ -416,7 +401,54 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmosSelected()
+    IEnumerator Parry()
+    {
+        yield return new WaitForSeconds(.1f);
+        //GetEnemy ... TryParry(); //get do the actual check in GetParried
+        yield return new WaitForSeconds(1.0f);
+    }
+    
+    void ParryAttack()
+    {
+        //GetEnemy ... GetParried
+    }
+
+    void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f, bool lunge = true) //defaults, set "lunge" to false for knockback
+    {
+        //lungeThrust - velocity of lunge movement
+        //lungeDuration - how long to maintain thrust velocity
+
+        //float distToPlayer = transform.position.x - transform.position.x; //getting player direction to enemy
+
+        Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+
+        if (lunge)
+        {
+            if (controller.m_FacingRight) //lunge towards facing direction
+            {
+                tempOffset.x += lungeDuration; //lunge to right
+            }
+            else //to left of player
+            {
+                tempOffset.x -= lungeDuration; //lunge to left
+            }
+        }
+        else
+        {
+            if (controller.m_FacingRight) //knockback away from facing direction
+            {
+                tempOffset.x -= lungeDuration; //knockback to left
+            }
+            else //to left of player
+            {
+                tempOffset.x += lungeDuration; //knockback to right
+            }
+        }
+        Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeThrust * Time.fixedDeltaTime);
+        transform.position = smoothPosition;
+    }
+
+    private void OnDrawGizmos() //OnDrawGizmosSelected
     {
         if (attackPoint == null)
             return;
@@ -440,6 +472,49 @@ public class PlayerCombat : MonoBehaviour
             Gizmos.DrawWireCube(newAttackPoint, new Vector3(wepRange * 3, 1, 0));
         }
     }
+     
+    public void GetKnockback(bool pushToRight, float kbThrust = 3f, float kbDuration = 5f) //defaults
+    {
+        //lungeThrust - velocity of lunge movement
+        //lungeDuration - how long to maintain thrust velocity
+
+        if (!animator.GetBool("isRolling"))
+        {
+            Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+            if (pushToRight) //knockback to right
+            {
+                tempOffset.x += kbDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
+            }
+            else //knockback to left
+            {
+                tempOffset.x -= kbDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
+            }
+            StunPlayer(1f);
+        }
+    }
+
+    public void StunPlayer(float stunDuration)
+    {
+        StartCoroutine(Stun(stunDuration));
+    }
+
+    IEnumerator Stun(float stunDuration, bool root = true) //root: player's velocity is set to 0
+    {
+        canAttack = false;
+        movement.canMove = false;
+        animator.SetBool("move", false);
+        if (root)
+            movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //only rooting player x velocity
+
+        yield return new WaitForSeconds(stunDuration);
+
+        canAttack = true;
+        movement.canMove = true;
+    }
 
     public void TakeDamage(float damage)
     {
@@ -447,6 +522,7 @@ public class PlayerCombat : MonoBehaviour
             if(animator.GetBool("isRolling")) //damage dodged
             {
                 damage = 0;
+                TextPopupsHandler.ShowDodge(transform.position);
             }
             currentHealth -= (damage);
             healthBar.SetHealth(currentHealth);
@@ -454,12 +530,13 @@ public class PlayerCombat : MonoBehaviour
             {
                 animator.SetTrigger("Hurt");
                 sr.material = mWhiteFlash; //flashing enemy sprite
+                //GetKnockback(true); //
                 Invoke("ResetMaterial", .1f);
             }
 
-            if (TextPopupsPrefab) {
-                ShowTextPopup(damage);
-            }
+            //if (TextPopupsHandler != null) {
+            TextPopupsHandler.ShowDamage(damage, transform.position);
+            //}
         }
 
         //hurt animation
@@ -473,44 +550,6 @@ public class PlayerCombat : MonoBehaviour
         sr.material = mDefault;
     }
 
-    void ShowTextPopup(float damageAmount)
-    {
-
-        //Vector3 tempTransform = transform.position; //randomize damage number position
-        Vector3 tempPos = transform.position;
-        tempPos.x += Random.Range(-.1f, .1f);
-        tempPos.y += Random.Range(-.9f, .1f);
-        //tempTransform = screenPosition; //have numbers float in place, don't follow object
-
-
-        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
-        
-        if (damageAmount > 0)
-        {
-            showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
-        }
-        else
-        {
-            showDmg.GetComponent<TextMeshPro>().text = "Dodged";
-        }
-        
-        tempShowDmg = showDmg;
-
-        if (controller.m_FacingRight)
-        {
-            FlipTextAgain(0);
-        }
-        else
-        {
-            FlipTextAgain(180);
-        }
-    }
-
-    public void FlipTextAgain(float rotateAgain) //gets called in PlayerMovement to flip with player
-    {
-        tempShowDmg.GetComponent<TextPopups>().FlipText(rotateAgain);
-    }
-
     public void HealPlayer(float healAmount)
     {
         if (isAlive && currentHealth > 0)
@@ -520,7 +559,7 @@ public class PlayerCombat : MonoBehaviour
             //animator.SetTrigger("Hurt");
             if (TextPopupsPrefab)
             {
-                ShowTextPopupHeal(healAmount);
+                TextPopupsHandler.ShowHeal(healAmount, transform.position);
             }
             if(currentHealth > maxHealth)
             {
@@ -532,33 +571,6 @@ public class PlayerCombat : MonoBehaviour
         if (currentHealth <= 0)
         {
             Die();
-        }
-
-    }
-
-    void ShowTextPopupHeal(float healAmount)
-    {
-        /*Vector3 tempPos = TextPopupOffset.position; //randomize damage number position
-        tempPos.x += Random.Range(-.1f, .1f);
-        tempPos.y += Random.Range(-.9f, .2f);*/
-
-
-        var showHeal = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
-        //Transform temp = transform;
-
-        //var showHeal = Instantiate(TextPopupsPrefab, tempPos, false);
-
-        showHeal.GetComponent<TextMeshPro>().text = healAmount.ToString();
-        showHeal.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
-        tempShowDmg = showHeal;
-
-        if (controller.m_FacingRight)
-        {
-            FlipTextAgain(0);
-        }
-        else
-        {
-            FlipTextAgain(180);
         }
 
     }
@@ -604,7 +616,7 @@ public class PlayerCombat : MonoBehaviour
             healthBar.SetHealth(currentHealth);
             if (TextPopupsPrefab)
             {
-                ShowTextPopupHeal(spawnHpPercentage); //respawn player with x percentage of health
+                TextPopupsHandler.ShowHeal(spawnHpPercentage, transform.position); //respawn player with x percentage of 
             }
             if (currentHealth > maxHealth)
             {

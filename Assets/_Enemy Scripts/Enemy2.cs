@@ -5,11 +5,10 @@ using TMPro;
 
 public class Enemy2 : MonoBehaviour
 {
+    //Text Popups
     public GameObject TextPopupsPrefab;
-    [SerializeField]
-    private Transform TextPopupOffset;
-    private GameObject tempShowDmg; //to flip damage popup as they are created
-    
+    public TextPopupsHandler TextPopupsHandler;
+
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;
@@ -49,6 +48,10 @@ public class Enemy2 : MonoBehaviour
     public float stunResist = .5f; //0f takes full stun duration, 1.0f complete stun resist
     public float allowStun = 0f;
     public float allowStunCD = 5f; //how often enemy can be stunned
+
+    [Space] //knockback
+    public float kbThrust = 3.0f;
+    public float kbDuration = 2.0f;
 
     [SerializeField]
     bool enCanAttack = true, isAttacking; //for parry()
@@ -94,6 +97,18 @@ public class Enemy2 : MonoBehaviour
 
     void Update()
     {
+        if (rb != null)
+        {
+            if (rb.velocity.x == 0)
+            {
+                enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while 
+            }
+            else
+            {
+                enAnimator.SetBool("move", true);
+            }
+        }
+
         if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
         {
             //checking distance to player for aggro range
@@ -133,7 +148,7 @@ public class Enemy2 : MonoBehaviour
     {
         enAnimator.SetBool("inCombat", false);
         //enController.enCanMove = true;
-        enAnimator.SetBool("move", true);
+        //enAnimator.SetBool("move", true);
 
         if (enController.enCanMove)
         {
@@ -287,24 +302,23 @@ public class Enemy2 : MonoBehaviour
                 currentHealth = maxHealth;
 
 
-            //temp knockback
-            Vector3 tempLocation = GetComponent<Transform>().position;
-            tempLocation.y += .5f;
-            //
-
-            Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
+            
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                ShowTextPopup(damage);
+                TextPopupsHandler.ShowDamage(damage, transform.position);
             }
-
 
             //hurt animation
             if (enAnimator != null && damage > 0) //took damage, not heal
             {
                 //stopping coroutine
                 //attackStopped = true;
+
+                Vector3 particleLocation = transform.position;
+                Vector3 particleOffset = particleLocation;
+                particleOffset.y += .5f;
+                Instantiate(hitParticlePrefab, particleOffset, Quaternion.identity);
 
                 enIsHurt = true;
                 enAnimator.SetTrigger("Hurt");
@@ -333,57 +347,33 @@ public class Enemy2 : MonoBehaviour
         if (rb != null)
         {
             Vector3 changeLocation = GetComponent<Transform>().position;
+            Vector3 tempLocation = changeLocation; //for particle instantiate
+            tempLocation.y += .5f;
 
-            if (playerToRight)
+            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
+
+            Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+            //tempOffset2.x += knockbackDist;
+
+            if (distToPlayer > 0) //to right of player
             {
-                changeLocation.x -= .1f; //knockback
-                //rb.AddForce(Vector2.left * knockbackAmount);
+                //knockback to left
+                tempOffset.x += kbDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
             }
-            else
+            else //to left of player
             {
-                changeLocation.x += .1f;
-                //rb.AddForce(Vector2.left * knockbackAmount);
+                //knockback to right
+                tempOffset.x -= kbDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
             }
-            
-            GetComponent<Transform>().position = changeLocation;
-            //StartCoroutine(StunEnemy(0f));
-        }
 
-        /*var showKnockback = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-        showKnockback.GetComponent<TextMeshPro>().text = "?!";*/
+            Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
+        }
     }
 
-    void ShowTextPopup(float damageAmount)
-    {
-        Vector3 tempTransform = transform.position; //randomize damage number position
-        tempTransform.x += Random.Range(-.1f, .1f);
-        tempTransform.y += Random.Range(-.9f, .1f);
-
-
-        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
-        showDmg.GetComponent<TextMeshPro>().text = Mathf.Abs(damageAmount).ToString();
-        tempShowDmg = showDmg;
-        if (damageAmount < 0)
-            showDmg.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
-        /*if (enController.enFacingRight) //player facing right by default
-            showDmg.transform.Rotate(0f, 0f, 0f);*/
-
-
-
-        if (enController.enFacingRight)
-        {
-            FlipTextAgain(180);
-        }
-        else
-        {
-            FlipTextAgain(0);
-        }
-
-    }
-    public void FlipTextAgain(float rotateAgain) //gets called in PlayerMovement to flip with player
-    {
-        tempShowDmg.GetComponent<TextPopups>().FlipText(rotateAgain);
-    }
     public void EnIsHurtStart()
     {
         enIsHurt = true;
@@ -467,6 +457,7 @@ public class Enemy2 : MonoBehaviour
         //give player exp
         GiveExperience(experiencePoints);
 
+        StopAllCoroutines(); //stops attack coroutine if dead
         //hide hp bar
 
 
