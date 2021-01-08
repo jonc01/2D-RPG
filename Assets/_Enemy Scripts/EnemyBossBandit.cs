@@ -5,10 +5,9 @@ using TMPro;
 
 public class EnemyBossBandit : MonoBehaviour
 {
+    //Text Popups
     public GameObject TextPopupsPrefab;
-    [SerializeField]
-    private Transform TextPopupOffset;
-    private GameObject tempShowDmg; //to flip damage popup as they are created
+    public TextPopupsHandler TextPopupsHandler;
 
     public LayerMask playerLayers;
     public Transform player;
@@ -19,7 +18,6 @@ public class EnemyBossBandit : MonoBehaviour
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
-
 
     public GameObject HealthBarCanvas;
     public float maxHealth = 1000;
@@ -193,7 +191,7 @@ public class EnemyBossBandit : MonoBehaviour
         }
     }
 
-    void Attack(float damageMultiplier)
+    void Attack(float damageMultiplier, bool knockback = true)
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange1, playerLayers);
 
@@ -201,16 +199,40 @@ public class EnemyBossBandit : MonoBehaviour
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
             player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
+            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
+            if (knockback)
+            {
+                if (distToPlayer > 0)
+                {
+                    playerCombat.GetKnockback(false); //knockback to left
+                }
+                else
+                {
+                    playerCombat.GetKnockback(true); //knockback to right
+                }
+            }
         }
     }
 
-    void Attack2(float damageMultiplier)
+    void Attack2(float damageMultiplier, bool knockback = true)
     {
         Collider2D[] hitPlayer = Physics2D.OverlapBoxAll(enAttackPoint2.position, enAttackRange2, 180, playerLayers);
 
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
             player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
+            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
+            if (knockback)
+            {
+                if (distToPlayer > 0)
+                {
+                    playerCombat.GetKnockback(false); //knockback to left
+                }
+                else
+                {
+                    playerCombat.GetKnockback(true); //knockback to right
+                }
+            }
         }
     }
 
@@ -240,13 +262,6 @@ public class EnemyBossBandit : MonoBehaviour
 
                     yield return new WaitForSeconds(0.7f); //time until damage is dealt based on animation
 
-                    if (enStunned)
-                    {
-                        isAttacking = false; //prevent enemy from getting stuck on "isAttacking" since it is never set to false
-                        //yield break;
-                        break;
-                    }
-
                     rb.velocity = new Vector2(0, 0); //stop enemy from moving
                     Attack(1.5f);
                     yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
@@ -261,6 +276,7 @@ public class EnemyBossBandit : MonoBehaviour
                     rb.velocity = new Vector2(0, 0);
 
                     yield return new WaitForSeconds(0.6f);
+                    LungeOnAttack();
                     Attack2(1f);
 
                     yield return new WaitForSeconds(enAttackSpeed);
@@ -279,6 +295,7 @@ public class EnemyBossBandit : MonoBehaviour
 
                     enAnimator.SetTrigger("Attack2Slow");
                     yield return new WaitForSeconds(0.5f); //maybe faster start up variation for this combo
+                    LungeOnAttack();
                     Attack2(1f);
 
                     yield return new WaitForSeconds(enAttackSpeed * 2f);
@@ -294,7 +311,7 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetTrigger("Attack1SlowStartCombo"); //Attack1
                     yield return new WaitForSeconds(.6f);
                     LungeOnAttack();
-                    Attack(1.2f);
+                    Attack(1f);
                     yield return new WaitForSeconds(.4f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo"); //Attack2
@@ -306,7 +323,7 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetTrigger("Attack1SlowStartCombo2"); //Attack1
                     yield return new WaitForSeconds(.3f);
                     LungeOnAttack();
-                    Attack(1.3f);
+                    Attack(1f);
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo2"); //Attack2
@@ -318,7 +335,7 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetTrigger("Attack1SlowStartCombo3"); //Attack1
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
-                    Attack(1.5f);
+                    Attack(1f);
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo3"); //Attack2
@@ -406,9 +423,8 @@ public class EnemyBossBandit : MonoBehaviour
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                ShowTextPopup(damage);
+                TextPopupsHandler.ShowDamage(damage, transform.position);
             }
-
 
             //hurt animation
             if (enAnimator != null && damage > 0) //took damage, not heal
@@ -463,36 +479,6 @@ public class EnemyBossBandit : MonoBehaviour
         showKnockback.GetComponent<TextMeshPro>().text = "?!";*/
     }
 
-    void ShowTextPopup(float damageAmount)
-    {
-        Vector3 tempTransform = transform.position; //randomize damage number position
-        tempTransform.x += Random.Range(-.1f, .1f);
-        tempTransform.y += Random.Range(-.9f, .1f);
-
-
-        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
-        showDmg.GetComponent<TextMeshPro>().text = Mathf.Abs(damageAmount).ToString();
-        tempShowDmg = showDmg;
-        if (damageAmount < 0)
-            showDmg.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
-        /*if (enController.enFacingRight) //player facing right by default
-            showDmg.transform.Rotate(0f, 0f, 0f);*/
-
-
-        if (enController.enFacingRight)
-        {
-            FlipTextAgain(180);
-        }
-        else
-        {
-            FlipTextAgain(0);
-        }
-
-    }
-    public void FlipTextAgain(float rotateAgain) //gets called in PlayerMovement to flip with player
-    {
-        tempShowDmg.GetComponent<TextPopups>().FlipText(rotateAgain);
-    }
     public void EnIsHurtStart()
     {
         enIsHurt = true;
@@ -514,6 +500,8 @@ public class EnemyBossBandit : MonoBehaviour
             StartCoroutine(StunEnemy(duration));
         }
     }
+
+
 
     IEnumerator StunEnemy(float stunDuration)
     {

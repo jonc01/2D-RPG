@@ -5,11 +5,13 @@ using TMPro;
 
 public class StationaryEnemy : MonoBehaviour
 {
+    //Text Popups
+    public GameObject TextPopupsPrefab;
+    public TextPopupsHandler TextPopupsHandler;
+
     //this is for support stationary enemies, can make non-support stationary separate
     //this script only targets enemies that are "friendly" to this object, and heals them
-    public GameObject TextPopupsPrefab;
-    [SerializeField]
-    private Transform TextPopupOffset;
+    
 
     public LayerMask playerLayers;
     public Transform player;
@@ -173,7 +175,7 @@ public class StationaryEnemy : MonoBehaviour
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                ShowTextPopup(damage);
+                TextPopupsHandler.ShowDamage(damage, transform.position);
             }
             
             //hurt animation
@@ -194,29 +196,7 @@ public class StationaryEnemy : MonoBehaviour
         sr.material = mDefault;
     }
 
-    void ShowTextPopup(float damageAmount)
-    {
-        //Vector3 tempTransform = GetComponent<Transform>().position;
-        //tempTransform.y -= 1.5f; //doesn't work
-        //Transform test = GetComponent<Transform>();
-        //Vector3 tempTest = test.position;
-        //tempTest.y += 0.8f;
-        //test.position = tempTest;
-
-        //Transform newTransform = TextPopupOffset;
-
-
-
-        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
-        showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
-
-
-
-        /*if (enController.enFacingRight) //player facing right by default
-            showDmg.transform.Rotate(0f, 0f, 0f);*/
-
-        //Instantiate(HitToRight, transform.position, Quaternion.identity);
-    }
+    
 
     public void GiveExperience(int experiencePoints)
     {

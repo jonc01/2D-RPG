@@ -5,20 +5,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
 {
-    public GameObject camera;
+    //public GameObject camera;
 
     public Animator animator;
     [SerializeField] bool m_noBlood = false;
     public PlayerMovement movement;
     public CharacterController2D controller;
-    public GameObject TextPopupsPrefab;
     public Transform playerLocation;
 
-    [SerializeField]
-    private Transform TextPopupOffset;
-
-    //textPopups for referencce in PlayerMovement
-    public GameObject tempShowDmg;
+    //Text Popups
+    public GameObject TextPopupsPrefab;
+    public TextPopupsHandler TextPopupsHandler;
 
     public float maxHealth = 100;
     public float currentHealth;
@@ -187,6 +184,18 @@ public class PlayerCombat : MonoBehaviour
         //animator.SetBool("IdleBlock", false);
         //}
 
+        if (movement.m_rolling)
+        {
+            //StopCoroutine(AttackCo)
+            Debug.Log("ROLLLINGGGG");
+        }
+
+        if (movement.isDashing)
+        {
+            //StopCoroutine(
+            Debug.Log("DASSSHHIINNGGG");
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -265,12 +274,11 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback/2);
-                enemy.GetComponent<Enemy>().GetStunned(.3f);
+                enemy.GetComponent<Enemy>().GetStunned(.3f, false);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
                 enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight);
-
 
             if (enemy.GetComponent<Enemy2>() != null)
             {
@@ -393,6 +401,18 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    IEnumerator Parry()
+    {
+        yield return new WaitForSeconds(.1f);
+        //GetEnemy ... TryParry(); //get do the actual check in GetParried
+        yield return new WaitForSeconds(1.0f);
+    }
+    
+    void ParryAttack()
+    {
+        //GetEnemy ... GetParried
+    }
+
     void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f, bool lunge = true) //defaults, set "lunge" to false for knockback
     {
         //lungeThrust - velocity of lunge movement
@@ -428,7 +448,7 @@ public class PlayerCombat : MonoBehaviour
         transform.position = smoothPosition;
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos() //OnDrawGizmosSelected
     {
         if (attackPoint == null)
             return;
@@ -452,33 +472,49 @@ public class PlayerCombat : MonoBehaviour
             Gizmos.DrawWireCube(newAttackPoint, new Vector3(wepRange * 3, 1, 0));
         }
     }
-
-void GetKnockback(float kbThrust = 3f, float kbDuration = 5f) //defaults
-{
-    //lungeThrust - velocity of lunge movement
-    //lungeDuration - how long to maintain thrust velocity
-
-    //TODO: instead of distance to player, need to get distance of enemy dealing damage to player, knockback away from them
-    float distToPlayer = transform.position.x - transform.position.x; //getting player direction to enemy //if 0 will use last direction
-
-    Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
-
-    if (distToPlayer < 0) //player hit from right
+     
+    public void GetKnockback(bool pushToRight, float kbThrust = 3f, float kbDuration = 5f) //defaults
     {
-        //knockback to right
-        tempOffset.x += kbDuration;
-        Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
-        transform.position = smoothPosition;
-    }
-    else //player hit from left
-    {
-        //knockback to left
-        tempOffset.x -= kbDuration;
-        Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
-        transform.position = smoothPosition;
+        //lungeThrust - velocity of lunge movement
+        //lungeDuration - how long to maintain thrust velocity
+
+        if (!animator.GetBool("isRolling"))
+        {
+            Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+            if (pushToRight) //knockback to right
+            {
+                tempOffset.x += kbDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
+            }
+            else //knockback to left
+            {
+                tempOffset.x -= kbDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
+            }
+            StunPlayer(1f);
+        }
     }
 
-}
+    public void StunPlayer(float stunDuration)
+    {
+        StartCoroutine(Stun(stunDuration));
+    }
+
+    IEnumerator Stun(float stunDuration, bool root = true) //root: player's velocity is set to 0
+    {
+        canAttack = false;
+        movement.canMove = false;
+        animator.SetBool("move", false);
+        if (root)
+            movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //only rooting player x velocity
+
+        yield return new WaitForSeconds(stunDuration);
+
+        canAttack = true;
+        movement.canMove = true;
+    }
 
     public void TakeDamage(float damage)
     {
@@ -486,6 +522,7 @@ void GetKnockback(float kbThrust = 3f, float kbDuration = 5f) //defaults
             if(animator.GetBool("isRolling")) //damage dodged
             {
                 damage = 0;
+                TextPopupsHandler.ShowDodge(transform.position);
             }
             currentHealth -= (damage);
             healthBar.SetHealth(currentHealth);
@@ -493,13 +530,13 @@ void GetKnockback(float kbThrust = 3f, float kbDuration = 5f) //defaults
             {
                 animator.SetTrigger("Hurt");
                 sr.material = mWhiteFlash; //flashing enemy sprite
-                GetKnockback(); //
+                //GetKnockback(true); //
                 Invoke("ResetMaterial", .1f);
             }
 
-            if (TextPopupsPrefab) {
-                ShowTextPopup(damage);
-            }
+            //if (TextPopupsHandler != null) {
+            TextPopupsHandler.ShowDamage(damage, transform.position);
+            //}
         }
 
         //hurt animation
@@ -513,44 +550,6 @@ void GetKnockback(float kbThrust = 3f, float kbDuration = 5f) //defaults
         sr.material = mDefault;
     }
 
-    void ShowTextPopup(float damageAmount)
-    {
-
-        //Vector3 tempTransform = transform.position; //randomize damage number position
-        Vector3 tempPos = transform.position;
-        tempPos.x += Random.Range(-.1f, .1f);
-        tempPos.y += Random.Range(-.9f, .1f);
-        //tempTransform = screenPosition; //have numbers float in place, don't follow object
-
-
-        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
-        
-        if (damageAmount > 0)
-        {
-            showDmg.GetComponent<TextMeshPro>().text = damageAmount.ToString();
-        }
-        else
-        {
-            showDmg.GetComponent<TextMeshPro>().text = "Dodged";
-        }
-        
-        tempShowDmg = showDmg;
-
-        if (controller.m_FacingRight)
-        {
-            FlipTextAgain(0);
-        }
-        else
-        {
-            FlipTextAgain(180);
-        }
-    }
-
-    public void FlipTextAgain(float rotateAgain) //gets called in PlayerMovement to flip with player
-    {
-        tempShowDmg.GetComponent<TextPopups>().FlipText(rotateAgain);
-    }
-
     public void HealPlayer(float healAmount)
     {
         if (isAlive && currentHealth > 0)
@@ -560,7 +559,7 @@ void GetKnockback(float kbThrust = 3f, float kbDuration = 5f) //defaults
             //animator.SetTrigger("Hurt");
             if (TextPopupsPrefab)
             {
-                ShowTextPopupHeal(healAmount);
+                TextPopupsHandler.ShowHeal(healAmount, transform.position);
             }
             if(currentHealth > maxHealth)
             {
@@ -572,33 +571,6 @@ void GetKnockback(float kbThrust = 3f, float kbDuration = 5f) //defaults
         if (currentHealth <= 0)
         {
             Die();
-        }
-
-    }
-
-    void ShowTextPopupHeal(float healAmount)
-    {
-        /*Vector3 tempPos = TextPopupOffset.position; //randomize damage number position
-        tempPos.x += Random.Range(-.1f, .1f);
-        tempPos.y += Random.Range(-.9f, .2f);*/
-
-
-        var showHeal = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
-        //Transform temp = transform;
-
-        //var showHeal = Instantiate(TextPopupsPrefab, tempPos, false);
-
-        showHeal.GetComponent<TextMeshPro>().text = healAmount.ToString();
-        showHeal.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
-        tempShowDmg = showHeal;
-
-        if (controller.m_FacingRight)
-        {
-            FlipTextAgain(0);
-        }
-        else
-        {
-            FlipTextAgain(180);
         }
 
     }
@@ -644,7 +616,7 @@ void GetKnockback(float kbThrust = 3f, float kbDuration = 5f) //defaults
             healthBar.SetHealth(currentHealth);
             if (TextPopupsPrefab)
             {
-                ShowTextPopupHeal(spawnHpPercentage); //respawn player with x percentage of health
+                TextPopupsHandler.ShowHeal(spawnHpPercentage, transform.position); //respawn player with x percentage of 
             }
             if (currentHealth > maxHealth)
             {

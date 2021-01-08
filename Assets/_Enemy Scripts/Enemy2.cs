@@ -5,11 +5,10 @@ using TMPro;
 
 public class Enemy2 : MonoBehaviour
 {
+    //Text Popups
     public GameObject TextPopupsPrefab;
-    [SerializeField]
-    private Transform TextPopupOffset;
-    private GameObject tempShowDmg; //to flip damage popup as they are created
-    
+    public TextPopupsHandler TextPopupsHandler;
+
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;
@@ -303,24 +302,23 @@ public class Enemy2 : MonoBehaviour
                 currentHealth = maxHealth;
 
 
-            //temp knockback
-            Vector3 tempLocation = GetComponent<Transform>().position;
-            tempLocation.y += .5f;
-            //
-
-            Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
+            
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                ShowTextPopup(damage);
+                TextPopupsHandler.ShowDamage(damage, transform.position);
             }
-
 
             //hurt animation
             if (enAnimator != null && damage > 0) //took damage, not heal
             {
                 //stopping coroutine
                 //attackStopped = true;
+
+                Vector3 particleLocation = transform.position;
+                Vector3 particleOffset = particleLocation;
+                particleOffset.y += .5f;
+                Instantiate(hitParticlePrefab, particleOffset, Quaternion.identity);
 
                 enIsHurt = true;
                 enAnimator.SetTrigger("Hurt");
@@ -376,37 +374,6 @@ public class Enemy2 : MonoBehaviour
         }
     }
 
-    void ShowTextPopup(float damageAmount)
-    {
-        Vector3 tempTransform = transform.position; //randomize damage number position
-        tempTransform.x += Random.Range(-.1f, .1f);
-        tempTransform.y += Random.Range(-.9f, .1f);
-
-
-        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
-        showDmg.GetComponent<TextMeshPro>().text = Mathf.Abs(damageAmount).ToString();
-        tempShowDmg = showDmg;
-        if (damageAmount < 0)
-            showDmg.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
-        /*if (enController.enFacingRight) //player facing right by default
-            showDmg.transform.Rotate(0f, 0f, 0f);*/
-
-
-
-        if (enController.enFacingRight)
-        {
-            FlipTextAgain(180);
-        }
-        else
-        {
-            FlipTextAgain(0);
-        }
-
-    }
-    public void FlipTextAgain(float rotateAgain) //gets called in PlayerMovement to flip with player
-    {
-        tempShowDmg.GetComponent<TextPopups>().FlipText(rotateAgain);
-    }
     public void EnIsHurtStart()
     {
         enIsHurt = true;
@@ -490,6 +457,7 @@ public class Enemy2 : MonoBehaviour
         //give player exp
         GiveExperience(experiencePoints);
 
+        StopAllCoroutines(); //stops attack coroutine if dead
         //hide hp bar
 
 

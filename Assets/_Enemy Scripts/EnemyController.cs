@@ -17,7 +17,6 @@ public class EnemyController : MonoBehaviour
 
     //to prevent flipping with Enemy parent object
     public Transform HealthBar;
-    public Transform TextPopups;
 
     [SerializeField]
     public bool enCanFlip;
@@ -60,20 +59,11 @@ public class EnemyController : MonoBehaviour
             {
                 transform.localRotation = Quaternion.Euler(0, 180, 0);
                 HealthBar.localRotation = Quaternion.Euler(0, 180, 0);
-                //theScale.y = 180; //negative x now faces
-                //transform.localScale = theScale;
-                /*Vector3 childScale = child.transform.localScale;
-                childScale.x *= -1;
-                child.transform.localScale = childScale;*/
-                //TextPopups.localRotation = Quaternion.Euler(0, 0, 0); //works without
             }
             else
             {
                 transform.localRotation = Quaternion.Euler(0, 0, 0);
                 HealthBar.localRotation = Quaternion.Euler(0, 0, 0);
-
-                //theScale.y = 0; //faces left by default
-                //TextPopups.localRotation = Quaternion.Euler(0, 180, 0); //
             }
         }
     }

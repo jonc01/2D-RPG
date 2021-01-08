@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float dashCD = 2;
     private float allowDash = 0; //TODO: delete me if combining dash with dodge CD
-    public float dashTime = .75f;
+    public float dashTime = .1f;
     private float dashTimeLeft;
     public float dashSpeed;
     public float distanceBetweenImages;
@@ -33,13 +33,10 @@ public class PlayerMovement : MonoBehaviour
     //private int m_currentAttack = 0;
     //private float m_timeSinceAttack = 0.0f;
     public int m_facingDirection = 1;
-    public bool m_rolling = false;
-    private bool isDashing = false;
-    private bool m_grounded = false;
+    public bool m_rolling;
+    public bool isDashing;
     float horizontalMove = 0f;
     bool jump = false;
-    bool crouch = false;
-
 
     public bool canMove = true;
 
@@ -53,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
         canMove = true;
         m_facingDirection = 1;
         controller.canFlip = true;
+        m_rolling = false;
+        isDashing = false;
     }
 
     // Update is called once per frame
@@ -70,18 +69,10 @@ public class PlayerMovement : MonoBehaviour
         if (horizontalMove > 0)
         {
             m_facingDirection = 1;
-            if (playerCombat.tempShowDmg != null)
-            {
-                playerCombat.FlipTextAgain(0);
-            }
         }
         else if(horizontalMove < 0)
         {
             m_facingDirection = -1;
-            if (playerCombat.tempShowDmg != null)
-            {
-                playerCombat.FlipTextAgain(180);
-            }
         }
 
         if (Input.GetButtonDown("Jump") && rb.velocity.y == 0)
@@ -144,7 +135,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canMove == true)
         {
-            controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump);
+            controller.Move(horizontalMove * Time.fixedDeltaTime, jump);
             //runSpeed = defaultRunSpeed;
         }
 
@@ -156,6 +147,9 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator DodgeRoll()
     {
+        //StopAllCoroutines();
+            //IsAttacking, 
+
         playerCombat.canAttack = false;
         m_rolling = true;
         animator.SetBool("isRolling", true);

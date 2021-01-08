@@ -5,11 +5,10 @@ using TMPro;
 
 public class Enemy : MonoBehaviour
 {
+    //Text Popups
     public GameObject TextPopupsPrefab;
-    [SerializeField]
-    private Transform TextPopupOffset;
-    private GameObject tempShowDmg; //to flip damage popup as they are created
-    
+    public TextPopupsHandler TextPopupsHandler;
+
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;
@@ -19,6 +18,7 @@ public class Enemy : MonoBehaviour
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
+
 
     public float maxHealth = 100;
     float currentHealth;
@@ -285,7 +285,7 @@ public class Enemy : MonoBehaviour
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                ShowTextPopup(damage);
+                TextPopupsHandler.ShowDamage(damage, transform.position);
             }
             
             //hurt animation
@@ -293,7 +293,11 @@ public class Enemy : MonoBehaviour
             {
                 //stopping coroutine
                 //attackStopped = true;
-                
+                Vector3 particleLocation = transform.position;
+                Vector3 particleOffset = particleLocation;
+                particleOffset.y += .5f;
+                Instantiate(hitParticlePrefab, particleOffset, Quaternion.identity);
+
                 enIsHurt = true;
                 enAnimator.SetTrigger("Hurt");
 
@@ -322,10 +326,6 @@ public class Enemy : MonoBehaviour
     {
         if (rb != null)
         {
-            //offset for particle instantiate
-            Vector3 changeLocation = GetComponent<Transform>().position;
-            Vector3 tempLocation = changeLocation;
-            tempLocation.y += .5f;
 
             //getting player direction to enemy 
             float distToPlayer = transform.position.x - player.transform.position.x;
@@ -347,8 +347,6 @@ public class Enemy : MonoBehaviour
                 Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
-
-            Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
         }
     }
 
@@ -365,34 +363,6 @@ public class Enemy : MonoBehaviour
         //enController.enCanMove = true;
     }
 
-    void ShowTextPopup(float damageAmount)
-    {
-        Vector3 tempTransform = transform.position; //randomize damage number position
-        tempTransform.x += Random.Range(-.1f, .1f);
-        tempTransform.y += Random.Range(-.9f, .1f);
-
-        var showDmg = Instantiate(TextPopupsPrefab, TextPopupOffset.position, Quaternion.identity, TextPopupOffset);
-        showDmg.GetComponent<TextMeshPro>().text = Mathf.Abs(damageAmount).ToString();
-        tempShowDmg = showDmg;
-        if (damageAmount < 0)
-            showDmg.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
-        /*if (enController.enFacingRight) //player facing right by default
-            showDmg.transform.Rotate(0f, 0f, 0f);*/
-
-        if (enController.enFacingRight)
-        {
-            FlipTextAgain(180);
-        }
-        else
-        {
-            FlipTextAgain(0);
-        }
-
-    }
-    public void FlipTextAgain(float rotateAgain) //gets called in PlayerMovement to flip with player
-    {
-        tempShowDmg.GetComponent<TextPopups>().FlipText(rotateAgain);
-    }
     public void EnIsHurtStart()
     {
         enIsHurt = true;
@@ -403,22 +373,22 @@ public class Enemy : MonoBehaviour
         enIsHurt = false;
     }
 
-    public void GetStunned(float duration) //allow player to call this function
+    public void GetStunned(float duration, bool fullStun = true) //two animations, full stun and light stun (stagger)
     {
         if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
         {
-            if(duration <= .5f)
-            {
-                enAnimator.SetTrigger("enLightStun");
-                StartCoroutine(LightStunEnemy(duration));
-            }
-            else
+            if(fullStun)
             {
                 float fullDuration = 1f;
                 fullDuration -= stunResist; //getting percentage of stun based on stunResist
                 duration *= fullDuration;
                 enAnimator.SetTrigger("enStunned");
                 StartCoroutine(StunEnemy(duration));
+            }
+            else
+            {
+                enAnimator.SetTrigger("enLightStun");
+                StartCoroutine(LightStunEnemy(.3f));
             }
         }
     }
@@ -428,6 +398,7 @@ public class Enemy : MonoBehaviour
         StopChase();
         enCanAttack = false;
         enController.enCanMove = false;
+        rb.velocity = new Vector2(0, rb.velocity.y);
         yield return new WaitForSeconds(lightStunDuration);
         enCanAttack = true;
         enController.enCanMove = true;
@@ -493,6 +464,9 @@ public class Enemy : MonoBehaviour
 
         //give player exp
         GiveExperience(experiencePoints);
+
+        StopAllCoroutines(); //stops attack coroutine if dead
+
         //playerCombat.HealPlayer(10);
         //hide hp bar
 
