@@ -8,6 +8,7 @@ public class Enemy2 : MonoBehaviour
     //Text Popups
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
+    [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
 
     public LayerMask playerLayers;
     public Transform player;
@@ -289,11 +290,6 @@ public class Enemy2 : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        /*if (TextPopupsPrefab)
-        {
-            ShowTextPopup(damage);
-        }*/
-
         if (isAlive == true)
         {
             currentHealth -= damage;
@@ -306,7 +302,9 @@ public class Enemy2 : MonoBehaviour
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                TextPopupsHandler.ShowDamage(damage, transform.position);
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowDamage(damage, tempPos);
             }
 
             //hurt animation
@@ -423,8 +421,9 @@ public class Enemy2 : MonoBehaviour
 
             if (isAlive)
             {
-                var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-                showStunned.GetComponent<TextMeshPro>().text = "\n*Stun*"; //temp fix to offset not working (anchors)
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowStun(tempPos);
             }
 
             yield return new WaitForSeconds(stunDuration);
@@ -448,6 +447,7 @@ public class Enemy2 : MonoBehaviour
 
     void Die()
     {
+        isAlive = false;
         //Die animation
         if (enAnimator != null)
         {

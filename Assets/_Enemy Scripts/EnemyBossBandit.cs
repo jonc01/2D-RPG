@@ -8,6 +8,7 @@ public class EnemyBossBandit : MonoBehaviour
     //Text Popups
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
+    [SerializeField] Vector3 TPOffset = new Vector3 (0, -.5f, 0);
 
     public LayerMask playerLayers;
     public Transform player;
@@ -69,6 +70,7 @@ public class EnemyBossBandit : MonoBehaviour
     {
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
+        //sr.material.SetFloat(2f);
 
         //Stats
         currentHealth = maxHealth;
@@ -423,7 +425,9 @@ public class EnemyBossBandit : MonoBehaviour
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                TextPopupsHandler.ShowDamage(damage, transform.position);
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowDamage(damage, tempPos);
             }
 
             //hurt animation
@@ -554,6 +558,7 @@ public class EnemyBossBandit : MonoBehaviour
 
     void Die()
     {
+        isAlive = false;
         //give player exp
         GiveExperience(experiencePoints);
 

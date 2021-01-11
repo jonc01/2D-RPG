@@ -209,9 +209,9 @@ MonoBehaviour:
   rb: {fileID: 8396513380961675701}
   enAnimator: {fileID: 0}
   enFacingRight: 0
-  moveSpeed: 1
+  moveSpeedDefault: 0
+  moveSpeed: 0
   HealthBar: {fileID: 3563829245018745206}
-  TextPopups: {fileID: 5457053112608264869, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
   enCanFlip: 0
   enCanMove: 0
 --- !u!114 &8396513380961675702
@@ -227,11 +227,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextPopupsPrefab: {fileID: 1416290914158628297, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
-  TextPopupOffset: {fileID: 8396513380551279477}
-  player: {fileID: 0}
+  TextPopupsHandler: {fileID: 0}
+  TPOffset: {x: 0, y: -0.25, z: 0}
   playerLayers:
     serializedVersion: 2
     m_Bits: 1024
+  player: {fileID: 0}
   enemyAllies: {fileID: 0}
   enemyLayers:
     serializedVersion: 2

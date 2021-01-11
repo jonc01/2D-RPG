@@ -14,15 +14,12 @@ public class TextPopupsHandler : MonoBehaviour
         Destroy(gameObject, DestroyTime);
     }
 
-    public void ShowDamage(float damage, Vector3 position)
+    public void ShowDamage(float damage, Vector3 position, bool crit = false)
     {
         //Vector3 tempTransform = transform.position; //randomize damage number position
         /*Vector3 tempPos = transform.position;
         tempPos.x += Random.Range(-.1f, .1f);
         tempPos.y += Random.Range(-.9f, .1f);*/
-        
-        /*Vector3 tempPos = position;
-        tempPos.z = 0;*/
 
         var showDmg = Instantiate(TextPopupsPrefab, position, Quaternion.identity);
 
@@ -32,7 +29,7 @@ public class TextPopupsHandler : MonoBehaviour
         }
         else if(damage < 0)
         {
-            showDmg.GetComponent<TextMeshPro>().text = damage.ToString();
+            showDmg.GetComponent<TextMeshPro>().text = Mathf.Abs(damage).ToString();
             showDmg.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
         }
         else //grey for 0 damage?
@@ -53,5 +50,12 @@ public class TextPopupsHandler : MonoBehaviour
     {
         var showDmg = Instantiate(TextPopupsPrefab, position, Quaternion.identity);
         showDmg.GetComponent<TextMeshPro>().text = "Dodged";
+    }
+
+    public void ShowStun(Vector3 position)
+    {
+        position.y += .25f;
+        var showStun = Instantiate(TextPopupsPrefab, position, Quaternion.identity);
+        showStun.GetComponent<TextMeshPro>().text = "*Stun*";
     }
 }

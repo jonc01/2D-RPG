@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 5711964551209702450}
   - component: {fileID: 5711964551209702463}
   m_Layer: 12
-  m_Name: Bandit
+  m_Name: Bandit (old)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -203,7 +203,6 @@ MonoBehaviour:
   enFacingRight: 0
   moveSpeed: 2
   HealthBar: {fileID: 5711964549507611569}
-  TextPopups: {fileID: 5457053112608264869, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
   enCanFlip: 0
   enCanMove: 0
 --- !u!114 &5711964551209702463
@@ -219,10 +218,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextPopupsPrefab: {fileID: 1416290914158628297, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
-  player: {fileID: 0}
+  TextPopupsHandler: {fileID: 0}
+  TPOffset: {x: 0, y: 0, z: 0}
   playerLayers:
     serializedVersion: 2
     m_Bits: 1024
+  player: {fileID: 0}
   playerCombat: {fileID: 0}
   hitParticlePrefab: {fileID: 7009136705139943684, guid: ac0f3979864ee0c4bb760a473f76f7a0, type: 3}
   deathParticlePrefab: {fileID: 8672885270232752092, guid: cc5039bc71745cf47bcfded07b4f6516, type: 3}
@@ -245,7 +246,7 @@ MonoBehaviour:
   allowStun: 0
   allowStunCD: 3
   kbThrust: 5
-  kbTime: 0.1
+  kbDuration: 5
   enCanAttack: 1
   isAttacking: 0
   playerToRight: 0

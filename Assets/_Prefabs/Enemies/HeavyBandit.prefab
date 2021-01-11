@@ -192,9 +192,9 @@ MonoBehaviour:
   rb: {fileID: 7044336218430027572}
   enAnimator: {fileID: 7044336217693309655}
   enFacingRight: 0
+  moveSpeedDefault: 2
   moveSpeed: 2
   HealthBar: {fileID: 2608052343559023882}
-  TextPopups: {fileID: 5457053112608264869, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
   enCanFlip: 0
   enCanMove: 0
 --- !u!114 &7044336217693309649
@@ -210,11 +210,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextPopupsPrefab: {fileID: 1416290914158628297, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
-  TextPopupOffset: {fileID: 7044336217189301369}
-  player: {fileID: 0}
+  TextPopupsHandler: {fileID: 0}
+  TPOffset: {x: 0, y: 0, z: 0}
   playerLayers:
     serializedVersion: 2
     m_Bits: 1024
+  player: {fileID: 0}
   playerCombat: {fileID: 0}
   hitParticlePrefab: {fileID: 1673159072164422025, guid: f4d963718e7979947bc7717ad6993df3, type: 3}
   deathParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
@@ -236,6 +237,8 @@ MonoBehaviour:
   stunResist: 0.5
   allowStun: 0
   allowStunCD: 5
+  kbThrust: 3
+  kbDuration: 2
   enCanAttack: 1
   isAttacking: 0
   playerToRight: 0

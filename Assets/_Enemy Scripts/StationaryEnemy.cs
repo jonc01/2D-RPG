@@ -8,10 +8,11 @@ public class StationaryEnemy : MonoBehaviour
     //Text Popups
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
+    [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
 
     //this is for support stationary enemies, can make non-support stationary separate
     //this script only targets enemies that are "friendly" to this object, and heals them
-    
+
 
     public LayerMask playerLayers;
     public Transform player;
@@ -74,10 +75,10 @@ public class StationaryEnemy : MonoBehaviour
 
     void Update()
     {
-        if (rb != null && enController != null && isAlive && enemyAllies != null) //check if object has rigidbody
+        if (rb != null && enController != null && isAlive) //check if object has rigidbody
         {
             //checking distance to player for aggro range
-            float distToPlayer = Vector2.Distance(transform.position, enemyAllies.position);
+            float distToPlayer = 1f; //TODO: delete, replace with OnTriggerEnter
 
             //range <= 3
             if (distToPlayer <= aggroRange)
@@ -175,15 +176,17 @@ public class StationaryEnemy : MonoBehaviour
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                TextPopupsHandler.ShowDamage(damage, transform.position);
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowDamage(damage, tempPos);
             }
             
             //hurt animation
             if (enAnimator != null)
             {
                 enAnimator.SetTrigger("Hurt");
-
             }
+        
             if (currentHealth <= 0)
             {
                 Die();
@@ -207,6 +210,7 @@ public class StationaryEnemy : MonoBehaviour
 
     void Die()
     {
+        isAlive = false;
         //Die animation
         if (enAnimator != null)
         {

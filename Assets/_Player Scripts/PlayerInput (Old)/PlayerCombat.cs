@@ -5,24 +5,28 @@ using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
 {
-    //public GameObject camera;
-
     public Animator animator;
     [SerializeField] bool m_noBlood = false;
     public PlayerMovement movement;
     public CharacterController2D controller;
     public Transform playerLocation;
+    [SerializeField] Canvas PlayerHealthBarCanvas;
 
+    [Space]
     //Text Popups
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
+    [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
+    [SerializeField] Transform PlayerHealthBar;
 
+    [Space]
     public float maxHealth = 100;
     public float currentHealth;
     public HealthBar healthBar;
     public HealthBar experienceBar;
     public bool isAlive = true;
 
+    [Space]
     //weapon stats
     public float wepDamage = 10f; //default values, should change based on weapon stats
     public float wepRange = .5f; //
@@ -274,7 +278,7 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(knockback/2);
-                enemy.GetComponent<Enemy>().GetStunned(.3f, false);
+                //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
@@ -518,31 +522,40 @@ public class PlayerCombat : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (currentHealth > 0) {
-            if(animator.GetBool("isRolling")) //damage dodged
-            {
-                damage = 0;
-                TextPopupsHandler.ShowDodge(transform.position);
-            }
-            currentHealth -= (damage);
-            healthBar.SetHealth(currentHealth);
-            if(damage > 0)
-            {
-                animator.SetTrigger("Hurt");
-                sr.material = mWhiteFlash; //flashing enemy sprite
-                //GetKnockback(true); //
-                Invoke("ResetMaterial", .1f);
-            }
+        if (isAlive)
+        {
+            if (currentHealth > 0) {
+                if(animator.GetBool("isRolling")) //damage dodged
+                {
+                    damage = 0;
+                    TextPopupsHandler.ShowDodge(transform.position);
+                }
+                currentHealth -= (damage);
+                healthBar.SetHealth(currentHealth);
+                if(damage > 0)
+                {
+                    Vector3 tempPos = transform.position;
+                    tempPos += TPOffset;
+                    Vector3 tempPos1 = PlayerHealthBar.position;
+                    tempPos1 += new Vector3(0, -.5f, 0);
+                    //TextPopupsHandler.ShowDamage(damage, tempPos1);
+                    var showDmg = Instantiate(TextPopupsPrefab, PlayerHealthBar.position, Quaternion.identity, PlayerHealthBar.transform);
+                    //var showDmg = Instantiate(TextPopupsPrefab, position, Quaternion.identity, Transform);
+                    showDmg.GetComponent<TextMeshPro>().text = damage.ToString();
+                    
 
-            //if (TextPopupsHandler != null) {
-            TextPopupsHandler.ShowDamage(damage, transform.position);
-            //}
+                    animator.SetTrigger("Hurt");
+                    sr.material = mWhiteFlash; //flashing enemy sprite
+                    //GetKnockback(true); //
+                    Invoke("ResetMaterial", .1f);
+                }
+            }
+            //hurt animation
+            if (currentHealth <= 0){
+                Die();
+            }
         }
 
-        //hurt animation
-        if (currentHealth <= 0){
-            Die();
-        }
     }
 
     void ResetMaterial()
@@ -559,39 +572,24 @@ public class PlayerCombat : MonoBehaviour
             //animator.SetTrigger("Hurt");
             if (TextPopupsPrefab)
             {
-                TextPopupsHandler.ShowHeal(healAmount, transform.position);
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                Vector3 tempPos1 = PlayerHealthBar.position;
+                tempPos1 += new Vector3(0, -.5f, 0);
+                TextPopupsHandler.ShowHeal(healAmount, tempPos1);
             }
             if(currentHealth > maxHealth)
             {
                 currentHealth = maxHealth; //can't overheal, can implement an overheal/shield later
             }
-        }
 
-        //hurt animation
-        if (currentHealth <= 0)
-        {
-            Die();
+            //hurt animation
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
         }
-
     }
-
-    /*void Blocking(bool isBlocking)
-    {
-        if(isBlocking == true)
-        {
-            Debug.Log("HOLDING");
-            //movement.runSpeed = 0f;
-            movement.rb.velocity = new Vector2(0, 0);
-            animator.SetBool("IdleBlock", true);
-        }
-        else
-        {
-            //Debug.Log("NOT HOLDING");
-            //movement.runSpeed = movement.defaultRunSpeed;
-            animator.ResetTrigger("Block");
-            animator.SetBool("IdleBlock", false);
-        }
-    }*/
 
     void Die()
     {
