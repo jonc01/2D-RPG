@@ -200,7 +200,7 @@ public class EnemyBossBandit : MonoBehaviour
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
+            playerCombat.TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
             float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
             if (knockback)
             {

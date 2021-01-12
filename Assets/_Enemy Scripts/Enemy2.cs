@@ -340,35 +340,24 @@ public class Enemy2 : MonoBehaviour
         sr.material = mDefault;
     }
 
-    public void GetKnockback(float knockbackAmount)
+    public void GetKnockback(bool playerFacingRight, float kbThrust = 2f, float kbDuration = 5f) //defaults
     {
-        if (rb != null)
+        //kbThrust - velocity of lunge movement
+        //kbDuration - how long to maintain thrust velocity (distance)
+        
+        Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+
+        if (playerFacingRight) //enemy -> knockback
         {
-            Vector3 changeLocation = GetComponent<Transform>().position;
-            Vector3 tempLocation = changeLocation; //for particle instantiate
-            tempLocation.y += .5f;
-
-            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
-
-            Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
-            //tempOffset2.x += knockbackDist;
-
-            if (distToPlayer > 0) //to right of player
-            {
-                //knockback to left
-                tempOffset.x += kbDuration;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
-                transform.position = smoothPosition;
-            }
-            else //to left of player
-            {
-                //knockback to right
-                tempOffset.x -= kbDuration;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
-                transform.position = smoothPosition;
-            }
-
-            Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
+            tempOffset.x += kbDuration;
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+            transform.position = smoothPosition;
+        }
+        else //knockback <- enemy
+        {
+            tempOffset.x -= kbDuration;
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+            transform.position = smoothPosition;
         }
     }
 

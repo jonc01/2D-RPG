@@ -65,7 +65,7 @@ public class PlayerCombat : MonoBehaviour
     public float altAttackTime = .3f;
 
     //weapon specific
-    public float knockback = 50f;
+    public float knockback = 5f;
 
     SpriteRenderer sr;
     [SerializeField] private Material mWhiteFlash;
@@ -277,7 +277,7 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(knockback/2);
+                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
                 //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
             }
 
@@ -287,7 +287,6 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy2>() != null)
             {
                 enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy2>().GetKnockback(knockback / 3);
             }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
@@ -313,7 +312,7 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy>() != null)
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(knockback*2);
+                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
                 //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
             
@@ -323,7 +322,6 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy2>() != null)
             {
                 enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy2>().GetKnockback(knockback * 2);
                 enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
             }
 
@@ -387,7 +385,7 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy>() != null)
             {
                 enemy.GetComponent<Enemy>().TakeDamage(altDamage); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(knockback*4f);
+                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
                 enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
 

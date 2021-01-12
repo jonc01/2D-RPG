@@ -335,33 +335,27 @@ public class Enemy : MonoBehaviour
         sr.material = mDefault;
     }
 
-    public void GetKnockback(float knockbackAmount) //boss has implementation of taking kbThrust and kbDuration as params with defaults instead
+    public void GetKnockback(bool playerFacingRight, float kbThrust = 2f, float kbDuration = 5f) //defaults
     {
-        if (rb != null)
+        //kbThrust - velocity of lunge movement
+        //kbDuration - how long to maintain thrust velocity (distance)
+
+        //float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
+        Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+
+        if (playerFacingRight) //knockback <- enemy -> player
         {
-
-            //getting player direction to enemy 
-            float distToPlayer = transform.position.x - player.transform.position.x;
-
-            Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
-            //tempOffset2.x += knockbackDist;
-
-            if (distToPlayer > 0) //to right of player
-            {
-                //knockback to left
-                tempOffset.x += kbDuration;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
-                transform.position = smoothPosition;
-            }
-            else //to left of player
-            {
-                //knockback to right
-                tempOffset.x -= kbDuration;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
-                transform.position = smoothPosition;
-            }
-            StopChase();
+            tempOffset.x += kbDuration;
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+            transform.position = smoothPosition;
         }
+        else //player <- enemy -> knockback
+        {
+            tempOffset.x -= kbDuration;
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+            transform.position = smoothPosition;
+        }
+        StopChase(1f);
     }
 
     public void EnIsHurtStart()

@@ -8,6 +8,7 @@ public class TextPopupsHandler : MonoBehaviour
     public GameObject TextPopupsPrefab;
     public float DestroyTime = 1.6f; //.8f
     public float yOffset = 2f;
+    [SerializeField] GameObject TextPopupsCanvas;
 
     void Start()
     {
@@ -22,6 +23,8 @@ public class TextPopupsHandler : MonoBehaviour
         tempPos.y += Random.Range(-.9f, .1f);*/
 
         var showDmg = Instantiate(TextPopupsPrefab, position, Quaternion.identity);
+
+        //showDmg.transform.SetParent(TextPopupsCanvas.transform);
 
         if (damage > 0)
         {
@@ -42,6 +45,7 @@ public class TextPopupsHandler : MonoBehaviour
     public void ShowHeal(float heal, Vector3 position)
     {
         var showHeal = Instantiate(TextPopupsPrefab, position, Quaternion.identity);
+
         showHeal.GetComponent<TextMeshPro>().text = heal.ToString();
         showHeal.GetComponent<TextMeshPro>().color = new Color32(35, 220, 0, 255);
     }

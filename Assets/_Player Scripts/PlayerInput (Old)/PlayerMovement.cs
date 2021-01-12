@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public float dodgeTime = .5f;
 
     public float dashCD = 2;
-    private float allowDash = 0; //TODO: delete me if combining dash with dodge CD
+    private float allowDash = 0; //delete me if combining dash with dodge CD
     public float dashTime = .1f;
     private float dashTimeLeft;
     public float dashSpeed;
@@ -128,7 +128,6 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         CheckDash();
-
     }
 
     private void FixedUpdate()
@@ -148,8 +147,8 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator DodgeRoll()
     {
         //StopAllCoroutines();
-            //IsAttacking, 
-
+            //IsAttacking,
+             
         playerCombat.canAttack = false;
         m_rolling = true;
         animator.SetBool("isRolling", true);
