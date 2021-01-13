@@ -538,10 +538,10 @@ public class PlayerCombat : MonoBehaviour
                     tempPos1 += new Vector3(0, -.5f, 0);
                     //TextPopupsHandler.ShowDamage(damage, tempPos1);
                     var showDmg = Instantiate(TextPopupsPrefab, PlayerHealthBar.position, Quaternion.identity, PlayerHealthBar.transform);
+                    showDmg.transform.SetParent(PlayerHealthBar.transform);
                     //var showDmg = Instantiate(TextPopupsPrefab, position, Quaternion.identity, Transform);
                     showDmg.GetComponent<TextMeshPro>().text = damage.ToString();
                     
-
                     animator.SetTrigger("Hurt");
                     sr.material = mWhiteFlash; //flashing enemy sprite
                     //GetKnockback(true); //
@@ -572,9 +572,9 @@ public class PlayerCombat : MonoBehaviour
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
-                Vector3 tempPos1 = PlayerHealthBar.position;
-                tempPos1 += new Vector3(0, -.5f, 0);
-                TextPopupsHandler.ShowHeal(healAmount, tempPos1);
+                /*Vector3 tempPos1 = PlayerHealthBar.position;
+                tempPos1 += new Vector3(0, -.5f, 0);*/
+                TextPopupsHandler.ShowHeal(healAmount, tempPos);
             }
             if(currentHealth > maxHealth)
             {
