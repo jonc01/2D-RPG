@@ -5,8 +5,6 @@ using UnityEngine;
 //When instantiating multiple objects, the objects are placed in a pool and reused
 //instead of continuing to create and delete objects
 
-//TODO: reuse for damage numbers system
-
 public class PlayerAfterImagePool : MonoBehaviour
 {
     [SerializeField]

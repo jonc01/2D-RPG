@@ -105,6 +105,8 @@ public class Enemy : MonoBehaviour
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
+
+        enAttackSpeed += Random.Range(0, .8f);
     }
 
     void Update()
@@ -144,12 +146,6 @@ public class Enemy : MonoBehaviour
                     //chase player
                     if(enCanChase)
                         StartChase();
-                    /*if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
-                    {
-                        StopChase(); //stop moving, don't clip into player just to attack
-                        //Attack //when in attack range
-                        //StartCoroutine
-                    }*/
                 }
                 else if(aggroStarted && enController.enCanMove) //now that we have aggro
                 {

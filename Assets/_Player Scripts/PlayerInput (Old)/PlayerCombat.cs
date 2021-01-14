@@ -30,6 +30,7 @@ public class PlayerCombat : MonoBehaviour
     //weapon stats
     public float wepDamage = 10f; //default values, should change based on weapon stats
     public float wepRange = .5f; //
+    public float playerAttackSpeed = .3f;
 
     public Transform attackPoint;
     float attackRange;
@@ -70,6 +71,7 @@ public class PlayerCombat : MonoBehaviour
     SpriteRenderer sr;
     [SerializeField] private Material mWhiteFlash;
     private Material mDefault;
+    Coroutine IsAttackingCO;
 
     void Start()
     {
@@ -119,10 +121,25 @@ public class PlayerCombat : MonoBehaviour
             // Call one of three attack animations "Attack1", "Attack2", "Attack3"
             animator.SetTrigger("Attack" + m_currentAttack);
 
-            StartCoroutine(IsAttacking(m_currentAttack));
-            
+            //Coroutine IsAttackingCO;
+            IsAttackingCO = StartCoroutine(IsAttacking(m_currentAttack));
+
             // Reset timer
             m_timeSinceAttack = 0.0f;
+        }
+
+        if(IsAttackingCO != null) //cancelling attack coroutine with dodge
+        {
+            if (movement.m_rolling)
+                StopCoroutine(IsAttackingCO);
+
+            if (movement.isDashing)
+                StopCoroutine(IsAttackingCO);
+
+            /*if (Input.GetButtonDown("Dodge") && animator.GetBool("isAttacking")){
+                StopCoroutine(IsAttackingCO);
+                Debug.Log("Stopping Attack CO");
+            }*/
         }
 
         //Block/Alt attack
@@ -145,30 +162,8 @@ public class PlayerCombat : MonoBehaviour
 
                 //AltAttacking = false;
 
-                /*if (blockCounter < 100)
-                {
-                    animator.SetTrigger("Block");
-                }
-                else
-                {
-                    animator.ResetTrigger("Block");
-                    animator.SetBool("IdleBlock", true);
-                    Debug.Log("IdleBlock: " + animator.GetBool("IdleBlock"));
-
-                }*/
                 //blockCounter++;
-                /*if (blockIsHeld == true)
-                {
-                    Debug.Log("HOLDING block");
-                    movement.runSpeed = 0f;
-                    animator.SetBool("IdleBlock", true);
-                }*/
-                /*else
-                {
-                    Debug.Log("NOT HOLDING block");
-                    animator.ResetTrigger("Block");
-                    animator.SetBool("IdleBlock", false);
-                }*/
+                
                 //Blocking(true);
             }
             AltAttacking = false;
@@ -187,18 +182,6 @@ public class PlayerCombat : MonoBehaviour
 
         //animator.SetBool("IdleBlock", false);
         //}
-
-        if (movement.m_rolling)
-        {
-            //StopCoroutine(AttackCo)
-            Debug.Log("ROLLLINGGGG");
-        }
-
-        if (movement.isDashing)
-        {
-            //StopCoroutine(
-            Debug.Log("DASSSHHIINNGGG");
-        }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -251,7 +234,7 @@ public class PlayerCombat : MonoBehaviour
         //movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         
         //yield return new WaitForSeconds(attackTime);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
         
         animator.SetBool("isAttacking", false);
@@ -534,13 +517,9 @@ public class PlayerCombat : MonoBehaviour
                 {
                     Vector3 tempPos = transform.position;
                     tempPos += TPOffset;
-                    Vector3 tempPos1 = PlayerHealthBar.position;
-                    tempPos1 += new Vector3(0, -.5f, 0);
-                    //TextPopupsHandler.ShowDamage(damage, tempPos1);
-                    var showDmg = Instantiate(TextPopupsPrefab, PlayerHealthBar.position, Quaternion.identity, PlayerHealthBar.transform);
-                    showDmg.transform.SetParent(PlayerHealthBar.transform);
-                    //var showDmg = Instantiate(TextPopupsPrefab, position, Quaternion.identity, Transform);
-                    showDmg.GetComponent<TextMeshPro>().text = damage.ToString();
+                    TextPopupsHandler.ShowDamage(damage, tempPos);
+                    //var showDmg = Instantiate(TextPopupsPrefab, PlayerHealthBar.position, Quaternion.identity, PlayerHealthBar.transform);
+                    //showDmg.transform.SetParent(PlayerHealthBar.transform);
                     
                     animator.SetTrigger("Hurt");
                     sr.material = mWhiteFlash; //flashing enemy sprite
