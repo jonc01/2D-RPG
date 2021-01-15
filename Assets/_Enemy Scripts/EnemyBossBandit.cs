@@ -8,6 +8,7 @@ public class EnemyBossBandit : MonoBehaviour
     //Text Popups
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
+    [SerializeField] Vector3 TPOffset = new Vector3 (0, -.5f, 0);
 
     public LayerMask playerLayers;
     public Transform player;
@@ -69,6 +70,7 @@ public class EnemyBossBandit : MonoBehaviour
     {
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
+        //sr.material.SetFloat(2f);
 
         //Stats
         currentHealth = maxHealth;
@@ -198,7 +200,7 @@ public class EnemyBossBandit : MonoBehaviour
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
+            playerCombat.TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
             float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
             if (knockback)
             {
@@ -323,25 +325,25 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetTrigger("Attack1SlowStartCombo2"); //Attack1
                     yield return new WaitForSeconds(.3f);
                     LungeOnAttack();
-                    Attack(1f);
+                    Attack(1.5f);
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo2"); //Attack2
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
-                    Attack2(1f);
+                    Attack2(1.5f);
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack1SlowStartCombo3"); //Attack1
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
-                    Attack(1f);
+                    Attack(2f);
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo3"); //Attack2
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
-                    Attack2(1f);
+                    Attack2(2f);
 
                     yield return new WaitForSeconds(.2f); //short delay so the Attack2 anim doesn't get cut off
                     enAnimator.SetTrigger("IdleLong"); //longer slow idle animation
@@ -423,7 +425,9 @@ public class EnemyBossBandit : MonoBehaviour
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                TextPopupsHandler.ShowDamage(damage, transform.position);
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowDamage(damage, tempPos);
             }
 
             //hurt animation
@@ -554,6 +558,7 @@ public class EnemyBossBandit : MonoBehaviour
 
     void Die()
     {
+        isAlive = false;
         //give player exp
         GiveExperience(experiencePoints);
 

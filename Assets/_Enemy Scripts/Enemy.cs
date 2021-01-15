@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     //Text Popups
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
+    [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
 
     public LayerMask playerLayers;
     public Transform player;
@@ -43,7 +44,7 @@ public class Enemy : MonoBehaviour
     public EnemyController enController;
     [Space]
     public float enAttackDamage = 5f;
-    public float enAttackSpeed = 1.1f; //lower value for lower delays between attacks
+    public float enAttackSpeed = 1.0f; //lower value for lower delays between attacks
     public float enAttackAnimSpeed = .4f; //lower value for shorter animations
     [Range(0f, 1.0f)]
     public float stunResist = 0f; //0f takes full stun duration, 1.0f complete stun resist
@@ -61,6 +62,7 @@ public class Enemy : MonoBehaviour
     bool playerToRight, aggroStarted;
     bool enIsHurt;
     bool enStunned;
+    bool enCanChase;
 
     SpriteRenderer sr;
     [SerializeField]
@@ -92,8 +94,8 @@ public class Enemy : MonoBehaviour
         }
         
         isAlive = true;
-        //enController.enCanMove = true;
         enCanAttack = true;
+        enCanChase = true;
         //AI aggro
         rb = GetComponent<Rigidbody2D>();
         enAnimator.SetBool("move", false);
@@ -103,6 +105,8 @@ public class Enemy : MonoBehaviour
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
+
+        enAttackSpeed += Random.Range(0, .8f);
     }
 
     void Update()
@@ -111,11 +115,20 @@ public class Enemy : MonoBehaviour
         {
             if (rb.velocity.x == 0)
             {
-                enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while 
+                if (isAttacking)
+                {
+                    enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while
+                }
+                else
+                {
+                    enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while
+                    enAnimator.SetBool("idle", true);
+                }
             }
             else
             {
                 enAnimator.SetBool("move", true);
+                enAnimator.SetBool("idle", false);
             }
         }
 
@@ -125,22 +138,20 @@ public class Enemy : MonoBehaviour
             float distToPlayer = Vector2.Distance(transform.position, player.position);
 
             //range <= 3
-            if(distToPlayer <= aggroRange && enController.enCanMove) //how to start aggro
+            if (enController.enCanMove)
             {
-                aggroStarted = true;
-                //chase player
-                StartChase();
-                /*if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
+                if(distToPlayer <= aggroRange) //how to start aggro
                 {
-                    StopChase(); //stop moving, don't clip into player just to attack
-                    //Attack //when in attack range
-                    //StartCoroutine
-                }*/
-            }
-            else if(aggroStarted && enController.enCanMove) //now that we have aggro
-            {
-                StartChase();
-                //StopChase(); //if player outruns aggro range stop chase, currently keep chasing forever
+                    aggroStarted = true;
+                    //chase player
+                    if(enCanChase)
+                        StartChase();
+                }
+                else if(aggroStarted && enController.enCanMove) //now that we have aggro
+                {
+                    if(enCanChase)
+                        StartChase();
+                }
             }
         }
         else if (!isAlive)
@@ -157,19 +168,17 @@ public class Enemy : MonoBehaviour
     //AI aggro
     void StartChase()
     {
-        enAnimator.SetBool("inCombat", false);
+        //enAnimator.SetBool("inCombat", false);
         //enController.enCanMove = true;
 
-        if (enController.enCanMove)
+        if (enController.enCanMove && enCanChase)
         {
-
             if (transform.position.x < player.position.x) //player is right
             {
                 playerToRight = true;
                 //player is to right, move right
                 
                 rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
-                
                 
                 //Facing right, flip sprite to face right
                 enController.enFacingRight = true;
@@ -197,27 +206,33 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            rb.velocity = new Vector2(0, 0);
+        }
 
         if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
         {
-            StopChase(); //stop moving, don't clip into player just to attack
+            StopChase(); //stop moving, stops enemy from walking into player
                          //Attack //when in attack range
                          //StartCoroutine
         }
     }
 
-    void StopChase()
+    void StopChase(float duration = 1f)
     {
-        rb.velocity = new Vector2(0, 0);
-        enAnimator.SetBool("move", false);
-        enController.enCanMove = false;
-        //enAnimator.SetBool("inCombat", true);
-        //enController.enCanMove = true;
+        StartCoroutine(StoppingChase(duration));
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    IEnumerator StoppingChase(float duration)
     {
-        //
+        enCanChase = false;
+        rb.velocity = new Vector2(0, 0);
+        enController.EnDisableMove();
+        //enAnimator.SetBool("move", false);
+        yield return new WaitForSeconds(duration); //1f
+        enCanChase = true;
+        enController.EnEnableMove();
     }
 
     void Attack()
@@ -233,36 +248,29 @@ public class Enemy : MonoBehaviour
     }
 
     IEnumerator IsAttacking()
-    {//TODO: combine redundant variables    
+    {//TODO: combine redundant variables
         enStunned = false; //attackStopped = false;
-        isAttacking = true;
-            
-        enAnimator.SetTrigger("Attack");
-            
-        enAnimator.SetBool("inCombat", true);
-        enAnimator.SetBool("isAttacking", true);
-        enAnimator.SetBool("move", false);
-        
-        enCanAttack = false;
-        enController.enCanMove = false;
-        rb.velocity = new Vector2(0, 0);
-        yield return new WaitForSeconds(enAttackAnimSpeed); 
-        if (enStunned) //attackStopped
-        {
-            isAttacking = false; //prevent enemy from getting stuck on "isAttacking" since it is never set to false
-            yield break;
-        }
 
-        rb.velocity = new Vector2(0, 0); //stop enemy from moving
+        isAttacking = true;
+        enAnimator.SetTrigger("Attack");
+        //enAnimator.SetBool("inCombat", true);
+        enAnimator.SetBool("isAttacking", true);
+        enController.enCanMove = false;
+
+        enCanAttack = false;
+        StopChase();
+        //rb.velocity = new Vector2(0, 0);
+        enController.EnDisableMove();
+        yield return new WaitForSeconds(enAttackAnimSpeed);
+
+        //rb.velocity = new Vector2(0, 0); //stop enemy from moving
         Attack();
         yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
-        rb.velocity = new Vector2(0.01f, 0);
+        enController.EnEnableMove();
         enAnimator.SetBool("isAttacking", false);
         isAttacking = false;
-        enController.enCanMove = true;
         enCanAttack = true;
     }
-
 
     private void OnDrawGizmosSelected()
     {
@@ -276,7 +284,6 @@ public class Enemy : MonoBehaviour
     {
         if (isAlive == true)
         {
-
             currentHealth -= damage;
             healthBar.SetHealth(currentHealth);
             if (currentHealth > maxHealth)
@@ -285,7 +292,9 @@ public class Enemy : MonoBehaviour
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                TextPopupsHandler.ShowDamage(damage, transform.position);
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowDamage(damage, tempPos);
             }
             
             //hurt animation
@@ -322,45 +331,27 @@ public class Enemy : MonoBehaviour
         sr.material = mDefault;
     }
 
-    public void GetKnockback(float knockbackAmount) //boss has implementation of taking kbThrust and kbDuration as params with defaults instead
+    public void GetKnockback(bool playerFacingRight, float kbThrust = 2f, float kbDuration = 5f) //defaults
     {
-        if (rb != null)
+        //kbThrust - velocity of lunge movement
+        //kbDuration - how long to maintain thrust velocity (distance)
+
+        //float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
+        Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+
+        if (playerFacingRight) //knockback <- enemy -> player
         {
-
-            //getting player direction to enemy 
-            float distToPlayer = transform.position.x - player.transform.position.x;
-
-            Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
-            //tempOffset2.x += knockbackDist;
-
-            if (distToPlayer > 0) //to right of player
-            {
-                //knockback to left
-                tempOffset.x += kbDuration;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
-                transform.position = smoothPosition;
-            }
-            else //to left of player
-            {
-                //knockback to right
-                tempOffset.x -= kbDuration;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
-                transform.position = smoothPosition;
-            }
+            tempOffset.x += kbDuration;
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+            transform.position = smoothPosition;
         }
-    }
-
-    IEnumerator KnockbackEnemy() //
-    {
-        rb.velocity = new Vector2(10, 0);
-        yield return new WaitForSeconds(.05f);
-        enController.enCanMove = false;
-        //rb.velocity = Vector3.zero;
-        StopChase();
-
-        yield return new WaitForSeconds(1.0f);
-        enController.enCanMove = true;
-        //enController.enCanMove = true;
+        else //player <- enemy -> knockback
+        {
+            tempOffset.x -= kbDuration;
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+            transform.position = smoothPosition;
+        }
+        StopChase(1f);
     }
 
     public void EnIsHurtStart()
@@ -377,6 +368,7 @@ public class Enemy : MonoBehaviour
     {
         if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
         {
+
             if(fullStun)
             {
                 float fullDuration = 1f;
@@ -397,11 +389,9 @@ public class Enemy : MonoBehaviour
     {
         StopChase();
         enCanAttack = false;
-        enController.enCanMove = false;
         rb.velocity = new Vector2(0, rb.velocity.y);
         yield return new WaitForSeconds(lightStunDuration);
         enCanAttack = true;
-        enController.enCanMove = true;
         enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
         allowStun = Time.time + allowStunCD;
     }
@@ -431,8 +421,9 @@ public class Enemy : MonoBehaviour
 
             if (isAlive)
             {
-                var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-                showStunned.GetComponent<TextMeshPro>().text = "\n*Stun*"; //temp fix to offset not working (anchors)
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowStun(tempPos);
             }
 
             yield return new WaitForSeconds(stunDuration);
@@ -456,6 +447,7 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        isAlive = false;
         //Die animation
         if(enAnimator != null)
         {

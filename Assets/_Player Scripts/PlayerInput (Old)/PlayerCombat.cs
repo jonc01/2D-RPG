@@ -5,27 +5,32 @@ using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
 {
-    //public GameObject camera;
-
     public Animator animator;
     [SerializeField] bool m_noBlood = false;
     public PlayerMovement movement;
     public CharacterController2D controller;
     public Transform playerLocation;
+    [SerializeField] Canvas PlayerHealthBarCanvas;
 
+    [Space]
     //Text Popups
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
+    [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
+    [SerializeField] Transform PlayerHealthBar;
 
+    [Space]
     public float maxHealth = 100;
     public float currentHealth;
     public HealthBar healthBar;
     public HealthBar experienceBar;
     public bool isAlive = true;
 
+    [Space]
     //weapon stats
     public float wepDamage = 10f; //default values, should change based on weapon stats
     public float wepRange = .5f; //
+    public float playerAttackSpeed = .3f;
 
     public Transform attackPoint;
     float attackRange;
@@ -61,11 +66,12 @@ public class PlayerCombat : MonoBehaviour
     public float altAttackTime = .3f;
 
     //weapon specific
-    public float knockback = 50f;
+    public float knockback = 5f;
 
     SpriteRenderer sr;
     [SerializeField] private Material mWhiteFlash;
     private Material mDefault;
+    Coroutine IsAttackingCO;
 
     void Start()
     {
@@ -115,10 +121,25 @@ public class PlayerCombat : MonoBehaviour
             // Call one of three attack animations "Attack1", "Attack2", "Attack3"
             animator.SetTrigger("Attack" + m_currentAttack);
 
-            StartCoroutine(IsAttacking(m_currentAttack));
-            
+            //Coroutine IsAttackingCO;
+            IsAttackingCO = StartCoroutine(IsAttacking(m_currentAttack));
+
             // Reset timer
             m_timeSinceAttack = 0.0f;
+        }
+
+        if(IsAttackingCO != null) //cancelling attack coroutine with dodge
+        {
+            if (movement.m_rolling)
+                StopCoroutine(IsAttackingCO);
+
+            if (movement.isDashing)
+                StopCoroutine(IsAttackingCO);
+
+            /*if (Input.GetButtonDown("Dodge") && animator.GetBool("isAttacking")){
+                StopCoroutine(IsAttackingCO);
+                Debug.Log("Stopping Attack CO");
+            }*/
         }
 
         //Block/Alt attack
@@ -141,30 +162,8 @@ public class PlayerCombat : MonoBehaviour
 
                 //AltAttacking = false;
 
-                /*if (blockCounter < 100)
-                {
-                    animator.SetTrigger("Block");
-                }
-                else
-                {
-                    animator.ResetTrigger("Block");
-                    animator.SetBool("IdleBlock", true);
-                    Debug.Log("IdleBlock: " + animator.GetBool("IdleBlock"));
-
-                }*/
                 //blockCounter++;
-                /*if (blockIsHeld == true)
-                {
-                    Debug.Log("HOLDING block");
-                    movement.runSpeed = 0f;
-                    animator.SetBool("IdleBlock", true);
-                }*/
-                /*else
-                {
-                    Debug.Log("NOT HOLDING block");
-                    animator.ResetTrigger("Block");
-                    animator.SetBool("IdleBlock", false);
-                }*/
+                
                 //Blocking(true);
             }
             AltAttacking = false;
@@ -183,18 +182,6 @@ public class PlayerCombat : MonoBehaviour
 
         //animator.SetBool("IdleBlock", false);
         //}
-
-        if (movement.m_rolling)
-        {
-            //StopCoroutine(AttackCo)
-            Debug.Log("ROLLLINGGGG");
-        }
-
-        if (movement.isDashing)
-        {
-            //StopCoroutine(
-            Debug.Log("DASSSHHIINNGGG");
-        }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -247,7 +234,7 @@ public class PlayerCombat : MonoBehaviour
         //movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         
         //yield return new WaitForSeconds(attackTime);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
         
         animator.SetBool("isAttacking", false);
@@ -273,8 +260,8 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(knockback/2);
-                enemy.GetComponent<Enemy>().GetStunned(.3f, false);
+                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
+                //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
@@ -283,7 +270,6 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy2>() != null)
             {
                 enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy2>().GetKnockback(knockback / 3);
             }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
@@ -309,7 +295,7 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy>() != null)
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(knockback*2);
+                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
                 //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
             
@@ -319,7 +305,6 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy2>() != null)
             {
                 enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy2>().GetKnockback(knockback * 2);
                 enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
             }
 
@@ -379,11 +364,10 @@ public class PlayerCombat : MonoBehaviour
         }
         foreach (Collider2D enemy in altHitEnemies) //loop through enemies hit
         {
-            //Debug.Log("We Hit " + enemy.name);
             if (enemy.GetComponent<Enemy>() != null)
             {
                 enemy.GetComponent<Enemy>().TakeDamage(altDamage); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(knockback*4f);
+                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
                 enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
 
@@ -518,31 +502,36 @@ public class PlayerCombat : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (currentHealth > 0) {
-            if(animator.GetBool("isRolling")) //damage dodged
-            {
-                damage = 0;
-                TextPopupsHandler.ShowDodge(transform.position);
+        if (isAlive)
+        {
+            if (currentHealth > 0) {
+                if(animator.GetBool("isRolling")) //damage dodged
+                {
+                    damage = 0;
+                    TextPopupsHandler.ShowDodge(transform.position);
+                }
+                currentHealth -= (damage);
+                healthBar.SetHealth(currentHealth);
+                if(damage > 0)
+                {
+                    Vector3 tempPos = transform.position;
+                    tempPos += TPOffset;
+                    TextPopupsHandler.ShowDamage(damage, tempPos);
+                    //var showDmg = Instantiate(TextPopupsPrefab, PlayerHealthBar.position, Quaternion.identity, PlayerHealthBar.transform);
+                    //showDmg.transform.SetParent(PlayerHealthBar.transform);
+                    
+                    animator.SetTrigger("Hurt");
+                    sr.material = mWhiteFlash; //flashing enemy sprite
+                    //GetKnockback(true); //
+                    Invoke("ResetMaterial", .1f);
+                }
             }
-            currentHealth -= (damage);
-            healthBar.SetHealth(currentHealth);
-            if(damage > 0)
-            {
-                animator.SetTrigger("Hurt");
-                sr.material = mWhiteFlash; //flashing enemy sprite
-                //GetKnockback(true); //
-                Invoke("ResetMaterial", .1f);
+            //hurt animation
+            if (currentHealth <= 0){
+                Die();
             }
-
-            //if (TextPopupsHandler != null) {
-            TextPopupsHandler.ShowDamage(damage, transform.position);
-            //}
         }
 
-        //hurt animation
-        if (currentHealth <= 0){
-            Die();
-        }
     }
 
     void ResetMaterial()
@@ -559,39 +548,24 @@ public class PlayerCombat : MonoBehaviour
             //animator.SetTrigger("Hurt");
             if (TextPopupsPrefab)
             {
-                TextPopupsHandler.ShowHeal(healAmount, transform.position);
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                /*Vector3 tempPos1 = PlayerHealthBar.position;
+                tempPos1 += new Vector3(0, -.5f, 0);*/
+                TextPopupsHandler.ShowHeal(healAmount, tempPos);
             }
             if(currentHealth > maxHealth)
             {
                 currentHealth = maxHealth; //can't overheal, can implement an overheal/shield later
             }
-        }
 
-        //hurt animation
-        if (currentHealth <= 0)
-        {
-            Die();
+            //hurt animation
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
         }
-
     }
-
-    /*void Blocking(bool isBlocking)
-    {
-        if(isBlocking == true)
-        {
-            Debug.Log("HOLDING");
-            //movement.runSpeed = 0f;
-            movement.rb.velocity = new Vector2(0, 0);
-            animator.SetBool("IdleBlock", true);
-        }
-        else
-        {
-            //Debug.Log("NOT HOLDING");
-            //movement.runSpeed = movement.defaultRunSpeed;
-            animator.ResetTrigger("Block");
-            animator.SetBool("IdleBlock", false);
-        }
-    }*/
 
     void Die()
     {

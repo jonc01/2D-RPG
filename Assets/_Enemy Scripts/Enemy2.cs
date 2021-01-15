@@ -8,6 +8,7 @@ public class Enemy2 : MonoBehaviour
     //Text Popups
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
+    [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
 
     public LayerMask playerLayers;
     public Transform player;
@@ -289,11 +290,6 @@ public class Enemy2 : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        /*if (TextPopupsPrefab)
-        {
-            ShowTextPopup(damage);
-        }*/
-
         if (isAlive == true)
         {
             currentHealth -= damage;
@@ -306,7 +302,9 @@ public class Enemy2 : MonoBehaviour
             //show damage/heal numbers
             if (TextPopupsPrefab)
             {
-                TextPopupsHandler.ShowDamage(damage, transform.position);
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowDamage(damage, tempPos);
             }
 
             //hurt animation
@@ -342,35 +340,24 @@ public class Enemy2 : MonoBehaviour
         sr.material = mDefault;
     }
 
-    public void GetKnockback(float knockbackAmount)
+    public void GetKnockback(bool playerFacingRight, float kbThrust = 2f, float kbDuration = 5f) //defaults
     {
-        if (rb != null)
+        //kbThrust - velocity of lunge movement
+        //kbDuration - how long to maintain thrust velocity (distance)
+        
+        Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+
+        if (playerFacingRight) //enemy -> knockback
         {
-            Vector3 changeLocation = GetComponent<Transform>().position;
-            Vector3 tempLocation = changeLocation; //for particle instantiate
-            tempLocation.y += .5f;
-
-            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
-
-            Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
-            //tempOffset2.x += knockbackDist;
-
-            if (distToPlayer > 0) //to right of player
-            {
-                //knockback to left
-                tempOffset.x += kbDuration;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
-                transform.position = smoothPosition;
-            }
-            else //to left of player
-            {
-                //knockback to right
-                tempOffset.x -= kbDuration;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
-                transform.position = smoothPosition;
-            }
-
-            Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
+            tempOffset.x += kbDuration;
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+            transform.position = smoothPosition;
+        }
+        else //knockback <- enemy
+        {
+            tempOffset.x -= kbDuration;
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+            transform.position = smoothPosition;
         }
     }
 
@@ -423,8 +410,9 @@ public class Enemy2 : MonoBehaviour
 
             if (isAlive)
             {
-                var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-                showStunned.GetComponent<TextMeshPro>().text = "\n*Stun*"; //temp fix to offset not working (anchors)
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowStun(tempPos);
             }
 
             yield return new WaitForSeconds(stunDuration);
@@ -448,6 +436,7 @@ public class Enemy2 : MonoBehaviour
 
     void Die()
     {
+        isAlive = false;
         //Die animation
         if (enAnimator != null)
         {

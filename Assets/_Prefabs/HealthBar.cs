@@ -27,14 +27,13 @@ public class HealthBar : MonoBehaviour
 
         if (slowTrail)
         {
-            trailProp = 6f / trail.maxValue;
+            trailProp = 6f / trail.maxValue; //this value is the delay of the coroutine reducing the trail slider value
         }
         else
         {
             trailProp = trailRate / trail.maxValue; //trail will move at rate proportional to max hp of object
         }
         
-
         if (healthNumbers != null) //option to show numbers
             maxHealth = slider.maxValue;
 

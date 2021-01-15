@@ -209,9 +209,9 @@ MonoBehaviour:
   rb: {fileID: 8396513380961675701}
   enAnimator: {fileID: 0}
   enFacingRight: 0
-  moveSpeed: 1
+  moveSpeedDefault: 0
+  moveSpeed: 0
   HealthBar: {fileID: 3563829245018745206}
-  TextPopups: {fileID: 5457053112608264869, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
   enCanFlip: 0
   enCanMove: 0
 --- !u!114 &8396513380961675702
@@ -227,18 +227,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextPopupsPrefab: {fileID: 1416290914158628297, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
-  TextPopupOffset: {fileID: 8396513380551279477}
-  player: {fileID: 0}
+  TextPopupsHandler: {fileID: 0}
+  TPOffset: {x: 0, y: -0.15, z: 0}
   playerLayers:
     serializedVersion: 2
     m_Bits: 1024
+  player: {fileID: 0}
   enemyAllies: {fileID: 0}
   enemyLayers:
     serializedVersion: 2
     m_Bits: 4096
   HitToRight: {fileID: 5348519943208086770, guid: e3a1e983f51bfb2498d695f0c6cd8751, type: 3}
   HitToLeft: {fileID: 6601068581037343418, guid: bbc8d6c487952ee449e949998073dcfd, type: 3}
-  HitEffect: {fileID: 1673159072164422025, guid: f4d963718e7979947bc7717ad6993df3, type: 3}
+  HitEffect: {fileID: 3144434496805319467, guid: 0d10d273d6177714cb3b6a24e8705577, type: 3}
   deathParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
   maxHealth: 100
   healthBar: {fileID: 3563829245018745207}
