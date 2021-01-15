@@ -325,25 +325,25 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetTrigger("Attack1SlowStartCombo2"); //Attack1
                     yield return new WaitForSeconds(.3f);
                     LungeOnAttack();
-                    Attack(1f);
+                    Attack(1.5f);
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo2"); //Attack2
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
-                    Attack2(1f);
+                    Attack2(1.5f);
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack1SlowStartCombo3"); //Attack1
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
-                    Attack(1f);
+                    Attack(2f);
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo3"); //Attack2
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
-                    Attack2(1f);
+                    Attack2(2f);
 
                     yield return new WaitForSeconds(.2f); //short delay so the Attack2 anim doesn't get cut off
                     enAnimator.SetTrigger("IdleLong"); //longer slow idle animation

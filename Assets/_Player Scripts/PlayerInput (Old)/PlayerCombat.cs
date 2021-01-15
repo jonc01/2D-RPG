@@ -364,7 +364,6 @@ public class PlayerCombat : MonoBehaviour
         }
         foreach (Collider2D enemy in altHitEnemies) //loop through enemies hit
         {
-            //Debug.Log("We Hit " + enemy.name);
             if (enemy.GetComponent<Enemy>() != null)
             {
                 enemy.GetComponent<Enemy>().TakeDamage(altDamage); //attackDamage + additional damage from parameter

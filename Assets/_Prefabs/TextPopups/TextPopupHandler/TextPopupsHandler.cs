@@ -23,7 +23,7 @@ public class TextPopupsHandler : MonoBehaviour
         tempPos.y += Random.Range(-.9f, .1f);*/
 
         var showDmg = Instantiate(TextPopupsPrefab, position, Quaternion.identity);
-        //showDmg.transform.SetParent(TextPopupsCanvas.transform);
+        //showDmg.transform.SetParent(TextPopupsCanvas.transform); //Instantiate with parent instead of SetParent
 
         if (damage > 0)
         {

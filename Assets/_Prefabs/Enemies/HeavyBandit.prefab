@@ -217,7 +217,7 @@ MonoBehaviour:
     m_Bits: 1024
   player: {fileID: 0}
   playerCombat: {fileID: 0}
-  hitParticlePrefab: {fileID: 1673159072164422025, guid: f4d963718e7979947bc7717ad6993df3, type: 3}
+  hitParticlePrefab: {fileID: 3144434496805319467, guid: 0d10d273d6177714cb3b6a24e8705577, type: 3}
   deathParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
   stunLParticlePrefab: {fileID: 6601068581037343418, guid: bbc8d6c487952ee449e949998073dcfd, type: 3}
   stunRParticlePrefab: {fileID: 5348519943208086770, guid: e3a1e983f51bfb2498d695f0c6cd8751, type: 3}
