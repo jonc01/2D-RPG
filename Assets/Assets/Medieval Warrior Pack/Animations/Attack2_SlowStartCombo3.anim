@@ -50,14 +50,14 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.33333334
         value: 8
-        inSlope: -16
-        outSlope: -16
+        inSlope: -8
+        outSlope: -8
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5
+        time: 0.75
         value: 1
         inSlope: 0
         outSlope: 0
@@ -80,7 +80,7 @@ AnimationClip:
       value: {fileID: 4668938655123782945, guid: 789874d4419b62d4b88074812a456faf, type: 3}
     - time: 0.25
       value: {fileID: 5683539909772271658, guid: 789874d4419b62d4b88074812a456faf, type: 3}
-    - time: 0.41666666
+    - time: 0.6666667
       value: {fileID: 5683539909772271658, guid: 789874d4419b62d4b88074812a456faf, type: 3}
     attribute: m_Sprite
     path: 
@@ -117,7 +117,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.5
+    m_StopTime: 0.75
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -166,14 +166,14 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.33333334
         value: 8
-        inSlope: -16
-        outSlope: -16
+        inSlope: -8
+        outSlope: -8
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5
+        time: 0.75
         value: 1
         inSlope: 0
         outSlope: 0

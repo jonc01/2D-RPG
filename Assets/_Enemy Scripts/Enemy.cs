@@ -111,7 +111,13 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if(rb != null)
+        CheckIdle();
+        Move();
+    }
+
+    void CheckIdle()
+    {
+        if (rb != null)
         {
             if (rb.velocity.x == 0)
             {
@@ -131,7 +137,10 @@ public class Enemy : MonoBehaviour
                 enAnimator.SetBool("idle", false);
             }
         }
+    }
 
+    void Move()
+    {
         if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
         {
             //checking distance to player for aggro range
@@ -140,16 +149,16 @@ public class Enemy : MonoBehaviour
             //range <= 3
             if (enController.enCanMove)
             {
-                if(distToPlayer <= aggroRange) //how to start aggro
+                if (distToPlayer <= aggroRange) //how to start aggro
                 {
                     aggroStarted = true;
                     //chase player
-                    if(enCanChase)
+                    if (enCanChase)
                         StartChase();
                 }
-                else if(aggroStarted && enController.enCanMove) //now that we have aggro
+                else if (aggroStarted && enController.enCanMove) //now that we have aggro
                 {
-                    if(enCanChase)
+                    if (enCanChase)
                         StartChase();
                 }
             }
@@ -161,9 +170,7 @@ public class Enemy : MonoBehaviour
         }
         if (!playerCombat.isAlive)
             StopChase();
-
     }
-
 
     //AI aggro
     void StartChase()
