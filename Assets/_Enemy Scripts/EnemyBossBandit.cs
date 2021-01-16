@@ -53,6 +53,7 @@ public class EnemyBossBandit : MonoBehaviour
     public float stunResist = .5f; //0f takes full stun duration, 1.0f complete stun resist
     public float allowStun = 0f;
     public float allowStunCD = 5f; //how often enemy can be stunned
+    public float damageTakenMultiplier = 1f;
 
     [SerializeField]
     bool enCanAttack = true, isAttacking; //for parry()
@@ -60,6 +61,7 @@ public class EnemyBossBandit : MonoBehaviour
     bool playerToRight, aggroStarted;
     bool enIsHurt;
     bool enStunned;
+    bool canParry;
 
     SpriteRenderer sr;
     [SerializeField]
@@ -85,11 +87,15 @@ public class EnemyBossBandit : MonoBehaviour
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
-
-
+        canParry = false;
     }
 
     void Update()
+    {
+        Move();
+    }
+
+    void Move()
     {
         if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
         {
@@ -123,7 +129,6 @@ public class EnemyBossBandit : MonoBehaviour
         if (!playerCombat.isAlive)
             StopChase();
     }
-
 
     //AI aggro
     void StartChase()
@@ -341,11 +346,13 @@ public class EnemyBossBandit : MonoBehaviour
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo3"); //Attack2
+                    //canParry = true
                     yield return new WaitForSeconds(.2f);
+                    //canParry = false
                     LungeOnAttack();
                     Attack2(2f);
 
-                    yield return new WaitForSeconds(.2f); //short delay so the Attack2 anim doesn't get cut off
+                    yield return new WaitForSeconds(.6f); //short delay so the Attack2 anim doesn't get cut off
                     enAnimator.SetTrigger("IdleLong"); //longer slow idle animation
                     yield return new WaitForSeconds(1.6f);
 
@@ -410,7 +417,8 @@ public class EnemyBossBandit : MonoBehaviour
     {
         if (isAlive == true)
         {
-            currentHealth -= damage;
+            damage *= damageTakenMultiplier;
+            currentHealth -= (damage);
             healthBar.SetHealth(currentHealth);
             if (currentHealth > maxHealth)
                 currentHealth = maxHealth;
@@ -427,7 +435,14 @@ public class EnemyBossBandit : MonoBehaviour
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
-                TextPopupsHandler.ShowDamage(damage, tempPos);
+                if(damageTakenMultiplier != 1) //crit damage, damage was multiplied
+                {
+                    TextPopupsHandler.ShowDamage(damage, tempPos, true);
+                }
+                else
+                {
+                    TextPopupsHandler.ShowDamage(damage, tempPos);
+                }
             }
 
             //hurt animation
@@ -478,9 +493,30 @@ public class EnemyBossBandit : MonoBehaviour
             GetComponent<Transform>().position = changeLocation;
             //StartCoroutine(StunEnemy(0f));
         }
+    }
 
-        /*var showKnockback = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-        showKnockback.GetComponent<TextMeshPro>().text = "?!";*/
+    public void CheckParry()
+    {
+        if (canParry)
+        {
+            StartCoroutine(GetParried());
+        }
+    }
+
+    IEnumerator GetParried()
+    {
+        //Instantiate(StunSparkParticles);
+        enAnimator.SetTrigger("Stunned");
+        damageTakenMultiplier = 2f;
+
+        yield return new WaitForSeconds(1.3f);
+
+        ResetDamageTakenMultiplier();
+    }
+
+    void ResetDamageTakenMultiplier()
+    {
+        damageTakenMultiplier = 1f;
     }
 
     public void EnIsHurtStart()

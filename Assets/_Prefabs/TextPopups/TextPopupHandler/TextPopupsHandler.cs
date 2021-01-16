@@ -27,6 +27,10 @@ public class TextPopupsHandler : MonoBehaviour
 
         if (damage > 0)
         {
+            if (crit)
+            {
+                showDmg.GetComponent<TextMeshPro>().color = new Color32(255, 0, 0, 255);
+            }
             showDmg.GetComponent<TextMeshPro>().text = damage.ToString();
         }
         else if(damage < 0)

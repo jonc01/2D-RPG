@@ -98,6 +98,12 @@ public class Enemy2 : MonoBehaviour
 
     void Update()
     {
+        CheckIdle();
+        Move();
+    }
+
+    void CheckIdle()
+    {
         if (rb != null)
         {
             if (rb.velocity.x == 0)
@@ -109,7 +115,10 @@ public class Enemy2 : MonoBehaviour
                 enAnimator.SetBool("move", true);
             }
         }
+    }
 
+    void Move()
+    {
         if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
         {
             //checking distance to player for aggro range
@@ -142,7 +151,6 @@ public class Enemy2 : MonoBehaviour
         if (!playerCombat.isAlive)
             StopChase();
     }
-
 
     //AI aggro
     void StartChase()
