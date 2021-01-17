@@ -31,7 +31,6 @@ public class StationaryEnemy : MonoBehaviour
     public Animator enAnimator;
     public bool isAlive;
 
-    
 
     [SerializeField]
     public Rigidbody2D rb;
@@ -57,7 +56,6 @@ public class StationaryEnemy : MonoBehaviour
         mDefault = sr.material;
 
         player = GameObject.Find("Player").transform;
-        //playerCombat = player.GetComponent<PlayerCombat>();
 
         //Stats
         currentHealth = maxHealth;
@@ -77,19 +75,7 @@ public class StationaryEnemy : MonoBehaviour
     {
         if (rb != null && enController != null && isAlive) //check if object has rigidbody
         {
-            //checking distance to player for aggro range
-            float distToPlayer = 1f; //TODO: delete, replace with OnTriggerEnter
 
-            //range <= 3
-            if (distToPlayer <= aggroRange)
-            {
-                StartCoroutine(IsAttacking());
-                //enCanAttack = true;
-            }
-            else
-            {
-                //StopChase();
-            }
         }
         else if (!isAlive)
         {
@@ -109,7 +95,6 @@ public class StationaryEnemy : MonoBehaviour
         {
             if(enemy != null && enemy.GetComponent<Enemy>() != null)
                 enemy.GetComponent<Enemy>().TakeDamage(-enAttackDamage); //negative damage for healing don't need Heal() function
-
 
         }
     }
