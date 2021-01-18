@@ -408,6 +408,7 @@ MonoBehaviour:
   stunResist: 0.5
   allowStun: 0
   allowStunCD: 5
+  damageTakenMultiplier: 1
   enCanAttack: 1
   isAttacking: 0
   playerToRight: 0
@@ -434,6 +435,7 @@ MonoBehaviour:
   HealthBar: {fileID: 5040420503057490420}
   enCanFlip: 0
   enCanMove: 0
+  enCanParry: 0
 --- !u!1 &61359296
 GameObject:
   m_ObjectHideFlags: 0

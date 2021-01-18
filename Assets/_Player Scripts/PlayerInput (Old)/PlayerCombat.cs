@@ -381,7 +381,7 @@ public class PlayerCombat : MonoBehaviour
             }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
-                enemy.GetComponent<EnemyBossBandit>().TakeDamage(altDamage);
+                enemy.GetComponent<EnemyBossBandit>().CheckParry();
         }
     }
 

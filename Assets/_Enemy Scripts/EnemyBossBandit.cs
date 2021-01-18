@@ -61,7 +61,8 @@ public class EnemyBossBandit : MonoBehaviour
     bool playerToRight, aggroStarted;
     bool enIsHurt;
     bool enStunned;
-    bool canParry;
+
+    Coroutine IsAttackingCO;
 
     SpriteRenderer sr;
     [SerializeField]
@@ -87,7 +88,6 @@ public class EnemyBossBandit : MonoBehaviour
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
-        canParry = false;
     }
 
     void Update()
@@ -152,7 +152,7 @@ public class EnemyBossBandit : MonoBehaviour
                 enController.Flip();
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
                 {
-                    StartCoroutine(IsAttacking());
+                    IsAttackingCO = StartCoroutine(IsAttacking());
                     isAttacking = false;
                 }
             }
@@ -169,7 +169,7 @@ public class EnemyBossBandit : MonoBehaviour
                 enController.Flip();
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
                 {
-                    StartCoroutine(IsAttacking());
+                    IsAttackingCO = StartCoroutine(IsAttacking());
                     isAttacking = false;
                 }
             }
@@ -251,7 +251,6 @@ public class EnemyBossBandit : MonoBehaviour
             int atkSequence = Random.Range(4, 4); //TODO: DEBUGGING revert to above
 
             Debug.Log("atkSequence rand: " + atkSequence);
-
 
             switch (atkSequence)
             {
@@ -497,7 +496,7 @@ public class EnemyBossBandit : MonoBehaviour
 
     public void CheckParry()
     {
-        if (canParry)
+        if (enController.enCanParry == true)
         {
             StartCoroutine(GetParried());
         }
@@ -505,12 +504,16 @@ public class EnemyBossBandit : MonoBehaviour
 
     IEnumerator GetParried()
     {
+        StopCoroutine(IsAttackingCO);
+        enController.enCanMove = false;
+        enCanAttack = false;
         //Instantiate(StunSparkParticles);
         enAnimator.SetTrigger("Stunned");
         damageTakenMultiplier = 2f;
-
-        yield return new WaitForSeconds(1.3f);
-
+        yield return new WaitForSeconds(2.3f); //1.3f
+        enController.EnDisableParry();
+        enController.enCanMove = true;
+        enCanAttack = true;
         ResetDamageTakenMultiplier();
     }
 

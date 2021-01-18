@@ -19,9 +19,12 @@ public class EnemyController : MonoBehaviour
     //to prevent flipping with Enemy parent object
     public Transform HealthBar;
 
-    [SerializeField]
+    [Space]
     public bool enCanFlip;
     public bool enCanMove;
+
+    public bool enCanParry;
+
 
     // Use this for initialization
     void Start()
@@ -29,6 +32,7 @@ public class EnemyController : MonoBehaviour
         moveSpeed = moveSpeedDefault;
         enCanFlip = true;
         enCanMove = true;
+        enCanParry = false;
     }
 
     // Update is called once per frame
@@ -92,4 +96,13 @@ public class EnemyController : MonoBehaviour
         moveSpeed = moveSpeedDefault;
     }
 
+    public void EnEnableParry()
+    {
+        enCanParry = true;
+    }
+
+    public void EnDisableParry()
+    {
+        enCanParry = false;
+    }
 }
