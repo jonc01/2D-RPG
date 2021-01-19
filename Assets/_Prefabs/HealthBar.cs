@@ -16,7 +16,7 @@ public class HealthBar : MonoBehaviour
     private bool damageTakenRecent = false;
     private float trailDelayTimer = 0.0f;
     private float trailProp;
-    private float trailRate = 2f; //lower values = faster trail, higher values = slower trail
+    private float trailRate = 1f; //lower values = faster trail, higher values = slower trail
 
     public bool slowTrail = false;
 

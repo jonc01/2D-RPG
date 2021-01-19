@@ -19,6 +19,8 @@ public class EnemyBossBandit : MonoBehaviour
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
+    public GameObject parriedParticlePrefab;
+
 
     public GameObject HealthBarCanvas;
     public float maxHealth = 1000;
@@ -61,6 +63,7 @@ public class EnemyBossBandit : MonoBehaviour
     bool playerToRight, aggroStarted;
     bool enIsHurt;
     bool enStunned;
+    bool particleHits;
 
     Coroutine IsAttackingCO;
 
@@ -88,11 +91,25 @@ public class EnemyBossBandit : MonoBehaviour
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
+        particleHits = false;
     }
 
     void Update()
     {
+        WhereIsPlayer();
         Move();
+    }
+
+    void WhereIsPlayer()
+    {
+        if (transform.position.x < player.position.x) //player is right
+        {
+            playerToRight = true;
+        }
+        else if (transform.position.x > player.position.x) //player is left
+        {
+            playerToRight = false;
+        }
     }
 
     void Move()
@@ -141,7 +158,7 @@ public class EnemyBossBandit : MonoBehaviour
         {
             if (transform.position.x < player.position.x) //player is right
             {
-                playerToRight = true;
+                //playerToRight = true;
                 //player is to right, move right
 
                 rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
@@ -158,7 +175,7 @@ public class EnemyBossBandit : MonoBehaviour
             }
             else if (transform.position.x > player.position.x) //player is left
             {
-                playerToRight = false;
+                //playerToRight = false;
                 //player is to left, move left
 
                 rb.velocity = new Vector2(-enController.moveSpeed, 0);
@@ -460,6 +477,18 @@ public class EnemyBossBandit : MonoBehaviour
                 Invoke("ResetMaterial", .1f);
             }
 
+            if (particleHits)
+            {
+                if (playerToRight)
+                {
+                    Instantiate(stunLParticlePrefab, tempLocation, Quaternion.identity);
+                }
+                else
+                {
+                    Instantiate(stunRParticlePrefab, tempLocation, Quaternion.identity);
+                }
+            }
+
             if (currentHealth <= 0)
             {
                 Die();
@@ -507,11 +536,15 @@ public class EnemyBossBandit : MonoBehaviour
         StopCoroutine(IsAttackingCO);
         enController.enCanMove = false;
         enCanAttack = false;
-        //Instantiate(StunSparkParticles);
-        enAnimator.SetTrigger("Stunned");
+        Instantiate(parriedParticlePrefab, transform.position, Quaternion.identity);
+
+        particleHits = true;
         damageTakenMultiplier = 2f;
-        yield return new WaitForSeconds(2.3f); //1.3f
         enController.EnDisableParry();
+        enAnimator.SetTrigger("Stunned");
+        
+        yield return new WaitForSeconds(2.3f); //1.3f
+
         enController.enCanMove = true;
         enCanAttack = true;
         ResetDamageTakenMultiplier();
@@ -520,6 +553,7 @@ public class EnemyBossBandit : MonoBehaviour
     void ResetDamageTakenMultiplier()
     {
         damageTakenMultiplier = 1f;
+        particleHits = false;
     }
 
     public void EnIsHurtStart()
@@ -539,12 +573,10 @@ public class EnemyBossBandit : MonoBehaviour
             float fullDuration = 1f;
             fullDuration -= stunResist; //getting percentage of stun based on stunResist
             duration *= fullDuration;
-            //enAnimator.SetTrigger("en2Stunned");
+
             StartCoroutine(StunEnemy(duration));
         }
     }
-
-
 
     IEnumerator StunEnemy(float stunDuration)
     {
@@ -577,9 +609,8 @@ public class EnemyBossBandit : MonoBehaviour
                 showStunned.GetComponent<TextMeshPro>().text = "\n*Stun*"; //temp fix to offset not working (anchors)
             }
 
-            yield return new WaitForSeconds(stunDuration);
-
-            yield return new WaitForSeconds(.5f); //time for recover animation
+            yield return new WaitForSeconds(stunDuration + .5f); //+ time for recover animation
+            
             enCanAttack = true;
             enController.enCanMove = true;
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip

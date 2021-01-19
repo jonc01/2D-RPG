@@ -389,6 +389,7 @@ MonoBehaviour:
   deathParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
   stunLParticlePrefab: {fileID: 7508974481244418147, guid: 8d45e883450c75c4ca42078c4e0e65cc, type: 3}
   stunRParticlePrefab: {fileID: 2630982711930720759, guid: 0da0552efade60a42abeec6a8eeb0b7f, type: 3}
+  parriedParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
   HealthBarCanvas: {fileID: 5040420503057490427}
   maxHealth: 800
   healthBar: {fileID: 5040420503328431211}
@@ -2044,13 +2045,17 @@ PrefabInstance:
       propertyPath: m_Color.b
       value: 0.84313726
       objectReference: {fileID: 0}
+    - target: {fileID: 245630209313134787, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 245630209313134788, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_Name
       value: Bandit
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.99
+      value: 7.762
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2114,7 +2119,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8088764731826395037, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: slowTrail
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
@@ -3240,6 +3245,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3563829245018745207, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: slowTrail
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7505291400752678348, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -3728,7 +3737,7 @@ MonoBehaviour:
   dodgeTime: 0.5
   dashCD: 2
   dashTime: 0.1
-  dashSpeed: 20
+  dashSpeed: 15
   distanceBetweenImages: 0.1
   m_facingDirection: 1
   m_rolling: 0
@@ -5578,7 +5587,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 2a10e0eaec40bf545b9f36b203d91222, type: 2}
     - target: {fileID: 245630209313134787, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_SortingOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134787, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_RenderingLayerMask
@@ -5606,7 +5615,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.276
+      value: -7.08
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7321,6 +7330,10 @@ PrefabInstance:
       propertyPath: m_Color.b
       value: 0.84313726
       objectReference: {fileID: 0}
+    - target: {fileID: 245630209313134787, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 245630209313134788, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_Name
       value: Bandit (2)
@@ -7391,7 +7404,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8088764731826395037, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: slowTrail
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
@@ -7925,6 +7938,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 979dce4ddfce19b49a2707c9e4c49f9c, type: 2}
+    - target: {fileID: 7044336217693309653, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 9037823791276753328, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -7952,6 +7969,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3563829244747797736, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3563829245018745207, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: slowTrail
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7505291400752678348, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}

@@ -128,7 +128,16 @@ public class PlayerCombat : MonoBehaviour
             m_timeSinceAttack = 0.0f;
         }
 
-        if(IsAttackingCO != null) //cancelling attack coroutine with dodge
+        if (m_currentAttack == 2)
+        {
+            Debug.Log("panic");
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("PANIC 2: electric boogaloo");
+            }
+        }
+
+        if (IsAttackingCO != null) //cancelling attack coroutine with dodge
         {
             if (movement.m_rolling)
                 StopCoroutine(IsAttackingCO);
