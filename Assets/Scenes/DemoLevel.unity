@@ -415,6 +415,8 @@ MonoBehaviour:
   playerToRight: 0
   aggroStarted: 0
   mWhiteFlash: {fileID: 2100000, guid: e8655ccdcc83dfb439430390344f0a3c, type: 2}
+  stunnedAnimTime: 0
+  combo3Attack1AnimTime: 0
 --- !u!114 &57842447
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -56,6 +56,8 @@ public class EnemyBossBandit : MonoBehaviour
     public float allowStun = 0f;
     public float allowStunCD = 5f; //how often enemy can be stunned
     public float damageTakenMultiplier = 1f;
+    float parryDuration;
+    float recoverDuration;
 
     [SerializeField]
     bool enCanAttack = true, isAttacking; //for parry()
@@ -71,6 +73,13 @@ public class EnemyBossBandit : MonoBehaviour
     [SerializeField]
     private Material mWhiteFlash;
     private Material mDefault;
+
+    //Animation timers
+    private AnimationClip clip;
+
+    public float stunnedAnimTime;
+    public float combo3Attack1AnimTime;
+
 
     void Start()
     {
@@ -92,7 +101,28 @@ public class EnemyBossBandit : MonoBehaviour
         enIsHurt = false;
         enStunned = false;
         particleHits = false;
+
+        //UpdateAnimClips();
     }
+
+    /*public void UpdateAnimClips()
+    {
+        AnimationClip[] clips = enAnimator.runtimeAnimatorController.animationClips;
+        foreach(AnimationClip clip in clips)
+        {
+            switch (clip.name)
+            {
+                case "Stunned":
+                    stunnedAnimTime = clip.length;
+                    Debug.Log("Stunned: " + stunnedAnimTime);
+                    break;
+                case "Attack1_SlowStartCombo3":
+                    combo3Attack1AnimTime = clip.length;
+                    Debug.Log("Attack1SlowaoejpfaoeCombo3: " + combo3Attack1AnimTime);
+                    break;
+            }
+        }
+    }*/
 
     void Update()
     {
@@ -264,8 +294,21 @@ public class EnemyBossBandit : MonoBehaviour
     {//TODO: combine redundant variables
         if (enCanAttack && !isAttacking)
         {
-            //int atkSequence = Random.Range(1, 5);
-            int atkSequence = Random.Range(4, 4); //TODO: DEBUGGING revert to above
+            int atkSequence;
+
+            if (currentHealth >= (maxHealth / 2)) //phase 1: 50%+ hp
+            {
+                atkSequence = Random.Range(1, 4); //1-3x
+                parryDuration = .5f;
+                recoverDuration = .5f;
+            }
+            else
+            {
+                atkSequence = Random.Range(4, 4); //only 4
+                parryDuration = 1.1f;
+                recoverDuration = 1.3f;
+            }
+
 
             Debug.Log("atkSequence rand: " + atkSequence);
 
@@ -542,8 +585,12 @@ public class EnemyBossBandit : MonoBehaviour
         damageTakenMultiplier = 2f;
         enController.EnDisableParry();
         enAnimator.SetTrigger("Stunned");
-        
-        yield return new WaitForSeconds(2.3f); //1.3f
+        yield return new WaitForSeconds(parryDuration); //1.1f
+
+        enAnimator.SetTrigger("IdleLong");
+        yield return new WaitForSeconds(recoverDuration); //1.3f
+        enAnimator.SetTrigger("Idle");
+        yield return new WaitForSeconds(.3f);
 
         enController.enCanMove = true;
         enCanAttack = true;
