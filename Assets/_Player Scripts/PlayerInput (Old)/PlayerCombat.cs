@@ -128,7 +128,16 @@ public class PlayerCombat : MonoBehaviour
             m_timeSinceAttack = 0.0f;
         }
 
-        if(IsAttackingCO != null) //cancelling attack coroutine with dodge
+        if (m_currentAttack == 2)
+        {
+            Debug.Log("panic");
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("PANIC 2: electric boogaloo");
+            }
+        }
+
+        if (IsAttackingCO != null) //cancelling attack coroutine with dodge
         {
             if (movement.m_rolling)
                 StopCoroutine(IsAttackingCO);
@@ -158,13 +167,8 @@ public class PlayerCombat : MonoBehaviour
                 animator.SetTrigger("Block");
                 StartCoroutine(AltAttack());
                 movement.canMove = false;
-                //crouch = true; can set later, or just disable hitbox, not collider
 
                 //AltAttacking = false;
-
-                //blockCounter++;
-                
-                //Blocking(true);
             }
             AltAttacking = false;
         }
@@ -175,18 +179,11 @@ public class PlayerCombat : MonoBehaviour
             animator.ResetTrigger("Block");
             animator.SetBool("IdleBlock", false);
         }*/
-        //else if (Input.GetButtonUp("Fire2"))
-        //{
-        //blockIsHeld = false;
-        //Blocking(false);
-
-        //animator.SetBool("IdleBlock", false);
-        //}
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
-        //TODO: testing healing and death animations, delete after player respawn is added
+        //TODO: testing healing, delete after player respawn is added
         if (Input.GetKeyDown(KeyCode.Q))
         {
             //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
@@ -381,7 +378,7 @@ public class PlayerCombat : MonoBehaviour
             }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
-                enemy.GetComponent<EnemyBossBandit>().TakeDamage(altDamage);
+                enemy.GetComponent<EnemyBossBandit>().CheckParry();
         }
     }
 

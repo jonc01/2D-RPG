@@ -108,7 +108,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 964014459
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 317b8365a4649ab459f6cb58ec8f9f18, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -197,6 +197,7 @@ MonoBehaviour:
   HealthBar: {fileID: 2608052343559023882}
   enCanFlip: 0
   enCanMove: 0
+  enCanParry: 0
 --- !u!114 &7044336217693309649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,6 +377,10 @@ PrefabInstance:
     - target: {fileID: 5040420504116435343, guid: 13792fec61c2f0f4983829b2fc1a1a85, type: 3}
       propertyPath: m_Name
       value: HealthBarCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5040420504383415327, guid: 13792fec61c2f0f4983829b2fc1a1a85, type: 3}
+      propertyPath: slowTrail
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5040420505050520053, guid: 13792fec61c2f0f4983829b2fc1a1a85, type: 3}
       propertyPath: m_AnchorMax.x

@@ -19,6 +19,8 @@ public class EnemyBossBandit : MonoBehaviour
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
+    public GameObject parriedParticlePrefab;
+
 
     public GameObject HealthBarCanvas;
     public float maxHealth = 1000;
@@ -54,6 +56,8 @@ public class EnemyBossBandit : MonoBehaviour
     public float allowStun = 0f;
     public float allowStunCD = 5f; //how often enemy can be stunned
     public float damageTakenMultiplier = 1f;
+    float parryDuration;
+    float recoverDuration;
 
     [SerializeField]
     bool enCanAttack = true, isAttacking; //for parry()
@@ -61,12 +65,21 @@ public class EnemyBossBandit : MonoBehaviour
     bool playerToRight, aggroStarted;
     bool enIsHurt;
     bool enStunned;
-    bool canParry;
+    bool particleHits;
+
+    Coroutine IsAttackingCO;
 
     SpriteRenderer sr;
     [SerializeField]
     private Material mWhiteFlash;
     private Material mDefault;
+
+    //Animation timers
+    private AnimationClip clip;
+
+    public float stunnedAnimTime;
+    public float combo3Attack1AnimTime;
+
 
     void Start()
     {
@@ -87,12 +100,46 @@ public class EnemyBossBandit : MonoBehaviour
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
-        canParry = false;
+        particleHits = false;
+
+        //UpdateAnimClips();
     }
+
+    /*public void UpdateAnimClips()
+    {
+        AnimationClip[] clips = enAnimator.runtimeAnimatorController.animationClips;
+        foreach(AnimationClip clip in clips)
+        {
+            switch (clip.name)
+            {
+                case "Stunned":
+                    stunnedAnimTime = clip.length;
+                    Debug.Log("Stunned: " + stunnedAnimTime);
+                    break;
+                case "Attack1_SlowStartCombo3":
+                    combo3Attack1AnimTime = clip.length;
+                    Debug.Log("Attack1SlowaoejpfaoeCombo3: " + combo3Attack1AnimTime);
+                    break;
+            }
+        }
+    }*/
 
     void Update()
     {
+        WhereIsPlayer();
         Move();
+    }
+
+    void WhereIsPlayer()
+    {
+        if (transform.position.x < player.position.x) //player is right
+        {
+            playerToRight = true;
+        }
+        else if (transform.position.x > player.position.x) //player is left
+        {
+            playerToRight = false;
+        }
     }
 
     void Move()
@@ -141,7 +188,7 @@ public class EnemyBossBandit : MonoBehaviour
         {
             if (transform.position.x < player.position.x) //player is right
             {
-                playerToRight = true;
+                //playerToRight = true;
                 //player is to right, move right
 
                 rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
@@ -152,13 +199,13 @@ public class EnemyBossBandit : MonoBehaviour
                 enController.Flip();
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
                 {
-                    StartCoroutine(IsAttacking());
+                    IsAttackingCO = StartCoroutine(IsAttacking());
                     isAttacking = false;
                 }
             }
             else if (transform.position.x > player.position.x) //player is left
             {
-                playerToRight = false;
+                //playerToRight = false;
                 //player is to left, move left
 
                 rb.velocity = new Vector2(-enController.moveSpeed, 0);
@@ -169,7 +216,7 @@ public class EnemyBossBandit : MonoBehaviour
                 enController.Flip();
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
                 {
-                    StartCoroutine(IsAttacking());
+                    IsAttackingCO = StartCoroutine(IsAttacking());
                     isAttacking = false;
                 }
             }
@@ -247,11 +294,23 @@ public class EnemyBossBandit : MonoBehaviour
     {//TODO: combine redundant variables
         if (enCanAttack && !isAttacking)
         {
-            //int atkSequence = Random.Range(1, 5);
-            int atkSequence = Random.Range(4, 4); //TODO: DEBUGGING revert to above
+            int atkSequence;
+
+            if (currentHealth >= (maxHealth / 2)) //phase 1: 50%+ hp
+            {
+                atkSequence = Random.Range(1, 4); //1-3x
+                parryDuration = .5f;
+                recoverDuration = .5f;
+            }
+            else
+            {
+                atkSequence = Random.Range(4, 4); //only 4
+                parryDuration = 1.1f;
+                recoverDuration = 1.3f;
+            }
+
 
             Debug.Log("atkSequence rand: " + atkSequence);
-
 
             switch (atkSequence)
             {
@@ -461,6 +520,18 @@ public class EnemyBossBandit : MonoBehaviour
                 Invoke("ResetMaterial", .1f);
             }
 
+            if (particleHits)
+            {
+                if (playerToRight)
+                {
+                    Instantiate(stunLParticlePrefab, tempLocation, Quaternion.identity);
+                }
+                else
+                {
+                    Instantiate(stunRParticlePrefab, tempLocation, Quaternion.identity);
+                }
+            }
+
             if (currentHealth <= 0)
             {
                 Die();
@@ -497,7 +568,7 @@ public class EnemyBossBandit : MonoBehaviour
 
     public void CheckParry()
     {
-        if (canParry)
+        if (enController.enCanParry == true)
         {
             StartCoroutine(GetParried());
         }
@@ -505,18 +576,31 @@ public class EnemyBossBandit : MonoBehaviour
 
     IEnumerator GetParried()
     {
-        //Instantiate(StunSparkParticles);
-        enAnimator.SetTrigger("Stunned");
+        StopCoroutine(IsAttackingCO);
+        enController.enCanMove = false;
+        enCanAttack = false;
+        Instantiate(parriedParticlePrefab, transform.position, Quaternion.identity);
+
+        particleHits = true;
         damageTakenMultiplier = 2f;
+        enController.EnDisableParry();
+        enAnimator.SetTrigger("Stunned");
+        yield return new WaitForSeconds(parryDuration); //1.1f
 
-        yield return new WaitForSeconds(1.3f);
+        enAnimator.SetTrigger("IdleLong");
+        yield return new WaitForSeconds(recoverDuration); //1.3f
+        enAnimator.SetTrigger("Idle");
+        yield return new WaitForSeconds(.3f);
 
+        enController.enCanMove = true;
+        enCanAttack = true;
         ResetDamageTakenMultiplier();
     }
 
     void ResetDamageTakenMultiplier()
     {
         damageTakenMultiplier = 1f;
+        particleHits = false;
     }
 
     public void EnIsHurtStart()
@@ -536,12 +620,10 @@ public class EnemyBossBandit : MonoBehaviour
             float fullDuration = 1f;
             fullDuration -= stunResist; //getting percentage of stun based on stunResist
             duration *= fullDuration;
-            //enAnimator.SetTrigger("en2Stunned");
+
             StartCoroutine(StunEnemy(duration));
         }
     }
-
-
 
     IEnumerator StunEnemy(float stunDuration)
     {
@@ -574,9 +656,8 @@ public class EnemyBossBandit : MonoBehaviour
                 showStunned.GetComponent<TextMeshPro>().text = "\n*Stun*"; //temp fix to offset not working (anchors)
             }
 
-            yield return new WaitForSeconds(stunDuration);
-
-            yield return new WaitForSeconds(.5f); //time for recover animation
+            yield return new WaitForSeconds(stunDuration + .5f); //+ time for recover animation
+            
             enCanAttack = true;
             enController.enCanMove = true;
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
