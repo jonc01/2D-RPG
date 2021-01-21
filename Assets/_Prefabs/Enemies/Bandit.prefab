@@ -213,7 +213,7 @@ MonoBehaviour:
   enAttackPoint: {fileID: 245630210167638629}
   enController: {fileID: 245630209313134797}
   enAttackDamage: 5
-  enAttackSpeed: 1
+  enAttackSpeed: 0.5
   enAttackAnimSpeed: 0.4
   stunResist: 0
   allowStun: 0

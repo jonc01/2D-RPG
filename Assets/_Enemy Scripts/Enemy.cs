@@ -111,31 +111,35 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        CheckIdle();
+        IdleAnimCheck();
+        MoveAnimCheck();
         Move();
     }
 
-    void CheckIdle()
+    void IdleAnimCheck()
     {
-        if (rb != null)
+        if (rb.velocity.x == 0)
         {
-            if (rb.velocity.x == 0)
+            if (!enCanAttack)
             {
-                if (isAttacking)
-                {
-                    enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while
-                }
-                else
-                {
-                    enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while
-                    enAnimator.SetBool("idle", true);
-                }
+                enAnimator.SetBool("idle", true);
             }
-            else
-            {
-                enAnimator.SetBool("move", true);
-                enAnimator.SetBool("idle", false);
-            }
+        }
+        else
+        {
+            enAnimator.SetBool("idle", false);
+        }
+    }
+
+    void MoveAnimCheck()
+    {
+        if (rb.velocity.x != 0)
+        {
+            enAnimator.SetBool("move", true);
+        }
+        else
+        {
+            enAnimator.SetBool("move", false);
         }
     }
 
@@ -258,20 +262,19 @@ public class Enemy : MonoBehaviour
     {//TODO: combine redundant variables
         enStunned = false; //attackStopped = false;
 
+        enAnimator.SetBool("isAttacking", true);
         isAttacking = true;
         enAnimator.SetTrigger("Attack");
         //enAnimator.SetBool("inCombat", true);
-        enAnimator.SetBool("isAttacking", true);
         enController.enCanMove = false;
 
         enCanAttack = false;
         StopChase();
-        //rb.velocity = new Vector2(0, 0);
+
         enController.EnDisableMove();
         yield return new WaitForSeconds(enAttackAnimSpeed);
-
-        //rb.velocity = new Vector2(0, 0); //stop enemy from moving
         Attack();
+
         yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
         enController.EnEnableMove();
         enAnimator.SetBool("isAttacking", false);

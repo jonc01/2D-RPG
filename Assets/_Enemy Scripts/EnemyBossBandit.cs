@@ -128,6 +128,7 @@ public class EnemyBossBandit : MonoBehaviour
     {
         WhereIsPlayer();
         Move();
+        MoveAnimCheck();
     }
 
     void WhereIsPlayer()
@@ -175,6 +176,18 @@ public class EnemyBossBandit : MonoBehaviour
         }
         if (!playerCombat.isAlive)
             StopChase();
+    }
+
+    void MoveAnimCheck()
+    {
+        if(rb.velocity.x != 0)
+        {
+            enAnimator.SetBool("Move", true);
+        }
+        else
+        {
+            enAnimator.SetBool("Move", false);
+        }
     }
 
     //AI aggro
@@ -367,7 +380,7 @@ public class EnemyBossBandit : MonoBehaviour
                     yield return new WaitForSeconds(enAttackSpeed * 2f);
                     enAnimator.SetBool("isAttacking", false);
                     break;
-                case 4: //Attack1+2 x 3 //can not flip, no parry
+                case 4: //Attack1+2 x 3 //can flip, can parry first attack //has knockback
                     enStunned = false;
                     isAttacking = true;
                     enAnimator.SetBool("isAttacking", true);
