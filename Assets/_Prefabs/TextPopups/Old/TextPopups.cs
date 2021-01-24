@@ -4,11 +4,28 @@ using UnityEngine;
 
 public class TextPopups : MonoBehaviour
 {
-    public float DestroyTime = 1.0f;
+    public float DestroyTime = 1.6f;
     //public Transform RectTransform;
+
+    [SerializeField]
+    private ObjectPoolerList pool;
 
     void Start()
     {
-        Destroy(gameObject, DestroyTime);
+        pool = transform.parent.GetComponent<ObjectPoolerList>();
+        pool.ReturnObject(gameObject);
+
+        //Destroy(gameObject, DestroyTime);
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine(PoolTextPopups());
+    }
+
+    IEnumerator PoolTextPopups()
+    {
+        yield return new WaitForSeconds(DestroyTime);
+        pool.ReturnObject(gameObject);
     }
 }
