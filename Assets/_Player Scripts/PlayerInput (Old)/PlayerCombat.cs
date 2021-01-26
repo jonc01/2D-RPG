@@ -16,7 +16,7 @@ public class PlayerCombat : MonoBehaviour
     //Text Popups
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
-    [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
+    [SerializeField] Vector3 TPOffset = new Vector3(0, 0f, 0);
     [SerializeField] Transform PlayerHealthBar;
 
     [Space]

@@ -98,11 +98,11 @@ public class Enemy2 : MonoBehaviour
 
     void Update()
     {
-        CheckIdle();
+        IdleAnimCheck();
         Move();
     }
 
-    void CheckIdle()
+    void IdleAnimCheck()
     {
         if (rb != null)
         {
