@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class TextPopups : MonoBehaviour
 {
-    public float DestroyTime = 1.6f;
+    [SerializeField]
+    private float DestroyTime = 1f;
     //public Transform RectTransform;
 
     [SerializeField]
@@ -13,9 +14,6 @@ public class TextPopups : MonoBehaviour
     void Start()
     {
         pool = transform.parent.GetComponent<ObjectPoolerList>();
-        pool.ReturnObject(gameObject);
-
-        //Destroy(gameObject, DestroyTime);
     }
 
     private void OnEnable()
