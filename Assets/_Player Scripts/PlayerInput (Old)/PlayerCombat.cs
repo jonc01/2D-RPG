@@ -11,6 +11,7 @@ public class PlayerCombat : MonoBehaviour
     public CharacterController2D controller;
     public Transform playerLocation;
     [SerializeField] Canvas PlayerHealthBarCanvas;
+    [SerializeField] GameObject StatusStunned;
 
     [Space]
     //Text Popups
@@ -151,7 +152,7 @@ public class PlayerCombat : MonoBehaviour
             }*/
         }
 
-        //Block/Alt attack
+        //Heavy Attack
         if (Time.time > allowAltAttack && movement.canMove)
         {
             if (Input.GetButtonDown("Fire2") && canAttack && !AltAttacking)
@@ -172,13 +173,6 @@ public class PlayerCombat : MonoBehaviour
             }
             AltAttacking = false;
         }
-        /*if (blockIsHeld == false)
-        {
-            //Debug.Log("NOT HOLDING block");
-            movement.runSpeed = movement.defaultRunSpeed;
-            animator.ResetTrigger("Block");
-            animator.SetBool("IdleBlock", false);
-        }*/
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -488,13 +482,26 @@ public class PlayerCombat : MonoBehaviour
         canAttack = false;
         movement.canMove = false;
         animator.SetBool("move", false);
+        animator.SetTrigger("Stunned");
+        ShowStatusStun(true);
+        //FlashMaterial();
         if (root)
             movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //only rooting player x velocity
 
         yield return new WaitForSeconds(stunDuration);
-
+        //Invoke("ResetMaterial", .1f);
         canAttack = true;
         movement.canMove = true;
+        ShowStatusStun(false);
+    }
+
+    void ShowStatusStun(bool setActive)
+    {
+        if (StatusStunned != null)
+        {
+            //PlayerHealthBarCanvas.GetComponentInChildren<Canvas>().enabled = true;
+            StatusStunned.SetActive(setActive);
+        }
     }
 
     public void TakeDamage(float damage)
@@ -518,7 +525,7 @@ public class PlayerCombat : MonoBehaviour
                     //showDmg.transform.SetParent(PlayerHealthBar.transform);
                     
                     animator.SetTrigger("Hurt");
-                    sr.material = mWhiteFlash; //flashing enemy sprite
+                    FlashMaterial();
                     //GetKnockback(true); //
                     Invoke("ResetMaterial", .1f);
                 }
@@ -529,6 +536,11 @@ public class PlayerCombat : MonoBehaviour
             }
         }
 
+    }
+
+    void FlashMaterial()
+    {
+        sr.material = mWhiteFlash; //change sprite to white material
     }
 
     void ResetMaterial()

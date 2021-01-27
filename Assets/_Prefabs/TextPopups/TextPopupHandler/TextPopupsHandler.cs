@@ -7,7 +7,7 @@ public class TextPopupsHandler : MonoBehaviour
 {
     //public GameObject TextPopupsPrefab;
     //public float DestroyTime = 1.6f; //.8f
-    //public float yOffset = 2f; //pivot y: start (position.y)+yOffset, end (position.y)+yOffset - 1; 
+    //public float yOffset = 2f;
     //[SerializeField] GameObject TextPopupsCanvas;
 
     [SerializeField]
