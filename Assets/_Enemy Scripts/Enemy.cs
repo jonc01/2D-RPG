@@ -63,6 +63,7 @@ public class Enemy : MonoBehaviour
     bool enIsHurt;
     bool enStunned;
     bool enCanChase;
+    bool knockbackHit;
 
     SpriteRenderer sr;
     [SerializeField]
@@ -105,6 +106,7 @@ public class Enemy : MonoBehaviour
         aggroStarted = false;
         enIsHurt = false;
         enStunned = false;
+        knockbackHit = false;
 
         enAttackSpeed += Random.Range(0, .8f);
     }
@@ -121,6 +123,9 @@ public class Enemy : MonoBehaviour
         if (rb.velocity.x == 0)
         {
             if (!enCanAttack)
+            {
+                enAnimator.SetBool("idle", true);
+            }else if (knockbackHit)
             {
                 enAnimator.SetBool("idle", true);
             }
@@ -237,6 +242,9 @@ public class Enemy : MonoBehaviour
 
     IEnumerator StoppingChase(float duration)
     {
+        if (knockbackHit)
+            enAnimator.SetTrigger("Hurt");
+
         enCanChase = false;
         rb.velocity = new Vector2(0, 0);
         enController.EnDisableMove();
@@ -244,6 +252,7 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(duration); //1f
         enCanChase = true;
         enController.EnEnableMove();
+        knockbackHit = false;
     }
 
     void Attack()
@@ -345,7 +354,8 @@ public class Enemy : MonoBehaviour
     {
         //kbThrust - velocity of lunge movement
         //kbDuration - how long to maintain thrust velocity (distance)
-
+        knockbackHit = true;
+        
         //float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
         Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
 
@@ -361,6 +371,7 @@ public class Enemy : MonoBehaviour
             Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
+        enAnimator.SetTrigger("Hurt");
         StopChase(1f);
     }
 
@@ -378,7 +389,6 @@ public class Enemy : MonoBehaviour
     {
         if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
         {
-
             if(fullStun)
             {
                 float fullDuration = 1f;
@@ -405,6 +415,7 @@ public class Enemy : MonoBehaviour
         enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
         allowStun = Time.time + allowStunCD;
     }
+
     IEnumerator StunEnemy(float stunDuration)
     {
         if (!enStunned)

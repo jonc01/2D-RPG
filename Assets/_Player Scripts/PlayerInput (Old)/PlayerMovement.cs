@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
         isDashing = false;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         if (canMove == true)
@@ -119,14 +119,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        //Dash (mid-air dodge)
-        if(Time.time > allowDash && canMove) //TODO: can just move this into Dodge ^^^^ just switching between both depending on "isGrounded"
-        {
-            if(Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && !isGrounded)
-            {
-                Dash();
-            }
-        }
+        DashInput();
         CheckDash();
     }
 
@@ -165,6 +158,18 @@ public class PlayerMovement : MonoBehaviour
     void AE_ResetRoll()
     {
         m_rolling = false;
+    }
+
+    void DashInput()
+    {
+        //Dash (mid-air dodge)
+        if (Time.time > allowDash && canMove) //TODO: can just move this into Dodge ^^^^ just switching between both depending on "isGrounded"
+        {
+            if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && !isGrounded)
+            {
+                Dash();
+            }
+        }
     }
 
     private void Dash()

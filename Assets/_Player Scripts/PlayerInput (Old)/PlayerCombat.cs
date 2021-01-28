@@ -41,6 +41,7 @@ public class PlayerCombat : MonoBehaviour
     float attackDamageHeavyMultiplier;
     public bool canAttack = true;
     public float stunStrength = 1f;
+    [SerializeField] bool playerStunned;
 
     public float attackTime = 0.25f; //0.25 seems good, give or take .1 seconds
     //bool canMove = true;
@@ -99,14 +100,51 @@ public class PlayerCombat : MonoBehaviour
         //movement.canMove = true;
         canAttack = true;
         AltAttacking = false;
-
+        playerStunned = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         m_timeSinceAttack += Time.deltaTime;
-        //Attack Animations //&& (blockIsHeld == false) 
+
+        CheckLightAttack();
+        
+        //CheckHeavyAttack();
+
+        if (m_currentAttack == 2)
+        {
+            Debug.Log("attempt combo");
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("combo works");
+            }
+        }
+
+
+        CheckAltAttack(); //Parry
+
+        DodgeAttackCancel(); //not currently in-use
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //TODO: testing healing, delete after player respawn is added
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
+            controller.RespawnPlayerResetLevel();
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            HealPlayer(25f); //how much health to heal
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+    }
+
+    void CheckLightAttack()
+    {
         if (Input.GetButtonDown("Fire1") && m_timeSinceAttack > 0.25f && canAttack)
         {
             m_currentAttack++;
@@ -128,38 +166,20 @@ public class PlayerCombat : MonoBehaviour
             // Reset timer
             m_timeSinceAttack = 0.0f;
         }
+    }
 
-        if (m_currentAttack == 2)
-        {
-            Debug.Log("panic");
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Debug.Log("PANIC 2: electric boogaloo");
-            }
-        }
+    void CheckHeavyAttack()
+    {
+        StartCoroutine(IsAttackingHeavy(m_currentAttack));
+    }
 
-        if (IsAttackingCO != null) //cancelling attack coroutine with dodge
-        {
-            if (movement.m_rolling)
-                StopCoroutine(IsAttackingCO);
-
-            if (movement.isDashing)
-                StopCoroutine(IsAttackingCO);
-
-            /*if (Input.GetButtonDown("Dodge") && animator.GetBool("isAttacking")){
-                StopCoroutine(IsAttackingCO);
-                Debug.Log("Stopping Attack CO");
-            }*/
-        }
-
-        //Heavy Attack
+    void CheckAltAttack()
+    {
         if (Time.time > allowAltAttack && movement.canMove)
         {
-            if (Input.GetButtonDown("Fire2") && canAttack && !AltAttacking)
+            if (Input.GetButtonDown("Fire3") && canAttack && !AltAttacking)
             {
-                
                 //currentBlockDuration = Time.timeSinceLevelLoad;
-                //blockIsHeld = true;
 
                 /*m_rolling = true;
                 animator.SetTrigger("Roll");
@@ -173,23 +193,23 @@ public class PlayerCombat : MonoBehaviour
             }
             AltAttacking = false;
         }
+    }
 
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        //TODO: testing healing, delete after player respawn is added
-        if (Input.GetKeyDown(KeyCode.Q))
+    void DodgeAttackCancel()
+    {
+        if (IsAttackingCO != null) //allow dodge to cancel attack
         {
-            //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
-            controller.RespawnPlayerResetLevel();
-        }
+            if (movement.m_rolling) //!!! dodge roll and dash can't be started while attacking because attacking sets canMove to false
+                StopCoroutine(IsAttackingCO); //replace canMove as a condition for dodge/dash for this to work
 
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            HealPlayer(25f); //how much health to heal
+            if (movement.isDashing)
+                StopCoroutine(IsAttackingCO);
+
+            /*if (Input.GetButtonDown("Dodge") && animator.GetBool("isAttacking")){
+                StopCoroutine(IsAttackingCO);
+                Debug.Log("Stopping Attack CO");
+            }*/
         }
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     IEnumerator IsAttacking(int attackNum)
@@ -231,6 +251,42 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBool("isAttacking", false);
         //movement.canMove = true;
         //movement.runSpeed = movement.defaultRunSpeed;
+    }
+
+    IEnumerator IsAttackingHeavy(int attackNum)
+    {
+        if (movement.isGrounded) //should let player attack mid air without stopping movement
+            movement.canMove = false;
+
+        animator.SetBool("isAttacking", true);
+        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //maintaining y velocity, instead of making player float
+
+        switch (attackNum)
+        {
+            case 1:
+                yield return new WaitForSeconds(0.1f);
+                Attack(); //Attack functions determine damage and attack hitbox
+                //yield return
+                break;
+            case 2:
+                yield return new WaitForSeconds(0.1f);
+                Attack();
+                //yield return
+                break;
+            case 3:
+                yield return new WaitForSeconds(0.2f);
+                AttackHeavy();
+                //yield return
+                break;
+            default:
+                yield return new WaitForSeconds(0.01f); //
+                break;
+        }
+
+        yield return new WaitForSeconds(playerAttackSpeed);
+        movement.canMove = true;
+
+        animator.SetBool("isAttacking", false);
     }
 
     void Attack()
@@ -474,11 +530,13 @@ public class PlayerCombat : MonoBehaviour
 
     public void StunPlayer(float stunDuration)
     {
-        StartCoroutine(Stun(stunDuration));
+        if(!playerStunned)
+            StartCoroutine(Stun(stunDuration));
     }
 
     IEnumerator Stun(float stunDuration, bool root = true) //root: player's velocity is set to 0
     {
+        playerStunned = true;
         canAttack = false;
         movement.canMove = false;
         animator.SetBool("move", false);
@@ -489,7 +547,8 @@ public class PlayerCombat : MonoBehaviour
             movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //only rooting player x velocity
 
         yield return new WaitForSeconds(stunDuration);
-        //Invoke("ResetMaterial", .1f);
+        
+        playerStunned = false;
         canAttack = true;
         movement.canMove = true;
         ShowStatusStun(false);
