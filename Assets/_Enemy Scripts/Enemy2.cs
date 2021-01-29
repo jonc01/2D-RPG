@@ -6,7 +6,6 @@ using TMPro;
 public class Enemy2 : MonoBehaviour
 {
     //Text Popups
-    public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
     [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
 
@@ -308,7 +307,7 @@ public class Enemy2 : MonoBehaviour
 
             
             //show damage/heal numbers
-            if (TextPopupsPrefab)
+            if (TextPopupsHandler)
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;

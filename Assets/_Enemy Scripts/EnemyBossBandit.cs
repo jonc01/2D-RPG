@@ -503,7 +503,7 @@ public class EnemyBossBandit : MonoBehaviour
 
             Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
             //show damage/heal numbers
-            if (TextPopupsPrefab)
+            if (TextPopupsHandler)
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
