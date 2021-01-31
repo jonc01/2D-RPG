@@ -190,9 +190,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba55a1d611bdf64299f15d5013c321c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TextPopupsPrefab: {fileID: 1416290914158628297, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
   TextPopupsHandler: {fileID: 0}
-  TPOffset: {x: 0, y: 0.1, z: 0}
+  TPOffset: {x: 0, y: 0.3, z: 0}
   playerLayers:
     serializedVersion: 2
     m_Bits: 1024

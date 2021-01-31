@@ -4,15 +4,25 @@ using UnityEngine;
 
 public class HitEffects : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField]
+    private float DestroyTime = 0.5f;
+
+    [SerializeField]
+    private ObjectPoolerList pool;
+
     void Start()
     {
-        
+        pool = transform.parent.GetComponent<ObjectPoolerList>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        StartCoroutine(PoolObject());
+    }
+
+    IEnumerator PoolObject()
+    {
+        yield return new WaitForSeconds(DestroyTime);
+        pool.ReturnObject(gameObject);
     }
 }
