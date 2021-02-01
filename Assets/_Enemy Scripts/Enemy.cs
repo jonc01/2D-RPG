@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     public TextPopupsHandler TextPopupsHandler;
     [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
     public HitEffectsHandler HitEffectsHandler;
+    public DeathParticlesHandler DeathParticlesHandler;
 
     public LayerMask playerLayers;
     public Transform player;
@@ -16,10 +17,8 @@ public class Enemy : MonoBehaviour
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
     public GameObject hitParticlePrefab;
-    public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
-
 
     public float maxHealth = 100;
     float currentHealth;
@@ -27,7 +26,6 @@ public class Enemy : MonoBehaviour
 
     //experience points based on enemy level
     //public int enLevel
-
 
     public int experiencePoints = 10;
     public Animator enAnimator;
@@ -488,12 +486,12 @@ public class Enemy : MonoBehaviour
         //disable enemy object
         isAlive = false;
 
-        if(deathParticlePrefab != null)
+        if(DeathParticlesHandler != null)
         {
             Vector3 changeLocation = GetComponent<Transform>().position;
             Vector3 tempLocation = changeLocation;
             tempLocation.y += .5f;
-            Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
+            DeathParticlesHandler.ShowHitEffect(tempLocation);
         }
 
         //DeleteEnemyObject();

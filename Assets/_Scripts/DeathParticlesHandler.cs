@@ -5,17 +5,13 @@ using UnityEngine;
 public class DeathParticlesHandler : MonoBehaviour
 {
     [SerializeField]
-    private ObjectPoolerList HitEffectsPool;
+    private ObjectPoolerList DeathParticlesPool;
 
-    // Start is called before the first frame update
-    void Start()
+    public void ShowHitEffect(Vector3 position)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GameObject showParticles = DeathParticlesPool.GetObject();
+        showParticles.transform.position = position;
+        showParticles.transform.rotation = Quaternion.identity;
+        showParticles.SetActive(true);
     }
 }

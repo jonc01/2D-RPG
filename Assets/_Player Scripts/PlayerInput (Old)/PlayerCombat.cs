@@ -57,11 +57,12 @@ public class PlayerCombat : MonoBehaviour
     public LayerMask enemyLayers;
     public LayerMask chestLayers;
 
-    private int m_currentAttack = 0;
-    private float m_timeSinceAttack = 0.0f;
+    private int currentLightAttack = 0;
+    private float timeSinceLightAttack = 0.0f;
+    private int currentHeavyAttack = 0;
+    private float timeSinceHeavyAttack = 0.0f;
 
     //ability cooldowns
-    //public float dodgeCD = 1;
     public float altAttackCD = 3f;
     bool AltAttacking;
     private float allowAltAttack = 0;
@@ -73,7 +74,8 @@ public class PlayerCombat : MonoBehaviour
     SpriteRenderer sr;
     [SerializeField] private Material mWhiteFlash;
     private Material mDefault;
-    Coroutine IsAttackingCO;
+    Coroutine IsLightAttackingCO;
+    Coroutine IsHeavyAttackingCO;
 
     void Start()
     {
@@ -106,25 +108,15 @@ public class PlayerCombat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_timeSinceAttack += Time.deltaTime;
+        timeSinceLightAttack += Time.deltaTime;
+        timeSinceHeavyAttack += Time.deltaTime;
 
         CheckLightAttack();
-        
-        //CheckHeavyAttack();
-
-        if (m_currentAttack == 2)
-        {
-            Debug.Log("attempt combo");
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Debug.Log("combo works");
-            }
-        }
-
+        CheckHeavyAttack();
 
         CheckAltAttack(); //Parry
 
-        DodgeAttackCancel(); //not currently in-use
+        //DodgeAttackCancel(); //not currently in-use, allows for either cancelling of attacks with a dodge input, or some alt Dodge attack
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,32 +137,57 @@ public class PlayerCombat : MonoBehaviour
 
     void CheckLightAttack()
     {
-        if (Input.GetButtonDown("Fire1") && m_timeSinceAttack > 0.25f && canAttack)
+        if (Input.GetButtonDown("Fire1") && timeSinceLightAttack > 0.25f && canAttack) //0.25f attack speed
         {
-            m_currentAttack++;
+            currentLightAttack++;
 
             // Loop back to one after third attack
-            if (m_currentAttack > 3)
-                m_currentAttack = 1;
+            if (currentLightAttack > 3)
+                currentLightAttack = 1;
 
             // Reset Attack combo if time since last attack is too large
-            if (m_timeSinceAttack > 1.0f)
-                m_currentAttack = 1;
+            if (timeSinceLightAttack > 1.0f)
+                currentLightAttack = 1;
 
             // Call one of three attack animations "Attack1", "Attack2", "Attack3"
-            animator.SetTrigger("Attack" + m_currentAttack);
+            animator.SetTrigger("Attack" + currentLightAttack);
 
             //Coroutine IsAttackingCO;
-            IsAttackingCO = StartCoroutine(IsAttacking(m_currentAttack));
+            IsLightAttackingCO = StartCoroutine(IsLightAttacking(currentLightAttack));
 
             // Reset timer
-            m_timeSinceAttack = 0.0f;
+            timeSinceLightAttack = 0.0f;
         }
     }
 
     void CheckHeavyAttack()
     {
-        StartCoroutine(IsAttackingHeavy(m_currentAttack));
+        if(Input.GetButtonDown("Fire2") && timeSinceHeavyAttack > 0.4f && canAttack)
+        {
+            currentHeavyAttack++;
+
+            if (currentHeavyAttack > 3)
+                currentHeavyAttack = 1;
+
+            if (timeSinceHeavyAttack > 1.0f)
+                currentHeavyAttack = 1;
+
+            // Call one of three attack animations "Attack1Heavy", "Attack2Heavy", "Attack3Heavy"
+            animator.SetTrigger("Attack" + currentHeavyAttack + "Heavy");
+
+            IsHeavyAttackingCO = StartCoroutine(IsAttackingHeavy(currentHeavyAttack));
+
+            /*if (currentLightAttack == 2) //if we use combos with mixed Light and Heavy attacks
+            {
+                Debug.Log("attempt combo");
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    Debug.Log("combo works");
+                }
+            }*/
+            
+            timeSinceHeavyAttack = 0.0f;
+        }
     }
 
     void CheckAltAttack()
@@ -180,39 +197,15 @@ public class PlayerCombat : MonoBehaviour
             if (Input.GetButtonDown("Fire3") && canAttack && !AltAttacking)
             {
                 //currentBlockDuration = Time.timeSinceLevelLoad;
-
-                /*m_rolling = true;
-                animator.SetTrigger("Roll");
-                rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
-                allowDodge = Time.time + dodgeCD;*/
                 animator.SetTrigger("Block");
                 StartCoroutine(AltAttack());
                 movement.canMove = false;
-
-                //AltAttacking = false;
             }
             AltAttacking = false;
         }
     }
 
-    void DodgeAttackCancel()
-    {
-        if (IsAttackingCO != null) //allow dodge to cancel attack
-        {
-            if (movement.m_rolling) //!!! dodge roll and dash can't be started while attacking because attacking sets canMove to false
-                StopCoroutine(IsAttackingCO); //replace canMove as a condition for dodge/dash for this to work
-
-            if (movement.isDashing)
-                StopCoroutine(IsAttackingCO);
-
-            /*if (Input.GetButtonDown("Dodge") && animator.GetBool("isAttacking")){
-                StopCoroutine(IsAttackingCO);
-                Debug.Log("Stopping Attack CO");
-            }*/
-        }
-    }
-
-    IEnumerator IsAttacking(int attackNum)
+    IEnumerator IsLightAttacking(int attackNum)
     {
         if(movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
@@ -264,19 +257,19 @@ public class PlayerCombat : MonoBehaviour
         switch (attackNum)
         {
             case 1:
-                yield return new WaitForSeconds(0.1f);
-                Attack(); //Attack functions determine damage and attack hitbox
-                //yield return
+                yield return new WaitForSeconds(0.4f);
+                AttackHeavy(); //Attack functions determine damage and attack hitbox
+                yield return new WaitForSeconds(0.3f);
                 break;
             case 2:
-                yield return new WaitForSeconds(0.1f);
-                Attack();
-                //yield return
+                yield return new WaitForSeconds(0.3f);
+                AttackHeavy();
+                yield return new WaitForSeconds(0.5f);
                 break;
             case 3:
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.3f);
                 AttackHeavy();
-                //yield return
+                yield return new WaitForSeconds(0.5f);
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
@@ -442,6 +435,25 @@ public class PlayerCombat : MonoBehaviour
     void ParryAttack()
     {
         //GetEnemy ... GetParried
+    }
+
+    void DodgeAttackCancel()
+    {
+        if (IsLightAttackingCO != null) //allow dodge to cancel attack
+        {
+            if (movement.m_rolling) //!!! dodge roll and dash can't be started while attacking because attacking sets canMove to false
+                StopCoroutine(IsLightAttackingCO); //replace canMove as a condition for dodge/dash for this to work
+
+            if (movement.isDashing)
+                StopCoroutine(IsLightAttackingCO);
+
+            /*if (Input.GetButtonDown("Dodge") && animator.GetBool("isAttacking")){
+                StopCoroutine(IsAttackingCO);
+                Debug.Log("Stopping Attack CO");
+            }*/
+        }
+
+        //if(IsHeavyAttackingCO != null)
     }
 
     void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f, bool lunge = true) //defaults, set "lunge" to false for knockback

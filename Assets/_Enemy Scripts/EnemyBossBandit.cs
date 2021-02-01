@@ -9,6 +9,7 @@ public class EnemyBossBandit : MonoBehaviour
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
     [SerializeField] Vector3 TPOffset = new Vector3 (0, -.5f, 0);
+    public HitEffectsHandler HitEffectsHandler;
 
     public LayerMask playerLayers;
     public Transform player;
@@ -500,8 +501,7 @@ public class EnemyBossBandit : MonoBehaviour
             Vector3 tempLocation = GetComponent<Transform>().position;
             tempLocation.y -= .0f;
             //
-
-            Instantiate(hitParticlePrefab, tempLocation, Quaternion.identity);
+            HitEffectsHandler.ShowHitEffect(tempLocation);
             //show damage/heal numbers
             if (TextPopupsHandler)
             {

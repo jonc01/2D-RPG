@@ -9,6 +9,7 @@ public class HitEffects : MonoBehaviour
 
     [SerializeField]
     private ObjectPoolerList pool;
+    // If using for a particle system, Stop Action should be set to None.
 
     void Start()
     {
