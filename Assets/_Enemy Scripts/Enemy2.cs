@@ -6,9 +6,9 @@ using TMPro;
 public class Enemy2 : MonoBehaviour
 {
     //Text Popups
-    public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
     [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
+    public HitEffectsHandler HitEffectsHandler;
 
     public LayerMask playerLayers;
     public Transform player;
@@ -308,7 +308,7 @@ public class Enemy2 : MonoBehaviour
 
             
             //show damage/heal numbers
-            if (TextPopupsPrefab)
+            if (TextPopupsHandler)
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
@@ -324,7 +324,7 @@ public class Enemy2 : MonoBehaviour
                 Vector3 particleLocation = transform.position;
                 Vector3 particleOffset = particleLocation;
                 particleOffset.y += .5f;
-                Instantiate(hitParticlePrefab, particleOffset, Quaternion.identity);
+                HitEffectsHandler.ShowHitEffect(particleOffset);
 
                 enIsHurt = true;
                 enAnimator.SetTrigger("Hurt");

@@ -9,6 +9,7 @@ public class StationaryEnemy : MonoBehaviour
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
     [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
+    public HitEffectsHandler HitEffectsHandler;
 
     //this is for support stationary enemies, can make non-support stationary separate
     //this script only targets enemies that are "friendly" to this object, and heals them
@@ -20,7 +21,7 @@ public class StationaryEnemy : MonoBehaviour
     public LayerMask enemyLayers;
     public GameObject HitToRight;
     public GameObject HitToLeft;
-    public GameObject HitEffect;
+    //public GameObject HitEffect;
     public GameObject deathParticlePrefab;
 
     public float maxHealth = 100;
@@ -152,8 +153,9 @@ public class StationaryEnemy : MonoBehaviour
             {
                 Instantiate(HitToRight, tempLocation, Quaternion.identity);
             }
-            
-            Instantiate(HitEffect, tempLocation, Quaternion.identity);
+
+            //Instantiate(HitEffect, tempLocation, Quaternion.identity);
+            HitEffectsHandler.ShowHitEffect(tempLocation);
 
             sr.material = mWhiteFlash; //flashing enemy sprite
             Invoke("ResetMaterial", .1f);

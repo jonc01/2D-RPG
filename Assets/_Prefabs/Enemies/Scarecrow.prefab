@@ -229,7 +229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TextPopupsPrefab: {fileID: 1416290914158628297, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
   TextPopupsHandler: {fileID: 0}
-  TPOffset: {x: 0, y: -0.15, z: 0}
+  TPOffset: {x: 0, y: 0.12, z: 0}
   playerLayers:
     serializedVersion: 2
     m_Bits: 1024

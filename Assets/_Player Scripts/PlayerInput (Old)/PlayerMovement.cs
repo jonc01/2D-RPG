@@ -110,14 +110,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Dodge Roll
-        if (Time.time > allowDodge && canMove)
-        {
-            if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && isGrounded) //prevent dodging midair
-            {
-                StartCoroutine(DodgeRoll());
-                canMove = false;
-            }
-        }
+        CheckDodge();
 
         DashInput();
         CheckDash();
@@ -135,6 +128,18 @@ public class PlayerMovement : MonoBehaviour
             runSpeed = 0f;
 
         jump = false;
+    }
+
+    void CheckDodge()
+    {
+        if (Time.time > allowDodge && canMove)
+        {
+            if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && isGrounded) //prevent dodging midair
+            {
+                StartCoroutine(DodgeRoll());
+                canMove = false;
+            }
+        }
     }
 
     IEnumerator DodgeRoll()
