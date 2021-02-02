@@ -92,7 +92,6 @@ public class CharacterController2D : MonoBehaviour
 					Flip();
 					attackPoint.localScale *= -1;
 				}
-				// Otherwise if the input is moving the player left and the player is facing right...
 				else if (move < 0 && m_FacingRight)
 				{
 					Flip();
@@ -109,6 +108,8 @@ public class CharacterController2D : MonoBehaviour
         }
 	}
 
+
+
 	public void DisableFlip()
 	{
 		canFlip = false;
@@ -118,16 +119,6 @@ public class CharacterController2D : MonoBehaviour
 	{
 		canFlip = true;
 	}
-
-	/*private void Flip()
-	{
-		if (canFlip)
-		{
-			FacingDirection *= -1;
-			transform.Rotate(0.0f, 180.0f, 0.0f);
-		}
-
-	}*/
 
 	private void Flip()
 	{

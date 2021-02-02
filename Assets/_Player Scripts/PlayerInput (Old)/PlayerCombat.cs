@@ -34,6 +34,7 @@ public class PlayerCombat : MonoBehaviour
     public float playerAttackSpeed = .3f;
 
     public Transform attackPoint;
+    public Transform parryPoint;
     float attackRange;
     float attackHeavyRange = 0.58f;
     float attackDamageLight;
@@ -67,6 +68,7 @@ public class PlayerCombat : MonoBehaviour
     bool AltAttacking;
     private float allowAltAttack = 0;
     public float altAttackTime = .3f;
+    bool IsParrying;
 
     //weapon specific
     public float knockback = 5f;
@@ -102,7 +104,30 @@ public class PlayerCombat : MonoBehaviour
         //movement.canMove = true;
         canAttack = true;
         AltAttacking = false;
+        IsParrying = false;
         playerStunned = false;
+        
+        //GetAnimDuration();
+    }
+
+    public void GetAnimDuration()
+    {
+        float anim1, anim2;
+        AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+        foreach(AnimationClip clip in clips)
+        {
+            switch (clip.name)
+            {
+                case "HeroKnight_Stunned":
+                    anim1 = clip.length;
+                    Debug.Log("HeroKnight_Stunned: " + anim1);
+                    break;
+                case "HeroKnight_Attack1_Heavy":
+                    anim2 = clip.length;
+                    Debug.Log("HeroKnight_Attack1_Heavy: " + anim2);
+                    break;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -194,14 +219,16 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time > allowAltAttack && movement.canMove)
         {
-            if (Input.GetButtonDown("Fire3") && canAttack && !AltAttacking)
+            if (Input.GetButtonDown("Fire3") && canAttack && !IsParrying /*!AltAttacking*/)
             {
                 //currentBlockDuration = Time.timeSinceLevelLoad;
                 animator.SetTrigger("Block");
-                StartCoroutine(AltAttack());
+                //StartCoroutine(AltAttack());
+                StartCoroutine(Parry());
                 movement.canMove = false;
             }
-            AltAttacking = false;
+            //AltAttacking = false;
+            IsParrying = false;
         }
     }
 
@@ -427,14 +454,41 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator Parry()
     {
-        yield return new WaitForSeconds(.1f);
-        //GetEnemy ... TryParry(); //get do the actual check in GetParried
-        yield return new WaitForSeconds(1.0f);
+        if (movement.isGrounded)
+            movement.canMove = false;
+
+        animator.SetBool("isAttacking", true);
+        ParryAttack();
+        movement.rb.velocity = new Vector2(0, 0); //stop player from moving
+        AltAttacking = true;
+
+        allowAltAttack = Time.time + altAttackCD;
+        yield return new WaitForSeconds(altAttackTime);
+        movement.canMove = true;
+        animator.SetBool("isAttacking", false);
     }
     
     void ParryAttack()
     {
-        //GetEnemy ... GetParried
+        Vector3 parryAttackPoint = parryPoint.position;
+        Collider2D[] parriedEnemies;
+
+        if (controller.m_FacingRight)
+        {
+            parryAttackPoint.x += (wepRange * 3) / 2;
+            parriedEnemies = Physics2D.OverlapBoxAll(parryAttackPoint, new Vector3(wepRange * 3, 1, 0), 180, enemyLayers);
+        }
+        else
+        {
+            parryAttackPoint.x += -(wepRange * 3) / 2;
+            parriedEnemies = Physics2D.OverlapBoxAll(parryAttackPoint, new Vector3(wepRange * 3, 1, 0), 0, enemyLayers);
+        }
+
+        foreach (Collider2D enemy in parriedEnemies) //loop through enemies hit
+        { 
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+            enemy.GetComponent<EnemyBossBandit>().CheckParry();
+        }
     }
 
     void DodgeAttackCancel()
@@ -498,6 +552,7 @@ public class PlayerCombat : MonoBehaviour
 
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         Gizmos.DrawWireSphere(attackPoint.position, attackHeavyRange);
+        Gizmos.DrawWireSphere(parryPoint.position, .3f);
 
         Vector3 newAttackPoint = attackPoint.position; //this could easily get out of hand if weapons have too much range
 
@@ -542,8 +597,8 @@ public class PlayerCombat : MonoBehaviour
 
     public void StunPlayer(float stunDuration)
     {
-        if(!playerStunned)
-            StartCoroutine(Stun(stunDuration));
+        //if(!playerStunned) //not using so we can chain stuns
+        StartCoroutine(Stun(stunDuration));
     }
 
     IEnumerator Stun(float stunDuration, bool root = true) //root: player's velocity is set to 0
@@ -552,7 +607,7 @@ public class PlayerCombat : MonoBehaviour
         canAttack = false;
         movement.canMove = false;
         animator.SetBool("move", false);
-        animator.SetTrigger("Stunned");
+        animator.SetBool("Stunned", true);
         ShowStatusStun(true);
         //FlashMaterial();
         if (root)
@@ -563,6 +618,8 @@ public class PlayerCombat : MonoBehaviour
         playerStunned = false;
         canAttack = true;
         movement.canMove = true;
+        animator.SetBool("Stunned", false);
+        ResetMaterial();
         ShowStatusStun(false);
     }
 
