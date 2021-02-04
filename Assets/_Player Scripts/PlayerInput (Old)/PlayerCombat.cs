@@ -32,8 +32,10 @@ public class PlayerCombat : MonoBehaviour
     public float wepDamage = 10f; //default values, should change based on weapon stats
     public float wepRange = .5f; //
     public float playerAttackSpeed = .3f;
+    private float playerHeavyAttackSpeed;
 
     public Transform attackPoint;
+    public Transform parryPoint;
     float attackRange;
     float attackHeavyRange = 0.58f;
     float attackDamageLight;
@@ -44,7 +46,6 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] bool playerStunned;
 
     public float attackTime = 0.25f; //0.25 seems good, give or take .1 seconds
-    //bool canMove = true;
 
     //armor stats
     public float playerArmor; //temp
@@ -67,6 +68,7 @@ public class PlayerCombat : MonoBehaviour
     bool AltAttacking;
     private float allowAltAttack = 0;
     public float altAttackTime = .3f;
+    bool IsParrying;
 
     //weapon specific
     public float knockback = 5f;
@@ -88,21 +90,42 @@ public class PlayerCombat : MonoBehaviour
         isAlive = true;
 
         //weapons stats
-
         attackRange = wepRange;
         attackHeavyRange = wepRange*1.15f;
 
+        playerHeavyAttackSpeed = (playerAttackSpeed * 1.25f);
         //attackDamageHeavyMultiplier = weapon.wepDamageHeavyMultiplier;
         attackDamageHeavyMultiplier = 1.5f; //placeholder
 
         attackDamageLight = wepDamage;
         attackDamageHeavy = wepDamage*attackDamageHeavyMultiplier;
 
-        
-        //movement.canMove = true;
         canAttack = true;
         AltAttacking = false;
+        IsParrying = false;
         playerStunned = false;
+        
+        //GetAnimDuration();
+    }
+
+    public void GetAnimDuration()
+    {
+        float anim1, anim2;
+        AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+        foreach(AnimationClip clip in clips)
+        {
+            switch (clip.name)
+            {
+                case "HeroKnight_Stunned":
+                    anim1 = clip.length;
+                    Debug.Log("HeroKnight_Stunned: " + anim1);
+                    break;
+                case "HeroKnight_Attack1_Heavy":
+                    anim2 = clip.length;
+                    Debug.Log("HeroKnight_Attack1_Heavy: " + anim2);
+                    break;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -111,8 +134,11 @@ public class PlayerCombat : MonoBehaviour
         timeSinceLightAttack += Time.deltaTime;
         timeSinceHeavyAttack += Time.deltaTime;
 
-        CheckLightAttack();
-        CheckHeavyAttack();
+        if (movement.isGrounded)
+        {
+            CheckLightAttack();
+            CheckHeavyAttack();
+        }
 
         CheckAltAttack(); //Parry
 
@@ -137,7 +163,7 @@ public class PlayerCombat : MonoBehaviour
 
     void CheckLightAttack()
     {
-        if (Input.GetButtonDown("Fire1") && timeSinceLightAttack > 0.25f && canAttack) //0.25f attack speed
+        if (Input.GetButtonDown("Fire1") && timeSinceLightAttack > playerAttackSpeed && canAttack) //0.25f attack speed
         {
             currentLightAttack++;
 
@@ -162,14 +188,14 @@ public class PlayerCombat : MonoBehaviour
 
     void CheckHeavyAttack()
     {
-        if(Input.GetButtonDown("Fire2") && timeSinceHeavyAttack > 0.4f && canAttack)
+        if(Input.GetButtonDown("Fire2") && timeSinceHeavyAttack > playerAttackSpeed && canAttack)
         {
             currentHeavyAttack++;
 
             if (currentHeavyAttack > 3)
                 currentHeavyAttack = 1;
 
-            if (timeSinceHeavyAttack > 1.0f)
+            if (timeSinceHeavyAttack > 2.0f) // How long to wait before reseting attack chain
                 currentHeavyAttack = 1;
 
             // Call one of three attack animations "Attack1Heavy", "Attack2Heavy", "Attack3Heavy"
@@ -194,14 +220,16 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time > allowAltAttack && movement.canMove)
         {
-            if (Input.GetButtonDown("Fire3") && canAttack && !AltAttacking)
+            if (Input.GetButtonDown("Fire3") && canAttack && !IsParrying /*!AltAttacking*/)
             {
                 //currentBlockDuration = Time.timeSinceLevelLoad;
                 animator.SetTrigger("Block");
-                StartCoroutine(AltAttack());
+                //StartCoroutine(AltAttack());
+                StartCoroutine(Parry());
                 movement.canMove = false;
             }
-            AltAttacking = false;
+            //AltAttacking = false;
+            IsParrying = false;
         }
     }
 
@@ -212,6 +240,7 @@ public class PlayerCombat : MonoBehaviour
 
         animator.SetBool("isAttacking", true);
         movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //maintaining y velocity, instead of making player float
+        canAttack = false;
 
         switch (attackNum)
         {
@@ -238,11 +267,11 @@ public class PlayerCombat : MonoBehaviour
         //movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         
         //yield return new WaitForSeconds(attackTime);
-        yield return new WaitForSeconds(playerAttackSpeed);
+        //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
+        canAttack = true;
         
         animator.SetBool("isAttacking", false);
-        //movement.canMove = true;
         //movement.runSpeed = movement.defaultRunSpeed;
     }
 
@@ -253,31 +282,33 @@ public class PlayerCombat : MonoBehaviour
 
         animator.SetBool("isAttacking", true);
         movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //maintaining y velocity, instead of making player float
+        canAttack = false;
 
         switch (attackNum)
         {
             case 1:
-                yield return new WaitForSeconds(0.4f);
+                yield return new WaitForSeconds(0.5f);
                 AttackHeavy(); //Attack functions determine damage and attack hitbox
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.1f); //0.3f
                 break;
             case 2:
                 yield return new WaitForSeconds(0.3f);
                 AttackHeavy();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.1f); //0.4f
                 break;
             case 3:
                 yield return new WaitForSeconds(0.3f);
                 AttackHeavy();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.2f); //0.5
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
                 break;
         }
 
-        yield return new WaitForSeconds(playerAttackSpeed);
+        //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
+        canAttack = true;
 
         animator.SetBool("isAttacking", false);
     }
@@ -427,14 +458,41 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator Parry()
     {
-        yield return new WaitForSeconds(.1f);
-        //GetEnemy ... TryParry(); //get do the actual check in GetParried
-        yield return new WaitForSeconds(1.0f);
+        if (movement.isGrounded)
+            movement.canMove = false;
+
+        animator.SetBool("isAttacking", true);
+        ParryAttack();
+        movement.rb.velocity = new Vector2(0, 0); //stop player from moving
+        AltAttacking = true;
+
+        allowAltAttack = Time.time + altAttackCD;
+        yield return new WaitForSeconds(altAttackTime);
+        movement.canMove = true;
+        animator.SetBool("isAttacking", false);
     }
     
     void ParryAttack()
     {
-        //GetEnemy ... GetParried
+        Vector3 parryAttackPoint = parryPoint.position;
+        Collider2D[] parriedEnemies;
+
+        if (controller.m_FacingRight)
+        {
+            parryAttackPoint.x += (wepRange * 3) / 2;
+            parriedEnemies = Physics2D.OverlapBoxAll(parryAttackPoint, new Vector3(wepRange * 3, 1, 0), 180, enemyLayers);
+        }
+        else
+        {
+            parryAttackPoint.x += -(wepRange * 3) / 2;
+            parriedEnemies = Physics2D.OverlapBoxAll(parryAttackPoint, new Vector3(wepRange * 3, 1, 0), 0, enemyLayers);
+        }
+
+        foreach (Collider2D enemy in parriedEnemies) //loop through enemies hit
+        { 
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+            enemy.GetComponent<EnemyBossBandit>().CheckParry();
+        }
     }
 
     void DodgeAttackCancel()
@@ -498,6 +556,7 @@ public class PlayerCombat : MonoBehaviour
 
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         Gizmos.DrawWireSphere(attackPoint.position, attackHeavyRange);
+        Gizmos.DrawWireSphere(parryPoint.position, .3f);
 
         Vector3 newAttackPoint = attackPoint.position; //this could easily get out of hand if weapons have too much range
 
@@ -542,8 +601,8 @@ public class PlayerCombat : MonoBehaviour
 
     public void StunPlayer(float stunDuration)
     {
-        if(!playerStunned)
-            StartCoroutine(Stun(stunDuration));
+        //if(!playerStunned) //not using so we can chain stuns
+        StartCoroutine(Stun(stunDuration));
     }
 
     IEnumerator Stun(float stunDuration, bool root = true) //root: player's velocity is set to 0
@@ -552,7 +611,7 @@ public class PlayerCombat : MonoBehaviour
         canAttack = false;
         movement.canMove = false;
         animator.SetBool("move", false);
-        animator.SetTrigger("Stunned");
+        animator.SetBool("Stunned", true);
         ShowStatusStun(true);
         //FlashMaterial();
         if (root)
@@ -563,6 +622,8 @@ public class PlayerCombat : MonoBehaviour
         playerStunned = false;
         canAttack = true;
         movement.canMove = true;
+        animator.SetBool("Stunned", false);
+        ResetMaterial();
         ShowStatusStun(false);
     }
 
@@ -654,7 +715,7 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBool("noBlood", m_noBlood);
         animator.SetTrigger("Death");
         movement.rb.velocity = new Vector2(0, 0); //prevent player from moving
-        movement.canMove = false;
+        movement.DisableMove();
         canAttack = false;
         //kill player
     }
@@ -662,7 +723,7 @@ public class PlayerCombat : MonoBehaviour
     void RevivePlayer(float spawnHpPercentage) //no use right now
     {
         isAlive = true;
-        movement.canMove = true;
+        movement.EnableMove();
         canAttack = true;
         currentHealth = (spawnHpPercentage * maxHealth); //spawnHpPercentage 1.0 = 100%
         if (isAlive && currentHealth > 0)
@@ -670,7 +731,7 @@ public class PlayerCombat : MonoBehaviour
             healthBar.SetHealth(currentHealth);
             if (TextPopupsPrefab)
             {
-                TextPopupsHandler.ShowHeal(spawnHpPercentage, transform.position); //respawn player with x percentage of 
+                TextPopupsHandler.ShowHeal(spawnHpPercentage, transform.position); //respawn player with x percentage of maxHealth
             }
             if (currentHealth > maxHealth)
             {

@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
     float horizontalMove = 0f;
     bool jump = false;
 
-    public bool canMove = true;
+    public bool canMove;
 
     //created new separate from CharacterController2D
     public bool isGrounded = true;
@@ -64,50 +64,10 @@ public class PlayerMovement : MonoBehaviour
         }
         
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove)); //greater than 0 -> play run anim, less than -> play idle
-        //animator.SetBool("Grounded", true);
 
-        if (horizontalMove > 0)
-        {
-            m_facingDirection = 1;
-        }
-        else if(horizontalMove < 0)
-        {
-            m_facingDirection = -1;
-        }
+        FacingDirection();
 
-        if (Input.GetButtonDown("Jump") && rb.velocity.y == 0)
-        //if (keyboard.spaceKey.isPressed && rb.velocity.y == 0)
-        {
-            if (canMove)
-                rb.AddForce(Vector2.up * 100f);
-                
-            //jump = true;
-            //animator.SetBool("Grounded", false);
-            //animator.SetBool("Jumping", true);
-        }
-
-        //checking if player is jumping or falling
-        //if (Mathf.Abs(horizontalMove) > 0 && rb.velocity.y == 0)
-        if (rb.velocity.y == 0) //player is grounded
-        {
-            animator.SetBool("Jumping", false);
-            animator.SetBool("isFalling", false);
-            isGrounded = true;
-        }
-
-        //bool check on Jumping to prevent launching when colliding with wall
-        if (rb.velocity.y > 0 && !animator.GetBool("Jumping"))
-        {
-            animator.SetBool("Jumping", true);
-            jump = true;
-            isGrounded = false;
-        }
-
-        if(rb.velocity.y < 0)
-        {
-            animator.SetBool("Jumping", false);
-            animator.SetBool("isFalling", true);
-        }
+        JumpCheck();
 
         //Dodge Roll
         CheckDodge();
@@ -128,6 +88,52 @@ public class PlayerMovement : MonoBehaviour
             runSpeed = 0f;
 
         jump = false;
+    }
+
+    void FacingDirection()
+    {
+        if (horizontalMove > 0)
+        {
+            m_facingDirection = 1;
+        }
+        else if(horizontalMove< 0)
+        {
+            m_facingDirection = -1;
+        }
+    }
+
+    void JumpCheck()
+    {
+        if (Input.GetButtonDown("Jump") && rb.velocity.y == 0)
+        //if (keyboard.spaceKey.isPressed && rb.velocity.y == 0)
+        {
+            if (canMove)
+                rb.AddForce(Vector2.up * 100f);
+
+        }
+
+        //checking if player is jumping or falling
+        //if (Mathf.Abs(horizontalMove) > 0 && rb.velocity.y == 0)
+        if (rb.velocity.y == 0) //player is grounded
+        {
+            animator.SetBool("Jumping", false);
+            animator.SetBool("isFalling", false);
+            isGrounded = true;
+        }
+
+        //bool check on Jumping to prevent launching when colliding with wall
+        if (rb.velocity.y > 0 && !animator.GetBool("Jumping"))
+        {
+            animator.SetBool("Jumping", true);
+            jump = true;
+            isGrounded = false;
+        }
+
+        if (rb.velocity.y < 0)
+        {
+            animator.SetBool("Jumping", false);
+            animator.SetBool("isFalling", true);
+        }
     }
 
     void CheckDodge()
@@ -194,7 +200,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (dashTimeLeft > 0)
             {
-                canMove = false;
+                DisableMove();
                 controller.canFlip = false;
                 rb.velocity = new Vector2(dashSpeed * m_facingDirection, rb.velocity.y);
                 dashTimeLeft -= Time.deltaTime;
@@ -209,10 +215,24 @@ public class PlayerMovement : MonoBehaviour
             if(dashTimeLeft <= 0)
             {
                 isDashing = false;
-                canMove = true;
+                EnableMove();
                 controller.canFlip = true;
             }
         }
     }
 
+    public void CheckMove()
+    {
+        //
+    }
+
+    public void EnableMove()
+    {
+        canMove = true;
+    }
+
+    public void DisableMove()
+    {
+        canMove = false;
+    }
 }

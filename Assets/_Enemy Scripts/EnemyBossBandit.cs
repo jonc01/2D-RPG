@@ -119,7 +119,7 @@ public class EnemyBossBandit : MonoBehaviour
                     break;
                 case "Attack1_SlowStartCombo3":
                     combo3Attack1AnimTime = clip.length;
-                    Debug.Log("Attack1SlowaoejpfaoeCombo3: " + combo3Attack1AnimTime);
+                    Debug.Log("Attack1SlowCombo3: " + combo3Attack1AnimTime);
                     break;
             }
         }
