@@ -32,6 +32,7 @@ public class PlayerCombat : MonoBehaviour
     public float wepDamage = 10f; //default values, should change based on weapon stats
     public float wepRange = .5f; //
     public float playerAttackSpeed = .3f;
+    private float playerHeavyAttackSpeed;
 
     public Transform attackPoint;
     public Transform parryPoint;
@@ -45,7 +46,6 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] bool playerStunned;
 
     public float attackTime = 0.25f; //0.25 seems good, give or take .1 seconds
-    //bool canMove = true;
 
     //armor stats
     public float playerArmor; //temp
@@ -90,18 +90,16 @@ public class PlayerCombat : MonoBehaviour
         isAlive = true;
 
         //weapons stats
-
         attackRange = wepRange;
         attackHeavyRange = wepRange*1.15f;
 
+        playerHeavyAttackSpeed = (playerAttackSpeed * 1.25f);
         //attackDamageHeavyMultiplier = weapon.wepDamageHeavyMultiplier;
         attackDamageHeavyMultiplier = 1.5f; //placeholder
 
         attackDamageLight = wepDamage;
         attackDamageHeavy = wepDamage*attackDamageHeavyMultiplier;
 
-        
-        //movement.canMove = true;
         canAttack = true;
         AltAttacking = false;
         IsParrying = false;
@@ -136,8 +134,11 @@ public class PlayerCombat : MonoBehaviour
         timeSinceLightAttack += Time.deltaTime;
         timeSinceHeavyAttack += Time.deltaTime;
 
-        CheckLightAttack();
-        CheckHeavyAttack();
+        if (movement.isGrounded)
+        {
+            CheckLightAttack();
+            CheckHeavyAttack();
+        }
 
         CheckAltAttack(); //Parry
 
@@ -162,7 +163,7 @@ public class PlayerCombat : MonoBehaviour
 
     void CheckLightAttack()
     {
-        if (Input.GetButtonDown("Fire1") && timeSinceLightAttack > 0.25f && canAttack) //0.25f attack speed
+        if (Input.GetButtonDown("Fire1") && timeSinceLightAttack > playerAttackSpeed && canAttack) //0.25f attack speed
         {
             currentLightAttack++;
 
@@ -187,14 +188,14 @@ public class PlayerCombat : MonoBehaviour
 
     void CheckHeavyAttack()
     {
-        if(Input.GetButtonDown("Fire2") && timeSinceHeavyAttack > 0.4f && canAttack)
+        if(Input.GetButtonDown("Fire2") && timeSinceHeavyAttack > playerAttackSpeed && canAttack)
         {
             currentHeavyAttack++;
 
             if (currentHeavyAttack > 3)
                 currentHeavyAttack = 1;
 
-            if (timeSinceHeavyAttack > 1.0f)
+            if (timeSinceHeavyAttack > 2.0f) // How long to wait before reseting attack chain
                 currentHeavyAttack = 1;
 
             // Call one of three attack animations "Attack1Heavy", "Attack2Heavy", "Attack3Heavy"
@@ -239,6 +240,7 @@ public class PlayerCombat : MonoBehaviour
 
         animator.SetBool("isAttacking", true);
         movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //maintaining y velocity, instead of making player float
+        canAttack = false;
 
         switch (attackNum)
         {
@@ -265,11 +267,11 @@ public class PlayerCombat : MonoBehaviour
         //movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         
         //yield return new WaitForSeconds(attackTime);
-        yield return new WaitForSeconds(playerAttackSpeed);
+        //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
+        canAttack = true;
         
         animator.SetBool("isAttacking", false);
-        //movement.canMove = true;
         //movement.runSpeed = movement.defaultRunSpeed;
     }
 
@@ -280,31 +282,33 @@ public class PlayerCombat : MonoBehaviour
 
         animator.SetBool("isAttacking", true);
         movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //maintaining y velocity, instead of making player float
+        canAttack = false;
 
         switch (attackNum)
         {
             case 1:
-                yield return new WaitForSeconds(0.4f);
+                yield return new WaitForSeconds(0.5f);
                 AttackHeavy(); //Attack functions determine damage and attack hitbox
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.1f); //0.3f
                 break;
             case 2:
                 yield return new WaitForSeconds(0.3f);
                 AttackHeavy();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.1f); //0.4f
                 break;
             case 3:
                 yield return new WaitForSeconds(0.3f);
                 AttackHeavy();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.2f); //0.5
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
                 break;
         }
 
-        yield return new WaitForSeconds(playerAttackSpeed);
+        //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
+        canAttack = true;
 
         animator.SetBool("isAttacking", false);
     }
@@ -711,7 +715,7 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBool("noBlood", m_noBlood);
         animator.SetTrigger("Death");
         movement.rb.velocity = new Vector2(0, 0); //prevent player from moving
-        movement.canMove = false;
+        movement.DisableMove();
         canAttack = false;
         //kill player
     }
@@ -719,7 +723,7 @@ public class PlayerCombat : MonoBehaviour
     void RevivePlayer(float spawnHpPercentage) //no use right now
     {
         isAlive = true;
-        movement.canMove = true;
+        movement.EnableMove();
         canAttack = true;
         currentHealth = (spawnHpPercentage * maxHealth); //spawnHpPercentage 1.0 = 100%
         if (isAlive && currentHealth > 0)
@@ -727,7 +731,7 @@ public class PlayerCombat : MonoBehaviour
             healthBar.SetHealth(currentHealth);
             if (TextPopupsPrefab)
             {
-                TextPopupsHandler.ShowHeal(spawnHpPercentage, transform.position); //respawn player with x percentage of 
+                TextPopupsHandler.ShowHeal(spawnHpPercentage, transform.position); //respawn player with x percentage of maxHealth
             }
             if (currentHealth > maxHealth)
             {
