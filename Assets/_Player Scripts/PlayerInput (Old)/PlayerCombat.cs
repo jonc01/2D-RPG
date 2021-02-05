@@ -78,6 +78,7 @@ public class PlayerCombat : MonoBehaviour
     private Material mDefault;
     Coroutine IsLightAttackingCO;
     Coroutine IsHeavyAttackingCO;
+    Coroutine PlayerStunnedCO;
 
     void Start()
     {
@@ -247,17 +248,17 @@ public class PlayerCombat : MonoBehaviour
             case 1:
                 yield return new WaitForSeconds(0.1f);
                 Attack(); //Attack functions determine damage and attack hitbox
-                //yield return
+                yield return new WaitForSeconds(0.1f);
                 break;
             case 2:
                 yield return new WaitForSeconds(0.1f);
                 Attack();
-                //yield return
+                yield return new WaitForSeconds(0.1f);
                 break;
             case 3:
                 yield return new WaitForSeconds(0.2f);
                 AttackHeavy();
-                //yield return
+                yield return new WaitForSeconds(0.1f);
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
@@ -595,14 +596,21 @@ public class PlayerCombat : MonoBehaviour
                 Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
-            StunPlayer(1f);
+            StunPlayer(.8f); //stunDuration
         }
     }
 
     public void StunPlayer(float stunDuration)
     {
-        //if(!playerStunned) //not using so we can chain stuns
-        StartCoroutine(Stun(stunDuration));
+        if (playerStunned)
+        {
+            StopCoroutine(PlayerStunnedCO);
+            PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
+        }
+        else
+        {
+            PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
+        }
     }
 
     IEnumerator Stun(float stunDuration, bool root = true) //root: player's velocity is set to 0
@@ -621,8 +629,8 @@ public class PlayerCombat : MonoBehaviour
         
         playerStunned = false;
         canAttack = true;
-        movement.canMove = true;
         animator.SetBool("Stunned", false);
+        movement.canMove = true;
         ResetMaterial();
         ShowStatusStun(false);
     }
