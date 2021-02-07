@@ -257,7 +257,7 @@ public class PlayerCombat : MonoBehaviour
                 break;
             case 3:
                 yield return new WaitForSeconds(0.2f);
-                AttackHeavy();
+                Attack(1.5f);
                 yield return new WaitForSeconds(0.1f);
                 break;
             default:
@@ -314,7 +314,7 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBool("isAttacking", false);
     }
 
-    void Attack()
+    void Attack(float damageMultiplier = 1.0f)
     {
         //Attack range, detect enemies in range
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
@@ -331,21 +331,21 @@ public class PlayerCombat : MonoBehaviour
 
             if (enemy.GetComponent<Enemy>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
             {
-                enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
                 //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
-                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight);
+                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight * damageMultiplier);
 
             if (enemy.GetComponent<Enemy2>() != null)
             {
-                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
             }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
-                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight);
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight * damageMultiplier);
         }
     }
 
@@ -602,7 +602,13 @@ public class PlayerCombat : MonoBehaviour
 
     public void StunPlayer(float stunDuration)
     {
-        if (playerStunned)
+        if(IsLightAttackingCO != null)
+            StopCoroutine(IsLightAttackingCO); // Stop Attacking coroutines
+
+        if(IsHeavyAttackingCO != null)
+            StopCoroutine(IsHeavyAttackingCO);
+
+        if (playerStunned) // If player is already stunned, refresh stun duration
         {
             StopCoroutine(PlayerStunnedCO);
             PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
