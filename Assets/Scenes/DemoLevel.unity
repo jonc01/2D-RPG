@@ -2900,7 +2900,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 982059460}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &848331418
 PrefabInstance:
@@ -3027,10 +3027,40 @@ PrefabInstance:
       objectReference: {fileID: 1735380980}
     - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: maxHealth
-      value: 100
+      value: 11123123
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+--- !u!1 &850834347
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 850834348}
+  m_Layer: 10
+  m_Name: HeavyAttackPointWide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &850834348
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850834347}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.27, y: 0.79, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 982059460}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &910211411
 GameObject:
   m_ObjectHideFlags: 0
@@ -3341,6 +3371,8 @@ Transform:
   - {fileID: 619630039}
   - {fileID: 1478519005}
   - {fileID: 1289604727}
+  - {fileID: 1276054015}
+  - {fileID: 850834348}
   - {fileID: 846256297}
   - {fileID: 2122231732}
   - {fileID: 1912721193}
@@ -3456,7 +3488,6 @@ MonoBehaviour:
   TextPopupsPrefab: {fileID: 1416290914158628297, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
   TextPopupsHandler: {fileID: 204774832}
   TPOffset: {x: 0, y: 0.35, z: 0}
-  PlayerHealthBar: {fileID: 1177505291}
   maxHealth: 100
   currentHealth: 0
   healthBar: {fileID: 1177505292}
@@ -3466,7 +3497,12 @@ MonoBehaviour:
   wepRange: 0.5
   playerAttackSpeed: 0.3
   attackPoint: {fileID: 1289604727}
+  heavyAttackPoint: {fileID: 1276054015}
+  heavyAttackPointWide: {fileID: 850834348}
   parryPoint: {fileID: 846256297}
+  attackRange: 0.5
+  attackHeavyRange: 0.58
+  attackDamageHeavyMultiplier: 2
   canAttack: 1
   stunStrength: 1
   playerStunned: 0
@@ -4383,6 +4419,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxEffectMultiplier: 0
+--- !u!1 &1276054014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1276054015}
+  m_Layer: 10
+  m_Name: HeavyAttackPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1276054015
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276054014}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.23, y: 0.89, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 982059460}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1289604726
 GameObject:
   m_ObjectHideFlags: 0
@@ -4407,7 +4473,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1289604726}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9, y: 0.97, z: 0}
+  m_LocalPosition: {x: 0.66, y: 0.94, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 982059460}
@@ -6358,7 +6424,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 982059460}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1917679336
 GameObject:
@@ -7055,7 +7121,7 @@ RectTransform:
   m_Children:
   - {fileID: 1356687766}
   m_Father: {fileID: 982059460}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

@@ -166,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
         m_rolling = false;
     }
     
-    void AE_ResetRoll()
+    void AE_ResetRoll() // called in animation event
     {
         m_rolling = false;
     }
@@ -234,5 +234,10 @@ public class PlayerMovement : MonoBehaviour
     public void DisableMove()
     {
         canMove = false;
+    }
+
+    public void StopCO()
+    {
+        StopAllCoroutines();
     }
 }

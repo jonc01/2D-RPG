@@ -18,7 +18,6 @@ public class PlayerCombat : MonoBehaviour
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0f, 0);
-    [SerializeField] Transform PlayerHealthBar;
 
     [Space]
     public float maxHealth = 100;
@@ -35,12 +34,14 @@ public class PlayerCombat : MonoBehaviour
     private float playerHeavyAttackSpeed;
 
     public Transform attackPoint;
+    public Transform heavyAttackPoint;
+    public Transform heavyAttackPointWide;
     public Transform parryPoint;
-    float attackRange;
-    float attackHeavyRange = 0.58f;
+    [SerializeField] float attackRange = .5f;
+    [SerializeField] float attackHeavyRange = 0.58f;
     float attackDamageLight;
     float attackDamageHeavy;
-    float attackDamageHeavyMultiplier;
+    [SerializeField] float attackDamageHeavyMultiplier = 2.0f;
     public bool canAttack = true;
     public float stunStrength = 1f;
     [SerializeField] bool playerStunned;
@@ -91,12 +92,12 @@ public class PlayerCombat : MonoBehaviour
         isAlive = true;
 
         //weapons stats
-        attackRange = wepRange;
-        attackHeavyRange = wepRange*1.15f;
+        //attackRange = wepRange; // would have to tie separate animations to weapons
+        //attackHeavyRange = wepRange*1.15f;
 
         playerHeavyAttackSpeed = (playerAttackSpeed * 1.25f);
         //attackDamageHeavyMultiplier = weapon.wepDamageHeavyMultiplier;
-        attackDamageHeavyMultiplier = 1.5f; //placeholder
+        //attackDamageHeavyMultiplier = 2.0f; //placeholder
 
         attackDamageLight = wepDamage;
         attackDamageHeavy = wepDamage*attackDamageHeavyMultiplier;
@@ -225,7 +226,7 @@ public class PlayerCombat : MonoBehaviour
             {
                 //currentBlockDuration = Time.timeSinceLevelLoad;
                 animator.SetTrigger("Block");
-                //StartCoroutine(AltAttack());
+                //StartCoroutine(StartAltAttack());
                 StartCoroutine(Parry());
                 movement.canMove = false;
             }
@@ -234,7 +235,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    IEnumerator IsLightAttacking(int attackNum)
+    IEnumerator IsLightAttacking(int attackNum) // Light Attack Coroutine
     {
         if(movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
@@ -267,7 +268,6 @@ public class PlayerCombat : MonoBehaviour
 
         //movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         
-        //yield return new WaitForSeconds(attackTime);
         //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
         canAttack = true;
@@ -276,7 +276,7 @@ public class PlayerCombat : MonoBehaviour
         //movement.runSpeed = movement.defaultRunSpeed;
     }
 
-    IEnumerator IsAttackingHeavy(int attackNum)
+    IEnumerator IsAttackingHeavy(int attackNum) // Heavy Attack Coroutine
     {
         if (movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
@@ -288,19 +288,19 @@ public class PlayerCombat : MonoBehaviour
         switch (attackNum)
         {
             case 1:
-                yield return new WaitForSeconds(0.5f);
-                AttackHeavy(); //Attack functions determine damage and attack hitbox
-                yield return new WaitForSeconds(0.1f); //0.3f
+                yield return new WaitForSeconds(0.4f);
+                AttackHeavy(); // Attack functions determine damage and attack hitbox
+                yield return new WaitForSeconds(0.2f);
                 break;
             case 2:
                 yield return new WaitForSeconds(0.3f);
-                AttackHeavy();
-                yield return new WaitForSeconds(0.1f); //0.4f
+                AttackHeavy(2);
+                yield return new WaitForSeconds(0.1f);
                 break;
             case 3:
                 yield return new WaitForSeconds(0.3f);
-                AttackHeavy();
-                yield return new WaitForSeconds(0.2f); //0.5
+                AttackHeavy(1, 1.5f);
+                yield return new WaitForSeconds(0.2f);
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
@@ -349,48 +349,84 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    void AttackHeavy()
+    void AttackHeavy(int attackPointVar = 1, float damageMultiplier = 1.0f)
     {
-        //animator.SetTrigger("Attack3");
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
-        //Collider2D[] hitEnemies = Physics2D.OverlapAreaAll(attackPoint.position, attackHeavyRange, enemyLayers);
-        
+        //Collider2D[] hitEnemiesWide = Physics2D.OverlapAreaAll(heavyAttackPointWide.position, (heavyAttackPointWide.position.y+attackHeavyRange), enemyLayers);
+        // .58f,          
         //LungeOnAttack();
 
-        foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
+        switch (attackPointVar)
         {
-            if(enemy.GetComponent<EnemyController>() != null)
-            {
-                //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
-            }
+            case 1:
+                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(heavyAttackPoint.position, attackHeavyRange, enemyLayers);
+                foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
+                {
+                    if(enemy.GetComponent<EnemyController>() != null)
+                    {
+                        //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
+                    }
 
-            if (enemy.GetComponent<Enemy>() != null)
-            {
-                enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
-                //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
-            }
+                    if (enemy.GetComponent<Enemy>() != null)
+                    {
+                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
+                        //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
+                    }
             
-            if (enemy.GetComponent<StationaryEnemy>() != null)
-                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy);
+                    if (enemy.GetComponent<StationaryEnemy>() != null)
+                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy * damageMultiplier);
 
-            if (enemy.GetComponent<Enemy2>() != null)
-            {
-                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
-            }
+                    if (enemy.GetComponent<Enemy2>() != null)
+                    {
+                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
+                    }
 
-            if (enemy.GetComponent<EnemyBossBandit>() != null)
-                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy);
+                    if (enemy.GetComponent<EnemyBossBandit>() != null)
+                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy * damageMultiplier);
+                }
+                break;
+            case 2:
+                Collider2D[] hitEnemiesWide = Physics2D.OverlapBoxAll(heavyAttackPointWide.position, new Vector2(attackHeavyRange*2.3f, .8f), enemyLayers);
+                foreach (Collider2D enemy in hitEnemiesWide) //loop through enemies hit
+                {
+                    if (enemy.GetComponent<EnemyController>() != null)
+                    {
+                        //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
+                    }
+
+                    if (enemy.GetComponent<Enemy>() != null)
+                    {
+                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
+                        //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
+                    }
+
+                    if (enemy.GetComponent<StationaryEnemy>() != null)
+                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy * damageMultiplier);
+
+                    if (enemy.GetComponent<Enemy2>() != null)
+                    {
+                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<Enemy2>().GetStunned(stunStrength * 2);
+                    }
+
+                    if (enemy.GetComponent<EnemyBossBandit>() != null)
+                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy * damageMultiplier);
+                }
+                break;
+            default:
+                break;
         }
     }
-    IEnumerator AltAttack() //TODO: adjust hitbox closer to player
+
+    IEnumerator StartAltAttack() //TODO: adjust hitbox closer to player
     {
         if (movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
-        _AltAttack(wepDamage*3f, wepRange*3f); //deals 300% weapon damage and applies knockback to enemies
+        AltAttack(wepDamage*3f, wepRange*3f); //deals 300% weapon damage and applies knockback to enemies
         movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         AltAttacking = true;
 
@@ -400,7 +436,7 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBool("isAttacking", false);
     }
 
-    void _AltAttack(float altDamage, float altRange)
+    void AltAttack(float altDamage, float altRange)
     {
         //range increase to around 15f-20f
         //hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
@@ -556,24 +592,16 @@ public class PlayerCombat : MonoBehaviour
             return;
 
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-        Gizmos.DrawWireSphere(attackPoint.position, attackHeavyRange);
+        Gizmos.DrawWireSphere(heavyAttackPoint.position, attackHeavyRange);
         Gizmos.DrawWireSphere(parryPoint.position, .3f);
-
-        Vector3 newAttackPoint = attackPoint.position; //this could easily get out of hand if weapons have too much range
 
         //player position and c center of wire cube
         // [    player c           ] //vs  player[          c           ]  //should probably just use a raycast
-        //newAttackPoint
-        if (controller.m_FacingRight)
-        {
-            newAttackPoint.x += (wepRange * 3) / 2; //divide in half so that player isn't at center of rectangle
-            Gizmos.DrawWireCube(newAttackPoint, new Vector3(wepRange * 3, 1, 0));
-        }
-        else
-        {
-            newAttackPoint.x += -(wepRange * 3) / 2; //divide in half so that player isn't at center of rectangle
-            Gizmos.DrawWireCube(newAttackPoint, new Vector3(wepRange * 3, 1, 0));
-        }
+        //newAttackPoint.x += -(wepRange * 3) / 2; //divide in half so that player isn't at center of rectangle
+        //Gizmos.DrawWireCube(newAttackPoint, new Vector3(wepRange * 3, 1, 0));
+
+        Vector3 newAttackPoint = heavyAttackPointWide.position;
+        Gizmos.DrawWireCube(newAttackPoint, new Vector3(attackHeavyRange*2.7f, .8f, 0)); //* 2.7f, Collider[] BoxOverlap is 2.3f
     }
      
     public void GetKnockback(bool pushToRight, float kbThrust = 3f, float kbDuration = 5f) //defaults
@@ -619,12 +647,13 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    IEnumerator Stun(float stunDuration, bool root = true) //root: player's velocity is set to 0
+    IEnumerator Stun(float stunDuration, bool root = true) // root: player's velocity is set to 0
     {
         playerStunned = true;
         canAttack = false;
         movement.canMove = false;
         animator.SetBool("move", false);
+        animator.SetBool("isAttacking", false);
         animator.SetBool("Stunned", true);
         ShowStatusStun(true);
         //FlashMaterial();
@@ -645,7 +674,6 @@ public class PlayerCombat : MonoBehaviour
     {
         if (StatusStunned != null)
         {
-            //PlayerHealthBarCanvas.GetComponentInChildren<Canvas>().enabled = true;
             StatusStunned.SetActive(setActive);
         }
     }
@@ -667,10 +695,9 @@ public class PlayerCombat : MonoBehaviour
                     Vector3 tempPos = transform.position;
                     tempPos += TPOffset;
                     TextPopupsHandler.ShowDamage(damage, tempPos);
-                    //var showDmg = Instantiate(TextPopupsPrefab, PlayerHealthBar.position, Quaternion.identity, PlayerHealthBar.transform);
-                    //showDmg.transform.SetParent(PlayerHealthBar.transform);
                     
                     animator.SetTrigger("Hurt");
+                    
                     FlashMaterial();
                     //GetKnockback(true); //
                     Invoke("ResetMaterial", .1f);
@@ -724,6 +751,9 @@ public class PlayerCombat : MonoBehaviour
 
     void Die()
     {
+        StopAllCoroutines();
+        movement.StopCO(); // Stop coroutines in movement script
+        
         //Die animation
         isAlive = false;
         animator.SetBool("noBlood", m_noBlood);
