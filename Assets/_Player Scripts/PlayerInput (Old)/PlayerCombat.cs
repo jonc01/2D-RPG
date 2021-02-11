@@ -226,7 +226,6 @@ public class PlayerCombat : MonoBehaviour
             {
                 //currentBlockDuration = Time.timeSinceLevelLoad;
                 animator.SetTrigger("Block");
-                //StartCoroutine(StartAltAttack());
                 StartCoroutine(Parry());
                 movement.canMove = false;
             }
@@ -248,7 +247,7 @@ public class PlayerCombat : MonoBehaviour
         {
             case 1:
                 yield return new WaitForSeconds(0.1f);
-                Attack(); //Attack functions determine damage and attack hitbox
+                Attack();
                 yield return new WaitForSeconds(0.1f);
                 break;
             case 2:
@@ -258,15 +257,13 @@ public class PlayerCombat : MonoBehaviour
                 break;
             case 3:
                 yield return new WaitForSeconds(0.2f);
-                Attack(1.5f);
+                Attack(1.5f); // damage multiplier
                 yield return new WaitForSeconds(0.1f);
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
                 break;
         }
-
-        //movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         
         //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
@@ -436,13 +433,12 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBool("isAttacking", false);
     }
 
-    void AltAttack(float altDamage, float altRange)
+    void AltAttack(float altDamage, float altRange) // ! not being used
     {
         //range increase to around 15f-20f
         //hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);
 
         Vector3 newAttackPoint = attackPoint.position;
-        //newAttackPoint.x += (wepRange * 3) / 2;
         Collider2D[] altHitEnemies;
 
         if (controller.m_FacingRight)
@@ -489,22 +485,24 @@ public class PlayerCombat : MonoBehaviour
             }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
+            {
                 enemy.GetComponent<EnemyBossBandit>().CheckParry();
+            }
         }
     }
 
-    IEnumerator Parry()
+    IEnumerator Parry() // stop player movement during animation
     {
         if (movement.isGrounded)
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
-        ParryAttack();
-        movement.rb.velocity = new Vector2(0, 0); //stop player from moving
+        ParryAttack(); // hit enemies and check if they can be parried
+        movement.rb.velocity = new Vector2(0, 0);
         AltAttacking = true;
 
         allowAltAttack = Time.time + altAttackCD;
-        yield return new WaitForSeconds(altAttackTime);
+        yield return new WaitForSeconds(altAttackTime); // parry attack time
         movement.canMove = true;
         animator.SetBool("isAttacking", false);
     }
@@ -514,21 +512,21 @@ public class PlayerCombat : MonoBehaviour
         Vector3 parryAttackPoint = parryPoint.position;
         Collider2D[] parriedEnemies;
 
-        if (controller.m_FacingRight)
+        if (controller.m_FacingRight) // flip attackpoint direction with player
         {
             parryAttackPoint.x += (wepRange * 3) / 2;
             parriedEnemies = Physics2D.OverlapBoxAll(parryAttackPoint, new Vector3(wepRange * 3, 1, 0), 180, enemyLayers);
         }
         else
         {
-            parryAttackPoint.x += -(wepRange * 3) / 2;
+            parryAttackPoint.x -= (wepRange * 3) / 2;
             parriedEnemies = Physics2D.OverlapBoxAll(parryAttackPoint, new Vector3(wepRange * 3, 1, 0), 0, enemyLayers);
         }
 
-        foreach (Collider2D enemy in parriedEnemies) //loop through enemies hit
+        foreach (Collider2D enemy in parriedEnemies) // loop through enemies hit
         { 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
-            enemy.GetComponent<EnemyBossBandit>().CheckParry();
+                enemy.GetComponent<EnemyBossBandit>().CheckParry();
         }
     }
 

@@ -27,7 +27,7 @@ public class EnemyController : MonoBehaviour
 
 
     // Use this for initialization
-    public void Start()
+    void Start()
     {
         moveSpeed = moveSpeedDefault;
         enCanFlip = true;

@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isGrounded = true;
 
 
-    private void Start()
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         canMove = true;
@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    void Update()
+    public void Update()
     {
         if (canMove == true)
         {
@@ -76,11 +76,12 @@ public class PlayerMovement : MonoBehaviour
         CheckDash();
     }
 
-    private void FixedUpdate()
+    public void FixedUpdate()
     {
         if (canMove == true)
         {
             controller.Move(horizontalMove * Time.fixedDeltaTime, jump);
+            Debug.Log("Time.fixedDeltaTime: " + Time.fixedDeltaTime);
             //runSpeed = defaultRunSpeed;
         }
 
