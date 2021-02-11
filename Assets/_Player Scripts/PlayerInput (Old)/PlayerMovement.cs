@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isGrounded = true;
 
 
-    private void Start()
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         canMove = true;
@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    void Update()
+    public void Update()
     {
         if (canMove == true)
         {
@@ -76,11 +76,12 @@ public class PlayerMovement : MonoBehaviour
         CheckDash();
     }
 
-    private void FixedUpdate()
+    public void FixedUpdate()
     {
         if (canMove == true)
         {
             controller.Move(horizontalMove * Time.fixedDeltaTime, jump);
+            Debug.Log("Time.fixedDeltaTime: " + Time.fixedDeltaTime);
             //runSpeed = defaultRunSpeed;
         }
 
@@ -166,7 +167,7 @@ public class PlayerMovement : MonoBehaviour
         m_rolling = false;
     }
     
-    void AE_ResetRoll()
+    void AE_ResetRoll() // called in animation event
     {
         m_rolling = false;
     }
@@ -234,5 +235,10 @@ public class PlayerMovement : MonoBehaviour
     public void DisableMove()
     {
         canMove = false;
+    }
+
+    public void StopCO()
+    {
+        StopAllCoroutines();
     }
 }

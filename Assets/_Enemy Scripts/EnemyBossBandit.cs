@@ -11,9 +11,11 @@ public class EnemyBossBandit : MonoBehaviour
     [SerializeField] Vector3 TPOffset = new Vector3 (0, -.5f, 0);
     public HitEffectsHandler HitEffectsHandler;
 
+    [Space]
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;
+    public TimeManager timeManager;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
     public GameObject hitParticlePrefab;
@@ -593,6 +595,10 @@ public class EnemyBossBandit : MonoBehaviour
         enController.enCanMove = false;
         enCanAttack = false;
         Instantiate(parriedParticlePrefab, transform.position, Quaternion.identity);
+
+        yield return new WaitForSeconds(.1f);
+        if(timeManager != null)
+            timeManager.DoSlowMotion();
 
         particleHits = true;
         damageTakenMultiplier = 2f;

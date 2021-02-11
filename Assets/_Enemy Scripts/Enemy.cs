@@ -183,7 +183,6 @@ public class Enemy : MonoBehaviour
     void StartChase()
     {
         //enAnimator.SetBool("inCombat", false);
-        //enController.enCanMove = true;
 
         if (enController.enCanMove && enCanChase)
         {
@@ -211,7 +210,6 @@ public class Enemy : MonoBehaviour
                 rb.velocity = new Vector2(-enController.moveSpeed, 0);
 
                 enController.enFacingRight = false;
-                //if (enCanMove)
                 enController.Flip();
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
                 {
@@ -273,7 +271,6 @@ public class Enemy : MonoBehaviour
         isAttacking = true;
         enAnimator.SetTrigger("Attack");
         //enAnimator.SetBool("inCombat", true);
-        enController.enCanMove = false;
 
         enCanAttack = false;
         StopChase();

@@ -36,7 +36,7 @@ public class EnemyController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         //child = GameObject.Find("HealthBarCanvas");
         if (enCanMove)

@@ -1,0 +1,767 @@
+fileFormatVersion: 2
+guid: 589546e798185cd4babd6ec881905b29
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4874713298547982176
+    second: HeroKnight - HeavyVariations - Single Image_0
+  - first:
+      213: 1744746823424441758
+    second: HeroKnight - HeavyVariations - Single Image_1
+  - first:
+      213: 5576998876603516601
+    second: HeroKnight - HeavyVariations - Single Image_2
+  - first:
+      213: -1630129732634997636
+    second: HeroKnight - HeavyVariations - Single Image_3
+  - first:
+      213: -9022603025042928668
+    second: HeroKnight - HeavyVariations - Single Image_4
+  - first:
+      213: -9040029030419238831
+    second: HeroKnight - HeavyVariations - Single Image_5
+  - first:
+      213: -3774019554281003727
+    second: HeroKnight - HeavyVariations - Single Image_6
+  - first:
+      213: -2057121168200120046
+    second: HeroKnight - HeavyVariations - Single Image_7
+  - first:
+      213: -2060232063202565584
+    second: HeroKnight - HeavyVariations - Single Image_8
+  - first:
+      213: 271315061271205141
+    second: HeroKnight - HeavyVariations - Single Image_9
+  - first:
+      213: -5739405239614705678
+    second: HeroKnight - HeavyVariations - Single Image_10
+  - first:
+      213: 3017247121991862279
+    second: HeroKnight - HeavyVariations - Single Image_11
+  - first:
+      213: 734190308619593538
+    second: HeroKnight - HeavyVariations - Single Image_12
+  - first:
+      213: 5540164740986699026
+    second: HeroKnight - HeavyVariations - Single Image_13
+  - first:
+      213: -7525130465392315395
+    second: HeroKnight - HeavyVariations - Single Image_14
+  - first:
+      213: -2570380492414926038
+    second: HeroKnight - HeavyVariations - Single Image_15
+  - first:
+      213: -8670808250148177623
+    second: HeroKnight - HeavyVariations - Single Image_16
+  - first:
+      213: 6279880318737423191
+    second: HeroKnight - HeavyVariations - Single Image_17
+  - first:
+      213: -4472638097411205640
+    second: HeroKnight - HeavyVariations - Single Image_18
+  - first:
+      213: -1028625560597688399
+    second: HeroKnight - HeavyVariations - Single Image_19
+  - first:
+      213: -3778153253157382313
+    second: HeroKnight - HeavyVariations - Single Image_20
+  - first:
+      213: 7440783700992632074
+    second: HeroKnight - HeavyVariations - Single Image_21
+  - first:
+      213: -9094079377048223770
+    second: HeroKnight - HeavyVariations - Single Image_22
+  - first:
+      213: 2480772422872740007
+    second: HeroKnight - HeavyVariations - Single Image_23
+  - first:
+      213: -7056097252519397616
+    second: HeroKnight - HeavyVariations - Single Image_24
+  - first:
+      213: 3725452416776086674
+    second: HeroKnight - HeavyVariations - Single Image_25
+  - first:
+      213: 8622969555598279264
+    second: HeroKnight - HeavyVariations - Single Image_26
+  - first:
+      213: 7599244633440560720
+    second: HeroKnight - HeavyVariations_0
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: 0
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_0
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 420
+        width: 77
+        height: 55
+      alignment: 9
+      pivot: {x: 0.4675, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a0cc22151a895cb0800000000000000
+      internalID: -4874713298547982176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_1
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 420
+        width: 68
+        height: 54
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9d7439edf5963810800000000000000
+      internalID: 1744746823424441758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_3
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 331
+        width: 110
+        height: 56
+      alignment: 9
+      pivot: {x: 0.282, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7c0d7c15ad9069e0800000000000000
+      internalID: -1630129732634997636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_4
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 333
+        width: 65
+        height: 46
+      alignment: 9
+      pivot: {x: 0.4461, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4eb83fe3a5649c280800000000000000
+      internalID: -9022603025042928668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_5
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 330
+        width: 52
+        height: 46
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15074a23e7d5b8280800000000000000
+      internalID: -9040029030419238831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_6
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 330
+        width: 38
+        height: 44
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 135e3b3063dff9bc0800000000000000
+      internalID: -3774019554281003727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_7
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 330
+        width: 38
+        height: 45
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 219ce755233a373e0800000000000000
+      internalID: -2057121168200120046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_9
+      rect:
+        serializedVersion: 2
+        x: 493
+        y: 328
+        width: 112
+        height: 50
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51598495c97e3c300800000000000000
+      internalID: 271315061271205141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_10
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 332
+        width: 104
+        height: 47
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ffefbed7598950b0800000000000000
+      internalID: -5739405239614705678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_11
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 330
+        width: 80
+        height: 46
+      alignment: 9
+      pivot: {x: 0.6125, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70805e9754a6fd920800000000000000
+      internalID: 3017247121991862279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_12
+      rect:
+        serializedVersion: 2
+        x: 818
+        y: 331
+        width: 82
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2472ece123e503a00800000000000000
+      internalID: 734190308619593538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_13
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 330
+        width: 78
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21df7a79a7e92ec40800000000000000
+      internalID: 5540164740986699026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_14
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 275
+        width: 64
+        height: 43
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df332d926bd519790800000000000000
+      internalID: -7525130465392315395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_15
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 275
+        width: 34
+        height: 47
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a23c3048f8c245cd0800000000000000
+      internalID: -2570380492414926038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_17
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 267
+        width: 132
+        height: 54
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75b9f4ea0ed962750800000000000000
+      internalID: 6279880318737423191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_18
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 272
+        width: 132
+        height: 51
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f51de2f85ffde1c0800000000000000
+      internalID: -4472638097411205640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_20
+      rect:
+        serializedVersion: 2
+        x: 473
+        y: 273
+        width: 120
+        height: 40
+      alignment: 9
+      pivot: {x: 0.425, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 757519e32ad419bc0800000000000000
+      internalID: -3778153253157382313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_23
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 272
+        width: 84
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a03ae9ff597d6220800000000000000
+      internalID: 2480772422872740007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_24
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 272
+        width: 56
+        height: 41
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 017b8f20fe4b31e90800000000000000
+      internalID: -7056097252519397616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_25
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 156
+        width: 60
+        height: 44
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2942f891c3773b330800000000000000
+      internalID: 3725452416776086674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - HeavyVariations - Single Image_26
+      rect:
+        serializedVersion: 2
+        x: 562
+        y: 178
+        width: 44
+        height: 22
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0628176df11faa770800000000000000
+      internalID: 8622969555598279264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline:
+    - - {x: -485, y: 163.5}
+      - {x: -485, y: 224.5}
+      - {x: -423, y: 224.5}
+      - {x: -423, y: 163.5}
+    - - {x: -382, y: 157.5}
+      - {x: -382, y: 233.5}
+      - {x: -309, y: 233.5}
+      - {x: -309, y: 157.5}
+    - - {x: -491, y: 77.5}
+      - {x: -491, y: 145.5}
+      - {x: -374, y: 145.5}
+      - {x: -374, y: 77.5}
+    - - {x: -364, y: 83.5}
+      - {x: -364, y: 140.5}
+      - {x: -301, y: 140.5}
+      - {x: -301, y: 83.5}
+    - - {x: -281, y: 79.5}
+      - {x: -281, y: 138.5}
+      - {x: -222, y: 138.5}
+      - {x: -222, y: 79.5}
+    - - {x: -178, y: 75.5}
+      - {x: -178, y: 135.5}
+      - {x: -127, y: 135.5}
+      - {x: -127, y: 75.5}
+    - - {x: -79, y: 78.5}
+      - {x: -79, y: 140.5}
+      - {x: -30, y: 140.5}
+      - {x: -30, y: 78.5}
+    - - {x: 1, y: 76.5}
+      - {x: 1, y: 141.5}
+      - {x: 114, y: 141.5}
+      - {x: 114, y: 76.5}
+    - - {x: 124, y: 81.5}
+      - {x: 124, y: 138.5}
+      - {x: 224, y: 138.5}
+      - {x: 224, y: 81.5}
+    - - {x: 232, y: 77.5}
+      - {x: 232, y: 138.5}
+      - {x: 301, y: 138.5}
+      - {x: 301, y: 77.5}
+    - - {x: 317, y: 80.5}
+      - {x: 317, y: 130.5}
+      - {x: 388, y: 130.5}
+      - {x: 388, y: 80.5}
+    - - {x: 405, y: 79.5}
+      - {x: 405, y: 128.5}
+      - {x: 470, y: 128.5}
+      - {x: 470, y: 79.5}
+    - - {x: 376, y: 47.5}
+      - {x: 376, y: 51.5}
+      - {x: 398, y: 51.5}
+      - {x: 398, y: 47.5}
+    - - {x: 227, y: 21.5}
+      - {x: 227, y: 68.5}
+      - {x: 285, y: 68.5}
+      - {x: 285, y: 21.5}
+    - - {x: 120, y: 21.5}
+      - {x: 120, y: 69.5}
+      - {x: 196, y: 69.5}
+      - {x: 196, y: 21.5}
+    - - {x: -6, y: 15.5}
+      - {x: -6, y: 68.5}
+      - {x: 100, y: 68.5}
+      - {x: 100, y: 15.5}
+    - - {x: -126, y: 20.5}
+      - {x: -126, y: 74.5}
+      - {x: -35, y: 74.5}
+      - {x: -35, y: 20.5}
+    - - {x: -291, y: 17.5}
+      - {x: -291, y: 75.5}
+      - {x: -192, y: 75.5}
+      - {x: -192, y: 17.5}
+    - - {x: -366, y: 24.5}
+      - {x: -366, y: 77.5}
+      - {x: -323, y: 77.5}
+      - {x: -323, y: 24.5}
+    - - {x: -495, y: 23.5}
+      - {x: -495, y: 70.5}
+      - {x: -417, y: 70.5}
+      - {x: -417, y: 23.5}
+    - - {x: -454, y: -97.5}
+      - {x: -454, y: -33.5}
+      - {x: -351, y: -33.5}
+      - {x: -351, y: -97.5}
+    - - {x: 47, y: -87.5}
+      - {x: 47, y: -37.5}
+      - {x: 125, y: -37.5}
+      - {x: 125, y: -87.5}
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
