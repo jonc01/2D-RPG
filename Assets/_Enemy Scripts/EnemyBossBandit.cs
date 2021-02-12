@@ -38,7 +38,6 @@ public class EnemyBossBandit : MonoBehaviour
     public Animator enAnimator;
     public bool isAlive;
 
-    [SerializeField]
     public Rigidbody2D rb;
     [SerializeField]
     float aggroRange = 5f; //when to start chasing player
