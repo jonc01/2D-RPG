@@ -81,7 +81,6 @@ public class PlayerMovement : MonoBehaviour
         if (canMove == true)
         {
             controller.Move(horizontalMove * Time.fixedDeltaTime, jump);
-            Debug.Log("Time.fixedDeltaTime: " + Time.fixedDeltaTime);
             //runSpeed = defaultRunSpeed;
         }
 
