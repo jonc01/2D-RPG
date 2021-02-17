@@ -11,8 +11,8 @@ public class ExperienceBar : MonoBehaviour
     float[] totalLevelXP = 
         {
         100, //1
-        500, //2
-        1000
+        200, //2
+        300
         }; 
 
     public int currentPlayerLevel;
@@ -22,10 +22,19 @@ public class ExperienceBar : MonoBehaviour
     public int currentXP; //displayed in slider.value
     public int maxXP; //total XP needed to level up
 
-    public void SetXP(int xp, int currentLevel) //call after level up
+    public void SetXP(int currentXP, int currentLevel) //call after level up
     {
-        slider.maxValue = xp;
-        slider.value = xp;
+        slider.maxValue = totalLevelXP[currentLevel - 1];
+        slider.value = currentXP;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown("i")) //TESTING
+        {
+            Debug.Log("give 10 XP");
+            AddXP(11);
+        }
     }
 
     public void AddXP(float xp)
@@ -37,15 +46,17 @@ public class ExperienceBar : MonoBehaviour
             //XP instantiate above player or player health bar
         }
         
-        if (slider.value >= slider.maxValue) //currentXP has met/exceeded XP needed to level up
+        if (slider.value >= slider.maxValue) //Level Up; currentXP has met/exceeded XP needed
         {
             float overflowXP = (slider.value - slider.maxValue);
             if(overflowXP > 0) //exceeded XP for level
             {
+                Debug.Log("Overflow XP: " + overflowXP);
                 LevelUp(overflowXP);
             }
             else
             {
+                Debug.Log("No overflow XP");
                 LevelUp();
             }
         }
