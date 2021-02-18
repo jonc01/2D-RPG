@@ -20,10 +20,4 @@ public class TimeManager : MonoBehaviour
         Time.timeScale = slowdownFactor;
         Time.fixedDeltaTime = Time.timeScale * .02f;
     }
-
-    public void PauseGame()
-    {
-        //bool paused;
-        Time.timeScale = 0;
-    }
 }

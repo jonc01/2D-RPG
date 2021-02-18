@@ -731,7 +731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 7363214383932210406, guid: e3bc24809234e3b49959a6e6a0855d7a, type: 3}
-  poolSize: 20
+  poolSize: 15
   expandable: 1
 --- !u!223 &204774830
 Canvas:
@@ -3886,6 +3886,10 @@ PrefabInstance:
       value: 0.12
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: playerCombat
+      value: 
+      objectReference: {fileID: 982059469}
+    - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: HitEffectsHandler
       value: 
       objectReference: {fileID: 1735380980}
@@ -4110,7 +4114,7 @@ GameObject:
   - component: {fileID: 946463622}
   - component: {fileID: 946463621}
   m_Layer: 5
-  m_Name: PlayerLevel
+  m_Name: PlayerLevelDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4132,8 +4136,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -105.5, y: -0.058258057}
-  m_SizeDelta: {x: 38.344, y: 35.8835}
+  m_AnchoredPosition: {x: -107.25722, y: -1.7944}
+  m_SizeDelta: {x: 38.3784, y: 39.356}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &946463621
 MonoBehaviour:
@@ -4182,12 +4186,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.3
+  m_fontSize: 35
   m_fontSizeBase: 31.7
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 32
-  m_fontSizeMax: 72
+  m_fontSizeMin: 15
+  m_fontSizeMax: 40
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -4198,7 +4202,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -4218,7 +4222,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -0.14653397, y: -0.1588993, z: -0.05242157, w: 0}
+  m_margin: {x: 3.7308884, y: 3.753502, z: 2.7848053, w: 3.5179443}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4578,10 +4582,11 @@ MonoBehaviour:
   TextPopupsPrefab: {fileID: 1416290914158628297, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
   TextPopupsHandler: {fileID: 204774832}
   TPOffset: {x: 0, y: 0.35, z: 0}
+  playerLevel: 1
   maxHealth: 100
   currentHealth: 100
   healthBar: {fileID: 1177505292}
-  experienceBar: {fileID: 0}
+  experienceBar: {fileID: 2070866454}
   isAlive: 1
   wepDamage: 10
   wepRange: 0.5
@@ -4722,7 +4727,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1063059736}
-  - component: {fileID: 1063059735}
   - component: {fileID: 1063059737}
   - component: {fileID: 1063059738}
   m_Layer: 0
@@ -4732,18 +4736,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1063059735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1063059734}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cecf1b5045b2644fa090fc37f4a9975, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1063059736
 Transform:
   m_ObjectHideFlags: 0
@@ -4765,12 +4757,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1063059734}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2cb2508ca18d5d146a1744807d70cbfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 1
+  freezeDuration: 0.5
 --- !u!114 &1063059738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5409,8 +5401,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.7999878, y: 1.8715057}
-  m_SizeDelta: {x: 226.238, y: 44.6529}
+  m_AnchoredPosition: {x: 0.032959, y: 2.5864}
+  m_SizeDelta: {x: 263.4, y: 42.681}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1204694269
 MonoBehaviour:
@@ -5495,7 +5487,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -13.179782, y: 0, z: -20.092136, w: 4.182233}
+  m_margin: {x: -0.4456742, y: 0, z: 0.059059415, w: -0.055814452}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -6310,8 +6302,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0.034249, y: 16.568108}
-  m_SizeDelta: {x: 176.07, y: 96.1362}
+  m_AnchoredPosition: {x: 0.034249, y: 15.691}
+  m_SizeDelta: {x: 176.07, y: 38.974}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1503038990
 MonoBehaviour:
@@ -6358,7 +6350,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 100
+  m_MaxValue: 125
   m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
@@ -8628,8 +8620,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: -15.7834015}
-  m_SizeDelta: {x: 0.000015259, y: -90.3168}
+  m_AnchoredPosition: {x: 0, y: -14.5844}
+  m_SizeDelta: {x: 0, y: -31.5688}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2070866452
 MonoBehaviour:
@@ -8682,7 +8674,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 1503038990}
-  currentPlayerLevel: 0
+  displayPlayerLevel: {fileID: 946463621}
+  healthBar: {fileID: 1177505292}
+  playerCombat: {fileID: 982059469}
+  currentPlayerLevel: 1
   currentXP: 0
   maxXP: 0
 --- !u!1 &2073806899
@@ -9679,6 +9674,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5040420503057490427}
     - target: {fileID: 5292194739621741515, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
+      propertyPath: experiencePoints
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292194739621741515, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
       propertyPath: HitEffectsHandler
       value: 
       objectReference: {fileID: 1735380980}
@@ -9811,6 +9810,10 @@ PrefabInstance:
       propertyPath: playerCombat
       value: 
       objectReference: {fileID: 982059469}
+    - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
+      propertyPath: experiencePoints
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: HitEffectsHandler
       value: 
@@ -9960,6 +9963,10 @@ PrefabInstance:
       propertyPath: TPOffset.y
       value: 0.12
       objectReference: {fileID: 0}
+    - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: playerCombat
+      value: 
+      objectReference: {fileID: 982059469}
     - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: HitEffectsHandler
       value: 

@@ -34,7 +34,7 @@ public class EnemyBossBandit : MonoBehaviour
     //public int enLevel
 
 
-    public int experiencePoints = 10;
+    public int experiencePoints = 80;
     public Animator enAnimator;
     public bool isAlive;
 
@@ -684,18 +684,11 @@ public class EnemyBossBandit : MonoBehaviour
         }
     }
 
-    public void GiveExperience(int experiencePoints)
-    {
-        Debug.Log("Give player " + experiencePoints + " XP");
-        //give xp
-        //
-    }
-
     void Die()
     {
         isAlive = false;
         //give player exp
-        GiveExperience(experiencePoints);
+        playerCombat.GiveXP(experiencePoints);
 
         StopAllCoroutines(); //stops attack coroutine if dead
 

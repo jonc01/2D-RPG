@@ -2,73 +2,71 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ExperienceBar : MonoBehaviour
 {
     public Slider slider; //Experience Bar
+    public TextMeshProUGUI displayPlayerLevel;
+    public HealthBar healthBar;
+    public PlayerCombat playerCombat;
 
-    //Level 1 = [0], etc
-    float[] totalLevelXP = 
-        {
-        100, //1
-        200, //2
-        300
-        }; 
+    //float[] totalLevelXP = {100, 200, 300}; 
 
-    public int currentPlayerLevel;
+    public float currentPlayerLevel; 
     //public float XPmultiplier = 1.0f;
 
     //might not need, just use slider values, calculate new values on LevelUp() call
     public int currentXP; //displayed in slider.value
     public int maxXP; //total XP needed to level up
 
-    public void SetXP(int currentXP, int currentLevel) //call after level up
+    public void SetXP(int currentXP, float currentLevel) //call after level up
     {
-        slider.maxValue = totalLevelXP[currentLevel - 1];
+        //slider.maxValue = totalLevelXP[currentLevel - 1];
+        slider.maxValue = (currentPlayerLevel * 100) * 1.25f;
         slider.value = currentXP;
+
+        if (displayPlayerLevel != null) //display level
+            displayPlayerLevel.text = currentLevel.ToString();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown("i")) //TESTING
         {
-            Debug.Log("give 10 XP");
+            Debug.Log("give 11 XP");
             AddXP(11);
         }
     }
 
     public void AddXP(float xp)
     {
+        float overflowXP = 0;
+        float xpNeeded = slider.maxValue - slider.value;
         slider.value += xp;
+
+        if (xp > xpNeeded)
+            overflowXP = xp - xpNeeded;
 
         if(xp > 0)
         {
-            //XP instantiate above player or player health bar
+            //XP instantiate above player
         }
-        
-        if (slider.value >= slider.maxValue) //Level Up; currentXP has met/exceeded XP needed
-        {
-            float overflowXP = (slider.value - slider.maxValue);
-            if(overflowXP > 0) //exceeded XP for level
-            {
-                Debug.Log("Overflow XP: " + overflowXP);
-                LevelUp(overflowXP);
-            }
-            else
-            {
-                Debug.Log("No overflow XP");
-                LevelUp();
-            }
-        }
+
+        if(slider.value >= slider.maxValue) //XP requirement met
+            LevelUp(overflowXP);
     }
 
     void LevelUp(float overflowXP = 0)
     {
         currentPlayerLevel++;
-        slider.value = 0;
-        slider.maxValue = totalLevelXP[currentPlayerLevel - 1]; //PLACEHOLDER
+        slider.value = overflowXP; //reset progress and add overflowXP if xp exceeded level up
+        slider.maxValue = (currentPlayerLevel * 100) * 1.25f;
+        //slider.maxValue = totalLevelXP[currentPlayerLevel - 1]; //PLACEHOLDER
+        if (displayPlayerLevel != null) //update level
+            displayPlayerLevel.text = currentPlayerLevel.ToString();
 
-        if(overflowXP > 0)
-            AddXP(overflowXP);
+        healthBar.SetMaxHealth(100 + ((currentPlayerLevel - 1) * 10f));
+        playerCombat.HealPlayer(healthBar.maxHealth);
     }
 }

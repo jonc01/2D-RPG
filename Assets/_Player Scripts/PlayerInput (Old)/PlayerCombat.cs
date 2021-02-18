@@ -20,10 +20,11 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0f, 0);
 
     [Space]
+    public float playerLevel = 1; //PLACEHOLDER, use save file
     public float maxHealth = 100;
     public float currentHealth;
     public HealthBar healthBar;
-    public HealthBar experienceBar;
+    public ExperienceBar experienceBar;
     public bool isAlive = true;
 
     [Space]
@@ -85,6 +86,9 @@ public class PlayerCombat : MonoBehaviour
     {
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
+
+        maxHealth = 100 + ((playerLevel - 1) * 10);
+        experienceBar.SetXP(0, playerLevel);
 
         //var keyboard = Keyboard.current; //temp workaround
         currentHealth = maxHealth;
@@ -698,6 +702,11 @@ public class PlayerCombat : MonoBehaviour
     void ResetMaterial()
     {
         sr.material = mDefault;
+    }
+
+    public void GiveXP(float xp)
+    {
+        experienceBar.AddXP(xp);
     }
 
     public void HealPlayer(float healAmount)

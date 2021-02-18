@@ -456,12 +456,6 @@ public class Enemy : MonoBehaviour
         
     }
 
-    public void GiveExperience(int experiencePoints){
-        Debug.Log("Give player " + experiencePoints + " XP");
-        //give xp
-        //
-    }
-
     void Die()
     {
         isAlive = false;
@@ -472,7 +466,7 @@ public class Enemy : MonoBehaviour
         }
 
         //give player exp
-        GiveExperience(experiencePoints);
+        playerCombat.GiveXP(experiencePoints);
 
         StopAllCoroutines(); //stops attack coroutine if dead
 
