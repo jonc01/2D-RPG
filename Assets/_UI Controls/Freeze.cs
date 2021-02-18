@@ -3,32 +3,31 @@ using UnityEngine;
 
 public class Freeze : MonoBehaviour
 {
-    public float duration = 1f;
     bool isFrozen = false;
-    float _FreezeDuration = 0f;
-    void Update()
+    public float freezeDuration = 0.1f;
+
+    private void Update()
     {
-        if(_FreezeDuration < 0 && !isFrozen)
+        /*if (Input.GetKeyDown("u"))
         {
-            StartCoroutine(StartFreeze());
-        }
+            StartFreeze();
+        }*/
+        //Time.timeScale += (1f / slowdownLength) * Time.unscaledDeltaTime; // slowly increases scale until it is back to 1.0
+        //Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
     }
 
-    public void Freezer()
+    public void StartFreeze()
     {
-        _FreezeDuration = duration;
+        if (!isFrozen)
+            StartCoroutine(FreezeTime(freezeDuration));
     }
 
-    IEnumerator StartFreeze()
+    IEnumerator FreezeTime(float freezeDuration)
     {
-        isFrozen = true;
-        var original = Time.timeScale;
         Time.timeScale = 0f;
-
-        yield return new WaitForSecondsRealtime(duration);
-
-        Time.timeScale = original;
-        _FreezeDuration = 0;
+        isFrozen = true;
+        yield return new WaitForSeconds(freezeDuration);
+        Time.timeScale = 1f;
         isFrozen = false;
     }
 }

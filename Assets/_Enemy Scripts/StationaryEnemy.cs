@@ -17,6 +17,7 @@ public class StationaryEnemy : MonoBehaviour
 
     public LayerMask playerLayers;
     public Transform player;
+    public PlayerCombat playerCombat;
     public Transform enemyAllies;
     public LayerMask enemyLayers;
     public GameObject HitToRight;
@@ -28,7 +29,7 @@ public class StationaryEnemy : MonoBehaviour
     float currentHealth;
     public HealthBar healthBar;
 
-    int experiencePoints = 10;
+    public int experiencePoints = 20;
     public Animator enAnimator;
     public bool isAlive;
 
@@ -186,15 +187,6 @@ public class StationaryEnemy : MonoBehaviour
         sr.material = mDefault;
     }
 
-    
-
-    public void GiveExperience(int experiencePoints)
-    {
-        Debug.Log("Give player " + experiencePoints + " XP");
-        //give xp
-        //
-    }
-
     void Die()
     {
         isAlive = false;
@@ -205,10 +197,10 @@ public class StationaryEnemy : MonoBehaviour
         }
 
         //give player exp
-        GiveExperience(experiencePoints);
+        playerCombat.GiveXP(experiencePoints);
 
         //hide hp bar
-        //GetComponent
+
 
         //disable enemy object
         isAlive = false;

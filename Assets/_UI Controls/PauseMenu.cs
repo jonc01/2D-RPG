@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
-    Freeze _freezer;
+    //Freeze _freezer;
 
 
     // Update is called once per frame
@@ -13,7 +13,7 @@ public class PauseMenu : MonoBehaviour
         if (Input.GetKey(KeyCode.Escape))
         {
             Debug.Log("Pause");
-            _freezer.Freezer();
+            //_freezer.Freezer();
             
         }
     }

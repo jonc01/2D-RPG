@@ -20,10 +20,11 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0f, 0);
 
     [Space]
+    public float playerLevel = 1; //PLACEHOLDER, use save file
     public float maxHealth = 100;
     public float currentHealth;
     public HealthBar healthBar;
-    public HealthBar experienceBar;
+    public ExperienceBar experienceBar;
     public bool isAlive = true;
 
     [Space]
@@ -61,7 +62,7 @@ public class PlayerCombat : MonoBehaviour
 
     private int currentLightAttack = 0;
     private float timeSinceLightAttack = 0.0f;
-    private int currentHeavyAttack = 0;
+    private int currentHeavyAttack = 0; //sharing currentAttack with Light and Heavy
     private float timeSinceHeavyAttack = 0.0f;
 
     //ability cooldowns
@@ -86,6 +87,9 @@ public class PlayerCombat : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
+        maxHealth = 100 + ((playerLevel - 1) * 10);
+        experienceBar.SetXP(0, playerLevel);
+
         //var keyboard = Keyboard.current; //temp workaround
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -106,28 +110,6 @@ public class PlayerCombat : MonoBehaviour
         AltAttacking = false;
         IsParrying = false;
         playerStunned = false;
-        
-        //GetAnimDuration();
-    }
-
-    public void GetAnimDuration()
-    {
-        float anim1, anim2;
-        AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
-        foreach(AnimationClip clip in clips)
-        {
-            switch (clip.name)
-            {
-                case "HeroKnight_Stunned":
-                    anim1 = clip.length;
-                    Debug.Log("HeroKnight_Stunned: " + anim1);
-                    break;
-                case "HeroKnight_Attack1_Heavy":
-                    anim2 = clip.length;
-                    Debug.Log("HeroKnight_Attack1_Heavy: " + anim2);
-                    break;
-            }
-        }
     }
 
     // Update is called once per frame
@@ -135,6 +117,8 @@ public class PlayerCombat : MonoBehaviour
     {
         timeSinceLightAttack += Time.deltaTime;
         timeSinceHeavyAttack += Time.deltaTime;
+
+        Debug.Log("currentAttack: " + currentLightAttack);
 
         if (movement.isGrounded)
         {
@@ -174,7 +158,7 @@ public class PlayerCombat : MonoBehaviour
                 currentLightAttack = 1;
 
             // Reset Attack combo if time since last attack is too large
-            if (timeSinceLightAttack > 1.0f)
+            if (timeSinceLightAttack > 1.5f) //if using separate timeSince...Attack for Light only use 1.0f
                 currentLightAttack = 1;
 
             // Call one of three attack animations "Attack1", "Attack2", "Attack3"
@@ -192,18 +176,19 @@ public class PlayerCombat : MonoBehaviour
     {
         if(Input.GetButtonDown("Fire2") && timeSinceHeavyAttack > playerAttackSpeed && canAttack)
         {
-            currentHeavyAttack++;
+            //currentHeavyAttack++; //sharing attack counter
+            currentLightAttack++;
 
-            if (currentHeavyAttack > 3)
-                currentHeavyAttack = 1;
+            if (currentLightAttack > 3)
+                currentLightAttack = 1;
 
             if (timeSinceHeavyAttack > 2.0f) // How long to wait before reseting attack chain
-                currentHeavyAttack = 1;
+                currentLightAttack = 1; //currentHeavyAttack
 
             // Call one of three attack animations "Attack1Heavy", "Attack2Heavy", "Attack3Heavy"
-            animator.SetTrigger("Attack" + currentHeavyAttack + "Heavy");
+            animator.SetTrigger("Attack" + currentLightAttack + "Heavy"); //currentHeavyAttack
 
-            IsHeavyAttackingCO = StartCoroutine(IsAttackingHeavy(currentHeavyAttack));
+            IsHeavyAttackingCO = StartCoroutine(IsAttackingHeavy(currentLightAttack)); //currentHeavyAttack
 
             /*if (currentLightAttack == 2) //if we use combos with mixed Light and Heavy attacks
             {
@@ -213,7 +198,7 @@ public class PlayerCombat : MonoBehaviour
                     Debug.Log("combo works");
                 }
             }*/
-            
+
             timeSinceHeavyAttack = 0.0f;
         }
     }
@@ -286,17 +271,17 @@ public class PlayerCombat : MonoBehaviour
         {
             case 1:
                 yield return new WaitForSeconds(0.4f);
-                AttackHeavy(); // Attack functions determine damage and attack hitbox
+                AttackHeavy();
                 yield return new WaitForSeconds(0.2f);
                 break;
             case 2:
-                yield return new WaitForSeconds(0.3f);
-                AttackHeavy(2);
+                yield return new WaitForSeconds(0.3f); //Attack functions determine damage and attack hitbox
+                AttackHeavy(2); //using hitbox 2
                 yield return new WaitForSeconds(0.1f);
                 break;
             case 3:
                 yield return new WaitForSeconds(0.3f);
-                AttackHeavy(1, 1.5f);
+                AttackHeavy(1, 1.5f); //default 1, 1.5x damage
                 yield return new WaitForSeconds(0.2f);
                 break;
             default:
@@ -717,6 +702,11 @@ public class PlayerCombat : MonoBehaviour
     void ResetMaterial()
     {
         sr.material = mDefault;
+    }
+
+    public void GiveXP(float xp)
+    {
+        experienceBar.AddXP(xp);
     }
 
     public void HealPlayer(float healAmount)

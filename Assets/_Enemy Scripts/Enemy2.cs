@@ -28,7 +28,7 @@ public class Enemy2 : MonoBehaviour
     //public int enLevel
 
 
-    public int experiencePoints = 10;
+    public int experiencePoints = 20;
     public Animator enAnimator;
     public bool isAlive;
 
@@ -435,13 +435,6 @@ public class Enemy2 : MonoBehaviour
         }
     }
 
-    public void GiveExperience(int experiencePoints)
-    {
-        Debug.Log("Give player " + experiencePoints + " XP");
-        //give xp
-        //
-    }
-
     void Die()
     {
         isAlive = false;
@@ -452,7 +445,7 @@ public class Enemy2 : MonoBehaviour
         }
 
         //give player exp
-        GiveExperience(experiencePoints);
+        playerCombat.GiveXP(experiencePoints);
 
         StopAllCoroutines(); //stops attack coroutine if dead
         //hide hp bar
