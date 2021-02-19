@@ -510,6 +510,7 @@ public class EnemyBossBandit : MonoBehaviour
                 tempPos += TPOffset;
                 if(damageTakenMultiplier != 1) //crit damage, damage was multiplied
                 {
+                    timeManager.DoFreezeTime(.1f);
                     TextPopupsHandler.ShowDamage(damage, tempPos, true);
                 }
                 else

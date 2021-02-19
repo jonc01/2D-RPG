@@ -81,4 +81,16 @@ public class TextPopupsHandler : MonoBehaviour
         showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255); //white text
         showDmg.GetComponent<TextMeshProUGUI>().text = "*Stun*";
     }
+
+    public void ShowText(Vector3 position, string text)
+    {
+        position.y += .25f;
+
+        GameObject showDmg = TextPopupsPool.GetObject();
+        showDmg.transform.position = position;
+        showDmg.transform.rotation = Quaternion.identity;
+        showDmg.SetActive(true);
+        showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255); //white text
+        showDmg.GetComponent<TextMeshProUGUI>().text = text;
+    }
 }

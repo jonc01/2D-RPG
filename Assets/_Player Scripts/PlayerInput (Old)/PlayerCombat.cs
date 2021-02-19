@@ -12,10 +12,9 @@ public class PlayerCombat : MonoBehaviour
     public Transform playerLocation;
     [SerializeField] Canvas PlayerHealthBarCanvas;
     [SerializeField] GameObject StatusStunned;
+    public TimeManager timeManager;
 
-    [Space]
-    //Text Popups
-    public GameObject TextPopupsPrefab;
+    [Space] //Text Popups
     public TextPopupsHandler TextPopupsHandler;
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0f, 0);
 
@@ -707,6 +706,7 @@ public class PlayerCombat : MonoBehaviour
     public void GiveXP(float xp)
     {
         experienceBar.AddXP(xp);
+        timeManager.DoFreezeTime(.1f);
     }
 
     public void HealPlayer(float healAmount)
@@ -716,7 +716,7 @@ public class PlayerCombat : MonoBehaviour
             currentHealth += healAmount;
             healthBar.SetHealth(currentHealth);
             //animator.SetTrigger("Hurt");
-            if (TextPopupsPrefab)
+            if (TextPopupsHandler)
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
@@ -761,7 +761,7 @@ public class PlayerCombat : MonoBehaviour
         if (isAlive && currentHealth > 0)
         {
             healthBar.SetHealth(currentHealth);
-            if (TextPopupsPrefab)
+            if (TextPopupsHandler)
             {
                 TextPopupsHandler.ShowHeal(spawnHpPercentage, transform.position); //respawn player with x percentage of maxHealth
             }
