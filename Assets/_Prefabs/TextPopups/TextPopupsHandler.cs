@@ -24,12 +24,16 @@ public class TextPopupsHandler : MonoBehaviour
         showDmg.transform.position = position;
         showDmg.transform.rotation = Quaternion.identity;
         showDmg.SetActive(true);
+        showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1.2f; //resetting to normal font size
 
         if (damage > 0)
         {
             if (crit)
             {
-                showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 0, 0, 255); //red text
+                showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 70, 0, 255); //orange text //255, 120
+                showDmg.GetComponent<TextMeshProUGUI>().fontSize = 2;
+                //showDmg.GetComponent<Animator>().SetBool
+                //showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 0, 0, 255); //red text
             }
             else
             {
@@ -90,7 +94,7 @@ public class TextPopupsHandler : MonoBehaviour
         showDmg.transform.position = position;
         showDmg.transform.rotation = Quaternion.identity;
         showDmg.SetActive(true);
-        showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255); //white text
+        showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255);
         showDmg.GetComponent<TextMeshProUGUI>().text = text;
     }
 }

@@ -21,10 +21,10 @@ public class TimeManager : MonoBehaviour
             isSlowed = false; //
         }
 
-        if (Time.timeScale < 1f && isSlowed) //only if Slow Time is called, slowly return back to normal speed
+        if (Time.timeScale < 1f && isSlowed) //only if Slow Time is called, gradually return back to normal speed
         {
             Time.timeScale += (1f/slowdownLength) * Time.unscaledDeltaTime;
-            Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f); //slowly increases scale until it is back to 1.0
+            Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f); //gradually increases scale until it is back to 1.0
 
             Time.fixedDeltaTime = Mathf.Clamp(Time.timeScale, 0.0004f, .02f); //player move speed uses fixedDeltaTime, need to reset here
         }

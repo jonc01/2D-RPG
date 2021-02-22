@@ -13,6 +13,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Canvas PlayerHealthBarCanvas;
     [SerializeField] GameObject StatusStunned;
     public TimeManager timeManager;
+    public AbilityUI abilityUI;
 
     [Space] //Text Popups
     public TextPopupsHandler TextPopupsHandler;
@@ -486,6 +487,7 @@ public class PlayerCombat : MonoBehaviour
         AltAttacking = true;
 
         allowAltAttack = Time.time + altAttackCD;
+        abilityUI.StartCooldown(altAttackCD);
         yield return new WaitForSeconds(altAttackTime); // parry attack time
         movement.canMove = true;
         animator.SetBool("isAttacking", false);
@@ -706,7 +708,8 @@ public class PlayerCombat : MonoBehaviour
     public void GiveXP(float xp)
     {
         experienceBar.AddXP(xp);
-        timeManager.DoFreezeTime(.1f);
+        timeManager.DoFreezeTime(.1f); //short freeze on kill
+        TextPopupsHandler.ShowText(transform.position, "+"+xp+"xp"); //temp, add new anim to float in place
     }
 
     public void HealPlayer(float healAmount)

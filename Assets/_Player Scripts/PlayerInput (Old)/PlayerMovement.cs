@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float m_rollForce = 5.0f;
     public CharacterController2D controller;
     public Animator animator;
+    public AbilityUI abilityUI;
 
     public float defaultRunSpeed = 40f;
     public float runSpeed = 40f;
@@ -16,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject player;
 
     //dodge/dash cooldown
-    public float dodgeCD = 1;
+    public float dodgeCD = 2;
     private float allowDodge = 0;
     public float dodgeTime = .5f;
 
@@ -159,6 +160,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetTrigger("Roll");
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
         allowDodge = Time.time + dodgeCD;
+        abilityUI.StartCooldown(dodgeCD);
         yield return new WaitForSeconds(dodgeTime); //dodge duration
         canMove = true;
         animator.SetBool("isRolling", false);
@@ -173,8 +175,8 @@ public class PlayerMovement : MonoBehaviour
 
     void DashInput()
     {
-        //Dash (mid-air dodge)
-        if (Time.time > allowDash && canMove) //TODO: can just move this into Dodge ^^^^ just switching between both depending on "isGrounded"
+        //Dash (mid-air dodge) //allowDash
+        if (Time.time > allowDodge && canMove) //TODO: can just move this into Dodge ^^^^ just switching between both depending on "isGrounded"
         {
             if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && !isGrounded)
             {
@@ -188,7 +190,9 @@ public class PlayerMovement : MonoBehaviour
         isDashing = true;
         dashTimeLeft = dashTime;
         lastDash = Time.time;
-        allowDash = Time.time + dodgeCD;
+        //allowDash = Time.time + dodgeCD;
+        allowDodge = Time.time + dodgeCD;
+        abilityUI.StartCooldown(dodgeCD);
 
         PlayerAfterImagePool.Instance.GetFromPool();
         lastImageXpos = transform.position.x;
