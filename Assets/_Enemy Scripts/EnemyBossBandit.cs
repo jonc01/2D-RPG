@@ -197,10 +197,10 @@ public class EnemyBossBandit : MonoBehaviour
     {
         ShowHealthBar();
 
-        enAnimator.SetBool("Move", true);
 
         if (enController.enCanMove)
         {
+            enAnimator.SetBool("Move", true);
             if (transform.position.x < player.position.x) //player is right
             {
                 //playerToRight = true;
@@ -510,6 +510,7 @@ public class EnemyBossBandit : MonoBehaviour
                 tempPos += TPOffset;
                 if(damageTakenMultiplier != 1) //crit damage, damage was multiplied
                 {
+                    timeManager.DoFreezeTime(.1f);
                     TextPopupsHandler.ShowDamage(damage, tempPos, true);
                 }
                 else
@@ -671,7 +672,7 @@ public class EnemyBossBandit : MonoBehaviour
             if (isAlive)
             {
                 var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-                showStunned.GetComponent<TextMeshPro>().text = "\n*Stun*"; //temp fix to offset not working (anchors)
+                showStunned.GetComponent<TextMeshPro>().text = "*Stun*"; //temp fix to offset not working (anchors)
             }
 
             yield return new WaitForSeconds(stunDuration + .5f); //+ time for recover animation

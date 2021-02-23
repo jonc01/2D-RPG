@@ -12,10 +12,11 @@ public class PlayerCombat : MonoBehaviour
     public Transform playerLocation;
     [SerializeField] Canvas PlayerHealthBarCanvas;
     [SerializeField] GameObject StatusStunned;
+    public TimeManager timeManager;
+    public AbilityUI abilityUI;
 
-    [Space]
-    //Text Popups
-    public GameObject TextPopupsPrefab;
+    [Space] //Text Popups
+    public TextPopupsHandler xpPopups;
     public TextPopupsHandler TextPopupsHandler;
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0f, 0);
 
@@ -487,6 +488,7 @@ public class PlayerCombat : MonoBehaviour
         AltAttacking = true;
 
         allowAltAttack = Time.time + altAttackCD;
+        abilityUI.StartCooldown(altAttackCD);
         yield return new WaitForSeconds(altAttackTime); // parry attack time
         movement.canMove = true;
         animator.SetBool("isAttacking", false);
@@ -669,7 +671,7 @@ public class PlayerCombat : MonoBehaviour
                 if(animator.GetBool("isRolling")) //damage dodged
                 {
                     damage = 0;
-                    TextPopupsHandler.ShowDodge(transform.position);
+                    xpPopups.ShowDodge(transform.position);
                 }
                 currentHealth -= (damage);
                 healthBar.SetHealth(currentHealth);
@@ -707,6 +709,8 @@ public class PlayerCombat : MonoBehaviour
     public void GiveXP(float xp)
     {
         experienceBar.AddXP(xp);
+        timeManager.DoFreezeTime(.1f); //short freeze on kill
+        xpPopups.ShowText(transform.position, "+" + xp + "xp");
     }
 
     public void HealPlayer(float healAmount)
@@ -715,18 +719,17 @@ public class PlayerCombat : MonoBehaviour
         {
             currentHealth += healAmount;
             healthBar.SetHealth(currentHealth);
-            //animator.SetTrigger("Hurt");
-            if (TextPopupsPrefab)
+            if (TextPopupsHandler)
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
                 /*Vector3 tempPos1 = PlayerHealthBar.position;
                 tempPos1 += new Vector3(0, -.5f, 0);*/
-                TextPopupsHandler.ShowHeal(healAmount, tempPos);
+                xpPopups.ShowHeal(healAmount, tempPos);
             }
             if(currentHealth > maxHealth)
             {
-                currentHealth = maxHealth; //can't overheal, can implement an overheal/shield later
+                currentHealth = maxHealth; //don't overheal
             }
 
             //hurt animation
@@ -761,7 +764,7 @@ public class PlayerCombat : MonoBehaviour
         if (isAlive && currentHealth > 0)
         {
             healthBar.SetHealth(currentHealth);
-            if (TextPopupsPrefab)
+            if (TextPopupsHandler)
             {
                 TextPopupsHandler.ShowHeal(spawnHpPercentage, transform.position); //respawn player with x percentage of maxHealth
             }

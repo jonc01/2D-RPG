@@ -10,6 +10,9 @@ public class ExperienceBar : MonoBehaviour
     public TextMeshProUGUI displayPlayerLevel;
     public HealthBar healthBar;
     public PlayerCombat playerCombat;
+    public TextPopupsHandler textPopupsHandler;
+    public TextPopupsHandler xpPopups;
+    public Transform player;
 
     //float[] totalLevelXP = {100, 200, 300}; 
 
@@ -28,15 +31,6 @@ public class ExperienceBar : MonoBehaviour
 
         if (displayPlayerLevel != null) //display level
             displayPlayerLevel.text = currentLevel.ToString();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown("i")) //TESTING
-        {
-            Debug.Log("give 11 XP");
-            AddXP(11);
-        }
     }
 
     public void AddXP(float xp)
@@ -62,11 +56,12 @@ public class ExperienceBar : MonoBehaviour
         currentPlayerLevel++;
         slider.value = overflowXP; //reset progress and add overflowXP if xp exceeded level up
         slider.maxValue = (currentPlayerLevel * 100) * 1.25f;
-        //slider.maxValue = totalLevelXP[currentPlayerLevel - 1]; //PLACEHOLDER
         if (displayPlayerLevel != null) //update level
             displayPlayerLevel.text = currentPlayerLevel.ToString();
 
         healthBar.SetMaxHealth(100 + ((currentPlayerLevel - 1) * 10f));
         playerCombat.HealPlayer(healthBar.maxHealth);
+
+        xpPopups.ShowText(player.position, "\nLEVEL UP");
     }
 }
