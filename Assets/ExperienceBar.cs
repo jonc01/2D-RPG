@@ -11,6 +11,7 @@ public class ExperienceBar : MonoBehaviour
     public HealthBar healthBar;
     public PlayerCombat playerCombat;
     public TextPopupsHandler textPopupsHandler;
+    public TextPopupsHandler xpPopups;
     public Transform player;
 
     //float[] totalLevelXP = {100, 200, 300}; 
@@ -61,6 +62,6 @@ public class ExperienceBar : MonoBehaviour
         healthBar.SetMaxHealth(100 + ((currentPlayerLevel - 1) * 10f));
         playerCombat.HealPlayer(healthBar.maxHealth);
 
-        textPopupsHandler.ShowText(player.position, "LEVEL UP");
+        xpPopups.ShowText(player.position, "\nLEVEL UP");
     }
 }
