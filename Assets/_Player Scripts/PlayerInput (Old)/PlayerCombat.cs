@@ -13,7 +13,12 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Canvas PlayerHealthBarCanvas;
     [SerializeField] GameObject StatusStunned;
     public TimeManager timeManager;
+    
+    [Space]
     public AbilityUI abilityUI;
+    public AbilityCycle ability1Cycle;
+    public AbilityCycle ability2Cycle;
+    bool canSwitch = false;
 
     [Space] //Text Popups
     public TextPopupsHandler xpPopups;
@@ -119,13 +124,13 @@ public class PlayerCombat : MonoBehaviour
         timeSinceLightAttack += Time.deltaTime;
         timeSinceHeavyAttack += Time.deltaTime;
 
-        Debug.Log("currentAttack: " + currentLightAttack);
-
         if (movement.isGrounded)
         {
             CheckLightAttack();
             CheckHeavyAttack();
         }
+
+        CheckAbilityDisplay();
 
         CheckAltAttack(); //Parry
 
@@ -159,7 +164,7 @@ public class PlayerCombat : MonoBehaviour
                 currentLightAttack = 1;
 
             // Reset Attack combo if time since last attack is too large
-            if (timeSinceLightAttack > 1.5f) //if using separate timeSince...Attack for Light only use 1.0f
+            if (timeSinceLightAttack > 2.0f) //if using separate timeSince...Attack for Light only use 1.0f
                 currentLightAttack = 1;
 
             // Call one of three attack animations "Attack1", "Attack2", "Attack3"
@@ -204,6 +209,24 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    void CheckAbilityDisplay()
+    {
+        if (currentLightAttack > 0 && currentLightAttack <= 3 && canSwitch == true)
+        {
+            ability1Cycle.ShowAbility(currentLightAttack - 1); //should cycle after attack anim ends? (.3f)
+            ability2Cycle.ShowAbility(currentLightAttack - 1); //bug: index breaks
+        }
+
+        if (timeSinceLightAttack > 2.0f) // 1.5f
+        {
+            ability1Cycle.ShowAbility(0);
+            ability2Cycle.ShowAbility(0);
+        }
+        if (timeSinceHeavyAttack > 2.0f) //
+        {
+        }
+    }
+
     void CheckAltAttack()
     {
         if (Time.time > allowAltAttack && movement.canMove)
@@ -234,23 +257,28 @@ public class PlayerCombat : MonoBehaviour
             case 1:
                 yield return new WaitForSeconds(0.1f);
                 Attack();
+                canSwitch = true;
                 yield return new WaitForSeconds(0.1f);
                 break;
             case 2:
                 yield return new WaitForSeconds(0.1f);
                 Attack();
+                canSwitch = true;
                 yield return new WaitForSeconds(0.1f);
                 break;
             case 3:
                 yield return new WaitForSeconds(0.2f);
                 Attack(1.5f); // damage multiplier
+                canSwitch = true;
                 yield return new WaitForSeconds(0.1f);
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
                 break;
         }
-        
+
+        canSwitch = false;
+
         //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
         canAttack = true;
@@ -273,22 +301,26 @@ public class PlayerCombat : MonoBehaviour
             case 1:
                 yield return new WaitForSeconds(0.4f);
                 AttackHeavy();
+                canSwitch = true;
                 yield return new WaitForSeconds(0.2f);
                 break;
             case 2:
                 yield return new WaitForSeconds(0.3f); //Attack functions determine damage and attack hitbox
                 AttackHeavy(2); //using hitbox 2
+                canSwitch = true;
                 yield return new WaitForSeconds(0.1f);
                 break;
             case 3:
                 yield return new WaitForSeconds(0.3f);
                 AttackHeavy(1, 1.5f); //default 1, 1.5x damage
                 yield return new WaitForSeconds(0.2f);
+                canSwitch = true;
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
                 break;
         }
+        canSwitch = false;
 
         //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;

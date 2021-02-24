@@ -32,6 +32,10 @@ public class CharacterController2D : MonoBehaviour
 	public SpriteRenderer playerSR;
 	public Transform attackPoint;
 
+	[Header("")]
+	[Space]
+	public AbilityCycle abilityMovementCycle;
+
 	[Header("Events")]
 	[Space]
 
@@ -66,10 +70,15 @@ public class CharacterController2D : MonoBehaviour
 			if (colliders[i].gameObject != gameObject)
 			{
 				m_Grounded = true;
+				abilityMovementCycle.ShowAbility(0); //movement ability has 
+				abilityMovementCycle.ShowAbility(1);
+
 				if (!wasGrounded)
 					OnLandEvent.Invoke();
 			}
 		}
+
+		DisplayGroundedAbility();
 	}
 
 	public void Move(float move, bool jump)
@@ -136,6 +145,18 @@ public class CharacterController2D : MonoBehaviour
 			FacingDirection *= -1;
 			transform.Rotate(0.0f, 180.0f, 0.0f);
 		}*/
+	}
+
+	private void DisplayGroundedAbility()
+    {
+		if(m_Grounded == true)
+        {
+			abilityMovementCycle.ShowAbilities(0, 1); //display first ability
+		}
+        else
+        {
+			abilityMovementCycle.ShowAbilities(0, 1, false); //display second ability, false to flip the default false
+		}
 	}
 
 	//RevivePlayer in PlayerCombat
