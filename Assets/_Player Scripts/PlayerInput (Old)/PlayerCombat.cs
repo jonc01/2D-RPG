@@ -13,9 +13,16 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Canvas PlayerHealthBarCanvas;
     [SerializeField] GameObject StatusStunned;
     public TimeManager timeManager;
-    public AbilityUI abilityUI;
 
-    [Space] //Text Popups
+    [Header("Ability UI")]
+    [Space]
+    public AbilityUI abilityUI;
+    public AbilityCycle ability1Cycle;
+    public AbilityCycle ability2Cycle;
+    bool canSwitch = false;
+
+    [Header("Text Popups")]
+    [Space]
     public TextPopupsHandler xpPopups;
     public TextPopupsHandler TextPopupsHandler;
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0f, 0);
@@ -119,13 +126,13 @@ public class PlayerCombat : MonoBehaviour
         timeSinceLightAttack += Time.deltaTime;
         timeSinceHeavyAttack += Time.deltaTime;
 
-        Debug.Log("currentAttack: " + currentLightAttack);
-
         if (movement.isGrounded)
         {
             CheckLightAttack();
             CheckHeavyAttack();
         }
+
+        UpdateAbilityDisplay();
 
         CheckAltAttack(); //Parry
 
@@ -159,7 +166,7 @@ public class PlayerCombat : MonoBehaviour
                 currentLightAttack = 1;
 
             // Reset Attack combo if time since last attack is too large
-            if (timeSinceLightAttack > 1.5f) //if using separate timeSince...Attack for Light only use 1.0f
+            if (timeSinceLightAttack > 2.0f) //if using separate timeSince...Attack for Light only use 1.0f
                 currentLightAttack = 1;
 
             // Call one of three attack animations "Attack1", "Attack2", "Attack3"
@@ -175,7 +182,7 @@ public class PlayerCombat : MonoBehaviour
 
     void CheckHeavyAttack()
     {
-        if(Input.GetButtonDown("Fire2") && timeSinceHeavyAttack > playerAttackSpeed && canAttack)
+        if(Input.GetButtonDown("Fire2") && timeSinceLightAttack > playerAttackSpeed && canAttack) //timeSinceHeavyAttack
         {
             //currentHeavyAttack++; //sharing attack counter
             currentLightAttack++;
@@ -183,7 +190,9 @@ public class PlayerCombat : MonoBehaviour
             if (currentLightAttack > 3)
                 currentLightAttack = 1;
 
-            if (timeSinceHeavyAttack > 2.0f) // How long to wait before reseting attack chain
+            //if (timeSinceHeavyAttack > 2.0f) // How long to wait before reseting attack chain
+
+            if (timeSinceLightAttack > 2.0f)
                 currentLightAttack = 1; //currentHeavyAttack
 
             // Call one of three attack animations "Attack1Heavy", "Attack2Heavy", "Attack3Heavy"
@@ -200,7 +209,32 @@ public class PlayerCombat : MonoBehaviour
                 }
             }*/
 
-            timeSinceHeavyAttack = 0.0f;
+            //timeSinceHeavyAttack = 0.0f;
+            timeSinceLightAttack = 0.0f;
+        }
+    }
+
+    void UpdateAbilityDisplay()
+    {
+        if (currentLightAttack > 0 && currentLightAttack <= 3 && canSwitch == true)
+        {
+            int displayAbility; //ability index to display, [0] -> 1, [1] -> 2, [2] -> 3
+            displayAbility = currentLightAttack; //set to currentAttack number to display next attack
+            if(currentLightAttack >= 3)
+            {
+                displayAbility = 0; //exceeded max attack number/index, display first ability
+            }
+            ability1Cycle.ShowAbility(displayAbility);
+            ability2Cycle.ShowAbility(displayAbility);
+        }
+
+        if (timeSinceLightAttack > 2.0f) // 1.5f
+        {
+            ability1Cycle.ShowAbility(0);
+            ability2Cycle.ShowAbility(0);
+        }
+        if (timeSinceHeavyAttack > 2.0f) // separate heavy attack reset
+        {
         }
     }
 
@@ -234,23 +268,28 @@ public class PlayerCombat : MonoBehaviour
             case 1:
                 yield return new WaitForSeconds(0.1f);
                 Attack();
+                canSwitch = true;
                 yield return new WaitForSeconds(0.1f);
                 break;
             case 2:
                 yield return new WaitForSeconds(0.1f);
                 Attack();
+                canSwitch = true;
                 yield return new WaitForSeconds(0.1f);
                 break;
             case 3:
                 yield return new WaitForSeconds(0.2f);
                 Attack(1.5f); // damage multiplier
+                canSwitch = true;
                 yield return new WaitForSeconds(0.1f);
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
                 break;
         }
-        
+
+        canSwitch = false;
+
         //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
         canAttack = true;
@@ -273,22 +312,26 @@ public class PlayerCombat : MonoBehaviour
             case 1:
                 yield return new WaitForSeconds(0.4f);
                 AttackHeavy();
+                canSwitch = true;
                 yield return new WaitForSeconds(0.2f);
                 break;
             case 2:
                 yield return new WaitForSeconds(0.3f); //Attack functions determine damage and attack hitbox
                 AttackHeavy(2); //using hitbox 2
+                canSwitch = true;
                 yield return new WaitForSeconds(0.1f);
                 break;
             case 3:
                 yield return new WaitForSeconds(0.3f);
                 AttackHeavy(1, 1.5f); //default 1, 1.5x damage
+                canSwitch = true;
                 yield return new WaitForSeconds(0.2f);
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
                 break;
         }
+        canSwitch = false;
 
         //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
@@ -709,7 +752,7 @@ public class PlayerCombat : MonoBehaviour
     public void GiveXP(float xp)
     {
         experienceBar.AddXP(xp);
-        timeManager.DoFreezeTime(.1f); //short freeze on kill
+        //timeManager.DoFreezeTime(.1f); //short freeze on kill
         xpPopups.ShowText(transform.position, "+" + xp + "xp");
     }
 
@@ -725,7 +768,7 @@ public class PlayerCombat : MonoBehaviour
                 tempPos += TPOffset;
                 /*Vector3 tempPos1 = PlayerHealthBar.position;
                 tempPos1 += new Vector3(0, -.5f, 0);*/
-                xpPopups.ShowHeal(healAmount, tempPos);
+                TextPopupsHandler.ShowHeal(healAmount, tempPos);
             }
             if(currentHealth > maxHealth)
             {

@@ -12,8 +12,8 @@ public class EnemyController : MonoBehaviour
 
     public Animator enAnimator;
     public bool enFacingRight = false;
-    public float moveSpeedDefault = 1;
-    public float moveSpeed;
+    public float moveSpeedDefault = 2;
+    public float moveSpeed = 2;
 
 
     //to prevent flipping with Enemy parent object

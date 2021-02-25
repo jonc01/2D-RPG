@@ -106,8 +106,8 @@ public class Enemy : MonoBehaviour
         enStunned = false;
         knockbackHit = false;
 
-        enAttackSpeed += Random.Range(0, .1f);
-        enController.moveSpeed += Random.Range(-.3f, .3f);
+        enAttackSpeed += Random.Range(-.4f, .4f);
+        enController.moveSpeed += Random.Range(-.4f, .4f);
     }
 
     void Update()
