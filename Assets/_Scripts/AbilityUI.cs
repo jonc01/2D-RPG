@@ -10,6 +10,9 @@ public class AbilityUI : MonoBehaviour
     [SerializeField] float abilityCooldown;
     [SerializeField] bool coolingDown = false;
 
+    //Timer
+    public Text timeText;
+
     void Update()
     {
         Cooldown();

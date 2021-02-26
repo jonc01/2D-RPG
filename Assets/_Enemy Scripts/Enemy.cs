@@ -259,7 +259,6 @@ public class Enemy : MonoBehaviour
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            //Debug.Log("Enemy Hit " + player.name);
             player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
         }
     }
