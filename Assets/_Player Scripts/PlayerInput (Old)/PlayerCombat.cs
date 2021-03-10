@@ -74,11 +74,14 @@ public class PlayerCombat : MonoBehaviour
     private float timeSinceHeavyAttack = 0.0f;
 
     //ability cooldowns
+    [Header("Alt Attack")]
+    public Collider2D shieldBashCollider;
     public float altAttackCD = 3f;
     bool AltAttacking;
     private float allowAltAttack = 0;
     public float altAttackTime = .3f;
     bool IsParrying;
+    bool IsShieldBashing;
 
     //weapon specific
     public float knockback = 5f;
@@ -117,7 +120,10 @@ public class PlayerCombat : MonoBehaviour
         canAttack = true;
         AltAttacking = false;
         IsParrying = false;
+        IsShieldBashing = false;
         playerStunned = false;
+
+        shieldBashCollider.enabled = true;
     }
 
     // Update is called once per frame
@@ -134,7 +140,9 @@ public class PlayerCombat : MonoBehaviour
 
         UpdateAbilityDisplay();
 
-        CheckAltAttack(); //Parry
+        //CheckAltAttack(); //Parry
+        ShieldBashInput();
+        CheckShieldBashCollision();
 
         //DodgeAttackCancel(); //not currently in-use, allows for either cancelling of attacks with a dodge input, or some alt Dodge attack
 
@@ -446,7 +454,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    IEnumerator StartAltAttack() //TODO: adjust hitbox closer to player
+    IEnumerator StartAltAttack()
     {
         if (movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
@@ -539,25 +547,85 @@ public class PlayerCombat : MonoBehaviour
     
     void ParryAttack()
     {
+        Debug.Log("CHECKING, should be high number ->"); //DELETE ME
         Vector3 parryAttackPoint = parryPoint.position;
-        Collider2D[] parriedEnemies;
+        Collider2D[] parriedEnemies = Physics2D.OverlapCircleAll(parryAttackPoint, .3f);
 
-        if (controller.m_FacingRight) // flip attackpoint direction with player
+        foreach (Collider2D enemy in parriedEnemies) // loop through enemies hit
         {
-            parryAttackPoint.x += (wepRange * 3) / 2;
-            parriedEnemies = Physics2D.OverlapBoxAll(parryAttackPoint, new Vector3(wepRange * 3, 1, 0), 180, enemyLayers);
+            if (enemy.GetComponent<Enemy>() != null)
+            {
+                enemy.GetComponent<Enemy>().GetStunned(1);
+
+                //movement.CancelDash();
+                animator.SetTrigger("Block");
+                //screenShake.startShake();
+            }
+
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+            {
+                enemy.GetComponent<EnemyBossBandit>().CheckParry();
+                //movement.CancelDash();
+                //animator.SetTrigger("Block");
+            }
+        }
+
+        //Call with if enemy is hit
+            //movement.CancelDash();
+            //animator.SetTrigger("Block");
+    }
+
+    void ShieldBashInput()
+    {
+        if (Time.time > allowAltAttack && movement.canMove)
+        {
+            if (Input.GetButtonDown("Fire3") && canAttack && !IsShieldBashing) //TODO: IsShieldBashing only need if coroutine?
+            {
+                ShieldBash();
+            }
+            IsShieldBashing = false;
+        }
+    }
+
+    void ShieldBash()
+    {
+        shieldBashCollider.enabled = true;
+        movement.Dash();
+        //animator.SetTrigger("Block");
+        allowAltAttack = Time.time + altAttackCD;
+        abilityUI.StartCooldown(altAttackCD);
+
+        //ParryAttack();
+    }
+
+    void CheckShieldBashCollision()
+    {
+        Debug.Log("collider enabled: " + shieldBashCollider.enabled);
+        if (movement.isDashing) //only checking for collision while dashing
+        {
+            //OnTriggerEnter2D();
+            shieldBashCollider.enabled = true; //enabling collision with Enemy layers
+            Debug.Log("checking for collision..."); //DELETE ME
+            ParryAttack();
         }
         else
         {
-            parryAttackPoint.x -= (wepRange * 3) / 2;
-            parriedEnemies = Physics2D.OverlapBoxAll(parryAttackPoint, new Vector3(wepRange * 3, 1, 0), 0, enemyLayers);
+            //shieldBashCollider.enabled = false;
         }
+    }
 
-        foreach (Collider2D enemy in parriedEnemies) // loop through enemies hit
-        { 
-            if (enemy.GetComponent<EnemyBossBandit>() != null)
-                enemy.GetComponent<EnemyBossBandit>().CheckParry();
-        }
+    public void OnSuccessfulBash()
+    {
+        StartCoroutine(ShieldBashEnd());
+    }
+
+    IEnumerator ShieldBashEnd()
+    {
+        movement.DisableMove();
+
+        yield return new WaitForSeconds(.3f);
+
+        movement.EnableMove();
     }
 
     void DodgeAttackCancel()
@@ -579,7 +647,7 @@ public class PlayerCombat : MonoBehaviour
         //if(IsHeavyAttackingCO != null)
     }
 
-    void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f, bool lunge = true) //defaults, set "lunge" to false for knockback
+    void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f, bool lunge = true) //defaults, set "lunge" to false for knockback (recoil)
     {
         //lungeThrust - velocity of lunge movement
         //lungeDuration - how long to maintain thrust velocity
@@ -652,7 +720,7 @@ public class PlayerCombat : MonoBehaviour
                 Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
-            StunPlayer(.8f); //stunDuration
+            StunPlayer(.8f); //stunDuration //.8f for stun lock on 3rd attack
         }
     }
 

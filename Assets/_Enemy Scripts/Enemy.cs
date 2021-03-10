@@ -381,7 +381,7 @@ public class Enemy : MonoBehaviour
         enIsHurt = false;
     }
 
-    public void GetStunned(float duration, bool fullStun = true) //two animations, full stun and light stun (stagger)
+    public void GetStunned(float duration = 1f, bool fullStun = true) //two animations, full stun and light stun (stagger)
     {
         if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
         {

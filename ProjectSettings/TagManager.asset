@@ -24,7 +24,7 @@ TagManager:
   - Ground
   - Patrol
   - CameraBounds
-  - 
+  - PlayerCollisionCheck
   - 
   - 
   - 
@@ -51,6 +51,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 1529022059
+    locked: 0
+  - name: PlayerCollisionCheck
+    uniqueID: 1161921551
     locked: 0
   - name: Ground
     uniqueID: 2418864409

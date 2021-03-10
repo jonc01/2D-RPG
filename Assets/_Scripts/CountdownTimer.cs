@@ -9,17 +9,10 @@ public class CountdownTimer : MonoBehaviour
     public int cdTime;
     public TextMeshProUGUI cdDisplay;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown("o"))
-        {
-            StartCountdown(5);
-        }
-    }
-
     public void StartCountdown(float cooldownTime)
     {
-        cdDisplay.gameObject.SetActive(true); //display timer text
+        cdDisplay.GetComponent<TextMeshProUGUI>().enabled = true;
+        //cdDisplay.gameObject.SetActive(true); //display timer text
         cdTime = (int)cooldownTime;
         StartCoroutine(CountdownTime());
     }
@@ -32,7 +25,7 @@ public class CountdownTimer : MonoBehaviour
             yield return new WaitForSeconds(1f);
             cdTime--;
         }
-
-        cdDisplay.gameObject.SetActive(false); //timer hits 0
+        cdDisplay.GetComponent<TextMeshProUGUI>().enabled = false;
+        //cdDisplay.gameObject.SetActive(false); //timer hits 0
     }
 }

@@ -74,6 +74,12 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    #region TakeDamage, GetKnockback, GetStunned
+        
+
+    #endregion
+
+    #region bools: Flip, Move, Parry
     public void EnDisableFlip()
     {
         enCanFlip = false;
@@ -105,4 +111,5 @@ public class EnemyController : MonoBehaviour
     {
         enCanParry = false;
     }
+    #endregion
 }
