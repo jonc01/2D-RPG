@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController2D controller;
     public Animator animator;
     public AbilityUI abilityUI;
-    public AbilityUI abilityUI2;
 
     public float defaultRunSpeed = 40f;
     public float runSpeed = 40f;
@@ -156,14 +155,13 @@ public class PlayerMovement : MonoBehaviour
         //StopAllCoroutines();
             //IsAttacking,
              
+        abilityUI.StartCooldown(dodgeCD);
         playerCombat.canAttack = false;
         m_rolling = true;
         animator.SetBool("isRolling", true);
         animator.SetTrigger("Roll");
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
         allowDodge = Time.time + dodgeCD;
-        abilityUI.StartCooldown(dodgeCD);
-        abilityUI2.StartCooldown(dodgeCD);
         yield return new WaitForSeconds(dodgeTime); //dodge duration
         canMove = true;
         animator.SetBool("isRolling", false);
@@ -196,10 +194,6 @@ public class PlayerMovement : MonoBehaviour
         allowDash = Time.time + dashCD;
 
         cancelDash = false;
-
-        //allowDash = Time.time + dodgeCD;
-        //abilityUI.StartCooldown(dodgeCD);
-        //abilityUI2.StartCooldown(dodgeCD);
 
         PlayerAfterImagePool.Instance.GetFromPool();
         lastImageXpos = transform.position.x;
@@ -235,12 +229,20 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    IEnumerator EndDash()
+    {
+        DisableMove();
+        yield return new WaitForSeconds(.2f);
+        EnableMove();
+    }
+
     public void CancelDash()
     {
         if (isDashing)
         {
             //cancelDash = true;
             dashTimeLeft = 0;
+            StartCoroutine(EndDash());
         }
     }
 

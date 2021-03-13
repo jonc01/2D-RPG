@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bounds
   - Enemy
+  - Boss
   layers:
   - Default
   - TransparentFX

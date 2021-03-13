@@ -75,7 +75,8 @@ public class PlayerCombat : MonoBehaviour
 
     //ability cooldowns
     [Header("Alt Attack")]
-    public Collider2D shieldBashCollider;
+    public CollisionCheck collisionCheck;
+    public Collider2D shieldBashCollider; //DELETE ME
     public float altAttackCD = 3f;
     bool AltAttacking;
     private float allowAltAttack = 0;
@@ -547,7 +548,6 @@ public class PlayerCombat : MonoBehaviour
     
     void ParryAttack()
     {
-        Debug.Log("CHECKING, should be high number ->"); //DELETE ME
         Vector3 parryAttackPoint = parryPoint.position;
         Collider2D[] parriedEnemies = Physics2D.OverlapCircleAll(parryAttackPoint, .3f);
 
@@ -582,6 +582,7 @@ public class PlayerCombat : MonoBehaviour
             if (Input.GetButtonDown("Fire3") && canAttack && !IsShieldBashing) //TODO: IsShieldBashing only need if coroutine?
             {
                 ShieldBash();
+
             }
             IsShieldBashing = false;
         }
@@ -600,18 +601,23 @@ public class PlayerCombat : MonoBehaviour
 
     void CheckShieldBashCollision()
     {
-        Debug.Log("collider enabled: " + shieldBashCollider.enabled);
         if (movement.isDashing) //only checking for collision while dashing
         {
             //OnTriggerEnter2D();
-            shieldBashCollider.enabled = true; //enabling collision with Enemy layers
-            Debug.Log("checking for collision..."); //DELETE ME
-            ParryAttack();
+            
+
+            if (collisionCheck.hitEnemy)
+            {
+                //movement.CancelDash();
+                ParryAttack();
+            }
+            
+            //ParryAttack();
         }
-        else
+        /*else
         {
             //shieldBashCollider.enabled = false;
-        }
+        }*/
     }
 
     public void OnSuccessfulBash()
