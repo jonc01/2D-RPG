@@ -5058,8 +5058,7 @@ MonoBehaviour:
   chestLayers:
     serializedVersion: 2
     m_Bits: 512
-  collisionCheck: {fileID: 0}
-  shieldBashCollider: {fileID: 0}
+  shieldBashCollider: {fileID: 1569115774}
   altAttackCD: 3
   altAttackTime: 0.3
   knockback: 50
@@ -7152,7 +7151,7 @@ CapsuleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1569115772}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -7174,6 +7173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {fileID: 982059464}
+  combat: {fileID: 982059469}
   hitEnemy: 0
 --- !u!1 &1599150646
 GameObject:

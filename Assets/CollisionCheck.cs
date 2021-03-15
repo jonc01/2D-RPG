@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class CollisionCheck : MonoBehaviour
 {
-    public PlayerMovement movement;
+    public PlayerMovement movement; //might not need
+
+    public PlayerCombat combat;
+
 
     //Use this bool to check when an enemy is within the trigger collider
     public bool hitEnemy;
@@ -34,16 +37,11 @@ public class CollisionCheck : MonoBehaviour
                         // if enemy is overlapping with solid hitbox, just Stun, don't dash.
         //SolidCollider: is enabled if enemy not overlapping to begin with, disable after end of dash, or on hit (consider hit to be end of dash)
                 //maybe only enable when also dashing and TriggerCollider1 is not set
-        //TriggerCollider2: disable SolidCollider on hit or end of dash ^^
+        //TriggerCollider2: disable SolidCollider on hit or end of dash ^^ 
 
 
-        /*if (collision.CompareTag("Enemy"))
-        {
-            hitEnemy = true;
-            movement.CancelDash();
-            Debug.Log("Player dash stopped.");
-        }
-
+        ApplyCollision(collision.gameObject);
+        /*
         if (collision.CompareTag("Boss"))
         {
             //CheckParry
@@ -55,6 +53,51 @@ public class CollisionCheck : MonoBehaviour
     {
         //hitEnemy = false;
     }
+
+    void ApplyCollision(GameObject collider)
+    {
+        combat.OnSuccessfulBash();
+
+        hitEnemy = true; //??
+        movement.CancelDash();
+        Debug.Log("Player dash stopped.");
+
+
+        if(collider.GetComponent<Enemy>() != null)
+        {
+            collider.GetComponent<Enemy>().TakeDamage(5);
+        }
+
+        /*foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
+        {
+            if (enemy.GetComponent<EnemyController>() != null)
+            {
+                //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
+            }
+
+            if (enemy.GetComponent<Enemy>() != null)
+            {
+                enemy.GetComponent<Enemy>().TakeDamage(5); //attackDamage + additional damage from parameter
+                //enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
+                //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
+            }
+
+            if (enemy.GetComponent<Enemy2>() != null)
+            {
+                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy2>().GetStunned(2);
+            }
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(5);
+        }*/
+
+
+        if (collider.CompareTag("Enemy"))
+        {
+
+        }
+    }
+
     
     /*void OnTriggerEnter2D(Collider2D collision)
     {

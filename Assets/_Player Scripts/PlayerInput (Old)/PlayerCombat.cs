@@ -75,8 +75,7 @@ public class PlayerCombat : MonoBehaviour
 
     //ability cooldowns
     [Header("Alt Attack")]
-    public CollisionCheck collisionCheck;
-    public Collider2D shieldBashCollider; //DELETE ME
+    public Collider2D shieldBashCollider; 
     public float altAttackCD = 3f;
     bool AltAttacking;
     private float allowAltAttack = 0;
@@ -124,7 +123,7 @@ public class PlayerCombat : MonoBehaviour
         IsShieldBashing = false;
         playerStunned = false;
 
-        shieldBashCollider.enabled = true;
+        shieldBashCollider.enabled = false;
     }
 
     // Update is called once per frame
@@ -143,7 +142,6 @@ public class PlayerCombat : MonoBehaviour
 
         //CheckAltAttack(); //Parry
         ShieldBashInput();
-        CheckShieldBashCollision();
 
         //DodgeAttackCancel(); //not currently in-use, allows for either cancelling of attacks with a dodge input, or some alt Dodge attack
 
@@ -599,35 +597,17 @@ public class PlayerCombat : MonoBehaviour
         //ParryAttack();
     }
 
-    void CheckShieldBashCollision()
-    {
-        if (movement.isDashing) //only checking for collision while dashing
-        {
-            //OnTriggerEnter2D();
-            
-
-            if (collisionCheck.hitEnemy)
-            {
-                //movement.CancelDash();
-                ParryAttack();
-            }
-            
-            //ParryAttack();
-        }
-        /*else
-        {
-            //shieldBashCollider.enabled = false;
-        }*/
-    }
-
     public void OnSuccessfulBash()
     {
+        shieldBashCollider.enabled = false;
         StartCoroutine(ShieldBashEnd());
     }
 
     IEnumerator ShieldBashEnd()
     {
         movement.DisableMove();
+        animator.SetTrigger("Block");
+        //shieldBashCollider.enabled = false;
 
         yield return new WaitForSeconds(.3f);
 
