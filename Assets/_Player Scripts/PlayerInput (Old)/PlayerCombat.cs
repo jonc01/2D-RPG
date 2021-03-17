@@ -567,20 +567,16 @@ public class PlayerCombat : MonoBehaviour
                 //animator.SetTrigger("Block");
             }
         }
-
-        //Call with if enemy is hit
-            //movement.CancelDash();
-            //animator.SetTrigger("Block");
     }
 
-    void ShieldBashInput()
+    #region ShieldBash
+    void ShieldBashInput() 
     {
         if (Time.time > allowAltAttack && movement.canMove)
         {
             if (Input.GetButtonDown("Fire3") && canAttack && !IsShieldBashing) //TODO: IsShieldBashing only need if coroutine?
             {
                 ShieldBash();
-
             }
             IsShieldBashing = false;
         }
@@ -589,17 +585,25 @@ public class PlayerCombat : MonoBehaviour
     void ShieldBash()
     {
         shieldBashCollider.enabled = true;
-        movement.Dash();
-        //animator.SetTrigger("Block");
-        allowAltAttack = Time.time + altAttackCD;
+        StartCoroutine(ShieldBashStart());
+        //movement.Dash(); //start Dash in movement script
+        //animator.SetTrigger("Block"); //start animation of ShieldBash
+        allowAltAttack = Time.time + altAttackCD; //get cooldown time for ShieldBash
         abilityUI.StartCooldown(altAttackCD);
-
-        //ParryAttack();
     }
 
-    public void OnSuccessfulBash()
+    IEnumerator ShieldBashStart()
     {
-        shieldBashCollider.enabled = false;
+        movement.DisableMove();
+        animator.SetTrigger("StartBlock");
+        yield return new WaitForSeconds(.2f);
+        movement.Dash(); //start Dash in movement script
+    }
+
+    public void OnSuccessfulBash() //called from CollisionCheck
+    {
+        //disable collider on hit
+        //shieldBashCollider.enabled = false;
         StartCoroutine(ShieldBashEnd());
     }
 
@@ -609,10 +613,12 @@ public class PlayerCombat : MonoBehaviour
         animator.SetTrigger("Block");
         //shieldBashCollider.enabled = false;
 
-        yield return new WaitForSeconds(.3f);
-
+        yield return new WaitForSeconds(.2f);
+        //Instantiate
         movement.EnableMove();
     }
+
+    #endregion
 
     void DodgeAttackCancel()
     {

@@ -221,9 +221,11 @@ public class PlayerMovement : MonoBehaviour
 
             if(dashTimeLeft <= 0)
             {
-                isDashing = false;
-                EnableMove();
-                controller.canFlip = true;
+                //isDashing = false;
+                //EnableMove();
+                //controller.canFlip = true;
+
+                CancelDash();
                 //ResetDash();
             }
         }
@@ -231,8 +233,10 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator EndDash()
     {
-        DisableMove();
-        yield return new WaitForSeconds(.2f);
+        DisableMove(); //root player in place, stops sliding if colliders intercept
+        isDashing = false;
+        yield return new WaitForSeconds(.5f);
+        controller.canFlip = true;
         EnableMove();
     }
 
@@ -240,7 +244,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing)
         {
+            animator.SetTrigger("Block");
             //cancelDash = true;
+            playerCombat.shieldBashCollider.enabled = false;
             dashTimeLeft = 0;
             StartCoroutine(EndDash());
         }
@@ -263,6 +269,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void DisableMove()
     {
+        rb.velocity = new Vector2(0, 0);
         canMove = false;
     }
 

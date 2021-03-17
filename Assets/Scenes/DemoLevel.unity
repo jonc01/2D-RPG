@@ -2146,6 +2146,14 @@ PrefabInstance:
       propertyPath: DeathParticlesHandler
       value: 
       objectReference: {fileID: 182975026}
+    - target: {fileID: 245630209313134786, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 96c56924af9b3c043a79be33143fe291, type: 2}
+    - target: {fileID: 245630209313134786, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: m_LinearDrag
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 245630209313134787, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_Color.b
       value: 0.84313726
@@ -2219,8 +2227,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134797, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: moveSpeed
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 245630209313134797, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: moveSpeedDefault
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 2962372095434930982, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4230,6 +4242,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3563829244747797738, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3563829245018745207, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: slowTrail
       value: 0
@@ -4241,6 +4257,14 @@ PrefabInstance:
     - target: {fileID: 7505291400752678348, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8396513379179993714, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8396513379179993715, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: m_Radius
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380527270058, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_RootOrder
@@ -4316,11 +4340,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380961675688, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 1.625
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380961675688, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 2.28125
+      value: 2.8125
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380961675689, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_Sprite
@@ -7175,6 +7199,37 @@ MonoBehaviour:
   movement: {fileID: 982059464}
   combat: {fileID: 982059469}
   hitEnemy: 0
+--- !u!114 &1579274258 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+  m_PrefabInstance: {fileID: 8396513379406551736}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d97ec32a79f9aa44cb67539e22e81532, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1598588851 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8396513379179993713, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+  m_PrefabInstance: {fileID: 8396513379406551736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1598588854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598588851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc8a28c421fd32e4c8e0004833b03071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stationaryEnemy: {fileID: 1579274258}
+  isHealing: 0
+  healAura: {fileID: 2935024730887338293, guid: c8c1ce8fda2fd0249a864e5289354511, type: 3}
 --- !u!1 &1599150646
 GameObject:
   m_ObjectHideFlags: 0
@@ -7338,6 +7393,14 @@ PrefabInstance:
       propertyPath: DeathParticlesHandler
       value: 
       objectReference: {fileID: 182975026}
+    - target: {fileID: 245630209313134786, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 96c56924af9b3c043a79be33143fe291, type: 2}
+    - target: {fileID: 245630209313134786, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: m_LinearDrag
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 245630209313134787, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_Color.a
       value: 1
@@ -7419,8 +7482,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134797, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: moveSpeed
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 245630209313134797, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: moveSpeedDefault
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 2962372095434930982, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_AnchorMax.x
@@ -8072,6 +8139,17 @@ Transform:
   m_Father: {fileID: 524071898}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1809785484 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+  m_PrefabInstance: {fileID: 848331418}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d97ec32a79f9aa44cb67539e22e81532, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1821877152
 GameObject:
   m_ObjectHideFlags: 0
@@ -9480,6 +9558,26 @@ MonoBehaviour:
   abilityCooldown: 0
   coolingDown: 0
   countdownTimer: {fileID: 650466060}
+--- !u!1 &2100476800 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8396513379179993713, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+  m_PrefabInstance: {fileID: 848331418}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2100476803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100476800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc8a28c421fd32e4c8e0004833b03071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stationaryEnemy: {fileID: 1809785484}
+  isHealing: 0
+  healAura: {fileID: 2935024730887338293, guid: c8c1ce8fda2fd0249a864e5289354511, type: 3}
 --- !u!1 &2122231731
 GameObject:
   m_ObjectHideFlags: 0
@@ -9628,6 +9726,14 @@ PrefabInstance:
       propertyPath: DeathParticlesHandler
       value: 
       objectReference: {fileID: 182975026}
+    - target: {fileID: 245630209313134786, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 96c56924af9b3c043a79be33143fe291, type: 2}
+    - target: {fileID: 245630209313134786, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: m_LinearDrag
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 245630209313134787, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_Color.b
       value: 0.84313726
@@ -9701,8 +9807,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134797, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: moveSpeed
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 245630209313134797, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: moveSpeedDefault
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 2962372095434930982, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_AnchorMax.x
@@ -10274,6 +10384,14 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5292194739621741518, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 96c56924af9b3c043a79be33143fe291, type: 2}
+    - target: {fileID: 5292194739621741518, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
+      propertyPath: m_LinearDrag
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
 --- !u!1001 &7044336218575463011
@@ -10412,6 +10530,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3563829244747797738, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3563829245018745207, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: slowTrail
       value: 0
@@ -10423,6 +10545,22 @@ PrefabInstance:
     - target: {fileID: 7505291400752678348, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8396513379179993714, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8396513379179993714, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8396513379179993715, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: m_Radius
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8396513379179993715, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380527270058, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_RootOrder

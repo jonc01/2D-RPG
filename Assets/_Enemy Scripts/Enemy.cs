@@ -63,6 +63,9 @@ public class Enemy : MonoBehaviour
     bool enCanChase;
     bool knockbackHit;
 
+    // Stop Coroutines
+    Coroutine IsAttackingCO;
+
     SpriteRenderer sr;
     [SerializeField]
     private Material mWhiteFlash; //material to flash to on hit
@@ -200,7 +203,7 @@ public class Enemy : MonoBehaviour
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
                 {
                     if(!isAttacking)
-                        StartCoroutine(IsAttacking());
+                        IsAttackingCO = StartCoroutine(IsAttacking());
                 }
             }
             else if (transform.position.x > player.position.x) //player is left
@@ -215,7 +218,7 @@ public class Enemy : MonoBehaviour
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
                 {
                     if(!isAttacking)
-                        StartCoroutine(IsAttacking());
+                        IsAttackingCO = StartCoroutine(IsAttacking());
                 }
             }
         }
@@ -296,7 +299,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (isAlive == true)
+        if (isAlive)
         {
             currentHealth -= damage;
             healthBar.SetHealth(currentHealth);
@@ -337,6 +340,21 @@ public class Enemy : MonoBehaviour
             if (currentHealth <= 0)
             {
                 Die();
+            }
+        }
+    }
+
+    public void TakeHeal(float healAmount)
+    {
+        if (isAlive)
+        {
+            currentHealth += healAmount;
+
+            if (TextPopupsHandler)
+            {
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowHeal(healAmount, tempPos);
             }
         }
     }
@@ -385,7 +403,12 @@ public class Enemy : MonoBehaviour
     {
         if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
         {
-            if(fullStun)
+            if (IsAttackingCO != null)
+            {
+                StopCoroutine(IsAttackingCO);
+            }
+
+            if (fullStun)
             {
                 float fullDuration = 1f;
                 fullDuration -= stunResist; //getting percentage of stun based on stunResist
@@ -447,8 +470,9 @@ public class Enemy : MonoBehaviour
 
             enAnimator.SetTrigger("enStunRecover");
             yield return new WaitForSeconds(.5f); //time for recover animation
+            isAttacking = false;
             enCanAttack = true;
-            enController.enCanMove = true;
+            enController.EnEnableMove();
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
             enStunned = false;
             allowStun = Time.time + allowStunCD;

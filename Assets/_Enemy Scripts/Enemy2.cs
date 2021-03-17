@@ -343,6 +343,21 @@ public class Enemy2 : MonoBehaviour
         }
     }
 
+    public void TakeHeal(float healAmount)
+    {
+        if (isAlive)
+        {
+            currentHealth += healAmount;
+
+            if (TextPopupsHandler)
+            {
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowHeal(healAmount, tempPos);
+            }
+        }
+    }
+
     void ResetMaterial()
     {
         sr.material = mDefault;
