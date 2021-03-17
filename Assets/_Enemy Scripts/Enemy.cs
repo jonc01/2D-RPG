@@ -63,6 +63,9 @@ public class Enemy : MonoBehaviour
     bool enCanChase;
     bool knockbackHit;
 
+    // Stop Coroutines
+    Coroutine IsAttackingCO;
+
     SpriteRenderer sr;
     [SerializeField]
     private Material mWhiteFlash; //material to flash to on hit
@@ -200,7 +203,7 @@ public class Enemy : MonoBehaviour
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
                 {
                     if(!isAttacking)
-                        StartCoroutine(IsAttacking());
+                        IsAttackingCO = StartCoroutine(IsAttacking());
                 }
             }
             else if (transform.position.x > player.position.x) //player is left
@@ -215,7 +218,7 @@ public class Enemy : MonoBehaviour
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
                 {
                     if(!isAttacking)
-                        StartCoroutine(IsAttacking());
+                        IsAttackingCO = StartCoroutine(IsAttacking());
                 }
             }
         }
@@ -259,7 +262,6 @@ public class Enemy : MonoBehaviour
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            //Debug.Log("Enemy Hit " + player.name);
             player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
         }
     }
@@ -297,7 +299,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (isAlive == true)
+        if (isAlive)
         {
             currentHealth -= damage;
             healthBar.SetHealth(currentHealth);
@@ -342,6 +344,21 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void TakeHeal(float healAmount)
+    {
+        if (isAlive)
+        {
+            currentHealth += healAmount;
+
+            if (TextPopupsHandler)
+            {
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
+                TextPopupsHandler.ShowHeal(healAmount, tempPos);
+            }
+        }
+    }
+
     void ResetMaterial()
     {
         sr.material = mDefault;
@@ -382,11 +399,16 @@ public class Enemy : MonoBehaviour
         enIsHurt = false;
     }
 
-    public void GetStunned(float duration, bool fullStun = true) //two animations, full stun and light stun (stagger)
+    public void GetStunned(float duration = 1f, bool fullStun = true) //two animations, full stun and light stun (stagger)
     {
         if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
         {
-            if(fullStun)
+            if (IsAttackingCO != null)
+            {
+                StopCoroutine(IsAttackingCO);
+            }
+
+            if (fullStun)
             {
                 float fullDuration = 1f;
                 fullDuration -= stunResist; //getting percentage of stun based on stunResist
@@ -448,8 +470,9 @@ public class Enemy : MonoBehaviour
 
             enAnimator.SetTrigger("enStunRecover");
             yield return new WaitForSeconds(.5f); //time for recover animation
+            isAttacking = false;
             enCanAttack = true;
-            enController.enCanMove = true;
+            enController.EnEnableMove();
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
             enStunned = false;
             allowStun = Time.time + allowStunCD;

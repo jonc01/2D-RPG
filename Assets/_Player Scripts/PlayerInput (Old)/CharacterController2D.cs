@@ -70,15 +70,14 @@ public class CharacterController2D : MonoBehaviour
 			if (colliders[i].gameObject != gameObject)
 			{
 				m_Grounded = true;
-				abilityMovementCycle.ShowAbility(0); //movement ability has 
-				abilityMovementCycle.ShowAbility(1);
+				//abilityMovementCycle.ShowAbility(0); //movement ability has 
 
 				if (!wasGrounded)
 					OnLandEvent.Invoke();
 			}
 		}
 
-		DisplayGroundedAbility();
+		//DisplayGroundedAbility();
 	}
 
 	public void Move(float move, bool jump)
@@ -149,14 +148,14 @@ public class CharacterController2D : MonoBehaviour
 
 	private void DisplayGroundedAbility()
     {
-		if(m_Grounded == true)
+		/*if(m_Grounded == true) //only using if displaying a separate movement ability when not grounded
         {
 			abilityMovementCycle.ShowAbilities(0, 1); //display first ability
 		}
         else
         {
 			abilityMovementCycle.ShowAbilities(0, 1, false); //display second ability, false to flip the default false
-		}
+		}*/
 	}
 
 	//RevivePlayer in PlayerCombat

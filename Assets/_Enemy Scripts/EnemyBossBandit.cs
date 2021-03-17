@@ -5,9 +5,10 @@ using TMPro;
 
 public class EnemyBossBandit : MonoBehaviour
 {
-    //Text Popups
+    [Header("Text Popups")]
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
+    public TextPopupsHandler FixedTextHandler;
     [SerializeField] Vector3 TPOffset = new Vector3 (0, -.5f, 0);
     public HitEffectsHandler HitEffectsHandler;
 
@@ -326,6 +327,8 @@ public class EnemyBossBandit : MonoBehaviour
 
 
             Debug.Log("atkSequence rand: " + atkSequence);
+            Vector3 tempPos = transform.position;
+            tempPos.y -= .5f; //TPOffset;
 
             switch (atkSequence)
             {
@@ -364,6 +367,8 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetBool("isAttacking", false);
                     break;
                 case 3: //Attack1 + Attack2 //Attack1 can be parried
+                    FixedTextHandler.ShowText(tempPos, "!");
+
                     enStunned = false;
                     isAttacking = true;
                     enAnimator.SetBool("isAttacking", true);
@@ -383,6 +388,9 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetBool("isAttacking", false);
                     break;
                 case 4: //Attack1+2 x 3 //can flip, can parry first attack //has knockback
+                    //canParry is set in animationEvent
+                    FixedTextHandler.ShowText(tempPos, "!");
+
                     enStunned = false;
                     isAttacking = true;
                     enAnimator.SetBool("isAttacking", true);
@@ -671,8 +679,10 @@ public class EnemyBossBandit : MonoBehaviour
 
             if (isAlive)
             {
-                var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-                showStunned.GetComponent<TextMeshPro>().text = "*Stun*"; //temp fix to offset not working (anchors)
+                //var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
+                //showStunned.GetComponent<TextMeshPro>().text = "*Stun*"; //temp fix to offset not working (anchors)
+
+                FixedTextHandler.ShowText(transform.position, "*Stun*");
             }
 
             yield return new WaitForSeconds(stunDuration + .5f); //+ time for recover animation

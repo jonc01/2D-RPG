@@ -20,9 +20,9 @@ public class AbilityCycle : MonoBehaviour
 
     public void ShowAbilities(int currentAbility1, int currentAbility2, bool enableAbility = true) //default to first image //default true
     {
-        abilities[currentAbility1].enabled = enableAbility; //display current ablity
+        abilities[currentAbility1].enabled = enableAbility; //display current ability
         abilities[currentAbility2].enabled = enableAbility;
-
+        
         for (int i = 0; i < abilities.Length; i++) //disable rest by default
         {
             if (i != currentAbility1 || i != currentAbility2)

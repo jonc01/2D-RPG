@@ -18,7 +18,6 @@ public class StationaryEnemy : MonoBehaviour
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;
-    public Transform enemyAllies;
     public LayerMask enemyLayers;
     public GameObject HitToRight;
     public GameObject HitToLeft;
@@ -86,7 +85,6 @@ public class StationaryEnemy : MonoBehaviour
                 rb.velocity = new Vector2(0, 0);
         }
     }
-
 
     void Attack() //for Stationary, can be buffing abilities, ex: totem
     {

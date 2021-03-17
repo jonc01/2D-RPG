@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController2D controller;
     public Animator animator;
     public AbilityUI abilityUI;
-    public AbilityUI abilityUI2;
 
     public float defaultRunSpeed = 40f;
     public float runSpeed = 40f;
@@ -31,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     private float lastImageXpos;
     private float lastDash = -100f;
 
+    private bool cancelDash = false;
 
     //private int m_currentAttack = 0;
     //private float m_timeSinceAttack = 0.0f;
@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         //Dodge Roll
         CheckDodge();
 
-        DashInput();
+        //DashInput(); //calling through PlayerCombat ShieldBash()
         CheckDash();
     }
 
@@ -155,14 +155,13 @@ public class PlayerMovement : MonoBehaviour
         //StopAllCoroutines();
             //IsAttacking,
              
+        abilityUI.StartCooldown(dodgeCD);
         playerCombat.canAttack = false;
         m_rolling = true;
         animator.SetBool("isRolling", true);
         animator.SetTrigger("Roll");
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
         allowDodge = Time.time + dodgeCD;
-        abilityUI.StartCooldown(dodgeCD);
-        abilityUI2.StartCooldown(dodgeCD);
         yield return new WaitForSeconds(dodgeTime); //dodge duration
         canMove = true;
         animator.SetBool("isRolling", false);
@@ -178,7 +177,7 @@ public class PlayerMovement : MonoBehaviour
     void DashInput()
     {
         //Dash (mid-air dodge) //allowDash
-        if (Time.time > allowDodge && canMove) //TODO: can just move this into Dodge ^^^^ just switching between both depending on "isGrounded"
+        if (Time.time > allowDash && canMove) //TODO: can just move this into Dodge ^^^^ just switching between both depending on "isGrounded"
         {
             if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && !isGrounded)
             {
@@ -187,15 +186,14 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void Dash()
+    public void Dash()
     {
         isDashing = true;
-        dashTimeLeft = dashTime;
-        lastDash = Time.time;
-        //allowDash = Time.time + dodgeCD;
-        allowDodge = Time.time + dodgeCD;
-        abilityUI.StartCooldown(dodgeCD);
-        abilityUI2.StartCooldown(dodgeCD);
+        dashTimeLeft = dashTime; //starts dash in CheckDash()
+        lastDash = Time.time; //
+        allowDash = Time.time + dashCD;
+
+        cancelDash = false;
 
         PlayerAfterImagePool.Instance.GetFromPool();
         lastImageXpos = transform.position.x;
@@ -205,27 +203,58 @@ public class PlayerMovement : MonoBehaviour
     {
         if(isDashing)
         {
+            //CancelDash can be called
+
             if (dashTimeLeft > 0)
             {
-                DisableMove();
+                DisableMove(); //no movement inputs
                 controller.canFlip = false;
                 rb.velocity = new Vector2(dashSpeed * m_facingDirection, rb.velocity.y);
                 dashTimeLeft -= Time.deltaTime;
 
                 if(Mathf.Abs(transform.position.x - lastImageXpos) > distanceBetweenImages)
                 {
-                    PlayerAfterImagePool.Instance.GetFromPool();
-                    lastImageXpos = transform.position.x;
+                    PlayerAfterImagePool.Instance.GetFromPool(); //display image
+                    lastImageXpos = transform.position.x; //track position of last image
                 }
             }
 
             if(dashTimeLeft <= 0)
             {
-                isDashing = false;
-                EnableMove();
-                controller.canFlip = true;
+                //isDashing = false;
+                //EnableMove();
+                //controller.canFlip = true;
+
+                CancelDash();
+                //ResetDash();
             }
         }
+    }
+
+    IEnumerator EndDash()
+    {
+        DisableMove(); //root player in place, stops sliding if colliders intercept
+        isDashing = false;
+        yield return new WaitForSeconds(.5f);
+        controller.canFlip = true;
+        EnableMove();
+    }
+
+    public void CancelDash()
+    {
+        if (isDashing)
+        {
+            animator.SetTrigger("Block");
+            //cancelDash = true;
+            playerCombat.shieldBashCollider.enabled = false;
+            dashTimeLeft = 0;
+            StartCoroutine(EndDash());
+        }
+    }
+
+    private void ResetDash()
+    {
+        //cancelDash = false;
     }
 
     public void CheckMove()
@@ -240,6 +269,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void DisableMove()
     {
+        rb.velocity = new Vector2(0, 0);
         canMove = false;
     }
 

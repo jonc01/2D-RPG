@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class AbilityUI : MonoBehaviour
 {
-    //PlayerCombat controls inputs and sends cooldown values here
+    //PlayerCombat controls inputs and sends cooldown values
     public Image abilityIcon;
     [SerializeField] float abilityCooldown;
     [SerializeField] bool coolingDown = false;
+
+    //Timer
+    public CountdownTimer countdownTimer;
 
     void Update()
     {
@@ -21,6 +25,8 @@ public class AbilityUI : MonoBehaviour
         abilityCooldown = abilityCD;
         abilityIcon.fillAmount = 0;
         coolingDown = true;
+        if(countdownTimer)
+            countdownTimer.StartCountdown(abilityCD);
     }
 
     void Cooldown()
