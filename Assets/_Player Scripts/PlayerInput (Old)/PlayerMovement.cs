@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float m_rollForce = 5.0f;
     public CharacterController2D controller;
     public Animator animator;
     public AbilityUI abilityUI;
@@ -17,10 +16,13 @@ public class PlayerMovement : MonoBehaviour
     public GameObject player;
 
     //dodge/dash cooldown
+    [Header ("DodgeRoll")]
+    [SerializeField] float m_rollForce = 4.0f; //default 5.0f
+    public float dodgeTime = .5f;
     public float dodgeCD = 2;
     private float allowDodge = 0;
-    public float dodgeTime = .5f;
 
+    public bool canDash;
     public float dashCD = 2;
     private float allowDash = 0; //delete me if combining dash with dodge CD
     public float dashTime = .1f;
@@ -54,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
         controller.canFlip = true;
         m_rolling = false;
         isDashing = false;
+        canDash = true;
     }
 
 
@@ -152,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator DodgeRoll()
     {
-        //StopAllCoroutines();
+        //StopAllCoroutines(); //cancel attacks with dodgeRoll
             //IsAttacking,
              
         abilityUI.StartCooldown(dodgeCD);
@@ -166,12 +169,14 @@ public class PlayerMovement : MonoBehaviour
         canMove = true;
         animator.SetBool("isRolling", false);
         playerCombat.canAttack = true;
-        m_rolling = false;
+        m_rolling = false; //DELETE: if we're still using AE_ResetRoll in animation event
     }
     
     void AE_ResetRoll() // called in animation event
     {
-        m_rolling = false;
+        m_rolling = false; 
+        //calling in animation event can cause issues if roll is cancelled with stun
+        //^ this is why animation is frozen after stunned, m_rolling is still true
     }
 
     void DashInput()
@@ -201,7 +206,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckDash()
     {
-        if(isDashing)
+        if(isDashing && canDash)
         {
             //CancelDash can be called
 
@@ -235,6 +240,7 @@ public class PlayerMovement : MonoBehaviour
     {
         DisableMove(); //root player in place, stops sliding if colliders intercept
         isDashing = false;
+        canDash = true;
         yield return new WaitForSeconds(.5f);
         controller.canFlip = true;
         EnableMove();
@@ -247,14 +253,20 @@ public class PlayerMovement : MonoBehaviour
             animator.SetTrigger("Block");
             //cancelDash = true;
             playerCombat.shieldBashCollider.enabled = false;
-            dashTimeLeft = 0;
+            dashTimeLeft = 0; //only needed when CancelDash is called elsewhere
+            isDashing = false;
             StartCoroutine(EndDash());
         }
     }
 
+    public void DisableDash()
+    {
+        canDash = false; //is re-enabled in EndDash()
+    }
+
     private void ResetDash()
     {
-        //cancelDash = false;
+        //cancelDash = false
     }
 
     public void CheckMove()

@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
 {
     //Text Popups
     public TextPopupsHandler TextPopupsHandler;
-    [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
+    [SerializeField] Vector3 TPOffset = new Vector3(0, .3f, 0);
     public HitEffectsHandler HitEffectsHandler;
     public DeathParticlesHandler DeathParticlesHandler;
 
@@ -462,8 +462,10 @@ public class Enemy : MonoBehaviour
             if (isAlive)
             {
                 Vector3 tempPos = transform.position;
-                tempPos += TPOffset;
-                TextPopupsHandler.ShowStun(tempPos);
+                //tempPos += TPOffset;
+                tempPos.y += 0f;
+                enController.noReScaleTextHandler.ShowText(tempPos, "Stun");
+                //TextPopupsHandler.ShowText(tempPos, "Stun");
             }
 
             yield return new WaitForSeconds(stunDuration);

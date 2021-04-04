@@ -76,12 +76,12 @@ public class PlayerCombat : MonoBehaviour
     //ability cooldowns
     [Header("Alt Attack")]
     public Collider2D shieldBashCollider; 
-    public float altAttackCD = 3f;
+    public float altAttackCD = 3f; //shieldBash cooldown
     bool AltAttacking;
-    private float allowAltAttack = 0;
+    private float allowAltAttack = 0; //shieldBash 
     public float altAttackTime = .3f;
     bool IsParrying;
-    bool IsShieldBashing;
+    public bool IsShieldBashing;
 
     //weapon specific
     public float knockback = 5f;
@@ -124,6 +124,7 @@ public class PlayerCombat : MonoBehaviour
         playerStunned = false;
 
         shieldBashCollider.enabled = false;
+        //shieldBashCollider.GetComponent<Collider2D>().isTrigger = true; //REPLACE
     }
 
     // Update is called once per frame
@@ -365,7 +366,7 @@ public class PlayerCombat : MonoBehaviour
             if (enemy.GetComponent<Enemy>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
             {
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
+                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight, 1f);
                 //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
             }
 
@@ -578,13 +579,14 @@ public class PlayerCombat : MonoBehaviour
             {
                 ShieldBash();
             }
-            IsShieldBashing = false;
+            //IsShieldBashing = false;
         }
     }
 
     void ShieldBash()
     {
-        shieldBashCollider.enabled = true;
+        shieldBashCollider.enabled = true; //
+        //shieldBashCollider.GetComponent<Collider2D>().isTrigger = true; //redundant //REPLACE
         StartCoroutine(ShieldBashStart());
         //movement.Dash(); //start Dash in movement script
         //animator.SetTrigger("Block"); //start animation of ShieldBash
@@ -594,6 +596,7 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator ShieldBashStart()
     {
+        IsShieldBashing = true;
         movement.DisableMove();
         animator.SetTrigger("StartBlock");
         yield return new WaitForSeconds(.2f);
@@ -609,9 +612,10 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator ShieldBashEnd()
     {
+        IsShieldBashing = false;
         movement.DisableMove();
         animator.SetTrigger("Block");
-        //shieldBashCollider.enabled = false;
+        shieldBashCollider.enabled = false; //REPLACE
 
         yield return new WaitForSeconds(.2f);
         //Instantiate
@@ -681,7 +685,7 @@ public class PlayerCombat : MonoBehaviour
 
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         Gizmos.DrawWireSphere(heavyAttackPoint.position, attackHeavyRange);
-        Gizmos.DrawWireSphere(parryPoint.position, .3f);
+        //Gizmos.DrawWireSphere(parryPoint.position, .3f);
 
         //player position and c center of wire cube
         // [    player c           ] //vs  player[          c           ]  //should probably just use a raycast
@@ -697,7 +701,7 @@ public class PlayerCombat : MonoBehaviour
         //lungeThrust - velocity of lunge movement
         //lungeDuration - how long to maintain thrust velocity
 
-        if (!animator.GetBool("isRolling"))
+        if (!animator.GetBool("isRolling") && isAlive)
         {
             Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
             if (pushToRight) //knockback to right
@@ -783,6 +787,8 @@ public class PlayerCombat : MonoBehaviour
                     Vector3 tempPos = transform.position;
                     tempPos += TPOffset;
                     TextPopupsHandler.ShowDamage(damage, tempPos);
+                    
+                    //if(animator.GetBool("isAttacking") == false)
                     
                     animator.SetTrigger("Hurt");
                     
