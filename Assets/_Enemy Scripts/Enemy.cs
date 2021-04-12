@@ -242,9 +242,6 @@ public class Enemy : MonoBehaviour
 
     IEnumerator StoppingChase(float duration)
     {
-        if (knockbackHit)
-            enAnimator.SetTrigger("Hurt");
-
         enCanChase = false;
         rb.velocity = new Vector2(0, 0);
         enController.EnDisableMove();
@@ -325,12 +322,16 @@ public class Enemy : MonoBehaviour
                 //Instantiate(hitParticlePrefab, particleOffset, Quaternion.identity);
                 HitEffectsHandler.ShowHitEffect(particleOffset);
 
-                enIsHurt = true;
-                enAnimator.SetTrigger("Hurt");
+                //enIsHurt = true;
+                //enAnimator.SetTrigger("Hurt");
+                if(isAttacking == false)
+                {
+                    enAnimator.SetTrigger("enLightStun");
+                }
 
                 //GetStunned(1f);
                 enCanAttack = true;
-                enAnimator.SetBool("isAttacking", false);
+                //enAnimator.SetBool("isAttacking", false);
                 //attackStopped = false;
 
                 sr.material = mWhiteFlash; //flashing enemy sprite
@@ -385,7 +386,6 @@ public class Enemy : MonoBehaviour
             Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
-        enAnimator.SetTrigger("Hurt");
         StopChase(1f);
     }
 

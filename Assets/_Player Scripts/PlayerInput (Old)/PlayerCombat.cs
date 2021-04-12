@@ -788,9 +788,8 @@ public class PlayerCombat : MonoBehaviour
                     tempPos += TPOffset;
                     TextPopupsHandler.ShowDamage(damage, tempPos);
                     
-                    //if(animator.GetBool("isAttacking") == false)
-                    
-                    animator.SetTrigger("Hurt");
+                    if(animator.GetBool("isAttacking") == false)
+                        animator.SetTrigger("Hurt");
                     
                     FlashMaterial();
                     //GetKnockback(true); //

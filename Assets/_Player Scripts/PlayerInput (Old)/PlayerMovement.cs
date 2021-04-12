@@ -229,7 +229,6 @@ public class PlayerMovement : MonoBehaviour
                 //isDashing = false;
                 //EnableMove();
                 //controller.canFlip = true;
-
                 CancelDash();
                 //ResetDash();
             }
@@ -250,13 +249,16 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing)
         {
+            Debug.Log("isDashing = true -> " + isDashing);
             animator.SetTrigger("Block");
             //cancelDash = true;
             playerCombat.shieldBashCollider.enabled = false;
             dashTimeLeft = 0; //only needed when CancelDash is called elsewhere
             isDashing = false;
+            Debug.Log("isDashing = false -> " + isDashing);
             StartCoroutine(EndDash());
         }
+        isDashing = false; //REPLACE if not needed
     }
 
     public void DisableDash()
