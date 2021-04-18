@@ -41,7 +41,6 @@ public class TriggerCheck : MonoBehaviour
         }
         //movement.CancelDash(); //need to prevent dashing completely if enemy is in collider
         //movement.DisableDash();
-        
     }
 
     void OnTriggerExit2D(Collider2D collision)

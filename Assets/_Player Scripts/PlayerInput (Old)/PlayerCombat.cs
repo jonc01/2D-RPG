@@ -622,6 +622,23 @@ public class PlayerCombat : MonoBehaviour
         movement.EnableMove();
     }
 
+    // Coroutine Alternative
+    //      re-used functions: OnSuccessfulBash(), ShieldBashEnd()
+    //      CollisionCheck calls OnSuccessfulBash()
+    IEnumerator ShieldBashStart1() //replace old with this code
+    {
+        IsShieldBashing = true;
+        movement.DisableMove();
+        animator.SetTrigger("StartBlock");
+        yield return new WaitForSeconds(0.2f); //charge up time
+        //movement.Dash() --delete
+            //add afterimages back in here
+        movement.rb.velocity = new Vector2(movement.dashSpeed * movement.m_facingDirection, movement.rb.velocity.y);
+        yield return new WaitForSeconds(.05f);
+
+    }
+    
+
     #endregion
 
     void DodgeAttackCancel()

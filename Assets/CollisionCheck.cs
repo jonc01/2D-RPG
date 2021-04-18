@@ -10,23 +10,9 @@ public class CollisionCheck : MonoBehaviour
     //Use this bool to check when an enemy is within the trigger collider
     public bool hitEnemy;
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Debug.Log("from Trigger ENTER");
-        //ApplyCollision(collision.gameObject); //REPLACE
-
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        Debug.Log("from Trigger EXIT");
-        //REPLACE if this doesn't get called by default
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("from Collider");
-        ApplyCollision(collision.gameObject);
+        //ApplyCollision(collision.gameObject);
     }
 
     private void OnCollisionExit2D(Collision2D collision)

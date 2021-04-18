@@ -141,6 +141,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    #region DodgeRoll
     void CheckDodge()
     {
         if (Time.time > allowDodge && canMove)
@@ -174,11 +175,19 @@ public class PlayerMovement : MonoBehaviour
     
     void AE_ResetRoll() // called in animation event
     {
-        m_rolling = false; 
+        m_rolling = false;
         //calling in animation event can cause issues if roll is cancelled with stun
         //^ this is why animation is frozen after stunned, m_rolling is still true
+        
+        /* call this if animation gets locked, if player is getting stunned and dodge can be interrupted
+         * ! currently, player is stun immune when dodge rolling
+        animator.SetBool("isRolling", false);
+        m_rolling = false;
+        */
     }
+#endregion
 
+    #region Dash
     void DashInput()
     {
         //Dash (mid-air dodge) //allowDash
@@ -270,6 +279,8 @@ public class PlayerMovement : MonoBehaviour
     {
         //cancelDash = false
     }
+
+    #endregion
 
     public void CheckMove()
     {
