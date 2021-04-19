@@ -587,9 +587,11 @@ public class PlayerCombat : MonoBehaviour
     {
         shieldBashCollider.enabled = true; //
         //shieldBashCollider.GetComponent<Collider2D>().isTrigger = true; //redundant //REPLACE
-        StartCoroutine(ShieldBashStart());
-        //movement.Dash(); //start Dash in movement script
-        //animator.SetTrigger("Block"); //start animation of ShieldBash
+
+        StartCoroutine(ShieldBashStart()); //TEMP
+        //StartCoroutine(ShieldBashStart1());
+
+
         allowAltAttack = Time.time + altAttackCD; //get cooldown time for ShieldBash
         abilityUI.StartCooldown(altAttackCD);
     }
@@ -631,11 +633,13 @@ public class PlayerCombat : MonoBehaviour
         movement.DisableMove();
         animator.SetTrigger("StartBlock");
         yield return new WaitForSeconds(0.2f); //charge up time
+        movement.isDashing = true;
         //movement.Dash() --delete
             //add afterimages back in here
         movement.rb.velocity = new Vector2(movement.dashSpeed * movement.m_facingDirection, movement.rb.velocity.y);
-        yield return new WaitForSeconds(.05f);
-
+        yield return new WaitForSeconds(2.2f);
+        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y);
+        movement.CancelDash();
     }
     
 
@@ -867,9 +871,17 @@ public class PlayerCombat : MonoBehaviour
 
     void Die()
     {
-        StopAllCoroutines();
+        StopAllCoroutines(); //
         movement.StopCO(); // Stop coroutines in movement script
-        
+
+        if (playerStunned && PlayerStunnedCO != null)
+        {
+            playerStunned = false;
+            animator.SetBool("Stunned", false);
+            ResetMaterial();
+            ShowStatusStun(false);
+        }
+
         //Die animation
         isAlive = false;
         animator.SetBool("noBlood", m_noBlood);
