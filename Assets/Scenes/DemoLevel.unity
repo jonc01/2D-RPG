@@ -4219,7 +4219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitEnemy: 0
-  collisionCheck: {fileID: 1569115775}
+  collisionCheck: {fileID: 0}
   solidCollider: {fileID: 1569115774}
   movement: {fileID: 982059464}
   combat: {fileID: 982059469}
@@ -4296,7 +4296,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380527270058, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.41
+      value: -7.44
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380527270058, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5100,6 +5100,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   shieldBashCollider: {fileID: 1569115774}
+  shieldBashTrigger: {fileID: 846256300}
   altAttackCD: 3
   altAttackTime: 0.3
   IsShieldBashing: 0
@@ -7163,7 +7164,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1569115773}
-  - component: {fileID: 1569115775}
   - component: {fileID: 1569115774}
   m_Layer: 17
   m_Name: ParryPoint (Collider)
@@ -7202,21 +7202,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0.43, y: -0.12}
   m_Size: {x: 0.31, y: 1}
   m_Direction: 0
---- !u!114 &1569115775
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1569115772}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19050730c4325aa4fad5049560af8ec3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movement: {fileID: 982059464}
-  combat: {fileID: 982059469}
-  hitEnemy: 0
 --- !u!114 &1579274258 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
@@ -7461,7 +7446,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.08
+      value: -11.95
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10388,7 +10373,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5292194739621741516, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.84
+      value: 4.07
       objectReference: {fileID: 0}
     - target: {fileID: 5292194739621741516, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
       propertyPath: m_LocalPosition.y

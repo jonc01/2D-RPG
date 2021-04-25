@@ -191,7 +191,7 @@ public class PlayerMovement : MonoBehaviour
     void DashInput()
     {
         //Dash (mid-air dodge) //allowDash
-        if (Time.time > allowDash && canMove) //TODO: can just move this into Dodge ^^^^ just switching between both depending on "isGrounded"
+        if (Time.time > allowDash && canMove) //not in-use, repurposed Dash for ShieldBash
         {
             if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && !isGrounded)
             {
@@ -217,8 +217,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if(isDashing && canDash)
         {
-            //CancelDash can be called
-
             if (dashTimeLeft > 0)
             {
                 DisableMove(); //no movement inputs
@@ -235,11 +233,7 @@ public class PlayerMovement : MonoBehaviour
 
             if(dashTimeLeft <= 0)
             {
-                //isDashing = false;
-                //EnableMove();
-                //controller.canFlip = true;
                 CancelDash();
-                //ResetDash();
             }
         }
     }
@@ -259,9 +253,7 @@ public class PlayerMovement : MonoBehaviour
         if (isDashing)
         {
             Debug.Log("isDashing = true -> " + isDashing);
-            animator.SetTrigger("Block");
-            //cancelDash = true;
-            playerCombat.shieldBashCollider.enabled = false;
+            playerCombat.OnSuccessfulBash();
             dashTimeLeft = 0; //only needed when CancelDash is called elsewhere
             isDashing = false;
             Debug.Log("isDashing = false -> " + isDashing);

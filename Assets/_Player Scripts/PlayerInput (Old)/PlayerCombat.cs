@@ -75,7 +75,8 @@ public class PlayerCombat : MonoBehaviour
 
     //ability cooldowns
     [Header("Alt Attack")]
-    public Collider2D shieldBashCollider; 
+    public Collider2D shieldBashCollider;
+    public Collider2D shieldBashTrigger;
     public float altAttackCD = 3f; //shieldBash cooldown
     bool AltAttacking;
     private float allowAltAttack = 0; //shieldBash 
@@ -124,7 +125,7 @@ public class PlayerCombat : MonoBehaviour
         playerStunned = false;
 
         shieldBashCollider.enabled = false;
-        //shieldBashCollider.GetComponent<Collider2D>().isTrigger = true; //REPLACE
+        shieldBashTrigger.enabled = false;
     }
 
     // Update is called once per frame
@@ -585,8 +586,8 @@ public class PlayerCombat : MonoBehaviour
 
     void ShieldBash()
     {
-        shieldBashCollider.enabled = true; //
-        //shieldBashCollider.GetComponent<Collider2D>().isTrigger = true; //redundant //REPLACE
+        //shieldBashCollider.enabled = true; //
+        //shieldBashTrigger.enabled = true;
 
         StartCoroutine(ShieldBashStart()); //TEMP
         //StartCoroutine(ShieldBashStart1());
@@ -602,10 +603,12 @@ public class PlayerCombat : MonoBehaviour
         movement.DisableMove();
         animator.SetTrigger("StartBlock");
         yield return new WaitForSeconds(.2f);
+        shieldBashCollider.enabled = true; //
+        shieldBashTrigger.enabled = true;
         movement.Dash(); //start Dash in movement script
     }
 
-    public void OnSuccessfulBash() //called from CollisionCheck
+    public void OnSuccessfulBash() //called from CollisionCheck //also called at end of Dash()
     {
         //disable collider on hit
         //shieldBashCollider.enabled = false;
@@ -618,6 +621,7 @@ public class PlayerCombat : MonoBehaviour
         movement.DisableMove();
         animator.SetTrigger("Block");
         shieldBashCollider.enabled = false; //REPLACE
+        shieldBashTrigger.enabled = false;
 
         yield return new WaitForSeconds(.2f);
         //Instantiate
