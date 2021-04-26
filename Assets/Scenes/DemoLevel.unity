@@ -4218,7 +4218,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a401991309620b642a4520461fcc4604, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitEnemy: 0
   collisionCheck: {fileID: 0}
   solidCollider: {fileID: 1569115774}
   movement: {fileID: 982059464}

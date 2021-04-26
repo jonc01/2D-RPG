@@ -580,19 +580,12 @@ public class PlayerCombat : MonoBehaviour
             {
                 ShieldBash();
             }
-            //IsShieldBashing = false;
         }
     }
 
     void ShieldBash()
     {
-        //shieldBashCollider.enabled = true; //
-        //shieldBashTrigger.enabled = true;
-
-        StartCoroutine(ShieldBashStart()); //TEMP
-        //StartCoroutine(ShieldBashStart1());
-
-
+        StartCoroutine(ShieldBashStart());
         allowAltAttack = Time.time + altAttackCD; //get cooldown time for ShieldBash
         abilityUI.StartCooldown(altAttackCD);
     }
@@ -611,7 +604,6 @@ public class PlayerCombat : MonoBehaviour
     public void OnSuccessfulBash() //called from CollisionCheck //also called at end of Dash()
     {
         //disable collider on hit
-        //shieldBashCollider.enabled = false;
         StartCoroutine(ShieldBashEnd());
     }
 
@@ -620,33 +612,13 @@ public class PlayerCombat : MonoBehaviour
         IsShieldBashing = false;
         movement.DisableMove();
         animator.SetTrigger("Block");
-        shieldBashCollider.enabled = false; //REPLACE
+        shieldBashCollider.enabled = false;
         shieldBashTrigger.enabled = false;
 
         yield return new WaitForSeconds(.2f);
         //Instantiate
         movement.EnableMove();
-    }
-
-    // Coroutine Alternative
-    //      re-used functions: OnSuccessfulBash(), ShieldBashEnd()
-    //      CollisionCheck calls OnSuccessfulBash()
-    IEnumerator ShieldBashStart1() //replace old with this code
-    {
-        IsShieldBashing = true;
-        movement.DisableMove();
-        animator.SetTrigger("StartBlock");
-        yield return new WaitForSeconds(0.2f); //charge up time
-        movement.isDashing = true;
-        //movement.Dash() --delete
-            //add afterimages back in here
-        movement.rb.velocity = new Vector2(movement.dashSpeed * movement.m_facingDirection, movement.rb.velocity.y);
-        yield return new WaitForSeconds(2.2f);
-        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y);
-        movement.CancelDash();
-    }
-    
-
+    }    
     #endregion
 
     void DodgeAttackCancel()

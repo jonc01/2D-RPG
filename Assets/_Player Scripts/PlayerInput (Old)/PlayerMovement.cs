@@ -188,17 +188,17 @@ public class PlayerMovement : MonoBehaviour
 #endregion
 
     #region Dash
-    void DashInput()
-    {
-        //Dash (mid-air dodge) //allowDash
-        if (Time.time > allowDash && canMove) //not in-use, repurposed Dash for ShieldBash
-        {
-            if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && !isGrounded)
-            {
-                Dash();
-            }
-        }
-    }
+    //void DashInput()
+    //{
+    //    //Dash (mid-air dodge) //allowDash
+    //    {
+    //    if (Time.time > allowDash && canMove) //not in-use, repurposed Dash for ShieldBash
+    //        if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && !isGrounded)
+    //        {
+    //            Dash();
+    //        }
+    //    }
+    //}
 
     public void Dash()
     {
