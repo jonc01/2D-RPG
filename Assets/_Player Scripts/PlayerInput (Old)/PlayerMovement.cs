@@ -74,11 +74,10 @@ public class PlayerMovement : MonoBehaviour
 
         JumpCheck();
 
+        //CheckDash();
         //Dodge Roll
         CheckDodge();
 
-        //DashInput(); //calling through PlayerCombat ShieldBash()
-        CheckDash();
     }
 
     public void FixedUpdate()
@@ -93,6 +92,9 @@ public class PlayerMovement : MonoBehaviour
             runSpeed = 0f;
 
         jump = false;
+
+        //DashInput(); //calling through PlayerCombat ShieldBash()
+        CheckDash();
     }
 
     void FacingDirection()
@@ -217,6 +219,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if(isDashing && canDash)
         {
+            float startPos, endPos;
+            startPos = transform.position.x; //DEBUG
             if (dashTimeLeft > 0)
             {
                 DisableMove(); //no movement inputs
@@ -233,6 +237,8 @@ public class PlayerMovement : MonoBehaviour
 
             if(dashTimeLeft <= 0)
             {
+                endPos = transform.position.x; //DEBUG
+                Debug.Log("dash distance: " + (startPos + endPos)); //DEBUG
                 CancelDash();
             }
         }
@@ -252,11 +258,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing)
         {
-            Debug.Log("isDashing = true -> " + isDashing);
             playerCombat.OnSuccessfulBash();
             dashTimeLeft = 0; //only needed when CancelDash is called elsewhere
             isDashing = false;
-            Debug.Log("isDashing = false -> " + isDashing);
             StartCoroutine(EndDash());
         }
         isDashing = false; //REPLACE if not needed

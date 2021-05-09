@@ -12,8 +12,8 @@ public class Enemy : MonoBehaviour
     public DeathParticlesHandler DeathParticlesHandler;
 
     public LayerMask playerLayers;
-    public Transform player;
-    public PlayerCombat playerCombat;
+    Transform player;
+    PlayerCombat playerCombat;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
     public GameObject hitParticlePrefab;
