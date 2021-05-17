@@ -350,6 +350,7 @@ public class Enemy : MonoBehaviour
         if (isAlive)
         {
             currentHealth += healAmount;
+            healthBar.SetHealth(currentHealth);
 
             if (TextPopupsHandler)
             {
