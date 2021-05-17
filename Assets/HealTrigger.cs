@@ -5,67 +5,38 @@ using UnityEngine;
 public class HealTrigger : MonoBehaviour
 {
     public StationaryEnemy stationaryEnemy;
-    [SerializeField] bool isHealing;
+    [SerializeField] bool isHealing; //keeps track of when enemy is healing, stops healCO on radius exit
+    [SerializeField] bool toggleHeal; //if true heal enemies in radius
     public GameObject healAura;
     Coroutine HealingCO;
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Triggered");
         if(collision.GetComponent<Enemy>() != null)
         {
-            isHealing = true;
+            toggleHeal = true;
             HealingCO = StartCoroutine(HealEnemy(collision.gameObject));
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("Exit");
         if (isHealing)
         {
             StopCoroutine(HealingCO);
+            toggleHeal = false;
             isHealing = false;
         }
     }
 
     IEnumerator HealEnemy(GameObject enemy)
     {
-        enemy.GetComponent<Enemy>().TakeHeal(5);
-        Instantiate(healAura, transform.position, Quaternion.identity, transform);
-        yield return new WaitForSeconds(1f);
-    }
-
-    /*
-    void ToggleHeal(GameObject collider, bool isHealing)
-    {
-        if (isHealing)
-        {
-            if (collider.GetComponent<Enemy>() != null)
-            {
-                //collider.GetComponent<Enemy>().TakeHeal(5);
-                HealingCO = StartCoroutine(Healing(collider, 5));
-                //isHealing = true;
-            }
-
-            if(collider.GetComponent<Enemy2>() != null)
-            {
-                collider.GetComponent<Enemy2>().TakeHeal(5);
-            }
-        }
-        else
-        {
-            StopCoroutine(HealingCO);
+        while (toggleHeal) {
+            isHealing = true;
+            enemy.GetComponent<Enemy>().TakeHeal(10);
+            Instantiate(healAura, transform.position, Quaternion.identity, transform);
+            yield return new WaitForSeconds(1f);
         }
     }
-
-    IEnumerator Healing(GameObject friend, float healAmount)
-    {
-
-        friend.GetComponent<Enemy>().TakeHeal(5);
-        Instantiate(healAura, transform.position, Quaternion.identity, transform);
-        yield return new WaitForSeconds(1f);
-        
-    }*/
 }

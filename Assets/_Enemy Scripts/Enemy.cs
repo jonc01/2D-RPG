@@ -7,13 +7,13 @@ public class Enemy : MonoBehaviour
 {
     //Text Popups
     public TextPopupsHandler TextPopupsHandler;
-    [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
+    [SerializeField] Vector3 TPOffset = new Vector3(0, .3f, 0);
     public HitEffectsHandler HitEffectsHandler;
     public DeathParticlesHandler DeathParticlesHandler;
 
     public LayerMask playerLayers;
-    public Transform player;
-    public PlayerCombat playerCombat;
+    Transform player;
+    PlayerCombat playerCombat;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
     public GameObject hitParticlePrefab;
@@ -109,8 +109,8 @@ public class Enemy : MonoBehaviour
         enStunned = false;
         knockbackHit = false;
 
-        enAttackSpeed += Random.Range(-.4f, .4f);
-        enController.moveSpeed += Random.Range(-.4f, .4f);
+        enAttackSpeed += Random.Range(-.1f, .1f);
+        enController.moveSpeed += Random.Range(-.1f, .1f);
     }
 
     void Update()
@@ -242,9 +242,6 @@ public class Enemy : MonoBehaviour
 
     IEnumerator StoppingChase(float duration)
     {
-        if (knockbackHit)
-            enAnimator.SetTrigger("Hurt");
-
         enCanChase = false;
         rb.velocity = new Vector2(0, 0);
         enController.EnDisableMove();
@@ -325,12 +322,16 @@ public class Enemy : MonoBehaviour
                 //Instantiate(hitParticlePrefab, particleOffset, Quaternion.identity);
                 HitEffectsHandler.ShowHitEffect(particleOffset);
 
-                enIsHurt = true;
-                enAnimator.SetTrigger("Hurt");
+                //enIsHurt = true;
+                //enAnimator.SetTrigger("Hurt");
+                if(isAttacking == false)
+                {
+                    enAnimator.SetTrigger("enLightStun");
+                }
 
                 //GetStunned(1f);
                 enCanAttack = true;
-                enAnimator.SetBool("isAttacking", false);
+                //enAnimator.SetBool("isAttacking", false);
                 //attackStopped = false;
 
                 sr.material = mWhiteFlash; //flashing enemy sprite
@@ -349,6 +350,7 @@ public class Enemy : MonoBehaviour
         if (isAlive)
         {
             currentHealth += healAmount;
+            healthBar.SetHealth(currentHealth);
 
             if (TextPopupsHandler)
             {
@@ -385,7 +387,6 @@ public class Enemy : MonoBehaviour
             Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
-        enAnimator.SetTrigger("Hurt");
         StopChase(1f);
     }
 
@@ -462,8 +463,10 @@ public class Enemy : MonoBehaviour
             if (isAlive)
             {
                 Vector3 tempPos = transform.position;
-                tempPos += TPOffset;
-                TextPopupsHandler.ShowStun(tempPos);
+                //tempPos += TPOffset;
+                tempPos.y += 0f;
+                enController.noReScaleTextHandler.ShowText(tempPos, "Stun");
+                //TextPopupsHandler.ShowText(tempPos, "Stun");
             }
 
             yield return new WaitForSeconds(stunDuration);

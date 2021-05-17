@@ -5,14 +5,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
 {
+    [Header("Object/Script References")]
     public Animator animator;
     [SerializeField] bool m_noBlood = false;
+    [SerializeField] bool enableScreenshake = true;
     public PlayerMovement movement;
     public CharacterController2D controller;
     public Transform playerLocation;
     [SerializeField] Canvas PlayerHealthBarCanvas;
     [SerializeField] GameObject StatusStunned;
     public TimeManager timeManager;
+    public ScreenShakeListener screenShake;
 
     [Header("Ability UI")]
     [Space]
@@ -75,13 +78,14 @@ public class PlayerCombat : MonoBehaviour
 
     //ability cooldowns
     [Header("Alt Attack")]
-    public Collider2D shieldBashCollider; 
-    public float altAttackCD = 3f;
+    public Collider2D shieldBashCollider;
+    public Collider2D shieldBashTrigger;
+    public float altAttackCD = 3f; //shieldBash cooldown
     bool AltAttacking;
-    private float allowAltAttack = 0;
+    private float allowAltAttack = 0; //shieldBash 
     public float altAttackTime = .3f;
     bool IsParrying;
-    bool IsShieldBashing;
+    public bool IsShieldBashing;
 
     //weapon specific
     public float knockback = 5f;
@@ -124,6 +128,9 @@ public class PlayerCombat : MonoBehaviour
         playerStunned = false;
 
         shieldBashCollider.enabled = false;
+        shieldBashTrigger.enabled = false;
+
+        //enableScreenshake //get settings from save file
     }
 
     // Update is called once per frame
@@ -161,7 +168,31 @@ public class PlayerCombat : MonoBehaviour
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
     }
+    void UpdateAbilityDisplay()
+    {
+        if (currentLightAttack > 0 && currentLightAttack <= 3 && canSwitch == true)
+        {
+            int displayAbility; //ability index to display, [0] -> 1, [1] -> 2, [2] -> 3
+            displayAbility = currentLightAttack; //set to currentAttack number to display next attack
+            if(currentLightAttack >= 3)
+            {
+                displayAbility = 0; //exceeded max attack number/index, display first ability
+            }
+            ability1Cycle.ShowAbility(displayAbility);
+            ability2Cycle.ShowAbility(displayAbility);
+        }
 
+        if (timeSinceLightAttack > 2.0f) // 1.5f
+        {
+            ability1Cycle.ShowAbility(0);
+            ability2Cycle.ShowAbility(0);
+        }
+        if (timeSinceHeavyAttack > 2.0f) // if separating heavy attack reset
+        {
+        }
+    }
+
+    #region Light Attack
     void CheckLightAttack()
     {
         if (Input.GetButtonDown("Fire1") && timeSinceLightAttack > playerAttackSpeed && canAttack) //0.25f attack speed
@@ -184,80 +215,6 @@ public class PlayerCombat : MonoBehaviour
 
             // Reset timer
             timeSinceLightAttack = 0.0f;
-        }
-    }
-
-    void CheckHeavyAttack()
-    {
-        if(Input.GetButtonDown("Fire2") && timeSinceLightAttack > playerAttackSpeed && canAttack) //timeSinceHeavyAttack
-        {
-            //currentHeavyAttack++; //sharing attack counter
-            currentLightAttack++;
-
-            if (currentLightAttack > 3)
-                currentLightAttack = 1;
-
-            //if (timeSinceHeavyAttack > 2.0f) // How long to wait before reseting attack chain
-
-            if (timeSinceLightAttack > 2.0f)
-                currentLightAttack = 1; //currentHeavyAttack
-
-            // Call one of three attack animations "Attack1Heavy", "Attack2Heavy", "Attack3Heavy"
-            animator.SetTrigger("Attack" + currentLightAttack + "Heavy"); //currentHeavyAttack
-
-            IsHeavyAttackingCO = StartCoroutine(IsAttackingHeavy(currentLightAttack)); //currentHeavyAttack
-
-            /*if (currentLightAttack == 2) //if we use combos with mixed Light and Heavy attacks
-            {
-                Debug.Log("attempt combo");
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    Debug.Log("combo works");
-                }
-            }*/
-
-            //timeSinceHeavyAttack = 0.0f;
-            timeSinceLightAttack = 0.0f;
-        }
-    }
-
-    void UpdateAbilityDisplay()
-    {
-        if (currentLightAttack > 0 && currentLightAttack <= 3 && canSwitch == true)
-        {
-            int displayAbility; //ability index to display, [0] -> 1, [1] -> 2, [2] -> 3
-            displayAbility = currentLightAttack; //set to currentAttack number to display next attack
-            if(currentLightAttack >= 3)
-            {
-                displayAbility = 0; //exceeded max attack number/index, display first ability
-            }
-            ability1Cycle.ShowAbility(displayAbility);
-            ability2Cycle.ShowAbility(displayAbility);
-        }
-
-        if (timeSinceLightAttack > 2.0f) // 1.5f
-        {
-            ability1Cycle.ShowAbility(0);
-            ability2Cycle.ShowAbility(0);
-        }
-        if (timeSinceHeavyAttack > 2.0f) // separate heavy attack reset
-        {
-        }
-    }
-
-    void CheckAltAttack()
-    {
-        if (Time.time > allowAltAttack && movement.canMove)
-        {
-            if (Input.GetButtonDown("Fire3") && canAttack && !IsParrying /*!AltAttacking*/)
-            {
-                //currentBlockDuration = Time.timeSinceLevelLoad;
-                animator.SetTrigger("Block");
-                StartCoroutine(Parry());
-                movement.canMove = false;
-            }
-            //AltAttacking = false;
-            IsParrying = false;
         }
     }
 
@@ -305,6 +262,78 @@ public class PlayerCombat : MonoBehaviour
         //movement.runSpeed = movement.defaultRunSpeed;
     }
 
+    void Attack(float damageMultiplier = 1.0f) //applying damage, ...
+    {
+        //Attack range, detect enemies in range
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+
+        //damage enemies
+        foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
+        {
+            if(enemy.GetComponent<EnemyController>() != null) //after migrating below functions into EnemyController
+            {
+                //screenShake.Shake();
+                /*enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
+                enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
+                enemy.GetComponent<EnemyController>().GetStunned(.3f);*/
+            }
+
+            if (enemy.GetComponent<Enemy>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
+            {
+                enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight, 1f);
+                //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
+            }
+
+            if (enemy.GetComponent<StationaryEnemy>() != null)
+                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight * damageMultiplier);
+
+            if (enemy.GetComponent<Enemy2>() != null)
+            {
+                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
+            }
+
+            if (enemy.GetComponent<EnemyBossBandit>() != null)
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight * damageMultiplier);
+        }
+    }
+    #endregion
+
+    #region Heavy Attack
+    void CheckHeavyAttack()
+    {
+        if(Input.GetButtonDown("Fire2") && timeSinceLightAttack > playerAttackSpeed && canAttack) //timeSinceHeavyAttack
+        {
+            //currentHeavyAttack++; //sharing attack counter
+            currentLightAttack++;
+
+            if (currentLightAttack > 3)
+                currentLightAttack = 1;
+
+            //if (timeSinceHeavyAttack > 2.0f) // How long to wait before reseting attack chain
+
+            if (timeSinceLightAttack > 2.0f)
+                currentLightAttack = 1; //currentHeavyAttack
+
+            // Call one of three attack animations "Attack1Heavy", "Attack2Heavy", "Attack3Heavy"
+            animator.SetTrigger("Attack" + currentLightAttack + "Heavy"); //currentHeavyAttack
+
+            IsHeavyAttackingCO = StartCoroutine(IsAttackingHeavy(currentLightAttack)); //currentHeavyAttack
+
+            /*if (currentLightAttack == 2) //if we use combos with mixed Light and Heavy attacks
+            {
+                Debug.Log("attempt combo");
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    Debug.Log("combo works");
+                }
+            }*/
+
+            //timeSinceHeavyAttack = 0.0f;
+            timeSinceLightAttack = 0.0f;
+        }
+    }
+
     IEnumerator IsAttackingHeavy(int attackNum) // Heavy Attack Coroutine
     {
         if (movement.isGrounded) //should let player attack mid air without stopping movement
@@ -347,41 +376,6 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBool("isAttacking", false);
     }
 
-    void Attack(float damageMultiplier = 1.0f)
-    {
-        //Attack range, detect enemies in range
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-
-        //damage enemies
-        foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
-        {
-            /*if(enemy.GetComponent<EnemyController>() != null) //after migrating below functions into EnemyController
-            {
-                enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
-                enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
-                enemy.GetComponent<EnemyController>().GetStunned(.3f);
-            }*/
-
-            if (enemy.GetComponent<Enemy>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
-            {
-                enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
-                //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
-            }
-
-            if (enemy.GetComponent<StationaryEnemy>() != null)
-                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight * damageMultiplier);
-
-            if (enemy.GetComponent<Enemy2>() != null)
-            {
-                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
-            }
-
-            if (enemy.GetComponent<EnemyBossBandit>() != null)
-                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight * damageMultiplier);
-        }
-    }
-
     void AttackHeavy(int attackPointVar = 1, float damageMultiplier = 1.0f)
     {
         //Collider2D[] hitEnemiesWide = Physics2D.OverlapAreaAll(heavyAttackPointWide.position, (heavyAttackPointWide.position.y+attackHeavyRange), enemyLayers);
@@ -394,8 +388,12 @@ public class PlayerCombat : MonoBehaviour
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(heavyAttackPoint.position, attackHeavyRange, enemyLayers);
                 foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
                 {
-                    if(enemy.GetComponent<EnemyController>() != null)
+                    if (enemy.GetComponent<EnemyController>() != null)
                     {
+                        /*if(enableScreenshake)
+                            screenShake.Shake();*/
+
+                        timeManager.DoFreezeTime(.2f);
                         //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
                     }
 
@@ -425,6 +423,10 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (enemy.GetComponent<EnemyController>() != null)
                     {
+                        /*if(enableScreenshake)
+                            screenShake.Shake();*/
+
+                        timeManager.DoFreezeTime(.2f);
                         //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
                     }
 
@@ -452,6 +454,7 @@ public class PlayerCombat : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
     IEnumerator StartAltAttack()
     {
@@ -544,7 +547,7 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBool("isAttacking", false);
     }
     
-    void ParryAttack()
+    void ParryAttack() //not currently in-use
     {
         Vector3 parryAttackPoint = parryPoint.position;
         Collider2D[] parriedEnemies = Physics2D.OverlapCircleAll(parryAttackPoint, .3f);
@@ -553,6 +556,9 @@ public class PlayerCombat : MonoBehaviour
         {
             if (enemy.GetComponent<Enemy>() != null)
             {
+                if (enableScreenshake)
+                    screenShake.Shake();
+
                 enemy.GetComponent<Enemy>().GetStunned(1);
 
                 //movement.CancelDash();
@@ -578,46 +584,48 @@ public class PlayerCombat : MonoBehaviour
             {
                 ShieldBash();
             }
-            IsShieldBashing = false;
         }
     }
 
     void ShieldBash()
     {
-        shieldBashCollider.enabled = true;
         StartCoroutine(ShieldBashStart());
-        //movement.Dash(); //start Dash in movement script
-        //animator.SetTrigger("Block"); //start animation of ShieldBash
         allowAltAttack = Time.time + altAttackCD; //get cooldown time for ShieldBash
         abilityUI.StartCooldown(altAttackCD);
     }
 
     IEnumerator ShieldBashStart()
     {
+        IsShieldBashing = true;
         movement.DisableMove();
         animator.SetTrigger("StartBlock");
         yield return new WaitForSeconds(.2f);
+        shieldBashCollider.enabled = true; //
+        shieldBashTrigger.enabled = true;
         movement.Dash(); //start Dash in movement script
     }
 
-    public void OnSuccessfulBash() //called from CollisionCheck
+    public void OnSuccessfulBash() //called from CollisionCheck //also called at end of Dash()
     {
         //disable collider on hit
-        //shieldBashCollider.enabled = false;
+        if (enableScreenshake)
+            screenShake.Shake();
+
         StartCoroutine(ShieldBashEnd());
     }
 
     IEnumerator ShieldBashEnd()
     {
+        IsShieldBashing = false;
         movement.DisableMove();
         animator.SetTrigger("Block");
-        //shieldBashCollider.enabled = false;
+        shieldBashCollider.enabled = false;
+        shieldBashTrigger.enabled = false;
 
         yield return new WaitForSeconds(.2f);
         //Instantiate
         movement.EnableMove();
-    }
-
+    }    
     #endregion
 
     void DodgeAttackCancel()
@@ -681,7 +689,7 @@ public class PlayerCombat : MonoBehaviour
 
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         Gizmos.DrawWireSphere(heavyAttackPoint.position, attackHeavyRange);
-        Gizmos.DrawWireSphere(parryPoint.position, .3f);
+        //Gizmos.DrawWireSphere(parryPoint.position, .3f);
 
         //player position and c center of wire cube
         // [    player c           ] //vs  player[          c           ]  //should probably just use a raycast
@@ -697,7 +705,7 @@ public class PlayerCombat : MonoBehaviour
         //lungeThrust - velocity of lunge movement
         //lungeDuration - how long to maintain thrust velocity
 
-        if (!animator.GetBool("isRolling"))
+        if (!animator.GetBool("isRolling") && isAlive)
         {
             Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
             if (pushToRight) //knockback to right
@@ -784,7 +792,8 @@ public class PlayerCombat : MonoBehaviour
                     tempPos += TPOffset;
                     TextPopupsHandler.ShowDamage(damage, tempPos);
                     
-                    animator.SetTrigger("Hurt");
+                    if(animator.GetBool("isAttacking") == false)
+                        animator.SetTrigger("Hurt");
                     
                     FlashMaterial();
                     //GetKnockback(true); //
@@ -845,9 +854,17 @@ public class PlayerCombat : MonoBehaviour
 
     void Die()
     {
-        StopAllCoroutines();
+        StopAllCoroutines(); //
         movement.StopCO(); // Stop coroutines in movement script
-        
+
+        if (playerStunned && PlayerStunnedCO != null)
+        {
+            playerStunned = false;
+            animator.SetBool("Stunned", false);
+            ResetMaterial();
+            ShowStatusStun(false);
+        }
+
         //Die animation
         isAlive = false;
         animator.SetBool("noBlood", m_noBlood);

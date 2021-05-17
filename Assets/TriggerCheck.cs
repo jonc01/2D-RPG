@@ -4,20 +4,63 @@ using UnityEngine;
 
 public class TriggerCheck : MonoBehaviour
 {
-    //Use this bool to check when an enemy is within the trigger collider
-    public bool hitEnemy;
+    // Called by ShieldBash() in PlayerCombat
+    // Using when trigger collider is enabled, used to apply the ShieldBash collision
 
-
+    public CollisionCheck collisionCheck;
+    public Collider2D solidCollider;
+    public PlayerMovement movement;
+    public PlayerCombat combat;
+    public TimeManager timeManager;
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        hitEnemy = true;
-        //disable collider
-
+        if (combat.IsShieldBashing)
+        {
+            //check for ShieldBash input, either in PlayerCombat after .2f charge up delay in ShieldBashStart()
+            ApplyCollision(collision.gameObject, true);
+        }
+        else
+        {
+            //
+        }
     }
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        hitEnemy = false;
+    }
+
+    public void ApplyCollision(GameObject collider, bool overrideDash = false)
+    {
+        if (movement.isDashing || overrideDash)
+        {
+            timeManager.DoFreezeTime();
+            combat.OnSuccessfulBash();
+            movement.CancelDash();
+
+            if (collider.GetComponent<Enemy>() != null)
+            {
+                collider.GetComponent<Enemy>().TakeDamage(5);
+                //collider.GetComponent<Enemy>().GetKnockback(combat.controller.m_FacingRight, 1f);
+                collider.GetComponent<Enemy>().GetStunned();
+            }
+
+            if (collider.GetComponent<Enemy2>() != null)
+            {
+                collider.GetComponent<Enemy2>().TakeDamage(5); //attackDamage + additional damage from parameter
+                collider.GetComponent<Enemy2>().GetStunned(2);
+            }
+
+            if (collider.GetComponent<StationaryEnemy>() != null)
+            {
+                collider.GetComponent<StationaryEnemy>().TakeDamage(10);
+            }
+
+            if (collider.GetComponent<EnemyBossBandit>() != null)
+            {
+                collider.GetComponent<EnemyBossBandit>().TakeDamage(10);
+                collider.GetComponent<EnemyBossBandit>().CheckParry();
+            }
+        }
     }
 }

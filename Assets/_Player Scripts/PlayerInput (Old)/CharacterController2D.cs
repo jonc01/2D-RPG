@@ -70,7 +70,7 @@ public class CharacterController2D : MonoBehaviour
 			if (colliders[i].gameObject != gameObject)
 			{
 				m_Grounded = true;
-				//abilityMovementCycle.ShowAbility(0); //movement ability has 
+				//abilityMovementCycle.ShowAbility(0); //movement ability icon
 
 				if (!wasGrounded)
 					OnLandEvent.Invoke();

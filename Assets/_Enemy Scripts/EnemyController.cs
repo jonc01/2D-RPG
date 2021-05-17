@@ -3,6 +3,8 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
+    [Header("TextPopups")]
+    public TextPopupsHandler noReScaleTextHandler;
 
     //[SerializeField] float m_speed = 4.0f;
     [SerializeField] float m_jumpForce = 7.5f;

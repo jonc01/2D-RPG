@@ -93,8 +93,8 @@ public class StationaryEnemy : MonoBehaviour
         //damage enemies
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
-            if(enemy != null && enemy.GetComponent<Enemy>() != null)
-                enemy.GetComponent<Enemy>().TakeDamage(-enAttackDamage); //negative damage for healing don't need Heal() function
+            //if(enemy != null && enemy.GetComponent<Enemy>() != null)
+                //enemy.GetComponent<Enemy>().TakeDamage(-enAttackDamage); //negative damage for healing don't need Heal() function
 
         }
     }

@@ -9,6 +9,8 @@ public class TimeManager : MonoBehaviour
     public float slowdownLength = 2f;
     bool isSlowed = false;
 
+    //public float freezeLength = 0.1f;
+
     //[Space] //freeze time
     //public float freezeLength = .1f;
     //bool isFrozen = false;
@@ -37,7 +39,7 @@ public class TimeManager : MonoBehaviour
         Time.fixedDeltaTime = Time.timeScale * .02f;
     }
 
-    public void DoFreezeTime(float duration = .1f)
+    public void DoFreezeTime(float duration = 0.05f)
     {
         StartCoroutine(FreezeTime(duration));
     }
@@ -45,11 +47,11 @@ public class TimeManager : MonoBehaviour
     IEnumerator FreezeTime(float freezeDuration)
     {
         //isFrozen = true;
-        Time.timeScale = 0;
+        Time.timeScale = 0f;
 
         yield return new WaitForSecondsRealtime(freezeDuration);
 
         //isFrozen = false;
-        Time.timeScale = 1; //set timeScale back to default scale
+        Time.timeScale = 1f; //set timeScale back to default scale
     }
 }
