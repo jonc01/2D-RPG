@@ -13,10 +13,12 @@ public class EnemyBossBandit : MonoBehaviour
     public HitEffectsHandler HitEffectsHandler;
 
     [Space]
+    [Header("References")]
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;
     public TimeManager timeManager;
+    public ScreenShakeListener screenShake;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
     public GameObject hitParticlePrefab;
@@ -106,7 +108,7 @@ public class EnemyBossBandit : MonoBehaviour
         particleHits = false;
 
         //UpdateAnimClips();
-    }
+    }   
 
     /*public void UpdateAnimClips()
     {
@@ -555,6 +557,11 @@ public class EnemyBossBandit : MonoBehaviour
                 }
             }
 
+            if(damageTakenMultiplier > 1)
+            {
+                screenShake.Shake();
+            }
+
             if (currentHealth <= 0)
             {
                 Die();
@@ -603,6 +610,7 @@ public class EnemyBossBandit : MonoBehaviour
         enController.enCanMove = false;
         enCanAttack = false;
         Instantiate(parriedParticlePrefab, transform.position, Quaternion.identity);
+
 
         yield return new WaitForSeconds(.1f);
         if(timeManager != null)

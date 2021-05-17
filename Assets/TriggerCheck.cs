@@ -11,6 +11,7 @@ public class TriggerCheck : MonoBehaviour
     public Collider2D solidCollider;
     public PlayerMovement movement;
     public PlayerCombat combat;
+    public TimeManager timeManager;
 
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -33,6 +34,7 @@ public class TriggerCheck : MonoBehaviour
     {
         if (movement.isDashing || overrideDash)
         {
+            timeManager.DoFreezeTime();
             combat.OnSuccessfulBash();
             movement.CancelDash();
 

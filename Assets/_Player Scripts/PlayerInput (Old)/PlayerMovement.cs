@@ -219,7 +219,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if(isDashing && canDash)
         {
-            float startPos, endPos;
+            float startPos, endPos; //DEBUG
             startPos = transform.position.x; //DEBUG
             if (dashTimeLeft > 0)
             {

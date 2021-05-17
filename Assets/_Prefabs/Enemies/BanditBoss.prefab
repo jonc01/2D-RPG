@@ -158,6 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f6663dc7f4e9ab4c976bfbd0fc28724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noReScaleTextHandler: {fileID: 0}
   m_jumpForce: 7.5
   rb: {fileID: 5292194739621741518}
   enAnimator: {fileID: 5292194739621741512}
@@ -182,19 +183,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TextPopupsPrefab: {fileID: 1416290914158628297, guid: d7962ff6aa3b2aa47b8dc88ce9161fc8, type: 3}
   TextPopupsHandler: {fileID: 0}
+  FixedTextHandler: {fileID: 0}
   TPOffset: {x: 0, y: -0.4, z: 0}
+  HitEffectsHandler: {fileID: 0}
   playerLayers:
     serializedVersion: 2
     m_Bits: 1024
   player: {fileID: 0}
   playerCombat: {fileID: 0}
+  timeManager: {fileID: 0}
+  screenShake: {fileID: 0}
   hitParticlePrefab: {fileID: 3144434496805319467, guid: 0d10d273d6177714cb3b6a24e8705577, type: 3}
   deathParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
   stunLParticlePrefab: {fileID: 7508974481244418147, guid: 8d45e883450c75c4ca42078c4e0e65cc, type: 3}
   stunRParticlePrefab: {fileID: 2630982711930720759, guid: 0da0552efade60a42abeec6a8eeb0b7f, type: 3}
   parriedParticlePrefab: {fileID: 3627953083683170458, guid: 917651ec27dbe51428d8339919eb6d85, type: 3}
   HealthBarCanvas: {fileID: 0}
-  maxHealth: 800
+  maxHealth: 1000
   healthBar: {fileID: 0}
   experiencePoints: 10
   enAnimator: {fileID: 5292194739621741512}
