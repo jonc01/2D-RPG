@@ -16,7 +16,6 @@ public class Enemy : MonoBehaviour
     PlayerCombat playerCombat;
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
-    public GameObject hitParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
 
@@ -319,7 +318,6 @@ public class Enemy : MonoBehaviour
                 Vector3 particleLocation = transform.position;
                 Vector3 particleOffset = particleLocation;
                 particleOffset.y += .5f;
-                //Instantiate(hitParticlePrefab, particleOffset, Quaternion.identity);
                 HitEffectsHandler.ShowHitEffect(particleOffset);
 
                 //enIsHurt = true;
@@ -351,6 +349,10 @@ public class Enemy : MonoBehaviour
         {
             currentHealth += healAmount;
             healthBar.SetHealth(currentHealth);
+            if(currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
 
             if (TextPopupsHandler)
             {

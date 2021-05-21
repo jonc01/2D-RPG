@@ -39,13 +39,16 @@ public class TimeManager : MonoBehaviour
         Time.fixedDeltaTime = Time.timeScale * .02f;
     }
 
-    public void DoFreezeTime(float duration = 0.05f)
+    public void DoFreezeTime(float duration = 0.05f, float delayStart = 0f)
     {
-        StartCoroutine(FreezeTime(duration));
+        StartCoroutine(FreezeTime(duration, delayStart));
     }
 
-    IEnumerator FreezeTime(float freezeDuration)
+    IEnumerator FreezeTime(float freezeDuration, float delayStart)
     {
+        if(delayStart > 0f)
+            yield return new WaitForSeconds(delayStart);
+
         //isFrozen = true;
         Time.timeScale = 0f;
 

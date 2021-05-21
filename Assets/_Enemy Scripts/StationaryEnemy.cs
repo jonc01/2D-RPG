@@ -88,15 +88,14 @@ public class StationaryEnemy : MonoBehaviour
 
     void Attack() //for Stationary, can be buffing abilities, ex: totem
     {
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, enemyLayers);
+        //Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, enemyLayers);
         //                                                                                  targetting enemy allies only
         //damage enemies
-        foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
+        /*foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
             //if(enemy != null && enemy.GetComponent<Enemy>() != null)
-                //enemy.GetComponent<Enemy>().TakeDamage(-enAttackDamage); //negative damage for healing don't need Heal() function
-
-        }
+            //enemy.GetComponent<Enemy>().TakeDamage(-enAttackDamage); //negative damage for healing don't need Heal() function
+        }*/
     }
 
     IEnumerator IsAttacking()
@@ -127,10 +126,10 @@ public class StationaryEnemy : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (enAttackPoint == null)
+        /*if (enAttackPoint == null)
             return;
 
-        Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);
+        Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);*/
     }
 
     public void TakeDamage(float damage)

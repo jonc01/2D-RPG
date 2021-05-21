@@ -144,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     #region DodgeRoll
-    void CheckDodge()
+    void CheckDodge() //player is immune to stun while rolling, check in PlayerCombat during knockback application
     {
         if (Time.time > allowDodge && canMove)
         {

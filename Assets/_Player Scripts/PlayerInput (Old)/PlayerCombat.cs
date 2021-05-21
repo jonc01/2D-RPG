@@ -393,7 +393,7 @@ public class PlayerCombat : MonoBehaviour
                         /*if(enableScreenshake)
                             screenShake.Shake();*/
 
-                        timeManager.DoFreezeTime(.2f);
+                        timeManager.DoFreezeTime(.1f, .05f);
                         //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
                     }
 
@@ -556,8 +556,8 @@ public class PlayerCombat : MonoBehaviour
         {
             if (enemy.GetComponent<Enemy>() != null)
             {
-                if (enableScreenshake)
-                    screenShake.Shake();
+                /*if (enableScreenshake)
+                    screenShake.Shake();*/
 
                 enemy.GetComponent<Enemy>().GetStunned(1);
 
@@ -700,12 +700,12 @@ public class PlayerCombat : MonoBehaviour
         Gizmos.DrawWireCube(newAttackPoint, new Vector3(attackHeavyRange*2.7f, .8f, 0)); //* 2.7f, Collider[] BoxOverlap is 2.3f
     }
      
-    public void GetKnockback(bool pushToRight, float kbThrust = 3f, float kbDuration = 5f) //defaults
+    public void GetKnockback(bool pushToRight, float kbThrust = 3f, float kbDuration = 5f) //defaults //short stun on knockback
     {
         //lungeThrust - velocity of lunge movement
         //lungeDuration - how long to maintain thrust velocity
 
-        if (!animator.GetBool("isRolling") && isAlive)
+        if (!animator.GetBool("isRolling") && isAlive) //player is immune to stun while rolling
         {
             Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
             if (pushToRight) //knockback to right
