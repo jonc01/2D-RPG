@@ -18,7 +18,7 @@ public class TriggerCheck : MonoBehaviour
         if (combat.IsShieldBashing)
         {
             //check for ShieldBash input, either in PlayerCombat after .2f charge up delay in ShieldBashStart()
-            ApplyCollision(collision.gameObject, true);
+            ApplyCollision(collision.gameObject); 
         }
         else
         {
@@ -30,7 +30,7 @@ public class TriggerCheck : MonoBehaviour
     {
     }
 
-    public void ApplyCollision(GameObject collider, bool overrideDash = false)
+    public void ApplyCollision(GameObject collider, bool overrideDash = false) //overrideDash - if an enemy is already in the trigger, don't dash at all
     {
         if (movement.isDashing || overrideDash)
         {

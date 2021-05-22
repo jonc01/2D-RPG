@@ -159,6 +159,7 @@ public class PlayerCombat : MonoBehaviour
         {
             //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
             controller.RespawnPlayerResetLevel();
+            timeManager.ResetTimeScale();
         }
 
         if (Input.GetKeyDown(KeyCode.H))
@@ -166,6 +167,24 @@ public class PlayerCombat : MonoBehaviour
             HealPlayer(25f); //how much health to heal
         }
         /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            screenShake.Shake(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            screenShake.Shake(2);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            screenShake.Shake(3);
+        }
+
+
         /////////////////////////////////////////////////////////////////////////////////////////////
     }
     void UpdateAbilityDisplay()
@@ -272,6 +291,7 @@ public class PlayerCombat : MonoBehaviour
         {
             if(enemy.GetComponent<EnemyController>() != null) //after migrating below functions into EnemyController
             {
+                timeManager.DoFreezeTime(.1f, .05f);
                 //screenShake.Shake();
                 /*enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
                 enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
@@ -390,8 +410,8 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (enemy.GetComponent<EnemyController>() != null)
                     {
-                        /*if(enableScreenshake)
-                            screenShake.Shake();*/
+                        if(enableScreenshake)
+                            screenShake.Shake();
 
                         timeManager.DoFreezeTime(.1f, .05f);
                         //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
@@ -423,8 +443,8 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (enemy.GetComponent<EnemyController>() != null)
                     {
-                        /*if(enableScreenshake)
-                            screenShake.Shake();*/
+                        if(enableScreenshake)
+                            screenShake.Shake();
 
                         timeManager.DoFreezeTime(.2f);
                         //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
@@ -610,6 +630,8 @@ public class PlayerCombat : MonoBehaviour
         //disable collider on hit
         if (enableScreenshake)
             screenShake.Shake();
+
+        timeManager.DoFreezeTime(.1f, .05f);
 
         StartCoroutine(ShieldBashEnd());
     }
@@ -821,7 +843,7 @@ public class PlayerCombat : MonoBehaviour
     public void GiveXP(float xp)
     {
         experienceBar.AddXP(xp);
-        //timeManager.DoFreezeTime(.1f); //short freeze on kill
+        timeManager.DoFreezeTime(.05f); //short freeze on kill
         xpPopups.ShowText(transform.position, "+" + xp + "xp");
     }
 
