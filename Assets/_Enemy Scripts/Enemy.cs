@@ -311,7 +311,7 @@ public class Enemy : MonoBehaviour
             }
             
             //hurt animation
-            if (enAnimator != null && damage > 0) //took damage, not heal 
+            if (enAnimator != null && damage > 0) //took damage, not heal
             {
                 //stopping coroutine
                 //attackStopped = true;

@@ -258,7 +258,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing)
         {
-            playerCombat.OnSuccessfulBash();
+            playerCombat.EndShieldBash();
             dashTimeLeft = 0; //only needed when CancelDash is called elsewhere
             isDashing = false;
             StartCoroutine(EndDash());

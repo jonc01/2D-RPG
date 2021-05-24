@@ -159,6 +159,7 @@ public class PlayerCombat : MonoBehaviour
         {
             //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
             controller.RespawnPlayerResetLevel();
+            timeManager.ResetTimeScale();
         }
 
         if (Input.GetKeyDown(KeyCode.H))
@@ -236,7 +237,7 @@ public class PlayerCombat : MonoBehaviour
                 yield return new WaitForSeconds(0.1f);
                 break;
             case 2:
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.05f);
                 Attack();
                 canSwitch = true;
                 yield return new WaitForSeconds(0.1f);
@@ -272,6 +273,7 @@ public class PlayerCombat : MonoBehaviour
         {
             if(enemy.GetComponent<EnemyController>() != null) //after migrating below functions into EnemyController
             {
+                timeManager.DoFreezeTime(.1f, .05f); //freezeDuration, delayToFreeze
                 //screenShake.Shake();
                 /*enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
                 enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
@@ -346,19 +348,19 @@ public class PlayerCombat : MonoBehaviour
         switch (attackNum)
         {
             case 1:
-                yield return new WaitForSeconds(0.4f);
+                yield return new WaitForSeconds(0.3f);
                 AttackHeavy();
                 canSwitch = true;
                 yield return new WaitForSeconds(0.2f);
                 break;
             case 2:
-                yield return new WaitForSeconds(0.3f); //Attack functions determine damage and attack hitbox
+                yield return new WaitForSeconds(0.25f); //Attack functions determine damage and attack hitbox
                 AttackHeavy(2); //using hitbox 2
                 canSwitch = true;
                 yield return new WaitForSeconds(0.1f);
                 break;
             case 3:
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.25f);
                 AttackHeavy(1, 1.5f); //default 1, 1.5x damage
                 canSwitch = true;
                 yield return new WaitForSeconds(0.2f);
@@ -390,10 +392,10 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (enemy.GetComponent<EnemyController>() != null)
                     {
-                        /*if(enableScreenshake)
-                            screenShake.Shake();*/
+                        if(enableScreenshake)
+                            screenShake.Shake();
 
-                        timeManager.DoFreezeTime(.1f, .05f);
+                        timeManager.DoFreezeTime(.15f, .05f); //.1, .05
                         //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
                     }
 
@@ -423,10 +425,10 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (enemy.GetComponent<EnemyController>() != null)
                     {
-                        /*if(enableScreenshake)
-                            screenShake.Shake();*/
+                        if(enableScreenshake)
+                            screenShake.Shake();
 
-                        timeManager.DoFreezeTime(.2f);
+                        timeManager.DoFreezeTime(.15f, .05f);
                         //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
                     }
 
@@ -609,8 +611,15 @@ public class PlayerCombat : MonoBehaviour
     {
         //disable collider on hit
         if (enableScreenshake)
-            screenShake.Shake();
+            screenShake.Shake(2);
 
+        timeManager.DoFreezeTime(.1f, .05f);
+
+        StartCoroutine(ShieldBashEnd());
+    }
+
+    public void EndShieldBash() //calling if Bash doesn't connect
+    {
         StartCoroutine(ShieldBashEnd());
     }
 
@@ -821,7 +830,7 @@ public class PlayerCombat : MonoBehaviour
     public void GiveXP(float xp)
     {
         experienceBar.AddXP(xp);
-        //timeManager.DoFreezeTime(.1f); //short freeze on kill
+        timeManager.DoFreezeTime(.05f); //short freeze on kill
         xpPopups.ShowText(transform.position, "+" + xp + "xp");
     }
 

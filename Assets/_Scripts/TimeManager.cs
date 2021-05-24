@@ -52,9 +52,14 @@ public class TimeManager : MonoBehaviour
         //isFrozen = true;
         Time.timeScale = 0f;
 
-        yield return new WaitForSecondsRealtime(freezeDuration);
+        yield return new WaitForSecondsRealtime(freezeDuration); //be careful this actually finishes or else timeScale is stuck at 0
 
         //isFrozen = false;
         Time.timeScale = 1f; //set timeScale back to default scale
+    }
+
+    public void ResetTimeScale()
+    {
+        Time.timeScale = 1f;
     }
 }
