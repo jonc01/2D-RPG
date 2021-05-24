@@ -14,7 +14,7 @@ public class ScreenShakeListener : MonoBehaviour
 
     public void Shake(int sourceChoice = 1)
     {
-        if (enableScreenshake)
+        if (enableScreenshake && source1 != null)
         {
             switch (sourceChoice)
             {
@@ -28,7 +28,7 @@ public class ScreenShakeListener : MonoBehaviour
                     source3.GenerateImpulse();
                     break;
                 default:
-                    Debug.Log("No impulse source.");
+                    //Debug.Log("No impulse source.");
                     break;
             }
         }
