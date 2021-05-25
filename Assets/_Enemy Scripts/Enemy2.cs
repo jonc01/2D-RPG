@@ -296,23 +296,22 @@ public class Enemy2 : MonoBehaviour
         Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, float damageMultiplier = 1.0f)
     {
         if (isAlive == true)
         {
-            currentHealth -= damage;
+            float damageTaken = damage * damageMultiplier;
+            currentHealth -= damageTaken;
             healthBar.SetHealth(currentHealth);
             if (currentHealth > maxHealth)
                 currentHealth = maxHealth;
-
-
-            
+   
             //show damage/heal numbers
             if (TextPopupsHandler)
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
-                TextPopupsHandler.ShowDamage(damage, tempPos);
+                TextPopupsHandler.ShowDamage(damageTaken, tempPos);
             }
 
             //hurt animation
@@ -396,13 +395,16 @@ public class Enemy2 : MonoBehaviour
 
     public void GetStunned(float duration) //allow player to call this function
     {
-        if (Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
+        if (isAlive)
         {
-            float fullDuration = 1f;
-            fullDuration -= stunResist; //getting percentage of stun based on stunResist
-            duration *= fullDuration;
-            enAnimator.SetTrigger("en2Stunned");
-            StartCoroutine(StunEnemy(duration));
+            if (Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
+            {
+                float fullDuration = 1f;
+                fullDuration -= stunResist; //getting percentage of stun based on stunResist
+                duration *= fullDuration;
+                enAnimator.SetTrigger("en2Stunned");
+                StartCoroutine(StunEnemy(duration));
+            }
         }
     }
 

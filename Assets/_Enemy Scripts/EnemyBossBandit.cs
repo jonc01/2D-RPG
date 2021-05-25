@@ -497,12 +497,13 @@ public class EnemyBossBandit : MonoBehaviour
         
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, float damageMultiplier = 1.0f)
     {
         if (isAlive == true)
         {
-            damage *= damageTakenMultiplier;
-            currentHealth -= (damage);
+            float damageTaken = damage * damageMultiplier;
+            damageTaken *= damageTakenMultiplier;
+            currentHealth -= damageTaken;
             healthBar.SetHealth(currentHealth);
             if (currentHealth > maxHealth)
                 currentHealth = maxHealth;
@@ -518,14 +519,14 @@ public class EnemyBossBandit : MonoBehaviour
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
-                if(damageTakenMultiplier != 1) //crit damage, damage was multiplied
+                if(damageTakenMultiplier != 1) //crit damage, damage was multiplied, this is set when Boss is parried
                 {
                     timeManager.DoFreezeTime(.1f);
-                    TextPopupsHandler.ShowDamage(damage, tempPos, true);
+                    TextPopupsHandler.ShowDamage(damageTaken, tempPos, true);
                 }
                 else
                 {
-                    TextPopupsHandler.ShowDamage(damage, tempPos);
+                    TextPopupsHandler.ShowDamage(damageTaken, tempPos);
                 }
             }
 
@@ -598,7 +599,7 @@ public class EnemyBossBandit : MonoBehaviour
 
     public void CheckParry()
     {
-        if (enController.enCanParry == true)
+        if (enController.enCanParry == true && isAlive)
         {
             StartCoroutine(GetParried());
         }
@@ -650,13 +651,16 @@ public class EnemyBossBandit : MonoBehaviour
 
     public void GetStunned(float duration) //allow player to call this function
     {
-        if (Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
+        if (isAlive)
         {
-            float fullDuration = 1f;
-            fullDuration -= stunResist; //getting percentage of stun based on stunResist
-            duration *= fullDuration;
+            if (Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
+            {
+                float fullDuration = 1f;
+                fullDuration -= stunResist; //getting percentage of stun based on stunResist
+                duration *= fullDuration;
 
-            StartCoroutine(StunEnemy(duration));
+                StartCoroutine(StunEnemy(duration));
+            }
         }
     }
 

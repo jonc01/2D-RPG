@@ -293,11 +293,12 @@ public class Enemy : MonoBehaviour
         Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, float damageMultiplier = 1.0f)
     {
         if (isAlive)
         {
-            currentHealth -= damage;
+            float damageTaken = damage * damageMultiplier;
+            currentHealth -= damageTaken;
             healthBar.SetHealth(currentHealth);
             if (currentHealth > maxHealth)
                 currentHealth = maxHealth;
@@ -307,7 +308,7 @@ public class Enemy : MonoBehaviour
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
-                TextPopupsHandler.ShowDamage(damage, tempPos);
+                TextPopupsHandler.ShowDamage(damageTaken, tempPos);
             }
             
             //hurt animation
@@ -404,25 +405,28 @@ public class Enemy : MonoBehaviour
 
     public void GetStunned(float duration = 1f, bool fullStun = true) //two animations, full stun and light stun (stagger)
     {
-        if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
+        if (isAlive)
         {
-            if (IsAttackingCO != null)
+            if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
             {
-                StopCoroutine(IsAttackingCO);
-            }
+                if (IsAttackingCO != null)
+                {
+                    StopCoroutine(IsAttackingCO);
+                }
 
-            if (fullStun)
-            {
-                float fullDuration = 1f;
-                fullDuration -= stunResist; //getting percentage of stun based on stunResist
-                duration *= fullDuration;
-                enAnimator.SetTrigger("enStunned");
-                StartCoroutine(StunEnemy(duration));
-            }
-            else
-            {
-                enAnimator.SetTrigger("enLightStun");
-                StartCoroutine(LightStunEnemy(.3f));
+                if (fullStun)
+                {
+                    float fullDuration = 1f;
+                    fullDuration -= stunResist; //getting percentage of stun based on stunResist
+                    duration *= fullDuration;
+                    enAnimator.SetTrigger("enStunned");
+                    StartCoroutine(StunEnemy(duration));
+                }
+                else
+                {
+                    enAnimator.SetTrigger("enLightStun");
+                    StartCoroutine(LightStunEnemy(.3f));
+                }
             }
         }
     }

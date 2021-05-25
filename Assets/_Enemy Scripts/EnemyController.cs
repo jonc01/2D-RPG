@@ -79,6 +79,11 @@ public class EnemyController : MonoBehaviour
     #region TakeDamage, GetKnockback, GetStunned
         
 
+    /*public void TakeDamage(float damage, float damageMultiplier)
+    {
+
+    }*/
+
     #endregion
 
     #region bools: Flip, Move, Parry

@@ -282,21 +282,21 @@ public class PlayerCombat : MonoBehaviour
 
             if (enemy.GetComponent<Enemy>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
             {
-                enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight, 1f);
                 //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
-                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight * damageMultiplier);
+                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight, damageMultiplier);
 
             if (enemy.GetComponent<Enemy2>() != null)
             {
-                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
             }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
-                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight * damageMultiplier);
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight, damageMultiplier);
         }
     }
     #endregion
@@ -401,22 +401,22 @@ public class PlayerCombat : MonoBehaviour
 
                     if (enemy.GetComponent<Enemy>() != null)
                     {
-                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
                         //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
                     }
             
                     if (enemy.GetComponent<StationaryEnemy>() != null)
-                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy * damageMultiplier);
+                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy, damageMultiplier);
 
                     if (enemy.GetComponent<Enemy2>() != null)
                     {
-                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
                     }
 
                     if (enemy.GetComponent<EnemyBossBandit>() != null)
-                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy * damageMultiplier);
+                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy, damageMultiplier);
                 }
                 break;
             case 2:
@@ -434,22 +434,22 @@ public class PlayerCombat : MonoBehaviour
 
                     if (enemy.GetComponent<Enemy>() != null)
                     {
-                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
                         //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
                     }
 
                     if (enemy.GetComponent<StationaryEnemy>() != null)
-                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy * damageMultiplier);
+                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy, damageMultiplier);
 
                     if (enemy.GetComponent<Enemy2>() != null)
                     {
-                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<Enemy2>().GetStunned(stunStrength * 2);
                     }
 
                     if (enemy.GetComponent<EnemyBossBandit>() != null)
-                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy * damageMultiplier);
+                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy, damageMultiplier);
                 }
                 break;
             default:
@@ -511,7 +511,7 @@ public class PlayerCombat : MonoBehaviour
         {
             if (enemy.GetComponent<Enemy>() != null)
             {
-                enemy.GetComponent<Enemy>().TakeDamage(altDamage); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy>().TakeDamage(altDamage, 1.0f); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
                 enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
@@ -881,6 +881,8 @@ public class PlayerCombat : MonoBehaviour
         movement.rb.velocity = new Vector2(0, 0); //prevent player from moving
         movement.DisableMove();
         canAttack = false;
+        timeManager.DoFreezeTime(.05f, .5f);
+        timeManager.DoSlowMotion();
         //kill player
     }
 
