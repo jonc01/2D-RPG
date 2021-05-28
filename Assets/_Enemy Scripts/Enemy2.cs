@@ -20,7 +20,7 @@ public class Enemy2 : MonoBehaviour
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
 
-    public float maxHealth = 100;
+    public float maxHealth = 300;
     float currentHealth;
     public HealthBar healthBar;
 
@@ -61,6 +61,10 @@ public class Enemy2 : MonoBehaviour
     bool enIsHurt;
     bool enStunned;
 
+    [Header("Attack variables")]
+    bool isShielded = true;
+
+
     SpriteRenderer sr;
     [SerializeField]
     private Material mWhiteFlash;
@@ -94,12 +98,16 @@ public class Enemy2 : MonoBehaviour
         enIsHurt = false;
         enStunned = false;
 
+        enController.moveSpeed += Random.Range(-.1f, .1f);
     }
 
     void Update()
     {
         IdleAnimCheck();
         Move();
+        //GetLungeDistance();
+        //CheckLungeAttack();
+        //GetLungeDirection();
     }
 
     void IdleAnimCheck()
@@ -220,45 +228,13 @@ public class Enemy2 : MonoBehaviour
         enController.enCanMove = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //
-    }
-
-    void Attack()
-    {
-        Vector3 changeLocation = transform.position;
-        if (enController.enFacingRight)
-        {
-            //go right
-            changeLocation.x += .3f;
-            transform.position = changeLocation;
-            //movement.rb.AddForce(Vector2.right * 10f);
-        }
-        else
-        {
-            //go left
-            changeLocation.x -= .3f;
-            transform.position = changeLocation;
-            //movement.rb.AddForce(Vector2.left * 10f);
-        }
-
-        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayers);
-
-        //damage enemies
-        foreach (Collider2D player in hitPlayer) //loop through enemies hit
-        {
-            //Debug.Log("Enemy Hit " + player.name);
-            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
-        }
-    }
-
     IEnumerator IsAttacking()
     {//TODO: combine redundant variables
         if (enCanAttack && !isAttacking)
         {
-            enStunned = false;
             isAttacking = true;
+            enStunned = false;
+            enCanAttack = false;
 
             enAnimator.SetTrigger("Attack");
 
@@ -266,7 +242,6 @@ public class Enemy2 : MonoBehaviour
             enAnimator.SetBool("isAttacking", true);
             enAnimator.SetBool("move", false);
 
-            enCanAttack = false;
             enController.enCanMove = false;
             rb.velocity = new Vector2(0, 0);
 
@@ -287,6 +262,117 @@ public class Enemy2 : MonoBehaviour
         enCanAttack = true;
     }
 
+    void Attack() //default, attack player when in melee range
+    {
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayers);
+
+        //damage enemies
+        foreach (Collider2D player in hitPlayer) //loop through enemies hit
+        {
+            //Debug.Log("Enemy Hit " + player.name);
+            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage, true); //attackDamage + additional damage from parameter
+        }
+    }
+
+    float GetLungeDistance()
+    {
+        //raycast
+
+        float distance = Mathf.Abs(transform.position.x - player.position.x);
+        return distance;
+    }
+
+    bool GetLungeDirection()
+    {
+        if (playerToRight)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void CheckLungeAttack() //when to start LungeAttack
+    {
+        if (GetLungeDistance() <= 5f)
+        {
+            StartLungeAttack();
+        }
+    }
+
+    void StartLungeAttack()
+    {
+        enCanAttack = false;
+        StartCoroutine(LungeAttacking());
+    }
+
+    IEnumerator LungeAttacking()
+    {
+        if (enCanAttack && !isAttacking)
+        {
+            StopChase();
+            Debug.Log("LungeAttacking"); //DELETEME
+            enStunned = false;
+            isAttacking = true;
+            enAnimator.SetBool("isAttacking", true);
+            enAnimator.SetBool("move", false);
+
+            enAnimator.SetTrigger("StartChargeUpLoop"); 
+
+            yield return new WaitForSeconds(1.0f); //Charge up time
+
+            isShielded = false; //disable shield, allow stun
+            enAnimator.SetTrigger("StartChargeUp");
+
+            yield return new WaitForSeconds(1.06f); //or 1.1f
+            enController.enCanMove = true;
+
+            //dash to player location, attack
+            if(GetLungeDirection() == true)
+            {
+                rb.AddForce(Vector3.right * 2);
+            }
+            else
+            {
+                rb.AddForce(Vector3.left * 2);
+            }
+
+            enAnimator.SetTrigger("StartChargedAttack");
+            //enCanAttack = false;
+            //enController.enCanMove = false;
+            //rb.velocity = new Vector2(0, 0);
+
+            yield return new WaitForSeconds(0.1f); //time when damage is dealt based on animation/lunge
+            isShielded = true;
+
+            rb.velocity = new Vector2(0, 0); //stop enemy from moving
+            LungeAttack();
+            yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
+            enAnimator.SetBool("isAttacking", false);
+            enController.enCanMove = true;
+            enCanAttack = true;
+        }
+        //enController.enCanMove = true;
+        //enCanAttack = true;
+    }
+
+    void LungeAttack()
+    {
+
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayers);
+
+
+        //damage enemies
+        foreach (Collider2D player in hitPlayer) //loop through enemies hit
+        {
+            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage*2, true); //attackDamage + additional damage from parameter
+        }
+        //no longer rooted
+        enController.enCanMove = true;
+        enCanAttack = true;
+    }
 
     private void OnDrawGizmosSelected()
     {

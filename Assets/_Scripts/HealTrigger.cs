@@ -9,31 +9,38 @@ public class HealTrigger : MonoBehaviour
     [SerializeField] bool toggleHeal; //if true heal enemies in radius
     public GameObject healAura;
     Coroutine HealingCO;
-
+    [SerializeField] int enemyCount = 0;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.GetComponent<Enemy>() != null)
         {
             toggleHeal = true;
+            if(enemyCount <= 5)
+                enemyCount++;
+
             HealingCO = StartCoroutine(HealEnemy(collision.gameObject));
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (isHealing)
+        if (enemyCount > 0)
         {
-            StopCoroutine(HealingCO);
+            if(enemyCount > 0)
+                enemyCount--;
+        }
+        else
+        {
+            //enemyCount = 0; //in case of negatives
             toggleHeal = false;
-            isHealing = false;
+            StopCoroutine(HealingCO);
         }
     }
 
     IEnumerator HealEnemy(GameObject enemy)
     {
         while (toggleHeal) {
-            isHealing = true;
             enemy.GetComponent<Enemy>().TakeHeal(10);
             Instantiate(healAura, transform.position, Quaternion.identity, transform);
             yield return new WaitForSeconds(1f);

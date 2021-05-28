@@ -783,7 +783,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, bool blockable = false)
     {
         if (isAlive)
         {
@@ -791,14 +791,22 @@ public class PlayerCombat : MonoBehaviour
                 if(animator.GetBool("isRolling")) //damage dodged
                 {
                     damage = 0;
-                    xpPopups.ShowDodge(transform.position);
+                    xpPopups.ShowDodge(transform.position); //xpPopups uses a static animation instead of the number animation
+                }
+                if (blockable)
+                {
+                    if (IsShieldBashing)
+                    {
+                        damage = 0;
+                        xpPopups.ShowText(transform.position, "Blocked");
+                    }
                 }
                 currentHealth -= (damage);
                 healthBar.SetHealth(currentHealth);
                 if(damage > 0)
                 {
                     Vector3 tempPos = transform.position;
-                    tempPos += TPOffset;
+                    tempPos += TPOffset; //damage pop up
                     TextPopupsHandler.ShowDamage(damage, tempPos);
                     
                     if(animator.GetBool("isAttacking") == false)

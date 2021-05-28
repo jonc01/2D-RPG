@@ -4336,7 +4336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380527270058, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.44
+      value: -1.82
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380527270058, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4424,7 +4424,7 @@ PrefabInstance:
       objectReference: {fileID: 3144434496805319467, guid: 0d10d273d6177714cb3b6a24e8705577, type: 3}
     - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: maxHealth
-      value: 1000
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: TPOffset.y
@@ -7520,6 +7520,7 @@ MonoBehaviour:
   isHealing: 0
   toggleHeal: 0
   healAura: {fileID: 2935024730887338293, guid: c8c1ce8fda2fd0249a864e5289354511, type: 3}
+  enemyCount: 0
 --- !u!1 &1599150646
 GameObject:
   m_ObjectHideFlags: 0
@@ -7829,7 +7830,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.95
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134789, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10008,6 +10009,7 @@ MonoBehaviour:
   isHealing: 0
   toggleHeal: 0
   healAura: {fileID: 2935024730887338293, guid: c8c1ce8fda2fd0249a864e5289354511, type: 3}
+  enemyCount: 0
 --- !u!1 &2122231731
 GameObject:
   m_ObjectHideFlags: 0
@@ -10873,7 +10875,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217550712157, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.33
+      value: -4.8
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217550712157, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10923,6 +10925,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 982059460}
+    - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
+      propertyPath: maxHealth
+      value: 300
+      objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: TPOffset.y
       value: 0.5
