@@ -92,6 +92,9 @@ public class EnemyBossBandit : MonoBehaviour
         mDefault = sr.material;
         //sr.material.SetFloat(2f);
 
+        player = GameObject.Find("Player").transform;
+        playerCombat = GameObject.Find("Player").GetComponent<PlayerCombat>();
+
         //Stats
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -681,6 +684,7 @@ public class EnemyBossBandit : MonoBehaviour
 
                 if (enController.enFacingRight)
                 {
+                    // If adding to pool, need to change prefab to not Destroy after it ends
                     Instantiate(stunLParticlePrefab, tempLocation, Quaternion.identity, transform);
                 }
                 else

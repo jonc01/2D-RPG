@@ -281,6 +281,11 @@ public class PlayerMovement : MonoBehaviour
     public void CheckMove()
     {
         //
+        if (canMove && rb.velocity.x > 0f) //attempt to fix stun animation playing while moving
+        {
+            animator.SetBool("Stunned", false);
+            playerCombat.ResetMaterial();
+        }
     }
 
     public void EnableMove()

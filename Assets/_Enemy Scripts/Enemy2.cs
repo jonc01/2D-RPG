@@ -7,20 +7,21 @@ public class Enemy2 : MonoBehaviour
 {
     //Text Popups
     public TextPopupsHandler TextPopupsHandler;
+    private TextPopupsHandler attackIndicator;
     [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
     public HitEffectsHandler HitEffectsHandler;
 
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;
-    //public GameObject hitPrefabToRight;
-    //public GameObject hitPrefabToLeft;
     public GameObject hitParticlePrefab;
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
 
-    public float maxHealth = 300;
+    private ScreenShakeListener screenshake;
+
+    public float maxHealth = 200;
     float currentHealth;
     public HealthBar healthBar;
 
@@ -63,7 +64,7 @@ public class Enemy2 : MonoBehaviour
 
     [Header("Attack variables")]
     bool isShielded = true;
-
+    RaycastHit2D lungeRaycast;
 
     SpriteRenderer sr;
     [SerializeField]
@@ -77,6 +78,8 @@ public class Enemy2 : MonoBehaviour
 
         player = GameObject.Find("Player").transform;
         playerCombat = player.GetComponent<PlayerCombat>();
+        screenshake = GameObject.Find("ScreenShakeManager").GetComponent<ScreenShakeListener>();
+        attackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
 
         //Stats
         currentHealth = maxHealth;
@@ -110,17 +113,45 @@ public class Enemy2 : MonoBehaviour
         //GetLungeDirection();
     }
 
+    private void FixedUpdate()
+    {
+        Vector3 tempPosRay = transform.position;
+        tempPosRay.y += .5f;
+
+        //bool playerToRight //Update this here
+
+        if (enController.enFacingRight)
+        {
+            lungeRaycast = Physics2D.Raycast(transform.position, Vector2.right, 5f);
+            Debug.DrawRay(tempPosRay, Vector3.right, Color.green);
+        }
+        else
+        {
+            lungeRaycast = Physics2D.Raycast(transform.position, Vector2.left, 5f);
+            Debug.DrawRay(tempPosRay, Vector3.left, Color.green);
+        }
+
+        if (lungeRaycast.collider != null)
+        {
+            Debug.Log("raycast HIT");
+            StartChase();
+        }
+    }
+
     void IdleAnimCheck()
     {
         if (rb != null)
         {
+            //idle animation is default state
             if (rb.velocity.x == 0)
             {
-                enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while 
+                enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while not moving
+                enAnimator.SetBool("idle", true);
             }
             else
             {
                 enAnimator.SetBool("move", true);
+                enAnimator.SetBool("idle", false);
             }
         }
     }
@@ -228,6 +259,18 @@ public class Enemy2 : MonoBehaviour
         enController.enCanMove = false;
     }
 
+    void ShowAttackIndicator()
+    {
+        if (attackIndicator != null)
+        {
+            Vector3 tempPos = transform.position;
+            tempPos.y += 0.2f;
+            //GetComponent<SpriteRenderer>().enabled = false;
+
+            attackIndicator.ShowText(tempPos, "!");
+        }
+    }
+
     IEnumerator IsAttacking()
     {//TODO: combine redundant variables
         if (enCanAttack && !isAttacking)
@@ -252,6 +295,7 @@ public class Enemy2 : MonoBehaviour
                 isAttacking = false; //prevent enemy from getting stuck on "isAttacking" since it is never set to false
                 yield break;
             }
+            LungeOnAttack();
 
             rb.velocity = new Vector2(0, 0); //stop enemy from moving
             Attack();
@@ -270,108 +314,44 @@ public class Enemy2 : MonoBehaviour
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
             //Debug.Log("Enemy Hit " + player.name);
-            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage, true); //attackDamage + additional damage from parameter
+            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
         }
     }
-
-    float GetLungeDistance()
+    
+    IEnumerable IsComboAttacking()
     {
-        //raycast
-
-        float distance = Mathf.Abs(transform.position.x - player.position.x);
-        return distance;
+        ShowAttackIndicator();
+        yield return new WaitForSeconds(1f);
     }
 
-    bool GetLungeDirection()
+    void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f) //defaults
     {
-        if (playerToRight)
+        //lungeThrust - velocity of lunge movement
+        //lungeDuration - how long to maintain thrust velocity
+
+        //REPLACEME (distToPlayer) ^replace with raycast distance, this function should be called with each attack
+            // ^should get direction of player by raycast hitting or not.
+            // can also set direction of player as a bool playerToRight and update bool in FixedUpdate with raycast
+
+        Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
+
+        if (enController.enCanFlip)
         {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    void CheckLungeAttack() //when to start LungeAttack
-    {
-        if (GetLungeDistance() <= 5f)
-        {
-            StartLungeAttack();
-        }
-    }
-
-    void StartLungeAttack()
-    {
-        enCanAttack = false;
-        StartCoroutine(LungeAttacking());
-    }
-
-    IEnumerator LungeAttacking()
-    {
-        if (enCanAttack && !isAttacking)
-        {
-            StopChase();
-            Debug.Log("LungeAttacking"); //DELETEME
-            enStunned = false;
-            isAttacking = true;
-            enAnimator.SetBool("isAttacking", true);
-            enAnimator.SetBool("move", false);
-
-            enAnimator.SetTrigger("StartChargeUpLoop"); 
-
-            yield return new WaitForSeconds(1.0f); //Charge up time
-
-            isShielded = false; //disable shield, allow stun
-            enAnimator.SetTrigger("StartChargeUp");
-
-            yield return new WaitForSeconds(1.06f); //or 1.1f
-            enController.enCanMove = true;
-
-            //dash to player location, attack
-            if(GetLungeDirection() == true)
+            if (playerToRight) //to right of player //swapped > to < from knockback, moving towards player instead of away
             {
-                rb.AddForce(Vector3.right * 2);
+                //lunge to right
+                tempOffset.x += lungeDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
             }
-            else
+            else //to left of player
             {
-                rb.AddForce(Vector3.left * 2);
+                //lunge to left
+                tempOffset.x -= lungeDuration;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeThrust * Time.fixedDeltaTime);
+                transform.position = smoothPosition;
             }
-
-            enAnimator.SetTrigger("StartChargedAttack");
-            //enCanAttack = false;
-            //enController.enCanMove = false;
-            //rb.velocity = new Vector2(0, 0);
-
-            yield return new WaitForSeconds(0.1f); //time when damage is dealt based on animation/lunge
-            isShielded = true;
-
-            rb.velocity = new Vector2(0, 0); //stop enemy from moving
-            LungeAttack();
-            yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
-            enAnimator.SetBool("isAttacking", false);
-            enController.enCanMove = true;
-            enCanAttack = true;
         }
-        //enController.enCanMove = true;
-        //enCanAttack = true;
-    }
-
-    void LungeAttack()
-    {
-
-        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayers);
-
-
-        //damage enemies
-        foreach (Collider2D player in hitPlayer) //loop through enemies hit
-        {
-            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage*2, true); //attackDamage + additional damage from parameter
-        }
-        //no longer rooted
-        enController.enCanMove = true;
-        enCanAttack = true;
     }
 
     private void OnDrawGizmosSelected()
@@ -387,9 +367,14 @@ public class Enemy2 : MonoBehaviour
         if (isAlive == true)
         {
             float damageTaken = damage * damageMultiplier;
+            if (enStunned)
+            {
+                damageTaken *= 2f;
+            }
             currentHealth -= damageTaken;
             healthBar.SetHealth(currentHealth);
-            if (currentHealth > maxHealth)
+
+            if (currentHealth > maxHealth) //in case of overheal
                 currentHealth = maxHealth;
    
             //show damage/heal numbers
@@ -397,7 +382,26 @@ public class Enemy2 : MonoBehaviour
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
-                TextPopupsHandler.ShowDamage(damageTaken, tempPos);
+                if (enStunned)
+                {
+                    TextPopupsHandler.ShowDamage(damageTaken, tempPos, true);
+                    if(screenshake != null)
+                    {
+                        screenshake.Shake(1);
+                    }
+                    if (playerToRight)
+                    {
+                        Instantiate(stunLParticlePrefab, tempPos, Quaternion.identity);
+                    }
+                    else
+                    {
+                        Instantiate(stunRParticlePrefab, tempPos, Quaternion.identity);
+                    }
+                }
+                else
+                {
+                    TextPopupsHandler.ShowDamage(damageTaken, tempPos);
+                }
             }
 
             //hurt animation
@@ -529,7 +533,7 @@ public class Enemy2 : MonoBehaviour
             yield return new WaitForSeconds(stunDuration);
 
             enAnimator.SetTrigger("en2StunRecover");
-            yield return new WaitForSeconds(.5f); //time for recover animation
+            yield return new WaitForSeconds(1f); //time for recover animation
             enCanAttack = true;
             enController.enCanMove = true;
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip

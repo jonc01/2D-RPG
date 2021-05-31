@@ -13,35 +13,43 @@ public class HealTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.GetComponent<Enemy>() != null)
+        if(stationaryEnemy != null)
         {
-            toggleHeal = true;
-            if(enemyCount <= 5)
-                enemyCount++;
+            if(collision.GetComponent<Enemy>() != null)
+            {
+                toggleHeal = true;
+                if(enemyCount <= 5)
+                    enemyCount++;
 
-            HealingCO = StartCoroutine(HealEnemy(collision.gameObject));
+                HealingCO = StartCoroutine(HealEnemy(collision.gameObject));
+            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (enemyCount > 0)
+        if (stationaryEnemy != null)
         {
-            if(enemyCount > 0)
-                enemyCount--;
-        }
-        else
-        {
-            //enemyCount = 0; //in case of negatives
-            toggleHeal = false;
-            StopCoroutine(HealingCO);
+            if (enemyCount > 0)
+            {
+                if(enemyCount > 0)
+                    enemyCount--;
+            }
+            else
+            {
+                //enemyCount = 0; //in case of negatives
+                toggleHeal = false;
+                StopCoroutine(HealingCO);
+            }
         }
     }
 
     IEnumerator HealEnemy(GameObject enemy)
     {
         while (toggleHeal) {
-            enemy.GetComponent<Enemy>().TakeHeal(10);
+            if(enemy != null)
+                enemy.GetComponent<Enemy>().TakeHeal(10);
+
             Instantiate(healAura, transform.position, Quaternion.identity, transform);
             yield return new WaitForSeconds(1f);
         }

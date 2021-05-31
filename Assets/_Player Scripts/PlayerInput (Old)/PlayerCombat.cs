@@ -16,6 +16,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] GameObject StatusStunned;
     public TimeManager timeManager;
     public ScreenShakeListener screenShake;
+    public GameObject respawnPrompt;
 
     [Header("Ability UI")]
     [Space]
@@ -37,6 +38,7 @@ public class PlayerCombat : MonoBehaviour
     public HealthBar healthBar;
     public ExperienceBar experienceBar;
     public bool isAlive = true;
+    bool canRespawn = false;
 
     [Space]
     //weapon stats
@@ -86,6 +88,7 @@ public class PlayerCombat : MonoBehaviour
     public float altAttackTime = .3f;
     bool IsParrying;
     public bool IsShieldBashing;
+    bool canStunPlayer;
 
     //weapon specific
     public float knockback = 5f;
@@ -96,6 +99,7 @@ public class PlayerCombat : MonoBehaviour
     Coroutine IsLightAttackingCO;
     Coroutine IsHeavyAttackingCO;
     Coroutine PlayerStunnedCO;
+
 
     void Start()
     {
@@ -126,6 +130,7 @@ public class PlayerCombat : MonoBehaviour
         IsParrying = false;
         IsShieldBashing = false;
         playerStunned = false;
+        canStunPlayer = true;
 
         shieldBashCollider.enabled = false;
         shieldBashTrigger.enabled = false;
@@ -151,13 +156,25 @@ public class PlayerCombat : MonoBehaviour
         ShieldBashInput();
 
         //DodgeAttackCancel(); //not currently in-use, allows for either cancelling of attacks with a dodge input, or some alt Dodge attack
+        if (!isAlive && canRespawn)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if(respawnPrompt != null)
+                {
+                    respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = false;
+                }
+                //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
+                controller.RespawnPlayerResetLevel();
+                timeManager.ResetTimeScale();
+            }
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
         //TODO: testing healing, delete after player respawn is added
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
             controller.RespawnPlayerResetLevel();
             timeManager.ResetTimeScale();
         }
@@ -273,7 +290,7 @@ public class PlayerCombat : MonoBehaviour
         {
             if(enemy.GetComponent<EnemyController>() != null) //after migrating below functions into EnemyController
             {
-                timeManager.DoFreezeTime(.1f, .05f); //freezeDuration, delayToFreeze
+                timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze
                 //screenShake.Shake();
                 /*enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
                 enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
@@ -412,7 +429,6 @@ public class PlayerCombat : MonoBehaviour
                     if (enemy.GetComponent<Enemy2>() != null)
                     {
                         enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
-                        enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
                     }
 
                     if (enemy.GetComponent<EnemyBossBandit>() != null)
@@ -582,7 +598,7 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time > allowAltAttack && movement.canMove)
         {
-            if (Input.GetButtonDown("Fire3") && canAttack && !IsShieldBashing) //TODO: IsShieldBashing only need if coroutine?
+            if (Input.GetButtonDown("Fire3") && canAttack && !IsShieldBashing)
             {
                 ShieldBash();
             }
@@ -599,6 +615,7 @@ public class PlayerCombat : MonoBehaviour
     IEnumerator ShieldBashStart()
     {
         IsShieldBashing = true;
+        canStunPlayer = false;
         movement.DisableMove();
         animator.SetTrigger("StartBlock");
         yield return new WaitForSeconds(.2f);
@@ -632,6 +649,7 @@ public class PlayerCombat : MonoBehaviour
         shieldBashTrigger.enabled = false;
 
         yield return new WaitForSeconds(.2f);
+        canStunPlayer = true;
         //Instantiate
         movement.EnableMove();
     }    
@@ -735,20 +753,23 @@ public class PlayerCombat : MonoBehaviour
 
     public void StunPlayer(float stunDuration)
     {
-        if(IsLightAttackingCO != null)
-            StopCoroutine(IsLightAttackingCO); // Stop Attacking coroutines
-
-        if(IsHeavyAttackingCO != null)
-            StopCoroutine(IsHeavyAttackingCO);
-
-        if (playerStunned) // If player is already stunned, refresh stun duration
+        if (canStunPlayer)
         {
-            StopCoroutine(PlayerStunnedCO);
-            PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
-        }
-        else
-        {
-            PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
+            if(IsLightAttackingCO != null)
+                StopCoroutine(IsLightAttackingCO); // Stop Attacking coroutines
+
+            if(IsHeavyAttackingCO != null)
+                StopCoroutine(IsHeavyAttackingCO);
+
+            if (playerStunned) // If player is already stunned, refresh stun duration
+            {
+                StopCoroutine(PlayerStunnedCO);
+                PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
+            }
+            else
+            {
+                PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
+            }
         }
     }
 
@@ -783,7 +804,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage, bool blockable = false)
+    public void TakeDamage(float damage, bool unBlockable = false)
     {
         if (isAlive)
         {
@@ -793,7 +814,7 @@ public class PlayerCombat : MonoBehaviour
                     damage = 0;
                     xpPopups.ShowDodge(transform.position); //xpPopups uses a static animation instead of the number animation
                 }
-                if (blockable)
+                if (!unBlockable)
                 {
                     if (IsShieldBashing)
                     {
@@ -830,7 +851,7 @@ public class PlayerCombat : MonoBehaviour
         sr.material = mWhiteFlash; //change sprite to white material
     }
 
-    void ResetMaterial()
+    public void ResetMaterial()
     {
         sr.material = mDefault;
     }
@@ -869,6 +890,17 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    IEnumerator DelayRespawn()
+    {
+        //short delay before respawn input is allowed
+        yield return new WaitForSeconds(1.0f);
+        if (respawnPrompt != null)
+        {
+            respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = true;
+        }
+        canRespawn = true;
+    }
+
     void Die()
     {
         StopAllCoroutines(); //
@@ -892,6 +924,8 @@ public class PlayerCombat : MonoBehaviour
         timeManager.DoFreezeTime(.05f, .5f);
         timeManager.DoSlowMotion();
         //kill player
+
+        StartCoroutine(DelayRespawn());
     }
 
     void RevivePlayer(float spawnHpPercentage) //no use right now
