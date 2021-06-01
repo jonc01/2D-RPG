@@ -39,7 +39,8 @@ public class HealTrigger : MonoBehaviour
             {
                 //enemyCount = 0; //in case of negatives
                 toggleHeal = false;
-                StopCoroutine(HealingCO);
+                if(HealingCO != null)
+                    StopCoroutine(HealingCO);
             }
         }
     }

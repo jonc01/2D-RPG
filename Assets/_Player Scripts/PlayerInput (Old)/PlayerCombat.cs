@@ -90,6 +90,9 @@ public class PlayerCombat : MonoBehaviour
     public bool IsShieldBashing;
     bool canStunPlayer;
 
+    //Consumables
+    public PlayerHealthPotion healthPotion;
+
     //weapon specific
     public float knockback = 5f;
 
@@ -170,18 +173,23 @@ public class PlayerCombat : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            healthPotion.UsePotionCharge();
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
-        //TODO: testing healing, delete after player respawn is added
+        //for Debugging, DELETE when done
         if (Input.GetKeyDown(KeyCode.Q))
         {
             controller.RespawnPlayerResetLevel();
             timeManager.ResetTimeScale();
         }
 
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            HealPlayer(25f); //how much health to heal
+            HealPlayer(100f);
         }
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,6 +215,7 @@ public class PlayerCombat : MonoBehaviour
         }
         if (timeSinceHeavyAttack > 2.0f) // if separating heavy attack reset
         {
+            //not in use
         }
     }
 
@@ -461,7 +470,6 @@ public class PlayerCombat : MonoBehaviour
                     if (enemy.GetComponent<Enemy2>() != null)
                     {
                         enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
-                        enemy.GetComponent<Enemy2>().GetStunned(stunStrength * 2);
                     }
 
                     if (enemy.GetComponent<EnemyBossBandit>() != null)
@@ -861,6 +869,7 @@ public class PlayerCombat : MonoBehaviour
         experienceBar.AddXP(xp);
         timeManager.DoFreezeTime(.05f); //short freeze on kill
         xpPopups.ShowText(transform.position, "+" + xp + "xp");
+        healthPotion.GetChargeFromKill();
     }
 
     public void HealPlayer(float healAmount)
@@ -880,12 +889,6 @@ public class PlayerCombat : MonoBehaviour
             if(currentHealth > maxHealth)
             {
                 currentHealth = maxHealth; //don't overheal
-            }
-
-            //hurt animation
-            if (currentHealth <= 0)
-            {
-                Die();
             }
         }
     }

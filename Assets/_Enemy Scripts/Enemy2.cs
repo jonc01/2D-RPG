@@ -47,7 +47,7 @@ public class Enemy2 : MonoBehaviour
     public float enAttackSpeed = 1.1f; //lower value for lower delays between attacks
     public float enAttackAnimSpeed = .4f; //lower value for shorter animations
     [Range(0f, 1.0f)]
-    public float stunResist = .5f; //0f takes full stun duration, 1.0f complete stun resist
+    public float stunResist = 0f; //0f takes full stun duration, 1.0f complete stun resist
     public float allowStun = 0f;
     public float allowStunCD = 5f; //how often enemy can be stunned
 
@@ -206,7 +206,6 @@ public class Enemy2 : MonoBehaviour
                 //player is to right, move right
 
                 rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
-
 
                 //Facing right, flip sprite to face right
                 enController.enFacingRight = true;
