@@ -132,12 +132,15 @@ public class StationaryEnemy : MonoBehaviour
         Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);*/
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, float damageMultiplier = 1.0f)
     {
         if (isAlive == true)
         {
-            currentHealth -= damage;
+            float damageTaken = damage * damageMultiplier;
+            currentHealth -= damageTaken;
             healthBar.SetHealth(currentHealth);
+            if (currentHealth > maxHealth)
+                currentHealth = maxHealth;
 
             Vector3 changeLocation = GetComponent<Transform>().position;
 
@@ -163,7 +166,7 @@ public class StationaryEnemy : MonoBehaviour
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
-                TextPopupsHandler.ShowDamage(damage, tempPos);
+                TextPopupsHandler.ShowDamage(damageTaken, tempPos);
             }
             
             //hurt animation

@@ -52,7 +52,7 @@ public class EnemyController : MonoBehaviour
                 enFacingRight = false;
             }
         }
-
+        Flip();
     }
 
     public void Flip()
@@ -78,6 +78,11 @@ public class EnemyController : MonoBehaviour
 
     #region TakeDamage, GetKnockback, GetStunned
         
+
+    /*public void TakeDamage(float damage, float damageMultiplier)
+    {
+
+    }*/
 
     #endregion
 

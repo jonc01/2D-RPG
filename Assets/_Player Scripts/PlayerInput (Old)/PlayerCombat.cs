@@ -16,6 +16,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] GameObject StatusStunned;
     public TimeManager timeManager;
     public ScreenShakeListener screenShake;
+    public GameObject respawnPrompt;
 
     [Header("Ability UI")]
     [Space]
@@ -37,6 +38,7 @@ public class PlayerCombat : MonoBehaviour
     public HealthBar healthBar;
     public ExperienceBar experienceBar;
     public bool isAlive = true;
+    bool canRespawn = false;
 
     [Space]
     //weapon stats
@@ -86,6 +88,10 @@ public class PlayerCombat : MonoBehaviour
     public float altAttackTime = .3f;
     bool IsParrying;
     public bool IsShieldBashing;
+    bool canStunPlayer;
+
+    //Consumables
+    public PlayerHealthPotion healthPotion;
 
     //weapon specific
     public float knockback = 5f;
@@ -96,6 +102,7 @@ public class PlayerCombat : MonoBehaviour
     Coroutine IsLightAttackingCO;
     Coroutine IsHeavyAttackingCO;
     Coroutine PlayerStunnedCO;
+
 
     void Start()
     {
@@ -126,6 +133,7 @@ public class PlayerCombat : MonoBehaviour
         IsParrying = false;
         IsShieldBashing = false;
         playerStunned = false;
+        canStunPlayer = true;
 
         shieldBashCollider.enabled = false;
         shieldBashTrigger.enabled = false;
@@ -151,20 +159,47 @@ public class PlayerCombat : MonoBehaviour
         ShieldBashInput();
 
         //DodgeAttackCancel(); //not currently in-use, allows for either cancelling of attacks with a dodge input, or some alt Dodge attack
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        //TODO: testing healing, delete after player respawn is added
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (!isAlive && canRespawn)
         {
-            //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
-            controller.RespawnPlayerResetLevel();
-            timeManager.ResetTimeScale();
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if(respawnPrompt != null)
+                {
+                    respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = false;
+                }
+                //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
+                controller.RespawnPlayerResetLevel();
+                timeManager.ResetTimeScale();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.H))
         {
-            HealPlayer(25f); //how much health to heal
+            healthPotion.UsePotionCharge();
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //for Debugging, DELETE when done
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            controller.RespawnPlayerResetLevel();
+            timeManager.ResetTimeScale();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            HealPlayer(100f);
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            timeManager.DoSlowMotion();
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            timeManager.ResetTimeScale();
         }
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -190,6 +225,7 @@ public class PlayerCombat : MonoBehaviour
         }
         if (timeSinceHeavyAttack > 2.0f) // if separating heavy attack reset
         {
+            //not in use
         }
     }
 
@@ -273,7 +309,7 @@ public class PlayerCombat : MonoBehaviour
         {
             if(enemy.GetComponent<EnemyController>() != null) //after migrating below functions into EnemyController
             {
-                timeManager.DoFreezeTime(.1f, .05f); //freezeDuration, delayToFreeze
+                timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze
                 //screenShake.Shake();
                 /*enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
                 enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
@@ -282,21 +318,21 @@ public class PlayerCombat : MonoBehaviour
 
             if (enemy.GetComponent<Enemy>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
             {
-                enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight, 1f);
                 //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
-                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight * damageMultiplier);
+                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight, damageMultiplier);
 
             if (enemy.GetComponent<Enemy2>() != null)
             {
-                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight * damageMultiplier); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
             }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
-                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight * damageMultiplier);
+                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight, damageMultiplier);
         }
     }
     #endregion
@@ -401,22 +437,20 @@ public class PlayerCombat : MonoBehaviour
 
                     if (enemy.GetComponent<Enemy>() != null)
                     {
-                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
-                        //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
                     }
             
                     if (enemy.GetComponent<StationaryEnemy>() != null)
-                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy * damageMultiplier);
+                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy, damageMultiplier);
 
                     if (enemy.GetComponent<Enemy2>() != null)
                     {
-                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
-                        enemy.GetComponent<Enemy2>().GetStunned(stunStrength*2);
+                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                     }
 
                     if (enemy.GetComponent<EnemyBossBandit>() != null)
-                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy * damageMultiplier);
+                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy, damageMultiplier);
                 }
                 break;
             case 2:
@@ -434,22 +468,20 @@ public class PlayerCombat : MonoBehaviour
 
                     if (enemy.GetComponent<Enemy>() != null)
                     {
-                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
-                        //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
                     }
 
                     if (enemy.GetComponent<StationaryEnemy>() != null)
-                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy * damageMultiplier);
+                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy, damageMultiplier);
 
                     if (enemy.GetComponent<Enemy2>() != null)
                     {
-                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy * damageMultiplier); //attackDamage + additional damage from parameter
-                        enemy.GetComponent<Enemy2>().GetStunned(stunStrength * 2);
+                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                     }
 
                     if (enemy.GetComponent<EnemyBossBandit>() != null)
-                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy * damageMultiplier);
+                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy, damageMultiplier);
                 }
                 break;
             default:
@@ -511,7 +543,7 @@ public class PlayerCombat : MonoBehaviour
         {
             if (enemy.GetComponent<Enemy>() != null)
             {
-                enemy.GetComponent<Enemy>().TakeDamage(altDamage); //attackDamage + additional damage from parameter
+                enemy.GetComponent<Enemy>().TakeDamage(altDamage, 1.0f); //attackDamage + additional damage from parameter
                 enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
                 enemy.GetComponent<Enemy>().GetStunned(stunStrength);
             }
@@ -582,7 +614,7 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time > allowAltAttack && movement.canMove)
         {
-            if (Input.GetButtonDown("Fire3") && canAttack && !IsShieldBashing) //TODO: IsShieldBashing only need if coroutine?
+            if (Input.GetButtonDown("Fire3") && canAttack && !IsShieldBashing)
             {
                 ShieldBash();
             }
@@ -599,6 +631,7 @@ public class PlayerCombat : MonoBehaviour
     IEnumerator ShieldBashStart()
     {
         IsShieldBashing = true;
+        canStunPlayer = false;
         movement.DisableMove();
         animator.SetTrigger("StartBlock");
         yield return new WaitForSeconds(.2f);
@@ -632,6 +665,7 @@ public class PlayerCombat : MonoBehaviour
         shieldBashTrigger.enabled = false;
 
         yield return new WaitForSeconds(.2f);
+        canStunPlayer = true;
         //Instantiate
         movement.EnableMove();
     }    
@@ -733,22 +767,25 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    public void StunPlayer(float stunDuration)
+    public void StunPlayer(float stunDuration = 1)
     {
-        if(IsLightAttackingCO != null)
-            StopCoroutine(IsLightAttackingCO); // Stop Attacking coroutines
-
-        if(IsHeavyAttackingCO != null)
-            StopCoroutine(IsHeavyAttackingCO);
-
-        if (playerStunned) // If player is already stunned, refresh stun duration
+        if (canStunPlayer)
         {
-            StopCoroutine(PlayerStunnedCO);
-            PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
-        }
-        else
-        {
-            PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
+            if(IsLightAttackingCO != null)
+                StopCoroutine(IsLightAttackingCO); // Stop Attacking coroutines
+
+            if(IsHeavyAttackingCO != null)
+                StopCoroutine(IsHeavyAttackingCO);
+
+            if (playerStunned) // If player is already stunned, refresh stun duration
+            {
+                StopCoroutine(PlayerStunnedCO);
+                PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
+            }
+            else
+            {
+                PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
+            }
         }
     }
 
@@ -783,7 +820,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, bool unBlockable = false)
     {
         if (isAlive)
         {
@@ -791,14 +828,22 @@ public class PlayerCombat : MonoBehaviour
                 if(animator.GetBool("isRolling")) //damage dodged
                 {
                     damage = 0;
-                    xpPopups.ShowDodge(transform.position);
+                    xpPopups.ShowDodge(transform.position); //xpPopups uses a static animation instead of the number animation
+                }
+                if (!unBlockable)
+                {
+                    if (IsShieldBashing)
+                    {
+                        damage = 0;
+                        xpPopups.ShowText(transform.position, "Blocked");
+                    }
                 }
                 currentHealth -= (damage);
                 healthBar.SetHealth(currentHealth);
                 if(damage > 0)
                 {
                     Vector3 tempPos = transform.position;
-                    tempPos += TPOffset;
+                    tempPos += TPOffset; //damage pop up
                     TextPopupsHandler.ShowDamage(damage, tempPos);
                     
                     if(animator.GetBool("isAttacking") == false)
@@ -822,7 +867,7 @@ public class PlayerCombat : MonoBehaviour
         sr.material = mWhiteFlash; //change sprite to white material
     }
 
-    void ResetMaterial()
+    public void ResetMaterial()
     {
         sr.material = mDefault;
     }
@@ -832,6 +877,7 @@ public class PlayerCombat : MonoBehaviour
         experienceBar.AddXP(xp);
         timeManager.DoFreezeTime(.05f); //short freeze on kill
         xpPopups.ShowText(transform.position, "+" + xp + "xp");
+        healthPotion.GetChargeFromKill(xp);
     }
 
     public void HealPlayer(float healAmount)
@@ -852,13 +898,18 @@ public class PlayerCombat : MonoBehaviour
             {
                 currentHealth = maxHealth; //don't overheal
             }
-
-            //hurt animation
-            if (currentHealth <= 0)
-            {
-                Die();
-            }
         }
+    }
+
+    IEnumerator DelayRespawn()
+    {
+        //short delay before respawn input is allowed
+        yield return new WaitForSeconds(1.0f);
+        if (respawnPrompt != null)
+        {
+            respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = true;
+        }
+        canRespawn = true;
     }
 
     void Die()
@@ -881,7 +932,11 @@ public class PlayerCombat : MonoBehaviour
         movement.rb.velocity = new Vector2(0, 0); //prevent player from moving
         movement.DisableMove();
         canAttack = false;
+        timeManager.DoFreezeTime(.05f, .5f);
+        timeManager.DoSlowMotion();
         //kill player
+
+        StartCoroutine(DelayRespawn());
     }
 
     void RevivePlayer(float spawnHpPercentage) //no use right now

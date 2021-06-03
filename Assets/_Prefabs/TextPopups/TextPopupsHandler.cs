@@ -19,18 +19,20 @@ public class TextPopupsHandler : MonoBehaviour
         tempPos.x += Random.Range(-.1f, .1f);
         tempPos.y += Random.Range(-.9f, .1f);*/
 
+        float fontSize = 1.2f;
+
         GameObject showDmg = TextPopupsPool.GetObject();
         showDmg.transform.position = position;
         showDmg.transform.rotation = Quaternion.identity;
         showDmg.SetActive(true);
-        showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1.2f; //resetting to normal font size
+        showDmg.GetComponent<TextMeshProUGUI>().fontSize = fontSize; //resetting to normal font size
 
         if (damage > 0)
         {
             if (crit)
             {
                 showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 70, 0, 255); //orange text //255, 120
-                showDmg.GetComponent<TextMeshProUGUI>().fontSize = 2;
+                showDmg.GetComponent<TextMeshProUGUI>().fontSize = fontSize*1.5f;
                 //showDmg.GetComponent<Animator>().SetBool
                 //showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 0, 0, 255); //red text
             }
@@ -40,15 +42,15 @@ public class TextPopupsHandler : MonoBehaviour
             }
             showDmg.GetComponent<TextMeshProUGUI>().text = damage.ToString();
         }
-        else if(damage < 0)
+        else if(damage < 0) //healing
         {
             showDmg.GetComponent<TextMeshProUGUI>().text = Mathf.Abs(damage).ToString();
             showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(35, 220, 0, 255); //green text
         }
-        else //grey for 0 damage?
+        else //0 damage, blocked
         {
-            showDmg.GetComponent<TextMeshProUGUI>().text = damage.ToString();
-            showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255); //white text
+            showDmg.GetComponent<TextMeshProUGUI>().text = "Blocked!";
+            showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(188, 188, 188, 255); //grey text
         }
     }
 
