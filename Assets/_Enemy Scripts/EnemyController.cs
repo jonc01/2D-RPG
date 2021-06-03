@@ -52,7 +52,7 @@ public class EnemyController : MonoBehaviour
                 enFacingRight = false;
             }
         }
-
+        Flip();
     }
 
     public void Flip()

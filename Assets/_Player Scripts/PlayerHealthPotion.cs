@@ -66,7 +66,9 @@ public class PlayerHealthPotion : MonoBehaviour
 
     public void UsePotionCharge()
     {
-        if(playerCombat.currentHealth < playerCombat.maxHealth && currentPotionCharges > 0)
+        if(playerCombat.isAlive && 
+            playerCombat.currentHealth < playerCombat.maxHealth && 
+            currentPotionCharges > 0)
         {
             playerCombat.HealPlayer(25);
             currentPotionCharges--;

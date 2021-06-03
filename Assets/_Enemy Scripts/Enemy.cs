@@ -264,25 +264,28 @@ public class Enemy : MonoBehaviour
 
     IEnumerator IsAttacking()
     {//TODO: combine redundant variables
-        enStunned = false; //attackStopped = false;
+        if (enCanAttack)
+        {
+            enCanAttack = false;
+            enStunned = false; //attackStopped = false;
 
-        enAnimator.SetBool("isAttacking", true);
-        isAttacking = true;
-        enAnimator.SetTrigger("Attack");
-        //enAnimator.SetBool("inCombat", true);
+            enAnimator.SetBool("isAttacking", true);
+            isAttacking = true;
+            enAnimator.SetTrigger("Attack");
+            //enAnimator.SetBool("inCombat", true);
 
-        enCanAttack = false;
-        StopChase();
+            StopChase();
 
-        enController.EnDisableMove();
-        yield return new WaitForSeconds(enAttackAnimSpeed);
-        Attack();
+            enController.EnDisableMove();
+            yield return new WaitForSeconds(enAttackAnimSpeed);
+            Attack();
 
-        yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
-        enController.EnEnableMove();
-        enAnimator.SetBool("isAttacking", false);
-        isAttacking = false;
-        enCanAttack = true;
+            yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
+            enController.EnEnableMove();
+            enAnimator.SetBool("isAttacking", false);
+            isAttacking = false;
+            enCanAttack = true;
+        }
     }
 
     private void OnDrawGizmosSelected()

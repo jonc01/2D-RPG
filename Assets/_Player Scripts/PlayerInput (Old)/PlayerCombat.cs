@@ -191,6 +191,16 @@ public class PlayerCombat : MonoBehaviour
         {
             HealPlayer(100f);
         }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            timeManager.DoSlowMotion();
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            timeManager.ResetTimeScale();
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////
     }
@@ -429,7 +439,6 @@ public class PlayerCombat : MonoBehaviour
                     {
                         enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
-                        //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
                     }
             
                     if (enemy.GetComponent<StationaryEnemy>() != null)
@@ -461,7 +470,6 @@ public class PlayerCombat : MonoBehaviour
                     {
                         enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
-                        //enemy.GetComponent<Enemy>().GetStunned(stunStrength);
                     }
 
                     if (enemy.GetComponent<StationaryEnemy>() != null)
@@ -759,7 +767,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    public void StunPlayer(float stunDuration)
+    public void StunPlayer(float stunDuration = 1)
     {
         if (canStunPlayer)
         {
@@ -869,7 +877,7 @@ public class PlayerCombat : MonoBehaviour
         experienceBar.AddXP(xp);
         timeManager.DoFreezeTime(.05f); //short freeze on kill
         xpPopups.ShowText(transform.position, "+" + xp + "xp");
-        healthPotion.GetChargeFromKill();
+        healthPotion.GetChargeFromKill(xp);
     }
 
     public void HealPlayer(float healAmount)

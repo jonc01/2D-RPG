@@ -334,7 +334,7 @@ public class EnemyBossBandit : MonoBehaviour
             Debug.Log("atkSequence rand: " + atkSequence);
             Vector3 tempPos = transform.position;
             tempPos.y -= .5f; //TPOffset;
-
+            enCanAttack = false;
             switch (atkSequence)
             {
                 case 1: //Attack1 //can be parried
@@ -366,6 +366,8 @@ public class EnemyBossBandit : MonoBehaviour
 
                     yield return new WaitForSeconds(0.6f);
                     LungeOnAttack();
+                    yield return new WaitForSeconds(0.02f);
+                    enController.enCanMove = false;
                     Attack2(1f);
 
                     yield return new WaitForSeconds(enAttackSpeed);
@@ -387,6 +389,8 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetTrigger("Attack2Slow");
                     yield return new WaitForSeconds(0.5f); //maybe faster start up variation for this combo
                     LungeOnAttack();
+                    yield return new WaitForSeconds(0.02f);
+                    enController.enCanMove = false;
                     Attack2(1f);
 
                     yield return new WaitForSeconds(enAttackSpeed * 2f);
@@ -405,30 +409,40 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetTrigger("Attack1SlowStartCombo"); //Attack1
                     yield return new WaitForSeconds(.6f);
                     LungeOnAttack();
+                    yield return new WaitForSeconds(0.02f);
+                    enController.enCanMove = false;
                     Attack(1f);
                     yield return new WaitForSeconds(.4f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo"); //Attack2
                     yield return new WaitForSeconds(.4f);
                     LungeOnAttack();
+                    yield return new WaitForSeconds(0.02f);
+                    enController.enCanMove = false;
                     Attack2(1f);
                     yield return new WaitForSeconds(.3f);
 
                     enAnimator.SetTrigger("Attack1SlowStartCombo2"); //Attack1
                     yield return new WaitForSeconds(.3f);
                     LungeOnAttack();
+                    yield return new WaitForSeconds(0.02f);
+                    enController.enCanMove = false;
                     Attack(1.5f);
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo2"); //Attack2
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
+                    yield return new WaitForSeconds(0.02f);
+                    enController.enCanMove = false;
                     Attack2(1.5f);
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack1SlowStartCombo3"); //Attack1
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
+                    yield return new WaitForSeconds(0.02f);
+                    enController.enCanMove = false;
                     Attack(2f);
                     yield return new WaitForSeconds(.2f);
 
@@ -437,6 +451,8 @@ public class EnemyBossBandit : MonoBehaviour
                     yield return new WaitForSeconds(.2f);
                     //canParry = false
                     LungeOnAttack();
+                    yield return new WaitForSeconds(0.02f);
+                    enController.enCanMove = false;
                     Attack2(2f);
 
                     yield return new WaitForSeconds(.6f); //short delay so the Attack2 anim doesn't get cut off
@@ -450,10 +466,9 @@ public class EnemyBossBandit : MonoBehaviour
                     yield return new WaitForSeconds(0.01f); //
                     break;
             }
+            enController.enCanMove = true;
+            enCanAttack = true;
         }
-
-        enController.enCanMove = true;
-        enCanAttack = true;
     }
 
     void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f) //defaults
@@ -467,6 +482,7 @@ public class EnemyBossBandit : MonoBehaviour
 
         if (enController.enCanFlip)
         {
+            enController.enCanMove = true;
             if (distToPlayer < 0) //to right of player //swapped > to < from knockback, moving towards player instead of away
             {
                 //lunge to right
