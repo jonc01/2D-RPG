@@ -249,7 +249,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 300, y: 115.9}
+  m_AnchoredPosition: {x: 300, y: 115.8999}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &46699787
@@ -2426,7 +2426,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: TPOffset.y
-      value: 0.3
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: allowStunCD
@@ -3920,7 +3920,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -150, y: 115.9}
+  m_AnchoredPosition: {x: -150, y: 115.8999}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &620971233
@@ -4761,7 +4761,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -50, y: 115.9}
+  m_AnchoredPosition: {x: -50, y: 115.8999}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &798246996
@@ -5169,7 +5169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: TPOffset.y
-      value: 0.12
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: healTrigger
@@ -5256,7 +5256,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 150, y: 115.9}
+  m_AnchoredPosition: {x: 150, y: 115.8999}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &879502587
@@ -6423,7 +6423,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 50, y: 115.9}
+  m_AnchoredPosition: {x: 50, y: 115.8999}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1136721103
@@ -8463,7 +8463,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: TPOffset.y
-      value: 0.3
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: stunResist
@@ -11092,7 +11092,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: TPOffset.y
-      value: 0.3
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: allowStunCD
@@ -11888,14 +11888,14 @@ PrefabInstance:
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 982059460}
+      objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: maxHealth
       value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: TPOffset.y
-      value: 0.5
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: stunResist
@@ -11904,7 +11904,11 @@ PrefabInstance:
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: playerCombat
       value: 
-      objectReference: {fileID: 982059469}
+      objectReference: {fileID: 0}
+    - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
+      propertyPath: shieldOutline
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: attackIndicator
       value: 
@@ -12104,7 +12108,7 @@ PrefabInstance:
       objectReference: {fileID: 3144434496805319467, guid: 0d10d273d6177714cb3b6a24e8705577, type: 3}
     - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: TPOffset.y
-      value: 0.12
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8396513380961675702, guid: a6783f52ea0250e46a6acfbe48d0f85f, type: 3}
       propertyPath: healTrigger

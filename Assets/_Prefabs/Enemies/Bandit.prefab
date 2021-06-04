@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f6663dc7f4e9ab4c976bfbd0fc28724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noReScaleTextHandler: {fileID: 0}
   m_jumpForce: 7.5
   rb: {fileID: 245630209313134786}
   enAnimator: {fileID: 245630209313134796}
@@ -191,15 +192,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextPopupsHandler: {fileID: 0}
-  TPOffset: {x: 0, y: 0.3, z: 0}
+  TPOffset: {x: 0, y: 0.4, z: 0}
   HitEffectsHandler: {fileID: 0}
   DeathParticlesHandler: {fileID: 0}
   playerLayers:
     serializedVersion: 2
     m_Bits: 1024
-  player: {fileID: 0}
-  playerCombat: {fileID: 0}
-  hitParticlePrefab: {fileID: 3144434496805319467, guid: 0d10d273d6177714cb3b6a24e8705577, type: 3}
   stunLParticlePrefab: {fileID: 6601068581037343418, guid: bbc8d6c487952ee449e949998073dcfd, type: 3}
   stunRParticlePrefab: {fileID: 5348519943208086770, guid: e3a1e983f51bfb2498d695f0c6cd8751, type: 3}
   maxHealth: 50

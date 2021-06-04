@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextPopupsHandler: {fileID: 0}
-  TPOffset: {x: 0, y: 0.5, z: 0}
+  TPOffset: {x: 0, y: 0.7, z: 0}
   HitEffectsHandler: {fileID: 0}
   playerLayers:
     serializedVersion: 2

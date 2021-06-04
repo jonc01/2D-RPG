@@ -63,6 +63,7 @@ public class TextPopupsHandler : MonoBehaviour
 
         showDmg.GetComponent<TextMeshProUGUI>().text = heal.ToString();
         showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(35, 220, 0, 255);
+        showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1.2f;
     }
 
     public void ShowDodge(Vector3 position)
@@ -73,6 +74,7 @@ public class TextPopupsHandler : MonoBehaviour
         showDmg.SetActive(true);
         showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255); //white text
         showDmg.GetComponent<TextMeshProUGUI>().text = "Dodged";
+        showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1.2f;
     }
 
     public void ShowStun(Vector3 position)
@@ -85,6 +87,20 @@ public class TextPopupsHandler : MonoBehaviour
         showDmg.SetActive(true);
         showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255); //white text
         showDmg.GetComponent<TextMeshProUGUI>().text = "*Stun*";
+        showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1.2f;
+    }
+    
+    public void ShowBreak(Vector3 position)
+    {
+        position.y -= .65f;
+
+        GameObject showDmg = TextPopupsPool.GetObject();
+        showDmg.transform.position = position;
+        showDmg.transform.rotation = Quaternion.identity;
+        showDmg.SetActive(true);
+        showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255); //white text
+        showDmg.GetComponent<TextMeshProUGUI>().text = "Break";
+        showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1f;
     }
 
     public void ShowText(Vector3 position, string text)
@@ -97,5 +113,6 @@ public class TextPopupsHandler : MonoBehaviour
         showDmg.SetActive(true);
         showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255);
         showDmg.GetComponent<TextMeshProUGUI>().text = text;
+        showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1.2f;
     }
 }
