@@ -5,8 +5,9 @@ using TMPro;
 
 public class Enemy : MonoBehaviour
 {
-    //Text Popups
-    public TextPopupsHandler TextPopupsHandler;
+    //Text Popups]
+    [SerializeField] private TextPopupsHandler TextPopupsHandler;
+    [SerializeField] private TextPopupsHandler AttackIndicator;
     [SerializeField] Vector3 TPOffset = new Vector3(0, .4f, 0);
     public HitEffectsHandler HitEffectsHandler;
     public DeathParticlesHandler DeathParticlesHandler;
@@ -78,6 +79,9 @@ public class Enemy : MonoBehaviour
         player = GameObject.Find("Player").transform;
         playerCombat = player.GetComponent<PlayerCombat>();
 
+        TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
+        AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
+
         if (transform.position.x > player.transform.position.x)
         {
             playerToRight = false;
@@ -121,19 +125,22 @@ public class Enemy : MonoBehaviour
 
     void IdleAnimCheck()
     {
-        if (rb.velocity.x == 0)
+        if(rb != null)
         {
-            if (!enCanAttack)
+            if (rb.velocity.x == 0)
             {
-                enAnimator.SetBool("idle", true);
-            }else if (knockbackHit)
-            {
+                enAnimator.SetBool("move", false);
                 enAnimator.SetBool("idle", true);
             }
-        }
-        else
-        {
-            enAnimator.SetBool("idle", false);
+            else
+            {
+                if (knockbackHit)
+                {
+                    enAnimator.SetBool("move", false);
+                    enAnimator.SetBool("idle", true);
+                }
+                enAnimator.SetBool("idle", false);
+            }
         }
     }
 
@@ -201,8 +208,8 @@ public class Enemy : MonoBehaviour
                 enController.Flip();
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
                 {
-                    if(!isAttacking)
-                        IsAttackingCO = StartCoroutine(IsAttacking());
+                    IsAttackingCO = StartCoroutine(IsAttacking());
+                    //isAttacking = false;
                 }
             }
             else if (transform.position.x > player.position.x) //player is left
@@ -216,14 +223,10 @@ public class Enemy : MonoBehaviour
                 enController.Flip();
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
                 {
-                    if(!isAttacking)
-                        IsAttackingCO = StartCoroutine(IsAttacking());
+                    IsAttackingCO = StartCoroutine(IsAttacking());
+                    //isAttacking = false;
                 }
             }
-        }
-        else
-        {
-            rb.velocity = new Vector2(0, 0);
         }
 
         if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
@@ -234,19 +237,28 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void StopChase(float duration = 1f)
+    void StopChase()
+    {
+        rb.velocity = new Vector2(0, 0);
+        enAnimator.SetBool("move", false);
+        //enAnimator.SetBool("inCombat", true);
+        enController.enCanMove = false;
+    }
+
+    void StopChase(float duration) //1f
     {
         StartCoroutine(StoppingChase(duration));
     }
 
-    IEnumerator StoppingChase(float duration)
+    IEnumerator StoppingChase(float duration = 1f)
     {
         enCanChase = false;
         rb.velocity = new Vector2(0, 0);
         enController.EnDisableMove();
-        //enAnimator.SetBool("move", false);
+        enAnimator.SetBool("move", false);
         yield return new WaitForSeconds(duration); //1f
         enCanChase = true;
+
         enController.EnEnableMove();
         knockbackHit = false;
     }
@@ -264,25 +276,32 @@ public class Enemy : MonoBehaviour
 
     IEnumerator IsAttacking()
     {//TODO: combine redundant variables
-        if (enCanAttack)
+        if (enCanAttack && !isAttacking && !enStunned)
         {
-            enCanAttack = false;
+            isAttacking = true;
             enStunned = false; //attackStopped = false;
+            enCanAttack = false;
 
             enAnimator.SetBool("isAttacking", true);
-            isAttacking = true;
             enAnimator.SetTrigger("Attack");
+            enAnimator.SetBool("move", false);
             //enAnimator.SetBool("inCombat", true);
 
-            StopChase();
+            //StopChase(.3f);
 
-            enController.EnDisableMove();
+            //enController.EnDisableMove();
+            enController.enCanMove = false;
+            rb.velocity = new Vector2(0, 0);
+
             yield return new WaitForSeconds(enAttackAnimSpeed);
             Attack();
 
             yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
-            enController.EnEnableMove();
+            //enController.EnEnableMove();
             enAnimator.SetBool("isAttacking", false);
+
+            enCanChase = true;
+            enController.enCanMove = true;
             isAttacking = false;
             enCanAttack = true;
         }
@@ -332,7 +351,7 @@ public class Enemy : MonoBehaviour
                 }
 
                 //GetStunned(1f);
-                enCanAttack = true;
+                //enCanAttack = true;
                 //enAnimator.SetBool("isAttacking", false);
                 //attackStopped = false;
 
@@ -393,7 +412,7 @@ public class Enemy : MonoBehaviour
             Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
-        StopChase(1f);
+        StopChase(.7f);
     }
 
     public void EnIsHurtStart()
@@ -414,6 +433,7 @@ public class Enemy : MonoBehaviour
             {
                 if (IsAttackingCO != null)
                 {
+                    isAttacking = false;
                     StopCoroutine(IsAttackingCO);
                 }
 
@@ -434,13 +454,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    IEnumerator LightStunEnemy(float lightStunDuration)
+    IEnumerator LightStunEnemy(float lightStunDuration) //used in knockback
     {
-        StopChase();
-        enCanAttack = false;
+        StopChase(.6f);
+        //enCanAttack = false;
         rb.velocity = new Vector2(0, rb.velocity.y);
         yield return new WaitForSeconds(lightStunDuration);
-        enCanAttack = true;
+        //enCanAttack = true;
         enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
         allowStun = Time.time + allowStunCD;
     }
@@ -473,9 +493,8 @@ public class Enemy : MonoBehaviour
             {
                 Vector3 tempPos = transform.position;
                 //tempPos += TPOffset;
-                tempPos.y += 0f;
-                enController.noReScaleTextHandler.ShowText(tempPos, "Stun");
-                //TextPopupsHandler.ShowText(tempPos, "Stun");
+                tempPos.y -= .4f;
+                AttackIndicator.ShowStun(tempPos, .8f);
             }
 
             yield return new WaitForSeconds(stunDuration);

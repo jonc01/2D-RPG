@@ -7,8 +7,9 @@ public class EnemyBossBandit : MonoBehaviour
 {
     [Header("Text Popups")]
     public GameObject TextPopupsPrefab;
-    public TextPopupsHandler TextPopupsHandler;
-    public TextPopupsHandler FixedTextHandler;
+    private TextPopupsHandler TextPopupsHandler;
+    //public TextPopupsHandler FixedTextHandler;
+    private TextPopupsHandler AttackIndicator;
     [SerializeField] Vector3 TPOffset = new Vector3 (0, -.5f, 0);
     public HitEffectsHandler HitEffectsHandler;
 
@@ -94,6 +95,9 @@ public class EnemyBossBandit : MonoBehaviour
 
         player = GameObject.Find("Player").transform;
         playerCombat = GameObject.Find("Player").GetComponent<PlayerCombat>();
+
+        TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
+        AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
 
         //Stats
         currentHealth = maxHealth;
@@ -266,6 +270,18 @@ public class EnemyBossBandit : MonoBehaviour
         }
     }
 
+    void ShowAttackIndicator()
+    {
+        if (AttackIndicator != null)
+        {
+            Vector3 tempPos = transform.position;
+            tempPos.y += 0.2f; //FIXME
+            //GetComponent<SpriteRenderer>().enabled = false;
+
+            AttackIndicator.ShowText(tempPos, "!");
+        }
+    }
+
     void Attack(float damageMultiplier, bool knockback = true)
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange1, playerLayers);
@@ -374,7 +390,8 @@ public class EnemyBossBandit : MonoBehaviour
                     enAnimator.SetBool("isAttacking", false);
                     break;
                 case 3: //Attack1 + Attack2 //Attack1 can be parried
-                    FixedTextHandler.ShowText(tempPos, "!");
+                    //AttackIndicator.ShowText(tempPos, "!");
+                    ShowAttackIndicator();
 
                     enStunned = false;
                     isAttacking = true;
@@ -398,7 +415,7 @@ public class EnemyBossBandit : MonoBehaviour
                     break;
                 case 4: //Attack1+2 x 3 //can flip, can parry first attack //has knockback
                     //canParry is set in animationEvent
-                    FixedTextHandler.ShowText(tempPos, "!");
+                    ShowAttackIndicator();
 
                     enStunned = false;
                     isAttacking = true;
@@ -713,8 +730,7 @@ public class EnemyBossBandit : MonoBehaviour
             {
                 //var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
                 //showStunned.GetComponent<TextMeshPro>().text = "*Stun*"; //temp fix to offset not working (anchors)
-
-                FixedTextHandler.ShowText(transform.position, "*Stun*");
+                AttackIndicator.ShowBreak(transform.position);
             }
 
             yield return new WaitForSeconds(stunDuration + .5f); //+ time for recover animation

@@ -77,7 +77,7 @@ public class TextPopupsHandler : MonoBehaviour
         showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1.2f;
     }
 
-    public void ShowStun(Vector3 position)
+    public void ShowStun(Vector3 position, float defaultFont = 1.2f)
     {
         position.y += .25f;
 
@@ -87,7 +87,7 @@ public class TextPopupsHandler : MonoBehaviour
         showDmg.SetActive(true);
         showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255); //white text
         showDmg.GetComponent<TextMeshProUGUI>().text = "*Stun*";
-        showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1.2f;
+        showDmg.GetComponent<TextMeshProUGUI>().fontSize = defaultFont;
     }
     
     public void ShowBreak(Vector3 position)
@@ -103,7 +103,7 @@ public class TextPopupsHandler : MonoBehaviour
         showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1f;
     }
 
-    public void ShowText(Vector3 position, string text)
+    public void ShowText(Vector3 position, string text, float defaultFont = 1.2f)
     {
         position.y += .25f;
 
@@ -113,6 +113,6 @@ public class TextPopupsHandler : MonoBehaviour
         showDmg.SetActive(true);
         showDmg.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255);
         showDmg.GetComponent<TextMeshProUGUI>().text = text;
-        showDmg.GetComponent<TextMeshProUGUI>().fontSize = 1.2f;
+        showDmg.GetComponent<TextMeshProUGUI>().fontSize = defaultFont;
     }
 }

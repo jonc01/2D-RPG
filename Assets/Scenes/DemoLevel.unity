@@ -11910,6 +11910,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
+      propertyPath: enAttackDamage
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: attackIndicator
       value: 
       objectReference: {fileID: 0}
