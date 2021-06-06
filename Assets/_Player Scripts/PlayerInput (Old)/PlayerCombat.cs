@@ -39,12 +39,14 @@ public class PlayerCombat : MonoBehaviour
     public ExperienceBar experienceBar;
     public bool isAlive = true;
     bool canRespawn = false;
+    float allowStun;
+    float allowStunCD = 1f;
 
     [Space]
     //weapon stats
     public float wepDamage = 10f; //default values, should change based on weapon stats
     public float wepRange = .5f; //
-    public float playerAttackSpeed = .3f;
+    public float playerAttackSpeed = .1f; //.3f
     private float playerHeavyAttackSpeed;
 
     public Transform attackPoint;
@@ -116,6 +118,7 @@ public class PlayerCombat : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         isAlive = true;
+        allowStun = 0; //stun immunity CD
 
         //weapons stats
         //attackRange = wepRange; // would have to tie separate animations to weapons
@@ -658,11 +661,11 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator ShieldBashEnd()
     {
-        IsShieldBashing = false;
         movement.DisableMove();
         animator.SetTrigger("Block");
         shieldBashCollider.enabled = false;
         shieldBashTrigger.enabled = false;
+        IsShieldBashing = false;
 
         yield return new WaitForSeconds(.2f);
         canStunPlayer = true;
@@ -767,9 +770,9 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    public void StunPlayer(float stunDuration = 1)
+    public void StunPlayer(float stunDuration = 1, bool playStunAnim = true)
     {
-        if (canStunPlayer)
+        if (Time.time > allowStun && canStunPlayer && !playerStunned)
         {
             if(IsLightAttackingCO != null)
                 StopCoroutine(IsLightAttackingCO); // Stop Attacking coroutines
@@ -803,7 +806,8 @@ public class PlayerCombat : MonoBehaviour
             movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //only rooting player x velocity
 
         yield return new WaitForSeconds(stunDuration);
-        
+
+        allowStun = Time.time + allowStunCD;
         playerStunned = false;
         canAttack = true;
         animator.SetBool("Stunned", false);

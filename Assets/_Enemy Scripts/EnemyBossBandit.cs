@@ -73,6 +73,9 @@ public class EnemyBossBandit : MonoBehaviour
     bool enStunned;
     bool particleHits;
 
+    bool allowBreak;
+    bool isBroken;
+
     Coroutine IsAttackingCO;
 
     SpriteRenderer sr;
@@ -105,6 +108,8 @@ public class EnemyBossBandit : MonoBehaviour
         isAlive = true;
         //enController.enCanMove = true;
         enCanAttack = true;
+        allowBreak = false;
+        isBroken = false;
         //AI aggro
         rb = GetComponent<Rigidbody2D>();
         enAnimator.SetBool("Move", false);
@@ -347,7 +352,7 @@ public class EnemyBossBandit : MonoBehaviour
             }
 
 
-            Debug.Log("atkSequence rand: " + atkSequence);
+            //Debug.Log("atkSequence rand: " + atkSequence); //DELETEME
             Vector3 tempPos = transform.position;
             tempPos.y -= .5f; //TPOffset;
             enCanAttack = false;
@@ -517,6 +522,16 @@ public class EnemyBossBandit : MonoBehaviour
         }
     }
 
+    void DisableShield() //for use in animation events
+    {
+        allowBreak = true;
+    }
+
+    void EnableShield()
+    {
+        allowBreak = false;
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (enAttackPoint == null)
@@ -582,21 +597,22 @@ public class EnemyBossBandit : MonoBehaviour
                 Invoke("ResetMaterial", .1f);
             }
 
-            if (particleHits)
-            {
-                if (playerToRight)
-                {
-                    Instantiate(stunLParticlePrefab, tempLocation, Quaternion.identity);
-                }
-                else
-                {
-                    Instantiate(stunRParticlePrefab, tempLocation, Quaternion.identity);
-                }
-            }
-
             if(damageTakenMultiplier > 1)
             {
+                //if(isBroken)
                 screenShake.Shake();
+
+                if (particleHits)
+                {
+                    if (playerToRight)
+                    {
+                        Instantiate(stunLParticlePrefab, tempLocation, Quaternion.identity);
+                    }
+                    else
+                    {
+                        Instantiate(stunRParticlePrefab, tempLocation, Quaternion.identity);
+                    }
+                }
             }
 
             if (currentHealth <= 0)
@@ -643,7 +659,9 @@ public class EnemyBossBandit : MonoBehaviour
 
     IEnumerator GetParried()
     {
-        StopCoroutine(IsAttackingCO);
+        if(IsAttackingCO != null)
+            StopCoroutine(IsAttackingCO);
+
         enController.enCanMove = false;
         enCanAttack = false;
         Instantiate(parriedParticlePrefab, transform.position, Quaternion.identity);
@@ -689,7 +707,7 @@ public class EnemyBossBandit : MonoBehaviour
     {
         if (isAlive)
         {
-            if (Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
+            if (allowBreak && !isBroken) //cooldown timer starts when recovered from stun
             {
                 float fullDuration = 1f;
                 fullDuration -= stunResist; //getting percentage of stun based on stunResist
@@ -704,6 +722,7 @@ public class EnemyBossBandit : MonoBehaviour
     {
         if (!enStunned)
         {
+            isBroken = true;
             enStunned = true;
             StopChase();
             enCanAttack = false;
@@ -728,18 +747,21 @@ public class EnemyBossBandit : MonoBehaviour
 
             if (isAlive)
             {
+                Vector3 tempPos = transform.position;
+                tempPos += TPOffset;
                 //var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
                 //showStunned.GetComponent<TextMeshPro>().text = "*Stun*"; //temp fix to offset not working (anchors)
-                AttackIndicator.ShowBreak(transform.position);
+                AttackIndicator.ShowBreak(tempPos);
             }
 
             yield return new WaitForSeconds(stunDuration + .5f); //+ time for recover animation
-            
+
+            EnableShield();
+            isBroken = false;
             enCanAttack = true;
             enController.enCanMove = true;
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
             enStunned = false;
-            allowStun = Time.time + allowStunCD;
         }
     }
 

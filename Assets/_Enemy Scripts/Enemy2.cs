@@ -10,7 +10,7 @@ public class Enemy2 : MonoBehaviour
     [SerializeField] private TextPopupsHandler AttackIndicator;
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0.7f, 0);
 
-    [SerializeField] private TimeManager timeManager;
+    TimeManager timeManager;
     public HitEffectsHandler HitEffectsHandler;
 
     public LayerMask playerLayers;
@@ -38,7 +38,7 @@ public class Enemy2 : MonoBehaviour
     [SerializeField]
     public Rigidbody2D rb;
     [SerializeField]
-    float aggroRange = 3f; //when to start chasing player
+    float aggroRange = 5f; //when to start chasing player
                            //might extend to aggro to player before enemy enters screen
     [SerializeField]
     float enAttackRange = .5f; //when to start attacking player, stop enemy from clipping into player
@@ -70,7 +70,7 @@ public class Enemy2 : MonoBehaviour
 
     [Header("Attack variables")]
     bool isShielded = true;
-    RaycastHit2D lungeRaycast;
+    RaycastHit2D aggroRaycast;
 
     SpriteRenderer sr;
     [SerializeField]
@@ -142,26 +142,27 @@ public class Enemy2 : MonoBehaviour
             }
         }
 
-        
-        if (enController.enFacingRight)
+        /*if (enController.enFacingRight)
         {
-            lungeRaycast = Physics2D.Raycast(transform.position, Vector2.right, 5f);
+            aggroRaycast = Physics2D.Raycast(transform.position, Vector2.right, 50f, LayerMask.GetMask("Player"));
             Debug.DrawRay(tempPosRay, Vector3.right, Color.green);
         }
         else
         {
-            lungeRaycast = Physics2D.Raycast(transform.position, Vector2.left, 5f);
+            aggroRaycast = Physics2D.Raycast(transform.position, Vector2.left, 50f, LayerMask.GetMask("Player"));
             Debug.DrawRay(tempPosRay, Vector3.left, Color.green);
         }
 
-        if (lungeRaycast.collider != null)
+        if (aggroRaycast.collider != null)
         {
             aggroStarted = true;
             if(!enStunned)
                 canChase = true;
 
+            Debug.Log("raycast hit" + aggroRaycast.collider);
+
             StartChase();
-        }
+        }*/
     }
 
     void IdleAnimCheck()
@@ -186,7 +187,13 @@ public class Enemy2 : MonoBehaviour
     {
         if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
         {
-            
+            if (player != null)
+            {
+                if (Mathf.Abs(transform.position.x - player.position.x) <= aggroRange)
+                {
+                    StartChase();
+                }
+            }
         }
         else if (!isAlive)
         {
@@ -244,7 +251,6 @@ public class Enemy2 : MonoBehaviour
             StopChase(); //stop moving, don't clip into player just to attack
                          //Attack //when in attack range
                          //StartCoroutine
-
         }
     }
 
@@ -358,7 +364,7 @@ public class Enemy2 : MonoBehaviour
             enAnimator.SetTrigger("StartChargedAttack"); //start first attack
             yield return new WaitForSeconds(.2f);
             LungeOnAttack(); //allowing movement during lunge
-            yield return new WaitForSeconds(.02f);
+            yield return new WaitForSeconds(.03f);
 
             //EnableShield(); //called in animation
 
@@ -373,14 +379,14 @@ public class Enemy2 : MonoBehaviour
             yield return new WaitForSeconds(.2f);
 
             LungeOnAttack();
-            yield return new WaitForSeconds(.02f);
+            yield return new WaitForSeconds(.03f);
             enController.enCanMove = false;
             Attack(1.5f);
 
             yield return new WaitForSeconds(1f);
             StopChase();
 
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.5f);
             canChase = true;
 
             enController.enCanMove = true;
@@ -588,6 +594,9 @@ public class Enemy2 : MonoBehaviour
             enCanAttack = false;
             enController.enCanMove = false;
 
+            if (timeManager != null)
+                timeManager.CustomSlowMotion(.02f, 1f);
+
             if (stunLParticlePrefab != null && stunRParticlePrefab != null)
             {
                 Vector3 changeLocation = GetComponent<Transform>().position;
@@ -621,7 +630,7 @@ public class Enemy2 : MonoBehaviour
             enController.enCanMove = true;
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
             enStunned = false;
-            allowStun = Time.time + allowStunCD;
+            //allowStun = Time.time + allowStunCD;
             canChase = true;
             enCanAttack = true;
         }
