@@ -8,7 +8,7 @@ public class StationaryEnemy : MonoBehaviour
     //Text Popups
     public GameObject TextPopupsPrefab;
     public TextPopupsHandler TextPopupsHandler;
-    [SerializeField] Vector3 TPOffset = new Vector3(0, -.5f, 0);
+    [SerializeField] Vector3 TPOffset = new Vector3(0, .2f, 0);
     public HitEffectsHandler HitEffectsHandler;
 
     //this is for support stationary enemies, can make non-support stationary separate

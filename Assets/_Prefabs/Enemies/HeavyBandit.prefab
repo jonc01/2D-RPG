@@ -212,7 +212,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextPopupsHandler: {fileID: 0}
-  TPOffset: {x: 0, y: 0.5, z: 0}
+  AttackIndicator: {fileID: 0}
+  TPOffset: {x: 0, y: 0.7, z: 0}
   HitEffectsHandler: {fileID: 0}
   playerLayers:
     serializedVersion: 2
@@ -229,7 +230,7 @@ MonoBehaviour:
   enAnimator: {fileID: 7044336217693309655}
   isAlive: 0
   rb: {fileID: 7044336218430027572}
-  aggroRange: 2.5
+  aggroRange: 4
   enAttackRange: 0.45
   enAttackPoint: {fileID: 7044336219045350573}
   enController: {fileID: 7044336217693309648}

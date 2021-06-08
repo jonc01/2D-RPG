@@ -76,8 +76,23 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void Flip(bool faceRight)
+    {   
+        //manually flip
+        if (faceRight)
+        {
+            transform.localRotation = Quaternion.Euler(0, 180, 0);
+            HealthBar.localRotation = Quaternion.Euler(0, 180, 0);
+        }
+        else
+        {
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+            HealthBar.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+    }
+
     #region TakeDamage, GetKnockback, GetStunned
-        
+
 
     /*public void TakeDamage(float damage, float damageMultiplier)
     {
