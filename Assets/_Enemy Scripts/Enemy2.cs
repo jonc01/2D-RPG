@@ -38,7 +38,7 @@ public class Enemy2 : MonoBehaviour
     [SerializeField]
     public Rigidbody2D rb;
     [SerializeField]
-    float aggroRange = 5f; //when to start chasing player
+    float aggroRange = 4f; //when to start chasing player
                            //might extend to aggro to player before enemy enters screen
     [SerializeField]
     float enAttackRange = .5f; //when to start attacking player, stop enemy from clipping into player
@@ -65,6 +65,7 @@ public class Enemy2 : MonoBehaviour
     bool enIsHurt;
     bool enStunned;
     bool canChase;
+    bool overrideFlip;
 
     Coroutine IsAttackingCO;
 
@@ -114,6 +115,7 @@ public class Enemy2 : MonoBehaviour
         canChase = true;
         allowBreak = false;
         isBroken = false;
+        overrideFlip = false;
 
         enController.moveSpeed += Random.Range(-.1f, .1f);
         
@@ -123,46 +125,7 @@ public class Enemy2 : MonoBehaviour
     {
         IdleAnimCheck();
         Move();
-    }
-
-    private void FixedUpdate()
-    {
-        Vector3 tempPosRay = transform.position;
-        tempPosRay.y += .5f;
-
-        if(player != null)
-        {
-            if (transform.position.x < player.position.x) //player is right
-            {
-                playerToRight = true;
-            }
-            else if (transform.position.x > player.position.x) //player is left
-            {
-                playerToRight = false;
-            }
-        }
-
-        /*if (enController.enFacingRight)
-        {
-            aggroRaycast = Physics2D.Raycast(transform.position, Vector2.right, 50f, LayerMask.GetMask("Player"));
-            Debug.DrawRay(tempPosRay, Vector3.right, Color.green);
-        }
-        else
-        {
-            aggroRaycast = Physics2D.Raycast(transform.position, Vector2.left, 50f, LayerMask.GetMask("Player"));
-            Debug.DrawRay(tempPosRay, Vector3.left, Color.green);
-        }
-
-        if (aggroRaycast.collider != null)
-        {
-            aggroStarted = true;
-            if(!enStunned)
-                canChase = true;
-
-            Debug.Log("raycast hit" + aggroRaycast.collider);
-
-            StartChase();
-        }*/
+        WhereIsPlayer();
     }
 
     void IdleAnimCheck()
@@ -183,13 +146,30 @@ public class Enemy2 : MonoBehaviour
         }
     }
 
+    void WhereIsPlayer()
+    {
+        if (transform.position.x < player.position.x) //player is right
+        {
+            playerToRight = true;
+        }
+        else if (transform.position.x > player.position.x) //player is left
+        {
+            playerToRight = false;
+        }
+    }
+
     void Move()
     {
         if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
         {
             if (player != null)
             {
-                if (Mathf.Abs(transform.position.x - player.position.x) <= aggroRange)
+                if (Mathf.Abs(transform.position.x - player.position.x) <= aggroRange && enController.enCanMove)
+                {
+                    aggroStarted = true;
+                    StartChase();
+                }
+                else if (aggroStarted && enController.enCanMove)
                 {
                     StartChase();
                 }
@@ -209,37 +189,27 @@ public class Enemy2 : MonoBehaviour
     void StartChase()
     {
         enAnimator.SetBool("inCombat", false);
-        //enController.enCanMove = true;
-        //enAnimator.SetBool("move", true);
 
-        if (enController.enCanMove && canChase)
+        if (enController.enCanMove)
         {
             if (transform.position.x < player.position.x) //player is right
             {
                 //player is to right, move right
-
                 rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
 
                 //Facing right, flip sprite to face right
                 enController.enFacingRight = true;
                 enController.Flip();
-                /*if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
-                {
-                    StartAttack();
-                    //isAttacking = false;
-                }*/
             }
             else if (transform.position.x > player.position.x) //player is left
             {
                 //player is to left, move left
-
                 rb.velocity = new Vector2(-enController.moveSpeed, 0);
 
                 enController.enFacingRight = false;
-                //if (enCanMove)
                 enController.Flip();
             }
-
+            
             if(Mathf.Abs(transform.position.x - player.position.x) <= (enAttackRange+.5f)) //long attack range
             {
                 StartAttack(2);
@@ -256,7 +226,7 @@ public class Enemy2 : MonoBehaviour
 
     void StopChase()
     {
-        canChase = false;
+        //canChase = false;
         rb.velocity = new Vector2(0, 0);
         enAnimator.SetBool("move", false);
         //enAnimator.SetBool("inCombat", true);
@@ -269,7 +239,6 @@ public class Enemy2 : MonoBehaviour
         {
             Vector3 tempPos = transform.position;
             tempPos.y += 0.2f;
-            //GetComponent<SpriteRenderer>().enabled = false;
 
             AttackIndicator.ShowText(tempPos, "!");
         }
@@ -318,7 +287,7 @@ public class Enemy2 : MonoBehaviour
             enController.enCanMove = true;
             enCanAttack = true;
             isAttacking = false;
-            canChase = true;
+            //canChase = true;
         }
     }
 
@@ -341,7 +310,6 @@ public class Enemy2 : MonoBehaviour
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            //Debug.Log("Enemy Hit " + player.name);
             player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
             player.GetComponent<PlayerCombat>().GetKnockback(playerToRight);
         }
@@ -356,20 +324,25 @@ public class Enemy2 : MonoBehaviour
             enCanAttack = false;
             ShowAttackIndicator();
 
+            enController.enCanMove = false;
+            rb.velocity = new Vector2(0, 0);
             enAnimator.SetTrigger("StartChargeUp");
-            yield return new WaitForSeconds(1.1f); //1.0
+            yield return new WaitForSeconds(1.1f);
+            rb.velocity = new Vector2(0, 0);
 
             //DisableShield(); //called in Animation event
 
             enAnimator.SetTrigger("StartChargedAttack"); //start first attack
             yield return new WaitForSeconds(.2f);
+
             LungeOnAttack(); //allowing movement during lunge
-            yield return new WaitForSeconds(.03f);
+            yield return new WaitForSeconds(.02f);
+            enController.enCanMove = false;
 
             //EnableShield(); //called in animation
 
-            enController.enCanMove = false; //stopping movement to root enemy during attack()
             Attack2();
+            
             yield return new WaitForSeconds(.3f); //delay before starting next attack
 
             enAnimator.SetTrigger("StartChargeUp"); // start second attack
@@ -379,16 +352,18 @@ public class Enemy2 : MonoBehaviour
             yield return new WaitForSeconds(.2f);
 
             LungeOnAttack();
-            yield return new WaitForSeconds(.03f);
+            yield return new WaitForSeconds(.02f);
             enController.enCanMove = false;
             Attack(1.5f);
 
+
             yield return new WaitForSeconds(1f);
-            StopChase();
+            overrideFlip = false;
+            //StopChase();
 
             yield return new WaitForSeconds(.5f);
-            canChase = true;
 
+            //canChase = true;
             enController.enCanMove = true;
             isAttacking = false;
             enCanAttack = true;
@@ -399,23 +374,21 @@ public class Enemy2 : MonoBehaviour
     {
         //lungeThrust - velocity of lunge movement
         //lungeDuration - how long to maintain thrust velocity
-
+        float distToPlayer = transform.position.x - player.transform.position.x;
 
         Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
 
-        if (enController.enCanFlip)
+        if (enController.enCanFlip) 
         {
             enController.enCanMove = true; //allow move to face correct direction
-            if (playerToRight) //to right of player //swapped > to < from knockback, moving towards player instead of away
+            if(distToPlayer < 0)
             {
-                //lunge to right
                 tempOffset.x += lungeDuration;
                 Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
-            else //to left of player
+            else
             {
-                //lunge to left
                 tempOffset.x -= lungeDuration;
                 Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
@@ -468,6 +441,7 @@ public class Enemy2 : MonoBehaviour
                     {
                         screenshake.Shake(1);
                     }
+
                     if (playerToRight)
                     {
                         Instantiate(stunLParticlePrefab, tempPos, Quaternion.identity);
@@ -595,7 +569,9 @@ public class Enemy2 : MonoBehaviour
             enController.enCanMove = false;
 
             if (timeManager != null)
+            {
                 timeManager.CustomSlowMotion(.02f, 1f);
+            }
 
             if (stunLParticlePrefab != null && stunRParticlePrefab != null)
             {
@@ -675,9 +651,4 @@ public class Enemy2 : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         Destroy(this.gameObject);
     }
-
-    /*private void DeleteEnemyObject()
-    {
-        Destroy(this.gameObject);
-    }*/
-    }
+}

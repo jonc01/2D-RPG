@@ -31,8 +31,6 @@ public class TimeManager : MonoBehaviour
 
             //Time.fixedDeltaTime = Mathf.Clamp(Time.timeScale, 0.0004f, .02f); //player move speed uses fixedDeltaTime, need to reset here
         }
-
-        Debug.Log("timeScale = " + Time.timeScale);
     }
 
     public void DoSlowMotion()

@@ -399,8 +399,8 @@ public class Enemy : MonoBehaviour
         
         //float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
         Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
-
-        if (playerFacingRight) //knockback <- enemy -- player
+        
+        if (playerFacingRight) //knockback <- enemy -- player //knockback to direction player is facing
         {
             tempOffset.x += kbDuration;
             Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);

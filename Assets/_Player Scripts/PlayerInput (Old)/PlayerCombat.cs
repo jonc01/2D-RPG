@@ -770,7 +770,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    public void StunPlayer(float stunDuration = 1, bool playStunAnim = true)
+    public void StunPlayer(float stunDuration = 1f)
     {
         if (Time.time > allowStun && canStunPlayer && !playerStunned)
         {
@@ -780,12 +780,7 @@ public class PlayerCombat : MonoBehaviour
             if(IsHeavyAttackingCO != null)
                 StopCoroutine(IsHeavyAttackingCO);
 
-            if (playerStunned) // If player is already stunned, refresh stun duration
-            {
-                StopCoroutine(PlayerStunnedCO);
-                PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
-            }
-            else
+            if (!playerStunned) // If player is already stunned, don't stun again
             {
                 PlayerStunnedCO = StartCoroutine(Stun(stunDuration));
             }

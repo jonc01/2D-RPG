@@ -218,7 +218,6 @@ public class EnemyBossBandit : MonoBehaviour
             enAnimator.SetBool("Move", true);
             if (transform.position.x < player.position.x) //player is right
             {
-                //playerToRight = true;
                 //player is to right, move right
 
                 rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
@@ -235,7 +234,6 @@ public class EnemyBossBandit : MonoBehaviour
             }
             else if (transform.position.x > player.position.x) //player is left
             {
-                //playerToRight = false;
                 //player is to left, move left
 
                 rb.velocity = new Vector2(-enController.moveSpeed, 0);
@@ -337,7 +335,7 @@ public class EnemyBossBandit : MonoBehaviour
         if (enCanAttack && !isAttacking)
         {
             int atkSequence;
-
+            
             if (currentHealth >= (maxHealth / 2)) //phase 1: 50%+ hp
             {
                 atkSequence = Random.Range(1, 4); //1-3x
@@ -351,8 +349,10 @@ public class EnemyBossBandit : MonoBehaviour
                 recoverDuration = 1.3f;
             }
 
+            //DELETEME
+            //atkSequence = 3;
 
-            //Debug.Log("atkSequence rand: " + atkSequence); //DELETEME
+
             Vector3 tempPos = transform.position;
             tempPos.y -= .5f; //TPOffset;
             enCanAttack = false;
@@ -601,6 +601,7 @@ public class EnemyBossBandit : MonoBehaviour
             {
                 //if(isBroken)
                 screenShake.Shake();
+                enAnimator.SetTrigger("StunHits");
 
                 if (particleHits)
                 {

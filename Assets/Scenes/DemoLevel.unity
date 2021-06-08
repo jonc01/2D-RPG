@@ -11762,7 +11762,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5292194739621741516, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.79
+      value: -5.22
       objectReference: {fileID: 0}
     - target: {fileID: 5292194739621741516, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11839,7 +11839,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217550712157, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6
+      value: 3.37
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217550712157, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11891,11 +11891,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: maxHealth
-      value: 300
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: TPOffset.y
       value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
+      propertyPath: aggroRange
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: stunResist
@@ -11915,7 +11919,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: enAttackDamage
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217693309649, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: attackIndicator
