@@ -633,7 +633,7 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator ShieldBashStart()
     {
-        IsShieldBashing = true;
+        IsShieldBashing = true; //starting to block damage
         canStunPlayer = false;
         movement.DisableMove();
         animator.SetTrigger("StartBlock");
@@ -665,7 +665,7 @@ public class PlayerCombat : MonoBehaviour
         animator.SetTrigger("Block");
         shieldBashCollider.enabled = false;
         shieldBashTrigger.enabled = false;
-        IsShieldBashing = false;
+        IsShieldBashing = false; //stop blocking damage
 
         yield return new WaitForSeconds(.2f);
         canStunPlayer = true;

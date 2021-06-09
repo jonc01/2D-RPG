@@ -4393,6 +4393,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 656035575}
   m_CullTransparentMesh: 1
+--- !u!4 &663728352 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5292194739955091543, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
+  m_PrefabInstance: {fileID: 5292194739635542213}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &747909372
 GameObject:
   m_ObjectHideFlags: 0
@@ -4991,7 +4996,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a401991309620b642a4520461fcc4604, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionCheck: {fileID: 0}
   solidCollider: {fileID: 1569115774}
   movement: {fileID: 982059464}
   combat: {fileID: 982059469}
@@ -11721,6 +11725,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5292194739621741515, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
+      propertyPath: TPOffsetObj
+      value: 
+      objectReference: {fileID: 663728352}
+    - target: {fileID: 5292194739621741515, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
       propertyPath: screenShake
       value: 
       objectReference: {fileID: 1370011435}
@@ -11762,7 +11770,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5292194739621741516, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.22
+      value: -5.209
       objectReference: {fileID: 0}
     - target: {fileID: 5292194739621741516, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11816,6 +11824,14 @@ PrefabInstance:
       propertyPath: m_LinearDrag
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 5292194739955091543, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292194739955091543, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 113b9e5c29589f740bd414126a66784a, type: 3}
 --- !u!1001 &7044336218575463011
@@ -11839,7 +11855,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217550712157, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.37
+      value: 1.45
       objectReference: {fileID: 0}
     - target: {fileID: 7044336217550712157, guid: 5ddd7b45f99a85a40b38ab91581fd2d4, type: 3}
       propertyPath: m_LocalPosition.y

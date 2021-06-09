@@ -11,6 +11,7 @@ public class EnemyBossBandit : MonoBehaviour
     //public TextPopupsHandler FixedTextHandler;
     private TextPopupsHandler AttackIndicator;
     [SerializeField] Vector3 TPOffset = new Vector3 (0, -.5f, 0);
+    public Transform TPOffsetObj;
     public HitEffectsHandler HitEffectsHandler;
 
     [Space]
@@ -20,8 +21,6 @@ public class EnemyBossBandit : MonoBehaviour
     public PlayerCombat playerCombat;
     public TimeManager timeManager;
     public ScreenShakeListener screenShake;
-    //public GameObject hitPrefabToRight;
-    //public GameObject hitPrefabToLeft;
     public GameObject hitParticlePrefab;
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
@@ -275,13 +274,12 @@ public class EnemyBossBandit : MonoBehaviour
 
     void ShowAttackIndicator()
     {
+        Vector3 tempOffset = TPOffsetObj.transform.position;
+        tempOffset.y -= 0.5f;
+
         if (AttackIndicator != null)
         {
-            Vector3 tempPos = transform.position;
-            tempPos.y += 0.2f; //FIXME
-            //GetComponent<SpriteRenderer>().enabled = false;
-
-            AttackIndicator.ShowText(tempPos, "!");
+            AttackIndicator.ShowText(tempOffset, "!");
         }
     }
 
@@ -350,7 +348,7 @@ public class EnemyBossBandit : MonoBehaviour
             }
 
             //DELETEME
-            //atkSequence = 3;
+            atkSequence = 4;
 
 
             Vector3 tempPos = transform.position;
@@ -667,6 +665,9 @@ public class EnemyBossBandit : MonoBehaviour
         enCanAttack = false;
         Instantiate(parriedParticlePrefab, transform.position, Quaternion.identity);
 
+        Vector3 tempPos = transform.position;
+        tempPos += new Vector3(0, .1f, 0);
+        AttackIndicator.ShowBreak(tempPos);
 
         yield return new WaitForSeconds(.1f);
         if(timeManager != null)
@@ -704,8 +705,9 @@ public class EnemyBossBandit : MonoBehaviour
         enIsHurt = false;
     }
 
-    public void GetStunned(float duration) //allow player to call this function
+    public void GetStunned(float duration)
     {
+        //currently set up with GetParried
         if (isAlive)
         {
             if (allowBreak && !isBroken) //cooldown timer starts when recovered from stun
@@ -749,9 +751,7 @@ public class EnemyBossBandit : MonoBehaviour
             if (isAlive)
             {
                 Vector3 tempPos = transform.position;
-                tempPos += TPOffset;
-                //var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-                //showStunned.GetComponent<TextMeshPro>().text = "*Stun*"; //temp fix to offset not working (anchors)
+                tempPos += new Vector3(0, 0f, 0);
                 AttackIndicator.ShowBreak(tempPos);
             }
 

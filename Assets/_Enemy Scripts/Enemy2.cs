@@ -65,7 +65,6 @@ public class Enemy2 : MonoBehaviour
     bool enIsHurt;
     bool enStunned;
     bool canChase;
-    bool overrideFlip;
 
     Coroutine IsAttackingCO;
 
@@ -115,7 +114,6 @@ public class Enemy2 : MonoBehaviour
         canChase = true;
         allowBreak = false;
         isBroken = false;
-        overrideFlip = false;
 
         enController.moveSpeed += Random.Range(-.1f, .1f);
         
@@ -356,10 +354,13 @@ public class Enemy2 : MonoBehaviour
             enController.enCanMove = false;
             Attack(1.5f);
 
+            yield return new WaitForSeconds(.5f);
+            enAnimator.SetTrigger("IdleStunnable");
+            //enAnimator.SetBool("IdleStunnableB", true);
 
-            yield return new WaitForSeconds(1f);
-            overrideFlip = false;
+            yield return new WaitForSeconds(.4f);
             //StopChase();
+            //enAnimator.SetBool("IdleStunnableB", false);
 
             yield return new WaitForSeconds(.5f);
 
@@ -549,6 +550,11 @@ public class Enemy2 : MonoBehaviour
                 enAnimator.SetTrigger("en2Stunned");
                 isAttacking = false;
 
+                /*if (timeManager != null)
+                {
+                    timeManager.CustomSlowMotion(.02f, 5f);
+                }*/
+
                 if (IsAttackingCO != null)
                     StopCoroutine(IsAttackingCO); //stopping attack coroutine when attacking
 
@@ -567,11 +573,6 @@ public class Enemy2 : MonoBehaviour
             StopChase();
             enCanAttack = false;
             enController.enCanMove = false;
-
-            if (timeManager != null)
-            {
-                timeManager.CustomSlowMotion(.02f, 1f);
-            }
 
             if (stunLParticlePrefab != null && stunRParticlePrefab != null)
             {
