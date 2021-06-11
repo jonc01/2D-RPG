@@ -7,7 +7,7 @@ public class TriggerCheck : MonoBehaviour
     // Called by ShieldBash() in PlayerCombat
     // Using when trigger collider is enabled, used to apply the ShieldBash collision
 
-    public CollisionCheck collisionCheck;
+    //public CollisionCheck collisionCheck;
     public Collider2D solidCollider;
     public PlayerMovement movement;
     public PlayerCombat combat;

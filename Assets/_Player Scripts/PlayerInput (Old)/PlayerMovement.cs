@@ -66,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
         {
             runSpeed = defaultRunSpeed;
             horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+            animator.SetBool("Stunned", false);
         }
         
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove)); //greater than 0 -> play run anim, less than -> play idle
@@ -219,8 +220,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if(isDashing && canDash)
         {
-            float startPos, endPos; //DEBUG
-            startPos = transform.position.x; //DEBUG
             if (dashTimeLeft > 0)
             {
                 DisableMove(); //no movement inputs
@@ -237,8 +236,6 @@ public class PlayerMovement : MonoBehaviour
 
             if(dashTimeLeft <= 0)
             {
-                endPos = transform.position.x; //DEBUG
-                Debug.Log("dash distance: " + (startPos + endPos)); //DEBUG
                 CancelDash();
             }
         }

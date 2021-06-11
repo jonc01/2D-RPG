@@ -8,9 +8,9 @@ public class EnemyBossBandit : MonoBehaviour
     [Header("Text Popups")]
     public GameObject TextPopupsPrefab;
     private TextPopupsHandler TextPopupsHandler;
-    //public TextPopupsHandler FixedTextHandler;
     private TextPopupsHandler AttackIndicator;
-    [SerializeField] Vector3 TPOffset = new Vector3 (0, -.5f, 0);
+    [SerializeField] Vector3 TPOffset = new Vector3 (0, .1f, 0);
+    public Transform TPOffsetObj;
     public HitEffectsHandler HitEffectsHandler;
 
     [Space]
@@ -20,8 +20,6 @@ public class EnemyBossBandit : MonoBehaviour
     public PlayerCombat playerCombat;
     public TimeManager timeManager;
     public ScreenShakeListener screenShake;
-    //public GameObject hitPrefabToRight;
-    //public GameObject hitPrefabToLeft;
     public GameObject hitParticlePrefab;
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
@@ -62,8 +60,8 @@ public class EnemyBossBandit : MonoBehaviour
     public float allowStun = 0f;
     public float allowStunCD = 5f; //how often enemy can be stunned
     public float damageTakenMultiplier = 1f;
-    float parryDuration;
-    float recoverDuration;
+    float breakDuration;
+    int atkSequence;
 
     [SerializeField]
     bool enCanAttack = true, isAttacking; //for parry()
@@ -118,6 +116,7 @@ public class EnemyBossBandit : MonoBehaviour
         enIsHurt = false;
         enStunned = false;
         particleHits = false;
+        atkSequence = 1;
 
         //UpdateAnimClips();
     }   
@@ -162,7 +161,7 @@ public class EnemyBossBandit : MonoBehaviour
 
     void Move()
     {
-        if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
+        if (rb != null && enController != null && isAlive && playerCombat.isAlive) //check if object has rigidbody
         {
             //checking distance to player for aggro range
             float distToPlayer = Vector2.Distance(transform.position, player.position);
@@ -197,13 +196,15 @@ public class EnemyBossBandit : MonoBehaviour
 
     void MoveAnimCheck()
     {
-        if(rb.velocity.x != 0)
+        if(rb.velocity.x == 0)
         {
-            enAnimator.SetBool("Move", true);
+            enAnimator.SetBool("Move", false);
+            enAnimator.SetBool("Idle", true);
         }
         else
         {
-            enAnimator.SetBool("Move", false);
+            enAnimator.SetBool("Move", true);
+            enAnimator.SetBool("Idle", false);
         }
     }
 
@@ -229,7 +230,7 @@ public class EnemyBossBandit : MonoBehaviour
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
                 {
                     IsAttackingCO = StartCoroutine(IsAttacking());
-                    isAttacking = false;
+                    //isAttacking = false;
                 }
             }
             else if (transform.position.x > player.position.x) //player is left
@@ -245,7 +246,7 @@ public class EnemyBossBandit : MonoBehaviour
                 if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange1)
                 {
                     IsAttackingCO = StartCoroutine(IsAttacking());
-                    isAttacking = false;
+                    //isAttacking = false;
                 }
             }
         }
@@ -275,17 +276,16 @@ public class EnemyBossBandit : MonoBehaviour
 
     void ShowAttackIndicator()
     {
+        Vector3 tempOffset = TPOffsetObj.transform.position;
+        tempOffset.y -= 0.5f;
+
         if (AttackIndicator != null)
         {
-            Vector3 tempPos = transform.position;
-            tempPos.y += 0.2f; //FIXME
-            //GetComponent<SpriteRenderer>().enabled = false;
-
-            AttackIndicator.ShowText(tempPos, "!");
+            AttackIndicator.ShowText(tempOffset, "!");
         }
     }
 
-    void Attack(float damageMultiplier, bool knockback = true)
+    void Attack(float damageMultiplier, bool knockback = false) //knockback has short stun
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange1, playerLayers);
 
@@ -308,7 +308,7 @@ public class EnemyBossBandit : MonoBehaviour
         }
     }
 
-    void Attack2(float damageMultiplier, bool knockback = true)
+    void Attack2(float damageMultiplier, bool knockback = true) //knockback has short stun
     {
         Collider2D[] hitPlayer = Physics2D.OverlapBoxAll(enAttackPoint2.position, enAttackRange2, 180, playerLayers);
 
@@ -332,38 +332,35 @@ public class EnemyBossBandit : MonoBehaviour
 
     IEnumerator IsAttacking()
     {//TODO: combine redundant variables
-        if (enCanAttack && !isAttacking)
+        if (enCanAttack && !isAttacking && !isBroken)
         {
-            int atkSequence;
-            
+            int phase;
             if (currentHealth >= (maxHealth / 2)) //phase 1: 50%+ hp
             {
-                atkSequence = Random.Range(1, 4); //1-3x
-                parryDuration = .5f;
-                recoverDuration = .5f;
+                phase = 1;
+                breakDuration = .5f; //stun duration when broken
             }
-            else
+            else //phase 2
             {
-                atkSequence = Random.Range(4, 4); //only 4
-                parryDuration = 1.1f;
-                recoverDuration = 1.3f;
+                phase = 2;
+                breakDuration = 1.0f;
             }
 
-            //DELETEME
-            //atkSequence = 3;
-
-
-            Vector3 tempPos = transform.position;
+            Vector3 tempPos = TPOffsetObj.transform.position;
             tempPos.y -= .5f; //TPOffset;
+
             enCanAttack = false;
+            isAttacking = true;
+
             switch (atkSequence)
             {
                 case 1: //Attack1 //can be parried
-                    enStunned = false;
+                    //enStunned = false;
+                    atkSequence = 2;
+
                     isAttacking = true;
                     enAnimator.SetTrigger("Attack1Slow");
 
-                    enAnimator.SetBool("isAttacking", true);
                     enAnimator.SetBool("Move", false);
 
                     enCanAttack = false;
@@ -375,13 +372,21 @@ public class EnemyBossBandit : MonoBehaviour
                     rb.velocity = new Vector2(0, 0); //stop enemy from moving
                     Attack(1.5f);
                     yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
-                    enAnimator.SetBool("isAttacking", false);
+
                     break;
                 case 2: //Attack2 //can be parried
-                    enStunned = false;
+                    //enStunned = false;
+                    if(phase == 1)
+                    {
+                        atkSequence = 3;
+                    }
+                    else
+                    {
+                        atkSequence = 4;
+                    }
+
                     isAttacking = true;
                     enAnimator.SetTrigger("Attack2Slow");
-                    enAnimator.SetBool("isAttacking", true);
                     enAnimator.SetBool("Move", false);
                     rb.velocity = new Vector2(0, 0);
 
@@ -392,15 +397,14 @@ public class EnemyBossBandit : MonoBehaviour
                     Attack2(1f);
 
                     yield return new WaitForSeconds(enAttackSpeed);
-                    enAnimator.SetBool("isAttacking", false);
+
                     break;
                 case 3: //Attack1 + Attack2 //Attack1 can be parried
-                    //AttackIndicator.ShowText(tempPos, "!");
+                    atkSequence = 1;
                     ShowAttackIndicator();
 
-                    enStunned = false;
+                    //enStunned = false;
                     isAttacking = true;
-                    enAnimator.SetBool("isAttacking", true);
                     enAnimator.SetBool("Move", false);
                     rb.velocity = new Vector2(0, 0);
 
@@ -414,21 +418,25 @@ public class EnemyBossBandit : MonoBehaviour
                     yield return new WaitForSeconds(0.02f);
                     enController.enCanMove = false;
                     Attack2(1f);
+                    yield return new WaitForSeconds(0.4f);
+                    enAnimator.SetBool("IdleLongStunnable", true);
+                    yield return new WaitForSeconds(1.0f); //enAttackSpeed * 2f
+                    enAnimator.SetBool("IdleLongStunnable", false);
 
-                    yield return new WaitForSeconds(enAttackSpeed * 2f);
-                    enAnimator.SetBool("isAttacking", false);
+
                     break;
                 case 4: //Attack1+2 x 3 //can flip, can parry first attack //has knockback
                     //canParry is set in animationEvent
+                    atkSequence = 1;
+                    breakDuration = 1.5f;
                     ShowAttackIndicator();
 
-                    enStunned = false;
+                    //enStunned = false;
                     isAttacking = true;
-                    enAnimator.SetBool("isAttacking", true);
                     enAnimator.SetBool("Move", false);
                     rb.velocity = new Vector2(0, 0);
 
-                    enAnimator.SetTrigger("Attack1SlowStartCombo"); //Attack1
+                    enAnimator.SetTrigger("Attack1SlowStartCombo"); //Attack1 can be stunned
                     yield return new WaitForSeconds(.6f);
                     LungeOnAttack();
                     yield return new WaitForSeconds(0.02f);
@@ -469,26 +477,29 @@ public class EnemyBossBandit : MonoBehaviour
                     yield return new WaitForSeconds(.2f);
 
                     enAnimator.SetTrigger("Attack2SlowStartCombo3"); //Attack2
-                    //canParry = true
                     yield return new WaitForSeconds(.2f);
-                    //canParry = false
                     LungeOnAttack();
                     yield return new WaitForSeconds(0.02f);
                     enController.enCanMove = false;
                     Attack2(2f);
 
                     yield return new WaitForSeconds(.6f); //short delay so the Attack2 anim doesn't get cut off
-                    enAnimator.SetTrigger("IdleLong"); //longer slow idle animation
-                    yield return new WaitForSeconds(1.6f);
+                    enAnimator.SetBool("IdleLongStunnable", true);
+                    yield return new WaitForSeconds(.5f);
+                    enAnimator.SetBool("IdleLongStunnable", false);
+                    //moving from Stunnable idle anim IdleLong anim
+                    enAnimator.SetBool("IdleLong", true);
+                    yield return new WaitForSeconds(.5f);
+                    enAnimator.SetBool("IdleLong", false);
 
                     yield return new WaitForSeconds(enAttackSpeed); //long delay before attacking again since we have a long attack sequence
-                    enAnimator.SetBool("isAttacking", false);
                     break;
                 default:
                     yield return new WaitForSeconds(0.01f); //
                     break;
             }
             enController.enCanMove = true;
+            isAttacking = false;
             enCanAttack = true;
         }
     }
@@ -553,7 +564,11 @@ public class EnemyBossBandit : MonoBehaviour
         if (isAlive == true)
         {
             float damageTaken = damage * damageMultiplier;
-            damageTaken *= damageTakenMultiplier;
+            if (isBroken)
+            {
+                damageTaken *= 2f;
+            }
+
             currentHealth -= damageTaken;
             healthBar.SetHealth(currentHealth);
             if (currentHealth > maxHealth)
@@ -561,17 +576,18 @@ public class EnemyBossBandit : MonoBehaviour
 
 
             //temp knockback
-            Vector3 tempLocation = GetComponent<Transform>().position;
-            tempLocation.y -= .0f;
+            Vector3 tempLocation = TPOffsetObj.transform.position;
+
             //
             HitEffectsHandler.ShowHitEffect(tempLocation);
             //show damage/heal numbers
             if (TextPopupsHandler)
             {
-                Vector3 tempPos = transform.position;
+                Vector3 tempPos = TPOffsetObj.transform.position;
                 tempPos += TPOffset;
-                if(damageTakenMultiplier != 1) //crit damage, damage was multiplied, this is set when Boss is parried
+                if(isBroken) //crit damage, damage was multiplied, this is set when Boss is parried
                 {
+                    //
                     timeManager.DoFreezeTime(.1f);
                     TextPopupsHandler.ShowDamage(damageTaken, tempPos, true);
                 }
@@ -584,22 +600,15 @@ public class EnemyBossBandit : MonoBehaviour
             //hurt animation
             if (enAnimator != null && damage > 0) //took damage, not heal
             {
-                //stopping coroutine
-                //attackStopped = true;
-
                 enIsHurt = true;
                 enAnimator.SetTrigger("Hurt");
-                enCanAttack = true;
-                enAnimator.SetBool("isAttacking", false);
-                //attackStopped = false;
 
                 sr.material = mWhiteFlash; //flashing enemy sprite
                 Invoke("ResetMaterial", .1f);
             }
 
-            if(damageTakenMultiplier > 1)
+            if(isBroken)
             {
-                //if(isBroken)
                 screenShake.Shake();
                 enAnimator.SetTrigger("StunHits");
 
@@ -637,22 +646,20 @@ public class EnemyBossBandit : MonoBehaviour
             if (playerToRight)
             {
                 changeLocation.x -= .1f; //knockback
-                //rb.AddForce(Vector2.left * knockbackAmount);
             }
             else
             {
                 changeLocation.x += .1f;
-                //rb.AddForce(Vector2.left * knockbackAmount);
             }
 
             GetComponent<Transform>().position = changeLocation;
-            //StartCoroutine(StunEnemy(0f));
+            //StartCoroutine(StunEnemy(0.1f));
         }
     }
 
     public void CheckParry()
     {
-        if (enController.enCanParry == true && isAlive)
+        if (allowBreak && !isBroken && isAlive)
         {
             StartCoroutine(GetParried());
         }
@@ -660,38 +667,42 @@ public class EnemyBossBandit : MonoBehaviour
 
     IEnumerator GetParried()
     {
-        if(IsAttackingCO != null)
+        enAnimator.SetBool("IdleLongStunnable", false); //need to reset animation bools since attack is interrupted
+        enAnimator.SetBool("IdleLong", false);
+
+        if (IsAttackingCO != null)
             StopCoroutine(IsAttackingCO);
 
         enController.enCanMove = false;
+        isAttacking = false;
         enCanAttack = false;
         Instantiate(parriedParticlePrefab, transform.position, Quaternion.identity);
 
+        isBroken = true;
+
+        Vector3 tempPos = TPOffsetObj.position;
+        tempPos += new Vector3(0, .1f, 0);
+        AttackIndicator.ShowBreak(tempPos);
 
         yield return new WaitForSeconds(.1f);
         if(timeManager != null)
             timeManager.DoSlowMotion();
 
         particleHits = true;
-        damageTakenMultiplier = 2f;
-        enController.EnDisableParry();
+        //damageTakenMultiplier = 2f; //update to only be called TakeDamage when isBroken is true
         enAnimator.SetTrigger("Stunned");
-        yield return new WaitForSeconds(parryDuration); //1.1f
+        yield return new WaitForSeconds(.5f); //1.1f //keep this static, transition from initial Stunned to StunnedLoop
+        enAnimator.SetBool("IdleLoopStunned", true);
 
-        enAnimator.SetTrigger("IdleLong");
-        yield return new WaitForSeconds(recoverDuration); //1.3f
-        enAnimator.SetTrigger("Idle");
-        yield return new WaitForSeconds(.3f);
+        yield return new WaitForSeconds(breakDuration); //1.3f //recoverDuration //change based on phase
+        enAnimator.SetBool("IdleLoopStunned", false);
+        isBroken = false;
+        yield return new WaitForSeconds(.2f);
+        ShowAttackIndicator();
+        yield return new WaitForSeconds(.5f);
 
         enController.enCanMove = true;
         enCanAttack = true;
-        ResetDamageTakenMultiplier();
-    }
-
-    void ResetDamageTakenMultiplier()
-    {
-        damageTakenMultiplier = 1f;
-        particleHits = false;
     }
 
     public void EnIsHurtStart()
@@ -704,70 +715,13 @@ public class EnemyBossBandit : MonoBehaviour
         enIsHurt = false;
     }
 
-    public void GetStunned(float duration) //allow player to call this function
-    {
-        if (isAlive)
-        {
-            if (allowBreak && !isBroken) //cooldown timer starts when recovered from stun
-            {
-                float fullDuration = 1f;
-                fullDuration -= stunResist; //getting percentage of stun based on stunResist
-                duration *= fullDuration;
-
-                StartCoroutine(StunEnemy(duration));
-            }
-        }
-    }
-
-    IEnumerator StunEnemy(float stunDuration)
-    {
-        if (!enStunned)
-        {
-            isBroken = true;
-            enStunned = true;
-            StopChase();
-            enCanAttack = false;
-            enController.enCanMove = false;
-
-            if (stunLParticlePrefab != null && stunRParticlePrefab != null)
-            {
-                Vector3 changeLocation = GetComponent<Transform>().position;
-                Vector3 tempLocation = changeLocation;
-                tempLocation.y += .5f;
-
-                if (enController.enFacingRight)
-                {
-                    // If adding to pool, need to change prefab to not Destroy after it ends
-                    Instantiate(stunLParticlePrefab, tempLocation, Quaternion.identity, transform);
-                }
-                else
-                {
-                    Instantiate(stunRParticlePrefab, tempLocation, Quaternion.identity, transform);
-                }
-            }
-
-            if (isAlive)
-            {
-                Vector3 tempPos = transform.position;
-                tempPos += TPOffset;
-                //var showStunned = Instantiate(TextPopupsPrefab, transform.position, Quaternion.identity, transform);
-                //showStunned.GetComponent<TextMeshPro>().text = "*Stun*"; //temp fix to offset not working (anchors)
-                AttackIndicator.ShowBreak(tempPos);
-            }
-
-            yield return new WaitForSeconds(stunDuration + .5f); //+ time for recover animation
-
-            EnableShield();
-            isBroken = false;
-            enCanAttack = true;
-            enController.enCanMove = true;
-            enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
-            enStunned = false;
-        }
-    }
-
     void Die()
     {
+        enAnimator.SetBool("IdleLongStunnable", false);
+        enAnimator.SetBool("IdleLong", false);
+        enAnimator.SetBool("Move", false);
+        enAnimator.SetBool("Idle", false);
+
         isAlive = false;
         //give player exp
         playerCombat.GiveXP(experiencePoints);
