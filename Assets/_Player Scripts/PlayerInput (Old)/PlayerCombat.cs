@@ -180,32 +180,6 @@ public class PlayerCombat : MonoBehaviour
         {
             healthPotion.UsePotionCharge();
         }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        //for Debugging, DELETE when done
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            controller.RespawnPlayerResetLevel();
-            timeManager.ResetTimeScale();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            HealPlayer(100f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            timeManager.DoSlowMotion();
-        }
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            timeManager.ResetTimeScale();
-        }
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////
     }
     void UpdateAbilityDisplay()
     {
@@ -493,7 +467,7 @@ public class PlayerCombat : MonoBehaviour
     }
     #endregion
 
-    IEnumerator StartAltAttack()
+    IEnumerator StartAltAttack() // ! not being used
     {
         if (movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
@@ -509,7 +483,7 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBool("isAttacking", false);
     }
 
-    void AltAttack(float altDamage, float altRange) // ! not being used
+    void AltAttack(float altDamage, float altRange) // ! not being used, calling ShieldBash in TriggerCheck script
     {
         //range increase to around 15f-20f
         //hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackHeavyRange, enemyLayers);

@@ -20,6 +20,7 @@ public class Enemy2 : MonoBehaviour
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
+    public GameObject initialStunParticle;
 
     private ScreenShakeListener screenshake;
 
@@ -435,6 +436,8 @@ public class Enemy2 : MonoBehaviour
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
+                Vector3 particleOffset = tempPos;
+                particleOffset.y -= .5f;
                 if (isBroken)
                 {
                     TextPopupsHandler.ShowDamage(damageTaken, tempPos, true);
@@ -445,11 +448,11 @@ public class Enemy2 : MonoBehaviour
 
                     if (playerToRight)
                     {
-                        Instantiate(stunLParticlePrefab, tempPos, Quaternion.identity);
+                        Instantiate(stunLParticlePrefab, particleOffset, Quaternion.identity);
                     }
                     else
                     {
-                        Instantiate(stunRParticlePrefab, tempPos, Quaternion.identity);
+                        Instantiate(stunRParticlePrefab, particleOffset, Quaternion.identity);
                     }
                 }
                 else
@@ -574,27 +577,18 @@ public class Enemy2 : MonoBehaviour
             enCanAttack = false;
             enController.enCanMove = false;
 
-            if (stunLParticlePrefab != null && stunRParticlePrefab != null)
+            if(initialStunParticle != null)
             {
-                Vector3 changeLocation = GetComponent<Transform>().position;
-                Vector3 tempLocation = changeLocation;
+                Vector3 tempLocation = transform.position;
                 tempLocation.y += .5f;
 
-                if (enController.enFacingRight)
-                {
-                    Instantiate(stunLParticlePrefab, tempLocation, Quaternion.identity, transform);
-                }
-                else
-                {
-                    Instantiate(stunRParticlePrefab, tempLocation, Quaternion.identity, transform);
-                }
+                Instantiate(initialStunParticle, tempLocation, Quaternion.identity, transform);
             }
 
             if (isAlive)
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
-                //TextPopupsHandler.ShowStun(tempPos);
                 AttackIndicator.ShowBreak(tempPos);
             }
 
