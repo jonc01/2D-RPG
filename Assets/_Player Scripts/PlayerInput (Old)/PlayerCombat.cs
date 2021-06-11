@@ -801,7 +801,7 @@ public class PlayerCombat : MonoBehaviour
                 if(animator.GetBool("isRolling")) //damage dodged
                 {
                     damage = 0;
-                    xpPopups.ShowDodge(transform.position); //xpPopups uses a static animation instead of the number animation
+                    //xpPopups.ShowDodge(transform.position); //xpPopups uses a static animation instead of the number animation
                 }
                 if (!unBlockable)
                 {

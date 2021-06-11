@@ -118,27 +118,7 @@ public class EnemyBossBandit : MonoBehaviour
         particleHits = false;
         atkSequence = 1;
 
-        //UpdateAnimClips();
     }   
-
-    /*public void UpdateAnimClips()
-    {
-        AnimationClip[] clips = enAnimator.runtimeAnimatorController.animationClips;
-        foreach(AnimationClip clip in clips)
-        {
-            switch (clip.name)
-            {
-                case "Stunned":
-                    stunnedAnimTime = clip.length;
-                    Debug.Log("Stunned: " + stunnedAnimTime);
-                    break;
-                case "Attack1_SlowStartCombo3":
-                    combo3Attack1AnimTime = clip.length;
-                    Debug.Log("Attack1SlowCombo3: " + combo3Attack1AnimTime);
-                    break;
-            }
-        }
-    }*/
 
     void Update()
     {
