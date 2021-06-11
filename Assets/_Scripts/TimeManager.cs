@@ -64,12 +64,10 @@ public class TimeManager : MonoBehaviour
         if(delayStart > 0f)
             yield return new WaitForSeconds(delayStart);
 
-        //isFrozen = true;
         Time.timeScale = 0f;
 
         yield return new WaitForSecondsRealtime(freezeDuration); //be careful this actually finishes or else timeScale is stuck at 0
 
-        //isFrozen = false;
         Time.timeScale = 1f; //set timeScale back to default scale
     }
 

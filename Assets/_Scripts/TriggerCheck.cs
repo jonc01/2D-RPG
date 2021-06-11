@@ -20,10 +20,6 @@ public class TriggerCheck : MonoBehaviour
             //check for ShieldBash input, either in PlayerCombat after .2f charge up delay in ShieldBashStart()
             ApplyCollision(collision.gameObject); 
         }
-        else
-        {
-            //
-        }
     }
 
     void OnTriggerExit2D(Collider2D collision)
@@ -41,7 +37,6 @@ public class TriggerCheck : MonoBehaviour
             if (collider.GetComponent<Enemy>() != null)
             {
                 collider.GetComponent<Enemy>().TakeDamage(5);
-                //collider.GetComponent<Enemy>().GetKnockback(combat.controller.m_FacingRight, 1f);
                 collider.GetComponent<Enemy>().GetStunned();
             }
 

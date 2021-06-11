@@ -104,8 +104,6 @@ public class Enemy : MonoBehaviour
         //AI aggro
         rb = GetComponent<Rigidbody2D>();
         enAnimator.SetBool("move", false);
-        //enController.enAnimator.SetBool("isRunning", false);
-        //enController.enFacingRight = false; //start facing left (towards player start)
         isAttacking = false;
         aggroStarted = false;
         enIsHurt = false;

@@ -72,13 +72,8 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove)); //greater than 0 -> play run anim, less than -> play idle
 
         FacingDirection();
-
         JumpCheck();
-
-        //CheckDash();
-        //Dodge Roll
         CheckDodge();
-
     }
 
     public void FixedUpdate()
@@ -181,12 +176,6 @@ public class PlayerMovement : MonoBehaviour
         m_rolling = false;
         //calling in animation event can cause issues if roll is cancelled with stun
         //^ this is why animation is frozen after stunned, m_rolling is still true
-        
-        /* call this if animation gets locked, if player is getting stunned and dodge can be interrupted
-         * ! currently, player is stun immune when dodge rolling
-        animator.SetBool("isRolling", false);
-        m_rolling = false;
-        */
     }
 #endregion
 
