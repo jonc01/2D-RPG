@@ -8,10 +8,10 @@ public class Enemy2 : MonoBehaviour
     //Text Popups
     [SerializeField] private TextPopupsHandler TextPopupsHandler;
     [SerializeField] private TextPopupsHandler AttackIndicator;
+    [SerializeField] private HitEffectsHandler HitEffectsHandler;
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0.7f, 0);
 
     TimeManager timeManager;
-    public HitEffectsHandler HitEffectsHandler;
 
     public LayerMask playerLayers;
     public Transform player;
@@ -27,6 +27,7 @@ public class Enemy2 : MonoBehaviour
     public float maxHealth = 200;
     float currentHealth;
     public HealthBar healthBar;
+    float maxHeal = 100;
 
     //experience points based on enemy level
     //public int enLevel
@@ -39,7 +40,7 @@ public class Enemy2 : MonoBehaviour
     [SerializeField]
     public Rigidbody2D rb;
     [SerializeField]
-    float aggroRange = 4f; //when to start chasing player
+    float aggroRange = 3f; //when to start chasing player
                            //might extend to aggro to player before enemy enters screen
     [SerializeField]
     float enAttackRange = .5f; //when to start attacking player, stop enemy from clipping into player
@@ -90,6 +91,7 @@ public class Enemy2 : MonoBehaviour
 
         TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
+        HitEffectsHandler = GameObject.Find("ObjectPool(HitEffects)").GetComponent<HitEffectsHandler>();
 
         timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
 
@@ -187,8 +189,6 @@ public class Enemy2 : MonoBehaviour
     //AI aggro
     void StartChase()
     {
-        enAnimator.SetBool("inCombat", false);
-
         if (enController.enCanMove)
         {
             if (transform.position.x < player.position.x) //player is right
@@ -269,7 +269,6 @@ public class Enemy2 : MonoBehaviour
 
             enAnimator.SetTrigger("Attack");
 
-            enAnimator.SetBool("inCombat", true);
             enAnimator.SetBool("isAttacking", true);
             enAnimator.SetBool("move", false);
 
@@ -356,12 +355,12 @@ public class Enemy2 : MonoBehaviour
             Attack(1.5f);
 
             yield return new WaitForSeconds(.5f);
-            enAnimator.SetTrigger("IdleStunnable");
-            //enAnimator.SetBool("IdleStunnableB", true);
+            //enAnimator.SetTrigger("IdleStunnable");
+            enAnimator.SetBool("IdleStunnableB", true);
 
-            yield return new WaitForSeconds(.4f);
+            yield return new WaitForSeconds(.3f);
             //StopChase();
-            //enAnimator.SetBool("IdleStunnableB", false);
+            enAnimator.SetBool("IdleStunnableB", false);
 
             yield return new WaitForSeconds(.5f);
 
@@ -491,9 +490,15 @@ public class Enemy2 : MonoBehaviour
 
     public void TakeHeal(float healAmount)
     {
-        if (isAlive)
+        if (isAlive && maxHeal > 0)
         {
+            maxHeal -= healAmount;
             currentHealth += healAmount;
+            healthBar.SetHealth(currentHealth);
+            if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
 
             if (TextPopupsHandler)
             {
@@ -550,7 +555,8 @@ public class Enemy2 : MonoBehaviour
                 float fullDuration = 1f;
                 fullDuration -= stunResist; //getting percentage of stun based on stunResist
                 duration *= fullDuration;
-                enAnimator.SetTrigger("en2Stunned");
+                enAnimator.SetBool("IdleStunnableB", false);
+                
                 isAttacking = false;
 
                 /*if (timeManager != null)
@@ -571,6 +577,8 @@ public class Enemy2 : MonoBehaviour
         if (!enStunned)
         {
             isBroken = true;
+            yield return new WaitForSeconds(.01f);
+            enAnimator.SetTrigger("en2Stunned");
 
             enStunned = true;
             StopChase();
@@ -597,11 +605,11 @@ public class Enemy2 : MonoBehaviour
             isBroken = false;
             enAnimator.SetTrigger("en2StunRecover");
             yield return new WaitForSeconds(1f); //time for recover animation
-            //enCanAttack = true; //MAYBE
+
             enController.enCanMove = true;
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
             enStunned = false;
-            //allowStun = Time.time + allowStunCD;
+
             canChase = true;
             enCanAttack = true;
         }

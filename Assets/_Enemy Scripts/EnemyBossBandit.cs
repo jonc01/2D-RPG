@@ -265,6 +265,17 @@ public class EnemyBossBandit : MonoBehaviour
         }
     }
 
+    void ShowAttackIndicator2()
+    {
+        Vector3 tempOffset = TPOffsetObj.transform.position;
+        tempOffset.y -= 0.4f;
+
+        if (AttackIndicator != null)
+        {
+            AttackIndicator.ShowText(tempOffset, "!!", 1.4f);
+        }
+    }
+
     void Attack(float damageMultiplier, bool knockback = false) //knockback has short stun
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange1, playerLayers);
@@ -409,7 +420,7 @@ public class EnemyBossBandit : MonoBehaviour
                     //canParry is set in animationEvent
                     atkSequence = 1;
                     breakDuration = 1.5f;
-                    ShowAttackIndicator();
+                    ShowAttackIndicator2();
 
                     //enStunned = false;
                     isAttacking = true;

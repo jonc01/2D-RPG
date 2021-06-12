@@ -15,7 +15,7 @@ public class PlayerHealthPotion : MonoBehaviour
 
     int currentPotionCharges;
     int defaultAmountPotions = 3; //placeholder until inventory is implemented
-    int maxPotions = 5;
+    int maxPotions = 10;
 
     public Slider chargeSlider; //killing enemies adds progress to charge bar
     int maxSliderValue = 50;
