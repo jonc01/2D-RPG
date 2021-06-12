@@ -15,10 +15,10 @@ public class HealTrigger : MonoBehaviour
     {
         if(stationaryEnemy != null)
         {
-            if(collision.GetComponent<Enemy>() != null)
+            if (collision.GetComponent<Enemy>() != null || collision.GetComponent<Enemy2>() != null)
             {
                 toggleHeal = true;
-                if(enemyCount <= 5)
+                if (enemyCount <= 5)
                     enemyCount++;
 
                 HealingCO = StartCoroutine(HealEnemy(collision.gameObject));
@@ -49,7 +49,16 @@ public class HealTrigger : MonoBehaviour
     {
         while (toggleHeal) {
             if(enemy != null)
-                enemy.GetComponent<Enemy>().TakeHeal(10);
+            {
+                if (enemy.GetComponent<Enemy>() != null)
+                {
+                    enemy.GetComponent<Enemy>().TakeHeal(10);
+                }
+                if(enemy.GetComponent<Enemy2>() != null)
+                {
+                    enemy.GetComponent<Enemy2>().TakeHeal(10);
+                }
+            }
 
             Instantiate(healAura, transform.position, Quaternion.identity, transform);
             yield return new WaitForSeconds(1f);

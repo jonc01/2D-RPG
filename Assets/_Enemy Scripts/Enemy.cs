@@ -6,10 +6,11 @@ using TMPro;
 public class Enemy : MonoBehaviour
 {
     //Text Popups]
+    [Header("Start() references")]
     [SerializeField] private TextPopupsHandler TextPopupsHandler;
     [SerializeField] private TextPopupsHandler AttackIndicator;
     [SerializeField] Vector3 TPOffset = new Vector3(0, .4f, 0);
-    public HitEffectsHandler HitEffectsHandler;
+    [SerializeField] private HitEffectsHandler HitEffectsHandler;
     public DeathParticlesHandler DeathParticlesHandler;
 
     public LayerMask playerLayers;
@@ -23,6 +24,7 @@ public class Enemy : MonoBehaviour
     public float maxHealth = 100;
     float currentHealth;
     public HealthBar healthBar;
+    float maxHeal = 100;
 
     //experience points based on enemy level
     //public int enLevel
@@ -81,6 +83,8 @@ public class Enemy : MonoBehaviour
 
         TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
+        HitEffectsHandler = GameObject.Find("ObjectPool(HitEffects)").GetComponent<HitEffectsHandler>();
+        DeathParticlesHandler = GameObject.Find("ObjectPool(DeathParticles)").GetComponent<DeathParticlesHandler>();
 
         if (transform.position.x > player.transform.position.x)
         {
@@ -129,6 +133,10 @@ public class Enemy : MonoBehaviour
             {
                 enAnimator.SetBool("move", false);
                 enAnimator.SetBool("idle", true);
+                if (aggroStarted)
+                {
+                    enAnimator.SetBool("inCombat", true);
+                }
             }
             else
             {
@@ -366,11 +374,12 @@ public class Enemy : MonoBehaviour
 
     public void TakeHeal(float healAmount)
     {
-        if (isAlive)
+        if (isAlive && maxHeal > 0)
         {
+            maxHeal -= healAmount; //enemy can only heal this amount total
             currentHealth += healAmount;
-            healthBar.SetHealth(currentHealth);
-            if(currentHealth > maxHealth)
+            healthBar.SetHealth(currentHealth); //update health bar
+            if(currentHealth > maxHealth) //prevent overhealing
             {
                 currentHealth = maxHealth;
             }

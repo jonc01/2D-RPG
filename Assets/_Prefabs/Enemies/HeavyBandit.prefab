@@ -231,7 +231,7 @@ MonoBehaviour:
   enAnimator: {fileID: 5827493887734094418}
   isAlive: 0
   rb: {fileID: 5827493887426521009}
-  aggroRange: 4
+  aggroRange: 3
   enAttackRange: 0.45
   enAttackPoint: {fileID: 5827493886938586152}
   enController: {fileID: 5827493887734094421}
