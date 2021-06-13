@@ -354,7 +354,7 @@ public class Enemy2 : MonoBehaviour
             enController.enCanMove = false;
             Attack(1.5f);
 
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.4f);
             //enAnimator.SetTrigger("IdleStunnable");
             enAnimator.SetBool("IdleStunnableB", true);
 
@@ -490,7 +490,7 @@ public class Enemy2 : MonoBehaviour
 
     public void TakeHeal(float healAmount)
     {
-        if (isAlive && maxHeal > 0)
+        if (isAlive && maxHeal > 0 && currentHealth < maxHealth)
         {
             maxHeal -= healAmount;
             currentHealth += healAmount;

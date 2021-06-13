@@ -150,36 +150,36 @@ public class PlayerCombat : MonoBehaviour
         timeSinceLightAttack += Time.deltaTime;
         timeSinceHeavyAttack += Time.deltaTime;
 
-        if (movement.isGrounded)
+        if (!PauseMenu.GameIsPaused)
         {
-            CheckLightAttack();
-            CheckHeavyAttack();
-        }
-
-        UpdateAbilityDisplay();
-
-        //CheckAltAttack(); //Parry
-        ShieldBashInput();
-
-        //DodgeAttackCancel(); //not currently in-use, allows for either cancelling of attacks with a dodge input, or some alt Dodge attack
-        if (!isAlive && canRespawn)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (movement.isGrounded)
             {
-                if(respawnPrompt != null)
+                CheckLightAttack();
+                CheckHeavyAttack();
+            }
+            ShieldBashInput();
+
+            //DodgeAttackCancel(); //not currently in-use, allows for either cancelling of attacks with a dodge input, or some alt Dodge attack
+            if (!isAlive && canRespawn)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = false;
+                    if(respawnPrompt != null)
+                    {
+                        respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = false;
+                    }
+                    //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
+                    controller.RespawnPlayerResetLevel();
+                    timeManager.ResetTimeScale();
                 }
-                //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
-                controller.RespawnPlayerResetLevel();
-                timeManager.ResetTimeScale();
+            }
+
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                healthPotion.UsePotionCharge();
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            healthPotion.UsePotionCharge();
-        }
+        UpdateAbilityDisplay();
     }
     void UpdateAbilityDisplay()
     {

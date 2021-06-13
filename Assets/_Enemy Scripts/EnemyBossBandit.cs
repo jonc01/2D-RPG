@@ -474,7 +474,7 @@ public class EnemyBossBandit : MonoBehaviour
                     enController.enCanMove = false;
                     Attack2(2f);
 
-                    yield return new WaitForSeconds(.6f); //short delay so the Attack2 anim doesn't get cut off
+                    yield return new WaitForSeconds(.4f); //short delay so the Attack2 anim doesn't get cut off
                     enAnimator.SetBool("IdleLongStunnable", true);
                     yield return new WaitForSeconds(.5f);
                     enAnimator.SetBool("IdleLongStunnable", false);

@@ -24,7 +24,7 @@ public class TimeManager : MonoBehaviour
             isSlowed = false; //toggle variable after time is back to normal
         }
 
-        if (Time.timeScale < 1f && isSlowed) //only if Slow Time is called, gradually return back to normal speed
+        if (Time.timeScale < 1f && isSlowed && !PauseMenu.GameIsPaused) //only if Slow Time is called, gradually return back to normal speed
         {
             Time.timeScale += (1f/slowdownLength) * Time.unscaledDeltaTime;
             Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f); //gradually increases scale until it is back to 1.0
@@ -51,7 +51,7 @@ public class TimeManager : MonoBehaviour
     {
         Time.timeScale = slowdownFactor;
         yield return new WaitForSeconds(slowdownTimer);
-        Time.timeScale = 1f;
+        ResetTimeScale();
     }
 
     public void DoFreezeTime(float duration = 0.05f, float delayStart = 0f)
@@ -68,11 +68,14 @@ public class TimeManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(freezeDuration); //be careful this actually finishes or else timeScale is stuck at 0
 
-        Time.timeScale = 1f; //set timeScale back to default scale
+        ResetTimeScale();
     }
 
     public void ResetTimeScale()
     {
-        Time.timeScale = 1f;
+        if (!PauseMenu.GameIsPaused)
+        {
+            Time.timeScale = 1f; //set timeScale back to default scale
+        }
     }
 }

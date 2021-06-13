@@ -374,7 +374,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeHeal(float healAmount)
     {
-        if (isAlive && maxHeal > 0)
+        if (isAlive && maxHeal > 0 && currentHealth < maxHealth)
         {
             maxHeal -= healAmount; //enemy can only heal this amount total
             currentHealth += healAmount;

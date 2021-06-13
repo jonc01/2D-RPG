@@ -21,10 +21,6 @@ public class ParallaxBackground : MonoBehaviour
 
     private void FixedUpdate() //FixedUpdate prevents jittery effect on scrolling
     {
-        /*Vector3 deltaMovement = cameraTransform.position - lastCameraPosition;
-        transform.position += deltaMovement * parallaxEffectMultiplier;
-        lastCameraPosition = cameraTransform.position;*/
-
         Vector3 deltaMovement = cameraTransform.position - lastCameraPosition;
         transform.position += deltaMovement * parallaxEffectMultiplier;
         lastCameraPosition = cameraTransform.position;
