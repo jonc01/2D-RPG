@@ -759,6 +759,8 @@ public class EnemyBossBandit : MonoBehaviour
         Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
 
         //yield return new WaitForSeconds(.1f);
-        Destroy(this.gameObject);
+
+        //Destroy(this.gameObject);
+        gameObject.SetActive(false);
     }
 }

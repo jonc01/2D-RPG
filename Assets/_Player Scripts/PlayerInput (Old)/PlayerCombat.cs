@@ -86,7 +86,7 @@ public class PlayerCombat : MonoBehaviour
     public Collider2D shieldBashTrigger;
     public float altAttackCD = 3f; //shieldBash cooldown
     bool AltAttacking;
-    private float allowAltAttack = 0; //shieldBash 
+    private float allowAltAttack = 0; //shieldBash
     public float altAttackTime = .3f;
     bool IsParrying;
     public bool IsShieldBashing;
@@ -141,7 +141,6 @@ public class PlayerCombat : MonoBehaviour
         shieldBashCollider.enabled = false;
         shieldBashTrigger.enabled = false;
 
-        //enableScreenshake //get settings from save file
     }
 
     // Update is called once per frame
@@ -361,7 +360,7 @@ public class PlayerCombat : MonoBehaviour
         switch (attackNum)
         {
             case 1:
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.35f);
                 AttackHeavy();
                 canSwitch = true;
                 yield return new WaitForSeconds(0.2f);
@@ -405,10 +404,11 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (enemy.GetComponent<EnemyController>() != null)
                     {
+                        timeManager.DoFreezeTime(.15f, .05f); //.1, .05
+
                         if(enableScreenshake)
                             screenShake.Shake();
 
-                        timeManager.DoFreezeTime(.15f, .05f); //.1, .05
                         //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
                     }
 
@@ -431,7 +431,7 @@ public class PlayerCombat : MonoBehaviour
                 }
                 break;
             case 2:
-                Collider2D[] hitEnemiesWide = Physics2D.OverlapBoxAll(heavyAttackPointWide.position, new Vector2(attackHeavyRange*2.3f, .8f), enemyLayers);
+                Collider2D[] hitEnemiesWide = Physics2D.OverlapBoxAll(heavyAttackPointWide.position, new Vector2(attackHeavyRange*2.7f, .8f), enemyLayers);
                 foreach (Collider2D enemy in hitEnemiesWide) //loop through enemies hit
                 {
                     if (enemy.GetComponent<EnemyController>() != null)

@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     public GameObject mainMenuUI;
+    public GameObject settingsMenuUI;
+    public SettingsMenu settingsMenu;
     public LevelLoader levelLoader;
     
     public void PlayDemo()
@@ -22,16 +24,22 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); 
     }*/
 
-    /*public void OpenSettings()
+    public void OpenSettings()
     {
-        //mainMenuUI.SetActive(false);
-        //settingsUI.SetActive(true);
-        //...
-    }*/
+        mainMenuUI.SetActive(false);
+        settingsMenuUI.SetActive(true);
+        settingsMenu.UpdateSettings();
+    }
 
     public void QuitGame()
     {
         Debug.Log("Quitting...");
         Application.Quit();
+    }
+
+    public void SettingsToMainMenu()
+    {
+        mainMenuUI.SetActive(true);
+        settingsMenuUI.SetActive(false);
     }
 }
