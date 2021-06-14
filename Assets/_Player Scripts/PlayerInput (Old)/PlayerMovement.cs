@@ -62,18 +62,21 @@ public class PlayerMovement : MonoBehaviour
 
     public void Update()
     {
-        if (canMove == true)
+        if (!PauseMenu.GameIsPaused)
         {
-            runSpeed = defaultRunSpeed;
-            horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-            animator.SetBool("Stunned", false);
-        }
+            if (canMove == true)
+            {
+                runSpeed = defaultRunSpeed;
+                horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+                animator.SetBool("Stunned", false);
+            }
         
-        animator.SetFloat("Speed", Mathf.Abs(horizontalMove)); //greater than 0 -> play run anim, less than -> play idle
+            animator.SetFloat("Speed", Mathf.Abs(horizontalMove)); //greater than 0 -> play run anim, less than -> play idle
 
-        FacingDirection();
-        JumpCheck();
-        CheckDodge();
+            FacingDirection();
+            JumpCheck();
+            CheckDodge();
+        }
     }
 
     public void FixedUpdate()

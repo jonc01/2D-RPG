@@ -6,9 +6,18 @@ public class Interactable : MonoBehaviour
     public bool isInRange;
     public UnityEvent interactAction;
 
+    public EnemyBossBandit boss;
+    //public bool bossReward = true; //if interactable is only available after boss was defeated
+
+
+    void Start()
+    {
+        boss = GameObject.Find("BanditBoss").GetComponent<EnemyBossBandit>();
+    }
+
     void Update()
     {
-        if (isInRange)
+        if (isInRange && !boss.isAlive)
         {
             if (Input.GetButtonDown("Interact"))
             {

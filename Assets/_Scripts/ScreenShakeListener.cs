@@ -6,7 +6,7 @@ public class ScreenShakeListener : MonoBehaviour
     [Header("*This uses Cinemachine, camera bounds will affect the screenshake.")]
     public string placeholderVariable = "";
 
-    public bool enableScreenshake = true;
+    public static bool enableScreenshake = true;
     //Sources listed in order of impulse strength
     public CinemachineImpulseSource source1;
     public CinemachineImpulseSource source2;

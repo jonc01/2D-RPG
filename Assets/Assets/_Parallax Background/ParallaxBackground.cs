@@ -19,12 +19,8 @@ public class ParallaxBackground : MonoBehaviour
         textureUnitSizeX = texture.width / sprite.pixelsPerUnit;
     }
 
-    private void FixedUpdate() //FixedUpdate prevents jittery effect on scrolling
+    private void Update() //FixedUpdate prevents jittery effect in editor, but Update fixes in build
     {
-        /*Vector3 deltaMovement = cameraTransform.position - lastCameraPosition;
-        transform.position += deltaMovement * parallaxEffectMultiplier;
-        lastCameraPosition = cameraTransform.position;*/
-
         Vector3 deltaMovement = cameraTransform.position - lastCameraPosition;
         transform.position += deltaMovement * parallaxEffectMultiplier;
         lastCameraPosition = cameraTransform.position;
@@ -32,6 +28,7 @@ public class ParallaxBackground : MonoBehaviour
         if (Mathf.Abs(cameraTransform.position.x - transform.position.x) >= textureUnitSizeX)
         {
             float offsetPositionX = (cameraTransform.position.x - transform.position.x) % textureUnitSizeX;
+
             transform.position = new Vector3(cameraTransform.position.x + offsetPositionX, transform.position.y);
         }
     }
