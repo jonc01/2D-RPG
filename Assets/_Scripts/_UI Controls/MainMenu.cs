@@ -8,6 +8,9 @@ public class MainMenu : MonoBehaviour
     public GameObject mainMenuUI;
     public GameObject settingsMenuUI;
     public SettingsMenu settingsMenu;
+
+    public GameObject creditsMenuUI;
+
     public LevelLoader levelLoader;
     
     public void PlayDemo()
@@ -30,6 +33,11 @@ public class MainMenu : MonoBehaviour
         settingsMenuUI.SetActive(true);
         settingsMenu.UpdateSettings();
     }
+    public void SettingsToMainMenu()
+    {
+        mainMenuUI.SetActive(true);
+        settingsMenuUI.SetActive(false);
+    }
 
     public void QuitGame()
     {
@@ -37,9 +45,16 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void SettingsToMainMenu()
+
+    public void OpenCredits()
+    {
+        mainMenuUI.SetActive(false);
+        creditsMenuUI.SetActive(true);
+    }
+
+    public void CreditsToMainMenu()
     {
         mainMenuUI.SetActive(true);
-        settingsMenuUI.SetActive(false);
+        creditsMenuUI.SetActive(false);
     }
 }
