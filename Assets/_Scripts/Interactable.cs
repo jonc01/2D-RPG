@@ -12,12 +12,12 @@ public class Interactable : MonoBehaviour
 
     void Start()
     {
-        boss = GameObject.Find("BanditBoss").GetComponent<EnemyBossBandit>();
+        boss = GameObject.FindGameObjectWithTag("Boss").GetComponent<EnemyBossBandit>();
     }
 
     void Update()
     {
-        if (isInRange && !boss.isAlive)
+        if (boss && isInRange && !boss.isAlive)
         {
             if (Input.GetButtonDown("Interact"))
             {

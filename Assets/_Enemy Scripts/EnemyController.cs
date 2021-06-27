@@ -12,6 +12,13 @@ public class EnemyController : MonoBehaviour
     
     public Rigidbody2D rb;
 
+    /*[Space]
+    [Header("References")] //Player References
+    public LayerMask playerLayers;
+    public Transform player;
+    public PlayerCombat playerCombat;
+    */
+
     public Animator enAnimator;
     public bool enFacingRight = false;
     public float moveSpeedDefault = 2;
@@ -24,7 +31,6 @@ public class EnemyController : MonoBehaviour
     [Space]
     public bool enCanFlip;
     public bool enCanMove;
-
     public bool enCanParry;
 
 
@@ -40,7 +46,6 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        //child = GameObject.Find("HealthBarCanvas");
         if (enCanMove)
         {
             if (rb.velocity.x > 0) //moving right

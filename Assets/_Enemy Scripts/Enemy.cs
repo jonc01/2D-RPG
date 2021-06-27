@@ -13,9 +13,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] private HitEffectsHandler HitEffectsHandler;
     public DeathParticlesHandler DeathParticlesHandler;
 
+    [Space]
+    [Header("References")] //Player References
     public LayerMask playerLayers;
-    Transform player;
-    PlayerCombat playerCombat;
+    public Transform player;
+    public PlayerCombat playerCombat;
+
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
     public GameObject stunLParticlePrefab;
@@ -43,17 +46,20 @@ public class Enemy : MonoBehaviour
     public Transform enAttackPoint;
     public EnemyController enController;
     [Space]
-    public float enAttackDamage = 5f;
-    public float enAttackSpeed = 1.0f; //lower value for lower delays between attacks
-    public float enAttackAnimSpeed = .4f; //lower value for shorter animations
+    public float 
+        enAttackDamage = 5f,
+        enAttackSpeed = 1.0f, //lower value for lower delays between attacks
+        enAttackAnimSpeed = .4f; //lower value for shorter animations
     [Range(0f, 1.0f)]
-    public float stunResist = 0f; //0f takes full stun duration, 1.0f complete stun resist
-    public float allowStun = 0f;
-    public float allowStunCD = 1f; //how often enemy can be stunned
+    public float 
+        stunResist = 0f, //0f takes full stun duration, 1.0f complete stun resist
+        allowStun = 0f,
+        allowStunCD = 0.1f; //how often enemy can be stunned
     
     [Space] //knockback
-    public float kbThrust = 3.0f;
-    public float kbDuration = 5.0f;
+    public float 
+        kbThrust = 3.0f,
+        kbDuration = 5.0f;
 
 
     [SerializeField]
@@ -78,22 +84,13 @@ public class Enemy : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
-        player = GameObject.Find("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         playerCombat = player.GetComponent<PlayerCombat>();
 
         TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
         HitEffectsHandler = GameObject.Find("ObjectPool(HitEffects)").GetComponent<HitEffectsHandler>();
         DeathParticlesHandler = GameObject.Find("ObjectPool(DeathParticles)").GetComponent<DeathParticlesHandler>();
-
-        if (transform.position.x > player.transform.position.x)
-        {
-            playerToRight = false;
-        }
-        else
-        {
-            playerToRight = true;
-        }
 
         //Stats
         currentHealth = maxHealth;
@@ -123,6 +120,7 @@ public class Enemy : MonoBehaviour
         IdleAnimCheck();
         MoveAnimCheck();
         Move();
+        WhereIsPlayer();
     }
 
     void IdleAnimCheck()
@@ -147,6 +145,18 @@ public class Enemy : MonoBehaviour
                 }
                 enAnimator.SetBool("idle", false);
             }
+        }
+    }
+
+    void WhereIsPlayer()
+    {
+        if (transform.position.x < player.position.x) //player is right
+        {
+            playerToRight = true;
+        }
+        else if (transform.position.x > player.position.x) //player is left
+        {
+            playerToRight = false;
         }
     }
 

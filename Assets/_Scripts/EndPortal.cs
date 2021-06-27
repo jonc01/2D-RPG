@@ -15,7 +15,7 @@ public class EndPortal : MonoBehaviour
         textPrompt.SetActive(false);
         portal.SetActive(false);
 
-        boss = GameObject.Find("BanditBoss").GetComponent<EnemyBossBandit>();
+        boss = GameObject.FindGameObjectWithTag("Boss").GetComponent<EnemyBossBandit>();
     }
 
     void Update()

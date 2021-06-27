@@ -18,6 +18,7 @@ public class StationaryEnemy : MonoBehaviour
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;
+
     public LayerMask enemyLayers;
     public GameObject HitToRight;
     public GameObject HitToLeft;
@@ -56,7 +57,7 @@ public class StationaryEnemy : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
-        player = GameObject.Find("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
 
         //Stats
         currentHealth = maxHealth;

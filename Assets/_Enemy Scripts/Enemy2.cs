@@ -16,6 +16,7 @@ public class Enemy2 : MonoBehaviour
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;
+
     public GameObject hitParticlePrefab;
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
@@ -85,7 +86,7 @@ public class Enemy2 : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
-        player = GameObject.Find("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         playerCombat = player.GetComponent<PlayerCombat>();
         screenshake = GameObject.Find("ScreenShakeManager").GetComponent<ScreenShakeListener>();
 

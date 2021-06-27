@@ -18,6 +18,7 @@ public class EnemyBossBandit : MonoBehaviour
     public LayerMask playerLayers;
     public Transform player;
     public PlayerCombat playerCombat;
+
     public TimeManager timeManager;
     public ScreenShakeListener screenShake;
     public GameObject hitParticlePrefab;
@@ -94,8 +95,9 @@ public class EnemyBossBandit : MonoBehaviour
         mDefault = sr.material;
         //sr.material.SetFloat(2f);
 
-        player = GameObject.Find("Player").transform;
-        playerCombat = GameObject.Find("Player").GetComponent<PlayerCombat>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        playerCombat = player.GetComponent<PlayerCombat>();
+        //playerCombat = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCombat>();
 
         TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();

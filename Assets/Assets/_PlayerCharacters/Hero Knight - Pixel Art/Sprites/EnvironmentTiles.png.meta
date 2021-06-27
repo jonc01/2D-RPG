@@ -1,22 +1,19 @@
 fileFormatVersion: 2
-guid: d94b5c1ffa7794547b59105c8f561da3
+guid: f094595c900579d4c85a02612d8fa36c
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: 21300000
-    second: HeroKnight_BlockNoEffect_0
+    second: EnvironmentTiles_0
   - first:
       213: 21300002
-    second: HeroKnight_BlockNoEffect_1
+    second: EnvironmentTiles_1
   - first:
       213: 21300004
-    second: HeroKnight_BlockNoEffect_2
+    second: EnvironmentTiles_2
   - first:
       213: 21300006
-    second: HeroKnight_BlockNoEffect_3
-  - first:
-      213: 21300008
-    second: HeroKnight_BlockNoEffect_4
+    second: EnvironmentTiles_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -48,8 +45,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -63,13 +60,15 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
@@ -81,7 +80,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -93,7 +92,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -104,106 +103,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HeroKnight_BlockNoEffect_0
+      name: EnvironmentTiles_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 100
-        height: 55
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 700b9cddfcfec4f4ea81e7912f4420d7
+      spriteID: 2cf6186365c49fb4aa9504cc09e4f6be
       internalID: 21300000
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HeroKnight_BlockNoEffect_1
+      name: EnvironmentTiles_1
       rect:
         serializedVersion: 2
-        x: 100
-        y: 0
-        width: 100
-        height: 55
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 576888c498c54194c8a9690c269d9a6a
+      spriteID: ee2195938173a3445a24721b6d1d9e23
       internalID: 21300002
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HeroKnight_BlockNoEffect_2
+      name: EnvironmentTiles_2
       rect:
         serializedVersion: 2
-        x: 200
+        x: 0
         y: 0
-        width: 100
-        height: 55
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a306af6b313267b429c9b23c005f4bd7
+      spriteID: ca152fac7d41f5541abdcbc44f9b5185
       internalID: 21300004
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HeroKnight_BlockNoEffect_3
+      name: EnvironmentTiles_3
       rect:
         serializedVersion: 2
-        x: 300
+        x: 32
         y: 0
-        width: 100
-        height: 55
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8fa2e7ad225ea314eac4c77262a8428c
+      spriteID: bbb432ff0cb76ef4ea4fe0713d57abee
       internalID: 21300006
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: HeroKnight_BlockNoEffect_4
-      rect:
-        serializedVersion: 2
-        x: 400
-        y: 0
-        width: 100
-        height: 55
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6083d2ece0bd7a04985c92e7c0411bec
-      internalID: 21300008
       vertices: []
       indices: 
       edges: []
@@ -211,7 +189,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 13f9bf9c1cbca32469bac747e17e10d7
+    spriteID: 27b531848459cbf47b1a6f53e9f3142a
     internalID: 0
     vertices: []
     indices: 
