@@ -34,7 +34,7 @@ public class EndPortal : MonoBehaviour
         }
     }
 
-    public void ReplayLevel() //PLACEHOLDER: end of level should give option to return to town, or proceed to next level
+    public void ReplayLevel() //PLACEHOLDER: end of level should proceed to next level
     {
         if (boss && !boss.isAlive)
         {

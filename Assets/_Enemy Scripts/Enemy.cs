@@ -15,7 +15,12 @@ public class Enemy : MonoBehaviour
 
     [Space]
     [Header("References")] //Player References
-    public LayerMask playerLayers;
+    [SerializeField]
+    public LayerMask
+        playerLayer,
+        groundLayer;
+
+
     public Transform player;
     public PlayerCombat playerCombat;
 
@@ -63,13 +68,34 @@ public class Enemy : MonoBehaviour
 
 
     [SerializeField]
-    bool enCanAttack, isAttacking; //for parry()
-    [SerializeField]
-    bool playerToRight, aggroStarted;
-    bool enIsHurt;
-    bool enStunned;
-    bool enCanChase;
-    bool knockbackHit;
+    private bool 
+        enCanAttack, 
+        isAttacking,
+        aggroStarted,
+        enIsHurt,
+        enStunned,
+        enCanChase,
+        knockbackHit;
+
+    //Raycast checks
+    private Transform
+        groundCheck,
+        wallCheck,
+        playerCheck;
+
+    private bool 
+        playerToRight,
+        playerHit,
+        groundDetect,
+        wallDetect;
+
+    private float
+        groundDetectDistance,
+        wallDetectDistance,
+        playerDetectDistance;
+        
+
+
 
     // Stop Coroutines
     Coroutine IsAttackingCO;
@@ -148,7 +174,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void WhereIsPlayer()
+    void WhereIsPlayer() //RaycastChecks
     {
         if (transform.position.x < player.position.x) //player is right
         {
@@ -158,6 +184,12 @@ public class Enemy : MonoBehaviour
         {
             playerToRight = false;
         }
+
+
+        //playerToRight, playerHit, groundDetect, wallDetect;
+
+        //groundDetect = Physics2D.Raycast(groundCheck.position, Vector2.down, groundDetectDistance, groundLayer);
+
     }
 
     void MoveAnimCheck()
@@ -185,7 +217,7 @@ public class Enemy : MonoBehaviour
                 if (distToPlayer <= aggroRange) //how to start aggro
                 {
                     aggroStarted = true;
-                    //chase player
+                    //chase
                     if (enCanChase)
                         StartChase();
                 }
@@ -201,8 +233,12 @@ public class Enemy : MonoBehaviour
             if (rb != null) //not needed if enemy is just deleted on death
                 rb.velocity = new Vector2(0, 0);
         }
-        if (!playerCombat.isAlive)
-            StopChase();
+
+        if(playerCombat != null)
+        {
+            if (!playerCombat.isAlive)
+                StopChase();
+        }
     }
 
     //AI aggro
@@ -281,7 +317,7 @@ public class Enemy : MonoBehaviour
 
     void Attack()
     {
-        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayers);
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayer);
         
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
@@ -538,7 +574,8 @@ public class Enemy : MonoBehaviour
         }
 
         //give player exp
-        playerCombat.GiveXP(experiencePoints);
+        if(playerCombat != null)
+            playerCombat.GiveXP(experiencePoints);
 
         StopAllCoroutines(); //stops attack coroutine if dead
 
