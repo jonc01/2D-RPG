@@ -11171,6 +11171,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6845915681777740103, guid: 963f852d130e6c1408e5ce7a79529dcb, type: 3}
     - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 16384
+      objectReference: {fileID: 0}
+    - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
+      propertyPath: playerLayer.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 245630209313134784, guid: 5c4bb778b3d144241aefde28d57abe48, type: 3}
       propertyPath: DeathParticlesHandler
       value: 
       objectReference: {fileID: 182975026}

@@ -86,6 +86,7 @@ public class Enemy : MonoBehaviour
     private bool 
         playerToRight,
         playerHit,
+        playerHit2,
         groundDetect,
         wallDetect;
 
@@ -145,8 +146,8 @@ public class Enemy : MonoBehaviour
     {
         IdleAnimCheck();
         MoveAnimCheck();
-        Move();
-        WhereIsPlayer();
+        Move(); //replace this
+        MoveCheck();
     }
 
     void IdleAnimCheck()
@@ -174,7 +175,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void WhereIsPlayer() //RaycastChecks
+    void MoveCheck() //RaycastChecks
     {
         if (transform.position.x < player.position.x) //player is right
         {
@@ -187,9 +188,43 @@ public class Enemy : MonoBehaviour
 
 
         //playerToRight, playerHit, groundDetect, wallDetect;
+        //ADD: playerHit2
 
+        //TODO: 
         //groundDetect = Physics2D.Raycast(groundCheck.position, Vector2.down, groundDetectDistance, groundLayer);
+        //wallDetect = Physics2D.Raycast(wallCheck.position, -transform.right, wallDetectDistance, groundLayer);
 
+        if(!groundDetect || wallDetect)
+        {
+            //turn around
+            //
+            if (enController.enFacingRight)
+            {
+                MoveRight(false); //flip to move left
+            }
+            else
+            {
+                MoveRight(true); //move right
+            }
+        }
+
+
+    }
+
+    void MoveRight(bool moveRight)
+    {
+        if (moveRight)
+        {
+            rb.velocity = new Vector2(enController.moveSpeed, 0);
+            enController.enFacingRight = true;
+            enController.Flip();
+        }
+        else
+        {
+            rb.velocity = new Vector2(-enController.moveSpeed, 0);
+            enController.enFacingRight = false;
+            enController.Flip();
+        }
     }
 
     void MoveAnimCheck()
