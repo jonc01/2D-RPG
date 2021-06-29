@@ -78,23 +78,27 @@ public class Enemy : MonoBehaviour
         knockbackHit;
 
     //Raycast checks
+    [SerializeField]
     private Transform
         groundCheck,
-        wallCheck,
-        playerCheck;
+        wallPlayerCheck,
+        attackCheck;
 
+    [SerializeField]
     private bool 
         playerToRight,
-        playerHit,
-        playerHit2,
+        playerDetectFront,
+        playerDetectBack,
+        playerInRange,
         groundDetect,
         wallDetect;
 
+    [SerializeField]
     private float
-        groundDetectDistance,
-        wallDetectDistance,
-        playerDetectDistance;
-        
+        groundCheckDistance,
+        wallCheckDistance,
+        playerCheckDistance, //Aggro range
+        attackRange;
 
 
 
@@ -146,8 +150,9 @@ public class Enemy : MonoBehaviour
     {
         IdleAnimCheck();
         MoveAnimCheck();
-        Move(); //replace this
+        //Move(); //replace this
         MoveCheck();
+        AttackCheck();
     }
 
     void IdleAnimCheck()
@@ -177,38 +182,71 @@ public class Enemy : MonoBehaviour
 
     void MoveCheck() //RaycastChecks
     {
-        if (transform.position.x < player.position.x) //player is right
+        /*if (transform.position.x < player.position.x) //player is right
         {
             playerToRight = true;
         }
         else if (transform.position.x > player.position.x) //player is left
         {
             playerToRight = false;
-        }
+        }*/
 
 
         //playerToRight, playerHit, groundDetect, wallDetect;
         //ADD: playerHit2
 
-        //TODO: 
-        //groundDetect = Physics2D.Raycast(groundCheck.position, Vector2.down, groundDetectDistance, groundLayer);
-        //wallDetect = Physics2D.Raycast(wallCheck.position, -transform.right, wallDetectDistance, groundLayer);
+        //TODO: move this to EnemyController once setup
+        groundDetect = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
 
-        if(!groundDetect || wallDetect)
+        if (enController.enFacingRight)
         {
-            //turn around
-            //
+            //make sure ground and wallcheck allow for enemies to walk up/down small slopes/stairs
+            wallDetect = Physics2D.Raycast(wallPlayerCheck.position, transform.right, wallCheckDistance, groundLayer);
+            //! re-using wallCheck transform for player detection, can use a separate if needed
+            playerDetectFront = Physics2D.Raycast(wallPlayerCheck.position, transform.right, playerCheckDistance, playerLayer);
+            playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistance, playerLayer);
+        }
+        else
+        {
+            //make sure ground and wallcheck allow for enemies to walk up/down small slopes/stairs
+            wallDetect = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, wallCheckDistance, groundLayer); 
+            //! re-using wallCheck transform for player detection, can use a separate if needed
+            playerDetectFront = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistance, playerLayer);
+            playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, transform.right, playerCheckDistance, playerLayer);
+        }
+
+        if (groundDetect)
+        {
             if (enController.enFacingRight)
             {
-                MoveRight(false); //flip to move left
+                MoveRight(true);
             }
             else
             {
-                MoveRight(true); //move right
+                MoveRight(false);
             }
         }
 
+        if(!groundDetect || wallDetect || playerDetectBack) //if ledge is found or wall is hit or player is behind enemy
+        {
+            if (enController.enCanFlip)
+            {
+                //turn around
+                if (enController.enFacingRight)
+                {
+                    MoveRight(false); //flip to move left
+                }
+                else
+                {
+                    MoveRight(true); //move right
+                }
+            }
+        }
 
+        if (playerDetectFront)
+        {
+            MoveRight(enController.enFacingRight);
+        }
     }
 
     void MoveRight(bool moveRight)
@@ -227,6 +265,23 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void AttackCheck()
+    {
+        if (enController.enFacingRight)
+        {
+            playerInRange = Physics2D.Raycast(attackCheck.position, transform.right, enAttackRange, playerLayer);
+        }
+        else
+        {
+            playerInRange = Physics2D.Raycast(attackCheck.position, -transform.right, enAttackRange, playerLayer);
+        }
+
+        if (playerInRange)
+        {
+            IsAttackingCO = StartCoroutine(IsAttacking());
+        }
+    }
+
     void MoveAnimCheck()
     {
         if (rb.velocity.x != 0)
@@ -238,6 +293,8 @@ public class Enemy : MonoBehaviour
             enAnimator.SetBool("move", false);
         }
     }
+
+
 
     void Move()
     {
@@ -285,9 +342,7 @@ public class Enemy : MonoBehaviour
         {
             if (transform.position.x < player.position.x) //player is right
             {
-                playerToRight = true;
                 //player is to right, move right
-                
                 rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
                 
                 //Facing right, flip sprite to face right
@@ -301,9 +356,7 @@ public class Enemy : MonoBehaviour
             }
             else if (transform.position.x > player.position.x) //player is left
             {
-                playerToRight = false;
                 //player is to left, move left
-                
                 rb.velocity = new Vector2(-enController.moveSpeed, 0);
 
                 enController.enFacingRight = false;
@@ -400,6 +453,19 @@ public class Enemy : MonoBehaviour
             return;
         
         Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);
+
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
+        Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + wallCheckDistance, wallPlayerCheck.position.y));
+
+        Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + playerCheckDistance, wallPlayerCheck.position.y));
+        Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x - playerCheckDistance, wallPlayerCheck.position.y));
+
+        //Attack range
+        Gizmos.DrawLine(attackCheck.position, new Vector2(attackCheck.position.x + attackRange, attackCheck.position.y));
     }
 
     public void TakeDamage(float damage, float damageMultiplier = 1.0f)
@@ -596,7 +662,6 @@ public class Enemy : MonoBehaviour
             enStunned = false;
             allowStun = Time.time + allowStunCD;
         }
-        
     }
 
     void Die()
