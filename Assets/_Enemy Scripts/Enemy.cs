@@ -104,6 +104,9 @@ public class Enemy : MonoBehaviour
 
     // Stop Coroutines
     Coroutine IsAttackingCO;
+    Coroutine IsPatrollingCO;
+    Coroutine IsIdlingCO;
+    bool isPatrolling;
 
     SpriteRenderer sr;
     [SerializeField]
@@ -144,6 +147,15 @@ public class Enemy : MonoBehaviour
 
         enAttackSpeed += Random.Range(-.1f, .1f);
         enController.moveSpeed += Random.Range(-.1f, .1f);
+
+
+        //TODO: everything here vvv
+        //bool startDir = (Random.Range(0, 2) == 0); //should return 0 or 1
+        //supposedly this works 
+        bool startDir = (Random.value > 0.5f);
+
+        MoveRight(startDir);
+        //MoveRight(true);
     }
 
     void Update()
@@ -167,6 +179,10 @@ public class Enemy : MonoBehaviour
                 {
                     enAnimator.SetBool("inCombat", true);
                 }
+                else
+                {
+                    enAnimator.SetBool("inCombat", false);
+                }
             }
             else
             {
@@ -182,87 +198,127 @@ public class Enemy : MonoBehaviour
 
     void MoveCheck() //RaycastChecks
     {
-        /*if (transform.position.x < player.position.x) //player is right
-        {
-            playerToRight = true;
-        }
-        else if (transform.position.x > player.position.x) //player is left
-        {
-            playerToRight = false;
-        }*/
-
-
-        //playerToRight, playerHit, groundDetect, wallDetect;
-        //ADD: playerHit2
-
         //TODO: move this to EnemyController once setup
         groundDetect = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+        playerDetectFront = Physics2D.Raycast(wallPlayerCheck.position, transform.right, playerCheckDistance, playerLayer);
+        playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistance, playerLayer);
+        wallDetect = Physics2D.Raycast(wallPlayerCheck.position, transform.right, wallCheckDistance, groundLayer);
 
-        if (enController.enFacingRight)
+        //TODO: shouldn't be needed, is set by default, changes when no ground, or wall, or player is detected
+        if (groundDetect && !aggroStarted && !isAttacking)
         {
-            //make sure ground and wallcheck allow for enemies to walk up/down small slopes/stairs
-            wallDetect = Physics2D.Raycast(wallPlayerCheck.position, transform.right, wallCheckDistance, groundLayer);
-            //! re-using wallCheck transform for player detection, can use a separate if needed
-            playerDetectFront = Physics2D.Raycast(wallPlayerCheck.position, transform.right, playerCheckDistance, playerLayer);
-            playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistance, playerLayer);
-        }
-        else
-        {
-            //make sure ground and wallcheck allow for enemies to walk up/down small slopes/stairs
-            wallDetect = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, wallCheckDistance, groundLayer); 
-            //! re-using wallCheck transform for player detection, can use a separate if needed
-            playerDetectFront = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistance, playerLayer);
-            playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, transform.right, playerCheckDistance, playerLayer);
-        }
-
-        if (groundDetect)
-        {
-            if (enController.enFacingRight)
+            if (isPatrolling)
             {
-                MoveRight(true);
-            }
-            else
-            {
-                MoveRight(false);
-            }
-        }
-
-        if(!groundDetect || wallDetect || playerDetectBack) //if ledge is found or wall is hit or player is behind enemy
-        {
-            if (enController.enCanFlip)
-            {
-                //turn around
-                if (enController.enFacingRight)
+                if (enController.enFacingRight) //move in direction enemy is facing
                 {
-                    MoveRight(false); //flip to move left
+                    MoveRight(true);
                 }
                 else
                 {
-                    MoveRight(true); //move right
+                    MoveRight(false);
+                }
+            }
+
+            if (!isPatrolling) //when patrolling is ended, random value to idle or move again, and duration of selected action
+            {
+                bool switchDir = (Random.value > 0.5f);
+                bool idleSwitch = (Random.value > 0.5f);
+                float coDuration = (Random.Range(0.3f, 1f));
+
+                if (idleSwitch)
+                {
+                    IsPatrollingCO = StartCoroutine(Patrolling(coDuration, switchDir));
+                }
+                else
+                {
+                    StartIdling(coDuration, switchDir);
                 }
             }
         }
 
-        if (playerDetectFront)
+        if(!groundDetect || wallDetect) //if ledge is found or wall is hit or player is behind enemy
         {
-            MoveRight(enController.enFacingRight);
+            //turn around
+            FlipDir();
+        }
+
+        if (!wallDetect && groundDetect) //prevent raycast hitting player through wall
+        {
+            if (playerDetectFront || playerDetectBack)
+            {
+                if (IsPatrollingCO != null)
+                    StopCoroutine(IsPatrollingCO);
+
+                if (IsIdlingCO != null)
+                    StopCoroutine(IsIdlingCO);
+
+                isPatrolling = false;
+                aggroStarted = true;
+                if (playerDetectFront)
+                {
+                    MoveRight(enController.enFacingRight);
+                }
+                else
+                {
+                    MoveRight(!enController.enFacingRight);
+                }
+            }
+            else
+            {
+                //player leaves aggro range, patrol again
+                aggroStarted = false;
+            }
         }
     }
 
     void MoveRight(bool moveRight)
     {
-        if (moveRight)
+        if (enController.enCanMove)
         {
-            rb.velocity = new Vector2(enController.moveSpeed, 0);
-            enController.enFacingRight = true;
-            enController.Flip();
+            if (moveRight)
+            {
+                rb.velocity = new Vector2(enController.moveSpeed, 0);
+                enController.enFacingRight = true;
+                enController.Flip();
+            }
+            else
+            {
+                rb.velocity = new Vector2(-enController.moveSpeed, 0);
+                enController.enFacingRight = false;
+                enController.Flip();
+            }
         }
-        else
-        {
-            rb.velocity = new Vector2(-enController.moveSpeed, 0);
-            enController.enFacingRight = false;
-            enController.Flip();
-        }
+    }
+
+    void FlipDir() //flips current direction
+    {
+        bool dir = !enController.enFacingRight;
+        MoveRight(dir);
+    }
+
+    IEnumerator Patrolling(float duration, bool switchDir)
+    {
+        isPatrolling = true;
+        if (switchDir)
+            FlipDir();
+
+        yield return new WaitForSeconds(duration);
+        isPatrolling = false;
+    }
+
+    void StartIdling(float duration, bool switchDir)
+    {
+        IsIdlingCO = StartCoroutine(Idling(duration, switchDir));
+    }
+
+    IEnumerator Idling(float duration, bool switchDir)
+    {
+        enController.enCanMove = false;
+        if (switchDir)
+            FlipDir();
+
+        yield return new WaitForSeconds(duration);
+        enController.enCanMove = true;
     }
 
     void AttackCheck()
@@ -293,116 +349,7 @@ public class Enemy : MonoBehaviour
             enAnimator.SetBool("move", false);
         }
     }
-
-
-
-    void Move()
-    {
-        if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
-        {
-            //checking distance to player for aggro range
-            float distToPlayer = Vector2.Distance(transform.position, player.position);
-
-            //range <= 3
-            if (enController.enCanMove)
-            {
-                if (distToPlayer <= aggroRange) //how to start aggro
-                {
-                    aggroStarted = true;
-                    //chase
-                    if (enCanChase)
-                        StartChase();
-                }
-                else if (aggroStarted && enController.enCanMove) //now that we have aggro
-                {
-                    if (enCanChase)
-                        StartChase();
-                }
-            }
-        }
-        else if (!isAlive)
-        {
-            if (rb != null) //not needed if enemy is just deleted on death
-                rb.velocity = new Vector2(0, 0);
-        }
-
-        if(playerCombat != null)
-        {
-            if (!playerCombat.isAlive)
-                StopChase();
-        }
-    }
-
-    //AI aggro
-    void StartChase()
-    {
-        //enAnimator.SetBool("inCombat", false);
-
-        if (enController.enCanMove && enCanChase)
-        {
-            if (transform.position.x < player.position.x) //player is right
-            {
-                //player is to right, move right
-                rb.velocity = new Vector2(enController.moveSpeed, 0); //moves at moveSpeed
-                
-                //Facing right, flip sprite to face right
-                enController.enFacingRight = true;
-                enController.Flip();
-                if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
-                {
-                    IsAttackingCO = StartCoroutine(IsAttacking());
-                    //isAttacking = false;
-                }
-            }
-            else if (transform.position.x > player.position.x) //player is left
-            {
-                //player is to left, move left
-                rb.velocity = new Vector2(-enController.moveSpeed, 0);
-
-                enController.enFacingRight = false;
-                enController.Flip();
-                if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
-                {
-                    IsAttackingCO = StartCoroutine(IsAttacking());
-                    //isAttacking = false;
-                }
-            }
-        }
-
-        if (Mathf.Abs(transform.position.x - player.position.x) <= enAttackRange)
-        {
-            StopChase(); //stop moving, stops enemy from walking into player
-                         //Attack //when in attack range
-                         //StartCoroutine
-        }
-    }
-
-    void StopChase()
-    {
-        rb.velocity = new Vector2(0, 0);
-        enAnimator.SetBool("move", false);
-        //enAnimator.SetBool("inCombat", true);
-        enController.enCanMove = false;
-    }
-
-    void StopChase(float duration) //1f
-    {
-        StartCoroutine(StoppingChase(duration));
-    }
-
-    IEnumerator StoppingChase(float duration = 1f)
-    {
-        enCanChase = false;
-        rb.velocity = new Vector2(0, 0);
-        enController.EnDisableMove();
-        enAnimator.SetBool("move", false);
-        yield return new WaitForSeconds(duration); //1f
-        enCanChase = true;
-
-        enController.EnEnableMove();
-        knockbackHit = false;
-    }
-
+    
     void Attack()
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayer);
@@ -425,7 +372,6 @@ public class Enemy : MonoBehaviour
             enAnimator.SetBool("isAttacking", true);
             enAnimator.SetTrigger("Attack");
             enAnimator.SetBool("move", false);
-            //enAnimator.SetBool("inCombat", true);
 
             //StopChase(.3f);
 
@@ -453,19 +399,25 @@ public class Enemy : MonoBehaviour
             return;
         
         Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);
-
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
-        Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + wallCheckDistance, wallPlayerCheck.position.y));
 
-        Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + playerCheckDistance, wallPlayerCheck.position.y));
-        Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x - playerCheckDistance, wallPlayerCheck.position.y));
-
+        if (enController.enFacingRight)
+        {
+            Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x - wallCheckDistance, wallPlayerCheck.position.y));
+            //Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x - playerCheckDistance, wallPlayerCheck.position.y));
+        }
+        else
+        {
+            Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + wallCheckDistance, wallPlayerCheck.position.y));
+            //Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + playerCheckDistance, wallPlayerCheck.position.y));
+        }
+        
         //Attack range
-        Gizmos.DrawLine(attackCheck.position, new Vector2(attackCheck.position.x + attackRange, attackCheck.position.y));
+        //Gizmos.DrawLine(attackCheck.position, new Vector2(attackCheck.position.x + attackRange, attackCheck.position.y));
     }
 
     public void TakeDamage(float damage, float damageMultiplier = 1.0f)
@@ -566,7 +518,8 @@ public class Enemy : MonoBehaviour
             Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
-        StopChase(.7f);
+        IsIdlingCO = StartCoroutine(Idling(.3f, false));
+        //StopChase(.7f);
     }
 
     public void EnIsHurtStart()
@@ -610,7 +563,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator LightStunEnemy(float lightStunDuration) //used in knockback
     {
-        StopChase(.6f);
+        StartIdling(.6f, false);
         //enCanAttack = false;
         rb.velocity = new Vector2(0, rb.velocity.y);
         yield return new WaitForSeconds(lightStunDuration);
@@ -624,7 +577,7 @@ public class Enemy : MonoBehaviour
         if (!enStunned)
         {
             enStunned = true;
-            StopChase();
+            StartIdling(.3f, false);
             enCanAttack = false;
             enController.enCanMove = false;
             if (stunLParticlePrefab != null && stunRParticlePrefab != null)
