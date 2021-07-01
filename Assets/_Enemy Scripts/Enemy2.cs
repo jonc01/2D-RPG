@@ -297,8 +297,8 @@ public class Enemy2 : MonoBehaviour
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            //Debug.Log("Enemy Hit " + player.name);
-            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMult); //attackDamage + additional damage from parameter
+            if (player.GetComponent<PlayerCombat>() != null)
+                player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMult); //attackDamage + additional damage from parameter
         }
     }
 
@@ -309,8 +309,11 @@ public class Enemy2 : MonoBehaviour
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
-            player.GetComponent<PlayerCombat>().GetKnockback(playerToRight);
+            if (player.GetComponent<PlayerCombat>() != null)
+            {
+                player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
+                player.GetComponent<PlayerCombat>().GetKnockback(playerToRight);
+            }
         }
     }
 

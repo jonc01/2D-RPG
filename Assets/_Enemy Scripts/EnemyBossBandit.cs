@@ -285,17 +285,20 @@ public class EnemyBossBandit : MonoBehaviour
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            playerCombat.TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
-            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
-            if (knockback)
+            if (player.GetComponent<PlayerCombat>() != null)
             {
-                if (distToPlayer > 0)
+                playerCombat.TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
+                float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
+                if (knockback)
                 {
-                    playerCombat.GetKnockback(false); //knockback to left
-                }
-                else
-                {
-                    playerCombat.GetKnockback(true); //knockback to right
+                    if (distToPlayer > 0)
+                    {
+                        playerCombat.GetKnockback(false); //knockback to left
+                    }
+                    else
+                    {
+                        playerCombat.GetKnockback(true); //knockback to right
+                    }
                 }
             }
         }
@@ -307,17 +310,20 @@ public class EnemyBossBandit : MonoBehaviour
 
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
-            float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
-            if (knockback)
+            if (player.GetComponent<PlayerCombat>() != null)
             {
-                if (distToPlayer > 0)
+                player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMultiplier); //attackDamage + additional damage from parameter
+                float distToPlayer = transform.position.x - player.transform.position.x; //getting player direction to enemy //if 0 will use last direction
+                if (knockback)
                 {
-                    playerCombat.GetKnockback(false); //knockback to left
-                }
-                else
-                {
-                    playerCombat.GetKnockback(true); //knockback to right
+                    if (distToPlayer > 0)
+                    {
+                        playerCombat.GetKnockback(false); //knockback to left
+                    }
+                    else
+                    {
+                        playerCombat.GetKnockback(true); //knockback to right
+                    }
                 }
             }
         }

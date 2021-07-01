@@ -581,9 +581,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: inCombat
-    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: idle
     m_EventTreshold: 0

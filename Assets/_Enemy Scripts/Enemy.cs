@@ -20,10 +20,6 @@ public class Enemy : MonoBehaviour
         playerLayer,
         groundLayer;
 
-
-    public Transform player;
-    public PlayerCombat playerCombat;
-
     //public GameObject hitPrefabToRight;
     //public GameObject hitPrefabToLeft;
     public GameObject stunLParticlePrefab;
@@ -45,7 +41,6 @@ public class Enemy : MonoBehaviour
     public Rigidbody2D rb;
     [SerializeField]
     float aggroRange = 3f; //when to start chasing player
-                        //might extend to aggro to player before enemy enters screen
     [SerializeField]
     float enAttackRange = .5f; //when to start attacking player, stop enemy from clipping into player
     public Transform enAttackPoint;
@@ -66,7 +61,6 @@ public class Enemy : MonoBehaviour
         kbThrust = 3.0f,
         kbDuration = 5.0f;
 
-
     [SerializeField]
     private bool 
         enCanAttack, 
@@ -74,7 +68,6 @@ public class Enemy : MonoBehaviour
         aggroStarted,
         enIsHurt,
         enStunned,
-        enCanChase,
         knockbackHit;
 
     //Raycast checks
@@ -106,7 +99,8 @@ public class Enemy : MonoBehaviour
     Coroutine IsAttackingCO;
     Coroutine IsPatrollingCO;
     Coroutine IsIdlingCO;
-    bool isPatrolling;
+    bool isPatrolling,
+        isIdling;
 
     SpriteRenderer sr;
     [SerializeField]
@@ -117,9 +111,6 @@ public class Enemy : MonoBehaviour
     {
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
-
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerCombat = player.GetComponent<PlayerCombat>();
 
         TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
@@ -135,7 +126,6 @@ public class Enemy : MonoBehaviour
         
         isAlive = true;
         enCanAttack = true;
-        enCanChase = true;
         //AI aggro
         rb = GetComponent<Rigidbody2D>();
         enAnimator.SetBool("move", false);
@@ -148,21 +138,15 @@ public class Enemy : MonoBehaviour
         enAttackSpeed += Random.Range(-.1f, .1f);
         enController.moveSpeed += Random.Range(-.1f, .1f);
 
-
-        //TODO: everything here vvv
-        //bool startDir = (Random.Range(0, 2) == 0); //should return 0 or 1
-        //supposedly this works 
         bool startDir = (Random.value > 0.5f);
 
         MoveRight(startDir);
-        //MoveRight(true);
     }
 
     void Update()
     {
         IdleAnimCheck();
         MoveAnimCheck();
-        //Move(); //replace this
         MoveCheck();
         AttackCheck();
     }
@@ -196,6 +180,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void MoveAnimCheck()
+    {
+        if (rb.velocity.x != 0)
+        {
+            enAnimator.SetBool("move", true);
+        }
+        else
+        {
+            enAnimator.SetBool("move", false);
+        }
+    }
+
     void MoveCheck() //RaycastChecks
     {
         //TODO: move this to EnemyController once setup
@@ -204,7 +200,6 @@ public class Enemy : MonoBehaviour
         playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistance, playerLayer);
         wallDetect = Physics2D.Raycast(wallPlayerCheck.position, transform.right, wallCheckDistance, groundLayer);
 
-        //TODO: shouldn't be needed, is set by default, changes when no ground, or wall, or player is detected
         if (groundDetect && !aggroStarted && !isAttacking)
         {
             if (isPatrolling)
@@ -242,16 +237,25 @@ public class Enemy : MonoBehaviour
             FlipDir();
         }
 
-        if (!wallDetect && groundDetect) //prevent raycast hitting player through wall
+        //this will hit player through wall and enemy will keep flipping until player leaves range
+        //it's running wallDetect logic, but aggro'ing to player
+        if (!wallDetect && groundDetect && !enStunned)
         {
             if (playerDetectFront || playerDetectBack)
             {
                 if (IsPatrollingCO != null)
                     StopCoroutine(IsPatrollingCO);
 
-                if (IsIdlingCO != null)
+                if (IsIdlingCO != null && !knockbackHit)
+                {
                     StopCoroutine(IsIdlingCO);
-
+                    if (isIdling)
+                    {
+                        enController.enCanMove = true;
+                        isIdling = false;
+                    }
+                }
+                
                 isPatrolling = false;
                 aggroStarted = true;
                 if (playerDetectFront)
@@ -273,17 +277,18 @@ public class Enemy : MonoBehaviour
 
     void MoveRight(bool moveRight)
     {
-        if (enController.enCanMove)
+        //Debug.Log("MoveRight: canMove: " + enController.enCanMove); //DELETEME
+        if (enController.enCanMove && !isAttacking)
         {
             if (moveRight)
             {
-                rb.velocity = new Vector2(enController.moveSpeed, 0);
+                rb.velocity = new Vector2(enController.moveSpeed, rb.velocity.y);
                 enController.enFacingRight = true;
                 enController.Flip();
             }
             else
             {
-                rb.velocity = new Vector2(-enController.moveSpeed, 0);
+                rb.velocity = new Vector2(-enController.moveSpeed, rb.velocity.y);
                 enController.enFacingRight = false;
                 enController.Flip();
             }
@@ -306,19 +311,30 @@ public class Enemy : MonoBehaviour
         isPatrolling = false;
     }
 
-    void StartIdling(float duration, bool switchDir)
+    void StartIdling(float duration, bool switchDir, bool knockbackHitB = false)
     {
-        IsIdlingCO = StartCoroutine(Idling(duration, switchDir));
+        IsIdlingCO = StartCoroutine(Idling(duration, switchDir, knockbackHitB));
     }
 
-    IEnumerator Idling(float duration, bool switchDir)
+    IEnumerator Idling(float duration, bool switchDir, bool knockbackHitB)
     {
+        if (knockbackHitB)
+            StartCoroutine(KnockbackRecover(duration));
+
+        isIdling = true;
         enController.enCanMove = false;
         if (switchDir)
             FlipDir();
-
+        
         yield return new WaitForSeconds(duration);
+        isIdling = false;
         enController.enCanMove = true;
+    }
+
+    IEnumerator KnockbackRecover(float duration = .3f)
+    {
+        yield return new WaitForSeconds(duration);
+        knockbackHit = false;
     }
 
     void AttackCheck()
@@ -337,18 +353,6 @@ public class Enemy : MonoBehaviour
             IsAttackingCO = StartCoroutine(IsAttacking());
         }
     }
-
-    void MoveAnimCheck()
-    {
-        if (rb.velocity.x != 0)
-        {
-            enAnimator.SetBool("move", true);
-        }
-        else
-        {
-            enAnimator.SetBool("move", false);
-        }
-    }
     
     void Attack()
     {
@@ -357,7 +361,8 @@ public class Enemy : MonoBehaviour
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
-            player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
+            if(player.GetComponent<PlayerCombat>() != null)
+                player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
         }
     }
 
@@ -377,7 +382,7 @@ public class Enemy : MonoBehaviour
 
             //enController.EnDisableMove();
             enController.enCanMove = false;
-            rb.velocity = new Vector2(0, 0);
+            rb.velocity = new Vector2(0, rb.velocity.y);
 
             yield return new WaitForSeconds(enAttackAnimSpeed);
             Attack();
@@ -386,7 +391,6 @@ public class Enemy : MonoBehaviour
             //enController.EnEnableMove();
             enAnimator.SetBool("isAttacking", false);
 
-            enCanChase = true;
             enController.enCanMove = true;
             isAttacking = false;
             enCanAttack = true;
@@ -408,12 +412,12 @@ public class Enemy : MonoBehaviour
         if (enController.enFacingRight)
         {
             Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x - wallCheckDistance, wallPlayerCheck.position.y));
-            //Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x - playerCheckDistance, wallPlayerCheck.position.y));
+            Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x - playerCheckDistance, wallPlayerCheck.position.y));
         }
         else
         {
             Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + wallCheckDistance, wallPlayerCheck.position.y));
-            //Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + playerCheckDistance, wallPlayerCheck.position.y));
+            Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + playerCheckDistance, wallPlayerCheck.position.y));
         }
         
         //Attack range
@@ -441,8 +445,6 @@ public class Enemy : MonoBehaviour
             //hurt animation
             if (enAnimator != null && damage > 0) //took damage, not heal
             {
-                //stopping coroutine
-                //attackStopped = true;
                 Vector3 particleLocation = transform.position;
                 Vector3 particleOffset = particleLocation;
                 particleOffset.y += .5f;
@@ -454,11 +456,6 @@ public class Enemy : MonoBehaviour
                 {
                     enAnimator.SetTrigger("enLightStun");
                 }
-
-                //GetStunned(1f);
-                //enCanAttack = true;
-                //enAnimator.SetBool("isAttacking", false);
-                //attackStopped = false;
 
                 sr.material = mWhiteFlash; //flashing enemy sprite
                 Invoke("ResetMaterial", .1f);
@@ -499,6 +496,7 @@ public class Enemy : MonoBehaviour
 
     public void GetKnockback(bool playerFacingRight, float kbThrust = 2f, float kbDuration = 5f) //defaults
     {
+        //playerFacingRight - passed from PlayerCombat when damage is applied
         //kbThrust - velocity of lunge movement
         //kbDuration - how long to maintain thrust velocity (distance)
         knockbackHit = true;
@@ -518,7 +516,7 @@ public class Enemy : MonoBehaviour
             Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
-        IsIdlingCO = StartCoroutine(Idling(.3f, false));
+        StartIdling(.3f, false);
         //StopChase(.7f);
     }
 
@@ -538,6 +536,7 @@ public class Enemy : MonoBehaviour
         {
             if(Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
             {
+                knockbackHit = true;
                 if (IsAttackingCO != null)
                 {
                     isAttacking = false;
@@ -555,21 +554,9 @@ public class Enemy : MonoBehaviour
                 else
                 {
                     enAnimator.SetTrigger("enLightStun");
-                    StartCoroutine(LightStunEnemy(.3f));
                 }
             }
         }
-    }
-
-    IEnumerator LightStunEnemy(float lightStunDuration) //used in knockback
-    {
-        StartIdling(.6f, false);
-        //enCanAttack = false;
-        rb.velocity = new Vector2(0, rb.velocity.y);
-        yield return new WaitForSeconds(lightStunDuration);
-        //enCanAttack = true;
-        enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
-        allowStun = Time.time + allowStunCD;
     }
 
     IEnumerator StunEnemy(float stunDuration)
@@ -577,7 +564,7 @@ public class Enemy : MonoBehaviour
         if (!enStunned)
         {
             enStunned = true;
-            StartIdling(.3f, false);
+            StartIdling(stunDuration + .5f, false, true);
             enCanAttack = false;
             enController.enCanMove = false;
             if (stunLParticlePrefab != null && stunRParticlePrefab != null)
@@ -627,8 +614,8 @@ public class Enemy : MonoBehaviour
         }
 
         //give player exp
-        if(playerCombat != null)
-            playerCombat.GiveXP(experiencePoints);
+        //if(playerCombat != null)
+        //    playerCombat.GiveXP(experiencePoints);
 
         StopAllCoroutines(); //stops attack coroutine if dead
 
