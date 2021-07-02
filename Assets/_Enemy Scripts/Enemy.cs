@@ -13,6 +13,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private HitEffectsHandler HitEffectsHandler;
     public DeathParticlesHandler DeathParticlesHandler;
 
+    //[SerializeField] private GameObject attackIndicator;
+
+
     [Space]
     [Header("References")] //Player References
     [SerializeField]
@@ -195,10 +198,15 @@ public class Enemy : MonoBehaviour
     void MoveCheck() //RaycastChecks
     {
         //TODO: move this to EnemyController once setup
+        //Vector2 lineRange = wallPlayerCheck.position + Vector3.right * playerCheckDistance;
+        //Vector2 lineRangeBack = wallPlayerCheck.position + Vector3.right * -playerCheckDistance;
+        //playerDetectFront = Physics2D.Linecast(wallPlayerCheck.position, lineRange, playerLayer);
+        //playerDetectBack = Physics2D.Linecast(wallPlayerCheck.position, lineRangeBack, playerLayer);
+
         groundDetect = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+        wallDetect = Physics2D.Raycast(wallPlayerCheck.position, transform.right, wallCheckDistance, groundLayer);
         playerDetectFront = Physics2D.Raycast(wallPlayerCheck.position, transform.right, playerCheckDistance, playerLayer);
         playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistance, playerLayer);
-        wallDetect = Physics2D.Raycast(wallPlayerCheck.position, transform.right, wallCheckDistance, groundLayer);
 
         if (groundDetect && !aggroStarted && !isAttacking)
         {
@@ -234,7 +242,8 @@ public class Enemy : MonoBehaviour
         if(!groundDetect || wallDetect) //if ledge is found or wall is hit or player is behind enemy
         {
             //turn around
-            FlipDir();
+            if(rb.velocity.y == 0)
+                FlipDir();
         }
 
         //this will hit player through wall and enemy will keep flipping until player leaves range
@@ -255,9 +264,10 @@ public class Enemy : MonoBehaviour
                         isIdling = false;
                     }
                 }
-                
+
                 isPatrolling = false;
                 aggroStarted = true;
+
                 if (playerDetectFront)
                 {
                     MoveRight(enController.enFacingRight);
@@ -277,7 +287,6 @@ public class Enemy : MonoBehaviour
 
     void MoveRight(bool moveRight)
     {
-        //Debug.Log("MoveRight: canMove: " + enController.enCanMove); //DELETEME
         if (enController.enCanMove && !isAttacking)
         {
             if (moveRight)
