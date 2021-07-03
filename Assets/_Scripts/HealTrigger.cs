@@ -50,13 +50,9 @@ public class HealTrigger : MonoBehaviour
         while (toggleHeal) {
             if(enemy != null)
             {
-                if (enemy.GetComponent<Enemy>() != null)
+                if (enemy.GetComponent<EnemyController>() != null)
                 {
-                    enemy.GetComponent<Enemy>().TakeHeal(10);
-                }
-                if(enemy.GetComponent<Enemy2>() != null)
-                {
-                    enemy.GetComponent<Enemy2>().TakeHeal(10);
+                    enemy.GetComponent<EnemyController>().TakeHeal(10);
                 }
             }
 

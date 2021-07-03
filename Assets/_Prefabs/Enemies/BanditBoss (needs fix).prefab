@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 4864561776211461294}
   - component: {fileID: 4864561776211461295}
   m_Layer: 12
-  m_Name: BanditBoss
+  m_Name: BanditBoss (needs fix)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

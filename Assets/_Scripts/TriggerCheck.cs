@@ -34,10 +34,11 @@ public class TriggerCheck : MonoBehaviour
             combat.OnSuccessfulBash();
             movement.CancelDash();
 
-            if (collider.GetComponent<Enemy>() != null)
+            if (collider.GetComponent<EnemyController>() != null)
             {
-                collider.GetComponent<Enemy>().TakeDamage(5);
-                collider.GetComponent<Enemy>().GetStunned();
+                collider.GetComponent<EnemyController>().TakeDamage(5);
+                collider.GetComponent<EnemyController>().GetStunned();
+                //collider.GetComponent<EnemyController>().CheckParry();
             }
 
             if (collider.GetComponent<Enemy2>() != null)
