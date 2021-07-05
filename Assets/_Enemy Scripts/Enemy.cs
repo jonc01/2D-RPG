@@ -5,12 +5,13 @@ using TMPro;
 
 public class Enemy : MonoBehaviour
 {
-    public EnemyController enController;
-    public Animator enAnimator;
+    [Header("*Need Controller")]
+    [SerializeField] private EnemyController enController;
 
     void Start()
     {
-        enAnimator.SetBool("move", false);
+        enController.enAnimator.SetBool("move", false);
+        //enController.enAttackAnimSpeed = .....
     }
 
     void Update()
@@ -25,40 +26,41 @@ public class Enemy : MonoBehaviour
         {
             if (enController.rb.velocity.x == 0)
             {
-                enAnimator.SetBool("move", false);
-                enAnimator.SetBool("idle", true);
+                enController.enAnimator.SetBool("move", false);
+                enController.enAnimator.SetBool("idle", true);
                 if (enController.aggroStarted)
                 {
-                    enAnimator.SetBool("inCombat", true);
+                    enController.enAnimator.SetBool("inCombat", true);
                 }
                 else
                 {
-                    enAnimator.SetBool("inCombat", false);
+                    enController.enAnimator.SetBool("inCombat", false);
                 }
             }
             else
             {
                 if (enController.knockbackHit)
                 {
-                    enAnimator.SetBool("move", false);
-                    enAnimator.SetBool("idle", true);
+                    enController.enAnimator.SetBool("move", false);
+                    enController.enAnimator.SetBool("idle", true);
                 }
-                enAnimator.SetBool("idle", false);
+                enController.enAnimator.SetBool("idle", false);
             }
         }
     }
 
     void MoveAnimCheck()
     {
-        if (enController.rb.velocity.x != 0)
+        if(enController.rb != null)
         {
-            enAnimator.SetBool("move", true);
-        }
-        else
-        {
-            enAnimator.SetBool("move", false);
+            if (enController.rb.velocity.x != 0)
+            {
+                enController.enAnimator.SetBool("move", true);
+            }
+            else
+            {
+                enController.enAnimator.SetBool("move", false);
+            }
         }
     }
-
-    
 }

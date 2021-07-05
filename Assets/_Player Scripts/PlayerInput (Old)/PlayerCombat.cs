@@ -283,17 +283,10 @@ public class PlayerCombat : MonoBehaviour
         //damage enemies
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
-            if(enemy.GetComponent<EnemyController>() != null) //after migrating below functions into EnemyController
+            if (enemy.GetComponent<EnemyController>() != null) //TODO: update for all 4 enemies
             {
                 timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze
                 //screenShake.Shake();
-                /*enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
-                enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
-                enemy.GetComponent<EnemyController>().GetStunned(.3f);*/
-            }
-
-            if (enemy.GetComponent<EnemyController>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
-            {
                 enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
                 enemy.GetComponent<EnemyController>().GetKnockback(controller.m_FacingRight, 1f);
                 //enemy.GetComponent<Enemy>().GetStunned(.3f, false);

@@ -3,52 +3,62 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
-    [Header("Start() references")]
-    [SerializeField] private TextPopupsHandler TextPopupsHandler;
-    [SerializeField] private TextPopupsHandler AttackIndicator;
-    [SerializeField] Vector3 TPOffset = new Vector3(0, .4f, 0);
-    [SerializeField] private HitEffectsHandler HitEffectsHandler;
-    public DeathParticlesHandler DeathParticlesHandler;
-    public GameObject stunLParticlePrefab;
-    public GameObject stunRParticlePrefab;
-    private SpriteRenderer sr;
-    [SerializeField]
-    private Material mWhiteFlash; //material to flash to on hit
-    private Material mDefault; //default material to switch back to
+    [Header("!If using separate script to override")]
+    [SerializeField] private bool overrideAttack = false;
+    [SerializeField] private bool overrideMove = false;
 
-    [Header("TextPopups")]
-    public TextPopupsHandler noReScaleTextHandler;
-
-    [SerializeField] float m_jumpForce = 7.5f;
-    public Rigidbody2D rb; //TODO: make protected after inheritance
-    public Animator enAnimator;
-    public bool enFacingRight = false;
-    public float 
-        moveSpeedDefault = 2,
-        moveSpeed = 2;
-
-    //to prevent flipping with Enemy parent object
-    //public Transform HealthBar; //DELETEME
-    //TODO: remove publics after fully migrating to controller
-    private Transform healthBarTransform;
-    public HealthBar healthBar;
-    public bool isAlive;
-    public float maxHealth = 100;
-    public float currentHealth;
-    public float maxHeal = 100;
-    public int experiencePoints = 10;
-
-    [SerializeField]
-    float aggroRange = 3f; //when to start chasing player
-    [SerializeField]
-    float enAttackRange = .3f; //TODO: .5f //when to start attacking player, stop enemy from clipping into player
-    public Transform enAttackPoint;
-    //public EnemyController enController;
     [Space]
+    [Header("=== Required reference setup ===")]
+    public Animator enAnimator;
+    [SerializeField] private Material mWhiteFlash; //material to flash to on hit
+    [SerializeField] private LayerMask
+        playerLayer,
+        groundLayer;
+    public Transform enAttackPoint;
+    public HealthBar healthBar;
+
+    [Space]
+    [Header("=== Adjustable Variables ===")]
+    [SerializeField] Vector3 TPOffset = new Vector3(0, .4f, 0);
+    public int experiencePoints = 10;
+    public float 
+        maxHealth = 100,
+        maxHeal = 100;
+    [SerializeField] float 
+        aggroRange = 3f, //when to start chasing player
+        enAttackRange = .3f; //TODO: .5f //when to start attacking player, stop enemy from clipping into player
+    public float moveSpeedDefault = 2f;
+    float m_jumpForce = 7.5f; //not in-use
     public float
         enAttackDamage = 5f,
         enAttackSpeed = 1.0f, //lower value for lower delays between attacks
         enAttackAnimSpeed = .4f; //lower value for shorter animations
+
+    [Space]
+    [Header("=== Optional prefabs ===")]
+    public GameObject stunLParticlePrefab;
+    public GameObject stunRParticlePrefab;
+    public TextPopupsHandler noReScaleTextHandler; //use for text to float above enemy, no re-scaling
+
+    [Space]
+    [Header("=== Prefab Handlers referenced at Start() ===")]
+    [SerializeField] private TextPopupsHandler TextPopupsHandler;
+    [SerializeField] private TextPopupsHandler AttackIndicator;
+    [SerializeField] private HitEffectsHandler HitEffectsHandler;
+    [SerializeField] private DeathParticlesHandler DeathParticlesHandler;
+    private SpriteRenderer sr;
+    public Rigidbody2D rb;
+    private Material mDefault; //grabbed at start
+
+    [Space]
+    [Header("=== Variables ===")]
+    public bool enFacingRight = false;
+    public float moveSpeed = 2f; //current movespeed
+    public bool isAlive;
+    public float currentHealth;
+    private Transform healthBarTransform; //to prevent flipping with Enemy parent object - Referenced at Start()
+
+    [Space]
     [Range(0f, 1.0f)]
     public float
         stunResist = 0f, //0f takes full stun duration, 1.0f complete stun resist
@@ -60,17 +70,10 @@ public class EnemyController : MonoBehaviour
         kbThrust = 3.0f,
         kbDuration = 5.0f;
 
-    [Space]
-    [Header("References")]
-    [SerializeField]
-    public LayerMask
-        playerLayer,
-        groundLayer;
-
-    [Header("Raycast Checks")]
+    [Header("=== Raycast Checks ===")]
     [SerializeField] //Raycast checks
-    private Transform
-        groundCheck,
+    private Transform groundCheck;
+    [SerializeField] private Transform
         wallPlayerCheck,
         attackCheck;
 
@@ -100,7 +103,7 @@ public class EnemyController : MonoBehaviour
         knockbackHit;
 
     [Space]
-    public bool //TODO: private after inheritance
+    public bool
         enCanFlip,
         enCanMove,
         enCanParry;
@@ -116,9 +119,9 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
         mDefault = sr.material;
 
-        rb = GetComponent<Rigidbody2D>();
         healthBarTransform = healthBar.GetComponent<Transform>();
 
         TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
@@ -147,7 +150,6 @@ public class EnemyController : MonoBehaviour
             healthBar.SetMaxHealth(maxHealth);
         }
 
-        //enAttackSpeed += Random.Range(-.1f, .1f); //TODO: ???
         moveSpeed += Random.Range(-.1f, .1f);
 
         bool startDir = (Random.value > 0.5f);
@@ -157,15 +159,30 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
+        //IdleAnimCheck();
+        //MoveAnimCheck();
+        
         Flip();
-        MoveCheck();
-        AttackCheck();
+        
+        if(!overrideMove)
+            MoveCheck();
+
+        if(!overrideAttack)
+            AttackCheck();
     }
 
-    //////////////////////////////////////// RAYCAST //////////////////////////////////////////////////////////////////////////////////
-    void MoveCheck() //RaycastChecks
+    protected virtual void IdleAnimCheck()
     {
-        //TODO: move this to EnemyController once setup
+        //not setup
+    }
+    protected virtual void MoveAnimCheck()
+    {
+        //not setup
+    }
+
+    #region Raycast - Move, Patrol, Idle
+    public void MoveCheck() //RaycastChecks
+    {
         //Vector2 lineRange = wallPlayerCheck.position + Vector3.right * playerCheckDistance;
         //Vector2 lineRangeBack = wallPlayerCheck.position + Vector3.right * -playerCheckDistance;
         //playerDetectFront = Physics2D.Linecast(wallPlayerCheck.position, lineRange, playerLayer);
@@ -253,7 +270,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void MoveRight(bool moveRight)
+    public void MoveRight(bool moveRight)
     {
         if (enCanMove && !isAttacking)
         {
@@ -272,7 +289,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void FlipDir() //flips current direction
+    void FlipDir() //flips current direction
     {
         bool dir = !enFacingRight;
         MoveRight(dir);
@@ -314,16 +331,12 @@ public class EnemyController : MonoBehaviour
         isPatrolling = false;
     }
 
-    void AttackCheck()
+    #endregion
+
+
+    public void AttackCheck()
     {
-        if (enFacingRight)
-        {
-            playerInRange = Physics2D.Raycast(attackCheck.position, transform.right, enAttackRange, playerLayer);
-        }
-        else
-        {
-            playerInRange = Physics2D.Raycast(attackCheck.position, -transform.right, enAttackRange, playerLayer);
-        }
+        playerInRange = Physics2D.Raycast(attackCheck.position, -transform.right, enAttackRange, playerLayer);
 
         if (playerInRange)
         {
@@ -401,7 +414,7 @@ public class EnemyController : MonoBehaviour
         //Gizmos.DrawLine(attackCheck.position, new Vector2(attackCheck.position.x + attackRange, attackCheck.position.y));
     }
 
-    public void TakeDamage(float damage, float damageMultiplier = 1.0f) //TODO: move to controller
+    public virtual void TakeDamage(float damage, float damageMultiplier = 1.0f) //TODO: move to controller
     {
         if (isAlive)
         {
@@ -445,7 +458,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void TakeHeal(float healAmount) //TODO: move to controller
+    public virtual void TakeHeal(float healAmount) //TODO: move to controller
     {
         if (isAlive && maxHeal > 0 && currentHealth < maxHealth)
         {
@@ -466,7 +479,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void GetKnockback(bool playerFacingRight, float kbThrust = 2f, float kbDuration = 5f) //defaults
+    public virtual void GetKnockback(bool playerFacingRight, float kbThrust = 2f, float kbDuration = 5f) //defaults
     {
         //playerFacingRight - passed from PlayerCombat when damage is applied
         //kbThrust - velocity of lunge movement
@@ -490,7 +503,7 @@ public class EnemyController : MonoBehaviour
         StartIdling(.3f, false);
     }
 
-    public void GetStunned(float duration = 1f, bool fullStun = true) //TODO: move all of this to EnemyController
+    public virtual void GetStunned(float duration = 1f, bool fullStun = true) //TODO: move all of this to EnemyController
     {
         //two animations, full stun and light stun (stagger)
         if (isAlive)
@@ -565,7 +578,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void Die() //TODO: move to controller? and override on certain enemies?
+    protected virtual void Die()
     {
         isAlive = false;
         //Die animation
@@ -658,18 +671,7 @@ public class EnemyController : MonoBehaviour
     #endregion
 
     #region TakeDamage, GetKnockback, GetStunned
-
-    //Referenced by PlayerCombat when attacking collider
-    /*public void TakeDamage(float damage, float damageMultiplier)
-    {
-        
-    }
     
-    public void GetKnockback(){
-        
-    }
-
-    */
     void ResetMaterial()
     {
         sr.material = mDefault;

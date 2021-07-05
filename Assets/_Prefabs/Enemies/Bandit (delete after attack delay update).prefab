@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5260986293912053690}
   - component: {fileID: 5260986293912053687}
   m_Layer: 12
-  m_Name: Bandit
+  m_Name: Bandit (delete after attack delay update)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
