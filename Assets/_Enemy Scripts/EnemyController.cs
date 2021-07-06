@@ -3,19 +3,26 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
-    [Header("!If using separate script to override")]
+    [Header("! - If using separate script to override")]
     [SerializeField] private bool overrideAttack = false;
     [SerializeField] private bool overrideMove = false;
+    [SerializeField] private bool overrideDie = false;
+    [SerializeField] private bool checkPlayerToRight = false;
 
     [Space]
     [Header("=== Required reference setup ===")]
     public Animator enAnimator;
     [SerializeField] private Material mWhiteFlash; //material to flash to on hit
-    [SerializeField] private LayerMask
+    [SerializeField] public LayerMask
         playerLayer,
         groundLayer;
     public Transform enAttackPoint;
     public HealthBar healthBar;
+    [SerializeField] //Raycast checks
+    private Transform groundCheck;
+    [SerializeField] private Transform
+        wallPlayerCheck,
+        attackCheck;
 
     [Space]
     [Header("=== Adjustable Variables ===")]
@@ -33,6 +40,22 @@ public class EnemyController : MonoBehaviour
         enAttackDamage = 5f,
         enAttackSpeed = 1.0f, //lower value for lower delays between attacks
         enAttackAnimSpeed = .4f; //lower value for shorter animations
+    [SerializeField] //Raycast variables
+    private float
+        groundCheckDistance,
+        wallCheckDistance,
+        playerCheckDistance, //Aggro range
+        attackRange;
+    [Space]
+    [Range(0f, 1.0f)]
+    public float
+        stunResist = 0f, //0f takes full stun duration, 1.0f complete stun resist
+        allowStun = 0f,
+        allowStunCD = 0.1f; //how often enemy can be stunned
+    [Space] //knockback
+    public float
+        kbThrust = 3.0f,
+        kbDuration = 5.0f;
 
     [Space]
     [Header("=== Optional prefabs ===")]
@@ -46,9 +69,19 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private TextPopupsHandler AttackIndicator;
     [SerializeField] private HitEffectsHandler HitEffectsHandler;
     [SerializeField] private DeathParticlesHandler DeathParticlesHandler;
-    private SpriteRenderer sr;
+    public SpriteRenderer sr;
     public Rigidbody2D rb;
     private Material mDefault; //grabbed at start
+
+    [Space]
+    [Header("=== Raycast Checks ===")]
+    public bool playerToRight;
+    [SerializeField] public bool
+        playerDetectFront,
+        playerDetectBack,
+        playerInRange,
+        groundDetect,
+        wallDetect;
 
     [Space]
     [Header("=== Variables ===")]
@@ -58,56 +91,18 @@ public class EnemyController : MonoBehaviour
     public float currentHealth;
     private Transform healthBarTransform; //to prevent flipping with Enemy parent object - Referenced at Start()
 
-    [Space]
-    [Range(0f, 1.0f)]
-    public float
-        stunResist = 0f, //0f takes full stun duration, 1.0f complete stun resist
-        allowStun = 0f,
-        allowStunCD = 0.1f; //how often enemy can be stunned
-
-    [Space] //knockback
-    public float
-        kbThrust = 3.0f,
-        kbDuration = 5.0f;
-
-    [Header("=== Raycast Checks ===")]
-    [SerializeField] //Raycast checks
-    private Transform groundCheck;
-    [SerializeField] private Transform
-        wallPlayerCheck,
-        attackCheck;
-
     [SerializeField]
-    private bool
-        playerToRight,
-        playerDetectFront,
-        playerDetectBack,
-        playerInRange,
-        groundDetect,
-        wallDetect;
-
-    [SerializeField] //Raycast variables
-    private float
-        groundCheckDistance,
-        wallCheckDistance,
-        playerCheckDistance, //Aggro range
-        attackRange;
-
-    [SerializeField]
-    public bool //TODO: private after inheritance
+    public bool
         enCanAttack,
         isAttacking,
         aggroStarted,
         enIsHurt,
         enStunned,
         knockbackHit;
-
-    [Space]
     public bool
         enCanFlip,
         enCanMove,
         enCanParry;
-
     public Coroutine IsAttackingCO;
     public Coroutine IsPatrollingCO;
     public Coroutine IsIdlingCO;
@@ -150,7 +145,7 @@ public class EnemyController : MonoBehaviour
             healthBar.SetMaxHealth(maxHealth);
         }
 
-        moveSpeed += Random.Range(-.1f, .1f);
+        moveSpeed += Random.Range(-.2f, .1f);
 
         bool startDir = (Random.value > 0.5f);
         MoveRight(startDir);
@@ -163,12 +158,13 @@ public class EnemyController : MonoBehaviour
         //MoveAnimCheck();
         
         Flip();
+        AttackCheck(); //only updates raycast bool, override will prevent default isAttacking from being called
         
         if(!overrideMove)
             MoveCheck();
 
-        if(!overrideAttack)
-            AttackCheck();
+        if (checkPlayerToRight)
+            UpdatePlayerToRight();
     }
 
     protected virtual void IdleAnimCheck()
@@ -178,6 +174,36 @@ public class EnemyController : MonoBehaviour
     protected virtual void MoveAnimCheck()
     {
         //not setup
+    }
+
+    void UpdatePlayerToRight()
+    {
+        if (playerDetectFront)
+        {
+            if (enFacingRight)
+            {
+                playerToRight = true;
+            }
+            else
+            {
+                playerToRight = false;
+            }
+        }
+        else if (playerDetectBack)
+        {
+            if (enFacingRight)
+            {
+                playerToRight = false;
+            }
+            else
+            {
+                playerToRight = true;
+            }
+        }
+        else
+        {
+            playerToRight = false;
+        }
     }
 
     #region Raycast - Move, Patrol, Idle
@@ -289,13 +315,13 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void FlipDir() //flips current direction
+    public void FlipDir() //flips current direction
     {
         bool dir = !enFacingRight;
         MoveRight(dir);
     }
 
-    void StartIdling(float duration, bool switchDir, bool knockbackHitB = false)
+    public void StartIdling(float duration, bool switchDir, bool knockbackHitB = false)
     {
         IsIdlingCO = StartCoroutine(Idling(duration, switchDir, knockbackHitB));
     }
@@ -321,6 +347,11 @@ public class EnemyController : MonoBehaviour
         knockbackHit = false;
     }
 
+    public void StartPatrolling(float duration, bool switchDir)
+    {
+        IsPatrollingCO = StartCoroutine(Patrolling(duration, switchDir));
+    }
+
     IEnumerator Patrolling(float duration, bool switchDir)
     {
         isPatrolling = true;
@@ -338,13 +369,13 @@ public class EnemyController : MonoBehaviour
     {
         playerInRange = Physics2D.Raycast(attackCheck.position, -transform.right, enAttackRange, playerLayer);
 
-        if (playerInRange)
+        if (playerInRange && !overrideAttack)
         {
             IsAttackingCO = StartCoroutine(IsAttacking());
         }
     }
 
-    void Attack()
+    public void Attack(float damageMult = 1f)
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayer);
 
@@ -352,7 +383,7 @@ public class EnemyController : MonoBehaviour
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
         {
             if (player.GetComponent<PlayerCombat>() != null)
-                player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
+                player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMult); //attackDamage + additional damage from parameter
         }
     }
 
@@ -414,7 +445,7 @@ public class EnemyController : MonoBehaviour
         //Gizmos.DrawLine(attackCheck.position, new Vector2(attackCheck.position.x + attackRange, attackCheck.position.y));
     }
 
-    public virtual void TakeDamage(float damage, float damageMultiplier = 1.0f) //TODO: move to controller
+    public void TakeDamage(float damage, float damageMultiplier = 1.0f)
     {
         if (isAlive)
         {
@@ -458,7 +489,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public virtual void TakeHeal(float healAmount) //TODO: move to controller
+    public void TakeHeal(float healAmount) //TODO: move to controller
     {
         if (isAlive && maxHeal > 0 && currentHealth < maxHealth)
         {
@@ -578,7 +609,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    protected virtual void Die()
+    void Die()
     {
         isAlive = false;
         //Die animation
@@ -593,12 +624,7 @@ public class EnemyController : MonoBehaviour
 
         StopAllCoroutines(); //stops attack coroutine if dead //TODO: make sure coroutines are saved in this script if started in Enemy.cs
 
-        //playerCombat.HealPlayer(10);
-        //hide hp bar
-
-
         //disable enemy object
-        //enController.isAlive = false;
 
         if (DeathParticlesHandler != null)
         {
@@ -607,14 +633,15 @@ public class EnemyController : MonoBehaviour
             tempLocation.y += .5f;
             DeathParticlesHandler.ShowHitEffect(tempLocation);
         }
-
-        //DeleteEnemyObject();
-        StartCoroutine(DeleteEnemyObject());
+        //InstantDeleteEnemyObject();
+        if(!overrideDie)
+            StartCoroutine(DeleteEnemyObject());
     }
 
     IEnumerator DeleteEnemyObject() //only using if we want to use enemy death animation, currently just exploding object
     {
-        GetComponent<SpriteRenderer>().enabled = false;
+        sr.enabled = false;
+        //GetComponent<SpriteRenderer>().enabled = false;
         GetComponentInChildren<Canvas>().enabled = false;
         yield return new WaitForSeconds(0.5f);
         Destroy(this.gameObject);

@@ -41,10 +41,10 @@ public class TriggerCheck : MonoBehaviour
                 //collider.GetComponent<EnemyController>().CheckParry();
             }
 
-            if (collider.GetComponent<Enemy2>() != null)
+            if (collider.GetComponent<Enemy2>() != null) //TODO: delete all but EnemyController ref
             {
-                collider.GetComponent<Enemy2>().TakeDamage(5); //attackDamage + additional damage from parameter
-                collider.GetComponent<Enemy2>().GetStunned(2);
+                //collider.GetComponent<Enemy2>().TakeDamage(5); //attackDamage + additional damage from parameter
+                //collider.GetComponent<Enemy2>().GetStunned(2);
             }
 
             if (collider.GetComponent<StationaryEnemy>() != null)

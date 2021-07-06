@@ -297,7 +297,7 @@ public class PlayerCombat : MonoBehaviour
 
             if (enemy.GetComponent<Enemy2>() != null)
             {
-                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
+                //enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
             }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
@@ -417,7 +417,7 @@ public class PlayerCombat : MonoBehaviour
 
                     if (enemy.GetComponent<Enemy2>() != null)
                     {
-                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
+                        //enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                     }
 
                     if (enemy.GetComponent<EnemyBossBandit>() != null)
@@ -448,7 +448,7 @@ public class PlayerCombat : MonoBehaviour
 
                     if (enemy.GetComponent<Enemy2>() != null)
                     {
-                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
+                        //enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                     }
 
                     if (enemy.GetComponent<EnemyBossBandit>() != null)
@@ -524,8 +524,8 @@ public class PlayerCombat : MonoBehaviour
 
             if(enemy.GetComponent<Enemy2>() != null)
             {
-                enemy.GetComponent<Enemy2>().TakeDamage(altDamage);
-                enemy.GetComponent<Enemy2>().GetStunned(stunStrength);
+                //enemy.GetComponent<Enemy2>().TakeDamage(altDamage);
+                //enemy.GetComponent<Enemy2>().GetStunned(stunStrength);
             }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)

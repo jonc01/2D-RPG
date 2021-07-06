@@ -5,48 +5,55 @@ using TMPro;
 
 public class Enemy2 : MonoBehaviour
 {
-    //Text Popups
-    [SerializeField] private TextPopupsHandler TextPopupsHandler;
-    [SerializeField] private TextPopupsHandler AttackIndicator;
-    [SerializeField] private HitEffectsHandler HitEffectsHandler;
+
+    public EnemyController enController;
+
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0.7f, 0);
 
     TimeManager timeManager;
-
-    public LayerMask playerLayers;
-    public Transform player;
-    public PlayerCombat playerCombat;
-
-    public GameObject hitParticlePrefab;
-    public GameObject deathParticlePrefab;
-    public GameObject stunLParticlePrefab;
-    public GameObject stunRParticlePrefab;
-    public GameObject initialStunParticle;
-
     private ScreenShakeListener screenshake;
 
-    public float maxHealth = 200;
-    float currentHealth;
-    public HealthBar healthBar;
-    float maxHeal = 100;
+    //Text Popups
+    [SerializeField] private TextPopupsHandler AttackIndicator; //TODO: should be animation or no handler, manual instantiate
+
+    //[SerializeField] private HitEffectsHandler HitEffectsHandler;
+    //[SerializeField] private TextPopupsHandler TextPopupsHandler;
+
+    //public LayerMask playerLayers;
+    //public Transform player;
+    //public PlayerCombat playerCombat;
+
+    //public GameObject hitParticlePrefab;
+    //public GameObject deathParticlePrefab;
+    //public GameObject stunLParticlePrefab;
+    //public GameObject stunRParticlePrefab;
+    public GameObject initialStunParticle;
+
+
+    //public float maxHealth = 200;
+    //float currentHealth;
+    //public HealthBar healthBar;
+   // float maxHeal = 100;
 
     //experience points based on enemy level
     //public int enLevel
 
 
-    public int experiencePoints = 20;
-    public Animator enAnimator;
-    public bool isAlive;
+    //public int experiencePoints = 20;
+    //public Animator enAnimator;
+    //public bool isAlive;
+    bool allowBreak;
+    bool isBroken;
+    bool isShielded = true;
 
-    [SerializeField]
-    public Rigidbody2D rb;
+    
+    //public Rigidbody2D rb;
     [SerializeField]
     float aggroRange = 3f; //when to start chasing player
                            //might extend to aggro to player before enemy enters screen
     [SerializeField]
     float enAttackRange = .5f; //when to start attacking player, stop enemy from clipping into player
-    public Transform enAttackPoint;
-    public EnemyController enController;
+    //public Transform enAttackPoint;
     [Space]
     public float enAttackDamage = 10f;
     public float enAttackSpeed = 1.1f; //lower value for lower delays between attacks
@@ -55,100 +62,95 @@ public class Enemy2 : MonoBehaviour
     public float stunResist = 0f; //0f takes full stun duration, 1.0f complete stun resist
     public float allowStun = 0f;
     public float allowStunCD = 1f; //how often enemy can be stunned
-    bool allowBreak;
-    bool isBroken;
-
-    [Space] //knockback
-    public float kbThrust = 3.0f;
-    public float kbDuration = 2.0f;
 
     [SerializeField] bool enCanAttack, isAttacking; //for parry()
     [SerializeField]
-    bool playerToRight, aggroStarted;
-    bool enIsHurt;
+    //bool playerToRight, aggroStarted;
+    //bool enIsHurt;
     bool enStunned;
-    bool canChase;
+    //bool canChase;
 
-    Coroutine IsAttackingCO;
+    //Coroutine IsAttackingCO;
 
-    [Header("Attack variables")]
-    bool isShielded = true;
-    RaycastHit2D aggroRaycast;
+    //[Header("Attack variables")]
+    //RaycastHit2D aggroRaycast;
 
-    SpriteRenderer sr;
-    [SerializeField]
-    private Material mWhiteFlash;
-    private Material mDefault;
+    //SpriteRenderer sr;
+    //[SerializeField]
+    //private Material mWhiteFlash;
+    //private Material mDefault;
     
 
     void Start()
     {
-        sr = GetComponent<SpriteRenderer>();
-        mDefault = sr.material;
+        //sr = GetComponent<SpriteRenderer>();
+        //mDefault = sr.material;
 
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerCombat = player.GetComponent<PlayerCombat>();
+        //player = GameObject.FindGameObjectWithTag("Player").transform;
+        //playerCombat = player.GetComponent<PlayerCombat>();
         screenshake = GameObject.Find("ScreenShakeManager").GetComponent<ScreenShakeListener>();
 
-        TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
-        HitEffectsHandler = GameObject.Find("ObjectPool(HitEffects)").GetComponent<HitEffectsHandler>();
+        //TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
+        //HitEffectsHandler = GameObject.Find("ObjectPool(HitEffects)").GetComponent<HitEffectsHandler>();
 
         timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
 
         //Stats
-        currentHealth = maxHealth;
-        if (healthBar != null)
-        {
-            healthBar.SetMaxHealth(maxHealth);
-        }
+        //currentHealth = maxHealth;
+        //if (healthBar != null)
+       // {
+         //   healthBar.SetMaxHealth(maxHealth);
+       // }
 
-        isAlive = true;
+        //isAlive = true;
         //enController.enCanMove = true;
-        enCanAttack = true;
+        //enCanAttack = true;
         //AI aggro
-        rb = GetComponent<Rigidbody2D>();
-        enAnimator.SetBool("move", false);
+       // rb = GetComponent<Rigidbody2D>();
+        enController.enAnimator.SetBool("move", false); //TODO: unnecessary
         //enController.enAnimator.SetBool("isRunning", false);
         //enController.enFacingRight = false; //start facing left (towards player start)
-        isAttacking = false;
-        aggroStarted = false;
-        enIsHurt = false;
-        enStunned = false;
-        canChase = true;
+        //isAttacking = false;
+        //aggroStarted = false;
+        //enIsHurt = false;
+        //enStunned = false;
+        //canChase = true;
         allowBreak = false;
         isBroken = false;
 
-        enController.moveSpeed += Random.Range(-.1f, .1f);
-        
+        //enController.moveSpeed += Random.Range(-.1f, .1f);
     }
 
     void Update()
     {
         IdleAnimCheck();
-        Move();
-        WhereIsPlayer();
+        //Move();
+        //WhereIsPlayer();
+        MoveCheck();
+        StartAttack();
+        DeathCheck();
     }
 
     void IdleAnimCheck()
     {
-        if (rb != null)
+        if (enController.rb != null)
         {
             //idle animation is default state
-            if (rb.velocity.x == 0)
+            if (enController.rb.velocity.x == 0)
             {
-                enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while not moving
-                enAnimator.SetBool("idle", true);
+                enController.enAnimator.SetBool("move", false); //check to make sure enemy isn't playing run anim while not moving
+                enController.enAnimator.SetBool("idle", true);
             }
             else
             {
-                enAnimator.SetBool("move", true);
-                enAnimator.SetBool("idle", false);
+                enController.enAnimator.SetBool("move", true);
+                enController.enAnimator.SetBool("idle", false);
             }
         }
     }
 
-    void WhereIsPlayer()
+    /*void WhereIsPlayer()
     {
         if (transform.position.x < player.position.x) //player is right
         {
@@ -158,9 +160,9 @@ public class Enemy2 : MonoBehaviour
         {
             playerToRight = false;
         }
-    }
+    }*/
 
-    void Move()
+    /*void Move()
     {
         if (rb != null && enController != null && isAlive && playerCombat.isAlive && !enStunned) //check if object has rigidbody
         {
@@ -185,10 +187,10 @@ public class Enemy2 : MonoBehaviour
         if (!playerCombat.isAlive)
             StopChase();
 
-    }
+    }*/
 
     //AI aggro
-    void StartChase()
+    /*void StartChase()
     {
         if (enController.enCanMove)
         {
@@ -222,18 +224,102 @@ public class Enemy2 : MonoBehaviour
                          //Attack //when in attack range
                          //StartCoroutine
         }
+    }*/
+
+    public void MoveCheck() //RaycastChecks
+    {
+        //groundDetect 
+        //wallDetect 
+        //playerDetectFront
+        //playerDetectBack
+
+        if (enController.groundDetect && !enController.aggroStarted && !isAttacking)
+        {
+            if (enController.isPatrolling)
+            {
+                if (enController.enFacingRight) //move in direction enemy is facing
+                {
+                    enController.MoveRight(true);
+                }
+                else
+                {
+                    enController.MoveRight(false);
+                }
+            }
+
+            if (!enController.isPatrolling) //when patrolling is ended, random value to idle or move again, and duration of selected action
+            {
+                bool switchDir = (Random.value > 0.5f);
+                bool idleSwitch = (Random.value > 0.5f);
+                float coDuration = (Random.Range(0.3f, 1f));
+
+                if (idleSwitch)
+                {
+                    enController.StartPatrolling(coDuration, switchDir);
+                }
+                else
+                {
+                    enController.StartIdling(coDuration, switchDir);
+                }
+            }
+        }
+
+        if (!enController.groundDetect || enController.wallDetect) //if ledge is found or wall is hit or player is behind enemy
+        {
+            //turn around
+            if (enController.rb.velocity.y == 0)
+                enController.FlipDir();
+        }
+
+        //this will hit player through wall and enemy will keep flipping until player leaves range
+        //wallDetect logic is met, but is aggro'ing to player
+        if (!enController.wallDetect && enController.groundDetect && !enStunned)
+        {
+            if (enController.playerDetectFront || enController.playerDetectBack)
+            {
+                if (enController.IsPatrollingCO != null)
+                    StopCoroutine(enController.IsPatrollingCO);
+
+                if (enController.IsIdlingCO != null && !enController.knockbackHit)
+                {
+                    StopCoroutine(enController.IsIdlingCO);
+                    if (enController.isIdling)
+                    {
+                        enController.enCanMove = true;
+                        enController.isIdling = false;
+                    }
+                }
+
+                enController.isPatrolling = false;
+                enController.aggroStarted = true;
+
+                if (enController.playerDetectFront)
+                {
+                    enController.MoveRight(enController.enFacingRight);
+                }
+                else
+                {
+                    enController.MoveRight(!enController.enFacingRight);
+                }
+            }
+            else
+            {
+                //player leaves aggro range, patrol again
+                enController.aggroStarted = false;
+            }
+        }
     }
 
-    void StopChase()
+    void StopChase() //TODO: might not need 
     {
         //canChase = false;
-        rb.velocity = new Vector2(0, 0);
-        enAnimator.SetBool("move", false);
+        enController.rb.velocity = new Vector2(0, 0);
+        enController.enAnimator.SetBool("move", false);
         //enAnimator.SetBool("inCombat", true);
         enController.enCanMove = false;
     }
 
-    void ShowAttackIndicator()
+    void ShowAttackIndicator() //TODO: fix reference
     {
         if (AttackIndicator != null)
         {
@@ -244,19 +330,22 @@ public class Enemy2 : MonoBehaviour
         }
     }
 
-    void StartAttack(int atkVariation)
+    void StartAttack(int atkVariation = 2)
     {
-        switch (atkVariation)
+        if (enController.playerInRange)
         {
-            case 1:
-                IsAttackingCO = StartCoroutine(IsAttacking());
-                break;
-            case 2:
-                enController.enCanMove = false;
-                IsAttackingCO = StartCoroutine(IsComboAttacking());
-                break;
-            default:
-                break;
+            switch (atkVariation)
+            {
+                case 1:
+                    enController.IsAttackingCO = StartCoroutine(IsAttacking());
+                    break;
+                case 2:
+                    enController.enCanMove = false;
+                    enController.IsAttackingCO = StartCoroutine(IsComboAttacking());
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -268,20 +357,20 @@ public class Enemy2 : MonoBehaviour
             enStunned = false;
             enCanAttack = false;
 
-            enAnimator.SetTrigger("Attack");
+            enController.enAnimator.SetTrigger("Attack");
 
-            enAnimator.SetBool("isAttacking", true);
-            enAnimator.SetBool("move", false);
+            enController.enAnimator.SetBool("isAttacking", true);
+            enController.enAnimator.SetBool("move", false);
 
             enController.enCanMove = false;
-            rb.velocity = new Vector2(0, 0);
+            enController.rb.velocity = new Vector2(0, enController.rb.velocity.y);
 
             yield return new WaitForSeconds(enAttackAnimSpeed); //time when damage is dealt based on animation
 
-            rb.velocity = new Vector2(0, 0); //stop enemy from moving
-            Attack();
+            enController.rb.velocity = new Vector2(0, enController.rb.velocity.y); //stop enemy from moving
+            enController.Attack();
             yield return new WaitForSeconds(enAttackSpeed); //delay between attacks
-            enAnimator.SetBool("isAttacking", false);
+            enController.enAnimator.SetBool("isAttacking", false);
         
             enController.enCanMove = true;
             enCanAttack = true;
@@ -290,9 +379,9 @@ public class Enemy2 : MonoBehaviour
         }
     }
 
-    void Attack(float damageMult = 1f) //default, attack player when in melee range
+    /*void Attack(float damageMult = 1f) //default, attack player when in melee range
     {
-        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayers);
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, enController.playerLayer);
 
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
@@ -300,11 +389,11 @@ public class Enemy2 : MonoBehaviour
             if (player.GetComponent<PlayerCombat>() != null)
                 player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMult); //attackDamage + additional damage from parameter
         }
-    }
+    }*/
 
     void Attack2() //default, attack player when in melee range
     {
-        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayers);
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enController.enAttackPoint.position, enAttackRange, enController.playerLayer);
 
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
@@ -312,7 +401,7 @@ public class Enemy2 : MonoBehaviour
             if (player.GetComponent<PlayerCombat>() != null)
             {
                 player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage); //attackDamage + additional damage from parameter
-                player.GetComponent<PlayerCombat>().GetKnockback(playerToRight);
+                player.GetComponent<PlayerCombat>().GetKnockback(enController.playerToRight);
             }
         }
     }
@@ -327,14 +416,14 @@ public class Enemy2 : MonoBehaviour
             ShowAttackIndicator();
 
             enController.enCanMove = false;
-            rb.velocity = new Vector2(0, 0);
-            enAnimator.SetTrigger("StartChargeUp");
+            enController.rb.velocity = new Vector2(0, 0);
+            enController.enAnimator.SetTrigger("StartChargeUp");
             yield return new WaitForSeconds(1.1f);
-            rb.velocity = new Vector2(0, 0);
+            enController.rb.velocity = new Vector2(0, 0);
 
             //DisableShield(); //called in Animation event
 
-            enAnimator.SetTrigger("StartChargedAttack"); //start first attack
+            enController.enAnimator.SetTrigger("StartChargedAttack"); //start first attack
             yield return new WaitForSeconds(.2f);
 
             LungeOnAttack(); //allowing movement during lunge
@@ -347,24 +436,24 @@ public class Enemy2 : MonoBehaviour
             
             yield return new WaitForSeconds(.3f); //delay before starting next attack
 
-            enAnimator.SetTrigger("StartChargeUp"); // start second attack
+            enController.enAnimator.SetTrigger("StartChargeUp"); // start second attack
             yield return new WaitForSeconds(.3f);
 
-            enAnimator.SetTrigger("StartChargedAttack");
+            enController.enAnimator.SetTrigger("StartChargedAttack");
             yield return new WaitForSeconds(.2f);
 
             LungeOnAttack();
             yield return new WaitForSeconds(.02f);
             enController.enCanMove = false;
-            Attack(1.5f);
+            enController.Attack(1.5f);
 
             yield return new WaitForSeconds(.4f);
             //enAnimator.SetTrigger("IdleStunnable");
-            enAnimator.SetBool("IdleStunnableB", true);
+            enController.enAnimator.SetBool("IdleStunnableB", true);
 
             yield return new WaitForSeconds(.3f);
             //StopChase();
-            enAnimator.SetBool("IdleStunnableB", false);
+            enController.enAnimator.SetBool("IdleStunnableB", false);
 
             yield return new WaitForSeconds(.5f);
 
@@ -375,26 +464,40 @@ public class Enemy2 : MonoBehaviour
         }
     }
 
-    void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f) //defaults
+    void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f) //defaults //TODO: update this with raycast
     {
         //lungeThrust - velocity of lunge movement
         //lungeDuration - how long to maintain thrust velocity
-        float distToPlayer = transform.position.x - player.transform.position.x;
+        //float distToPlayer = transform.position.x - player.transform.position.x; //TODO: update with raycast
 
         Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
 
-        if (enController.enCanFlip) 
+        if (enController.enCanFlip)
         {
             enController.enCanMove = true; //allow move to face correct direction
-            if(distToPlayer < 0)
+            if(enController.playerDetectFront)
             {
-                tempOffset.x += lungeDuration;
+                if (enController.enFacingRight)
+                {
+                    tempOffset.x += lungeDuration; //lunge to left
+                }
+                else
+                {
+                    tempOffset.x -= lungeDuration; //lunge to right
+                }
                 Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
-            else
+            else //playerDetectBack, lunge towards player
             {
-                tempOffset.x -= lungeDuration;
+                if (enController.enFacingRight)
+                {
+                    tempOffset.x -= lungeDuration; //lunge to left
+                }
+                else
+                {
+                    tempOffset.x += lungeDuration; //lunge to right
+                }
                 Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
@@ -413,13 +516,13 @@ public class Enemy2 : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (enAttackPoint == null)
+        if (enController.enAttackPoint == null)
             return;
 
-        Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);
+        Gizmos.DrawWireSphere(enController.enAttackPoint.position, enAttackRange);
     }
 
-    public void TakeDamage(float damage, float damageMultiplier = 1.0f)
+    /*public void TakeDamage(float damage, float damageMultiplier = 1.0f)
     {
         if (isAlive == true)
         {
@@ -490,9 +593,9 @@ public class Enemy2 : MonoBehaviour
                 Die();
             }
         }
-    }
+    }*/
 
-    public void TakeHeal(float healAmount)
+    /*public void TakeHeal(float healAmount)
     {
         if (isAlive && maxHeal > 0 && currentHealth < maxHealth)
         {
@@ -511,14 +614,14 @@ public class Enemy2 : MonoBehaviour
                 TextPopupsHandler.ShowHeal(healAmount, tempPos);
             }
         }
-    }
+    }*/
 
-    void ResetMaterial()
+    /*void ResetMaterial()
     {
         sr.material = mDefault;
-    }
+    }*/
 
-    public void GetKnockback(bool playerFacingRight, float kbThrust = 2f, float kbDuration = 5f) //defaults
+    /*public void GetKnockback(bool playerFacingRight, float kbThrust = 2f, float kbDuration = 5f) //defaults
     {
         //kbThrust - velocity of lunge movement
         //kbDuration - how long to maintain thrust velocity (distance)
@@ -537,9 +640,9 @@ public class Enemy2 : MonoBehaviour
             Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
-    }
+    }*/
 
-    public void EnIsHurtStart()
+    /*public void EnIsHurtStart()
     {
         enIsHurt = true;
     }
@@ -547,11 +650,11 @@ public class Enemy2 : MonoBehaviour
     public void EnIsHurtEnd()
     {
         enIsHurt = false;
-    }
+    }*/
 
-    public void GetStunned(float duration) //allow player to call this function
+    public void GetStunned(float duration) //allow player to call this function //TODO: this might be more robust than enController's
     {
-        if (isAlive)
+        if (enController.isAlive)
         {
             //if (Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
             if(allowBreak && !isBroken)
@@ -559,7 +662,7 @@ public class Enemy2 : MonoBehaviour
                 float fullDuration = 1f;
                 fullDuration -= stunResist; //getting percentage of stun based on stunResist
                 duration *= fullDuration;
-                enAnimator.SetBool("IdleStunnableB", false);
+                enController.enAnimator.SetBool("IdleStunnableB", false);
                 
                 isAttacking = false;
 
@@ -568,8 +671,8 @@ public class Enemy2 : MonoBehaviour
                     timeManager.CustomSlowMotion(.02f, 5f);
                 }*/
 
-                if (IsAttackingCO != null)
-                    StopCoroutine(IsAttackingCO); //stopping attack coroutine when attacking
+                if (enController.IsAttackingCO != null)
+                    StopCoroutine(enController.IsAttackingCO); //stopping attack coroutine when attacking
 
                 StartCoroutine(StunEnemy(duration));
             }
@@ -582,7 +685,7 @@ public class Enemy2 : MonoBehaviour
         {
             isBroken = true;
             yield return new WaitForSeconds(.01f);
-            enAnimator.SetTrigger("en2Stunned");
+            enController.enAnimator.SetTrigger("en2Stunned");
 
             enStunned = true;
             StopChase();
@@ -597,7 +700,7 @@ public class Enemy2 : MonoBehaviour
                 Instantiate(initialStunParticle, tempLocation, Quaternion.identity, transform);
             }
 
-            if (isAlive)
+            if (enController.isAlive)
             {
                 Vector3 tempPos = transform.position;
                 tempPos += TPOffset;
@@ -607,53 +710,54 @@ public class Enemy2 : MonoBehaviour
             yield return new WaitForSeconds(stunDuration);
             EnableShield(); //shield is back, no more increased damage taken
             isBroken = false;
-            enAnimator.SetTrigger("en2StunRecover");
+            enController.enAnimator.SetTrigger("en2StunRecover");
             yield return new WaitForSeconds(1f); //time for recover animation
 
             enController.enCanMove = true;
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
             enStunned = false;
 
-            canChase = true;
+            //canChase = true;
             enCanAttack = true;
         }
     }
 
-    void Die()
+    void DeathCheck()
     {
-        isAlive = false;
+        //isAlive = false;
         //Die animation
-        if (enAnimator != null)
+        /*if (enAnimator != null)
         {
             enAnimator.SetTrigger("Death");
-        }
+        }*/
 
         //give player exp
-        if(player != null)
-            playerCombat.GiveXP(experiencePoints);
+        //if(player != null)
+        //    playerCombat.GiveXP(experiencePoints);
 
-        StopAllCoroutines(); //stops attack coroutine if dead
-        //hide hp bar
+        //StopAllCoroutines(); //stops attack coroutine if dead
+
 
 
         //disable enemy object
-        isAlive = false;
+        //isAlive = false;
 
-        if (deathParticlePrefab != null)
+        /*if (deathParticlePrefab != null)
         {
             Vector3 changeLocation = GetComponent<Transform>().position;
             Vector3 tempLocation = changeLocation;
             tempLocation.y += .5f;
             Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity);
-        }
+        }*/
 
         //DeleteEnemyObject();
-        StartCoroutine(DeleteEnemyObject());
+        if (!enController.isAlive)
+            StartCoroutine(DeleteEnemyObject());
     }
 
     IEnumerator DeleteEnemyObject()
     {
-        GetComponent<SpriteRenderer>().enabled = false;
+        enController.sr.enabled = false;
         GetComponentInChildren<Canvas>().enabled = false;
         yield return new WaitForSeconds(.5f);
         Destroy(this.gameObject);
