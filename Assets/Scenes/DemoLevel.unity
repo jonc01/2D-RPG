@@ -6766,21 +6766,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bandit
       objectReference: {fileID: 0}
-    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 1560790813732959709, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
@@ -8173,21 +8177,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bandit (5)
       objectReference: {fileID: 0}
-    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 1560790813732959709, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
@@ -8638,21 +8646,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bandit (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 1560790813732959709, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
@@ -9051,21 +9063,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bandit (4)
       objectReference: {fileID: 0}
-    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 1560790813732959709, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
@@ -12883,21 +12899,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bandit (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 1560790813732959709, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
@@ -15787,21 +15807,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bandit (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 1560790813732959709, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
@@ -16431,7 +16455,7 @@ PrefabInstance:
       objectReference: {fileID: 1928820832}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: attackRange
-      value: -0.76
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: groundCheck
@@ -16447,7 +16471,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: overrideMove
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: enAttackPoint
@@ -16470,6 +16494,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
+      propertyPath: coDurationLower
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
+      propertyPath: coDurationUpper
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: wallPlayerCheck
       value: 
       objectReference: {fileID: 515623913}
@@ -16479,7 +16511,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: wallCheckDistance
-      value: -0.4
+      value: -0.6
       objectReference: {fileID: 0}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: checkPlayerToRight

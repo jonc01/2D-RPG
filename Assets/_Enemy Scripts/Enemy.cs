@@ -12,12 +12,14 @@ public class Enemy : MonoBehaviour
     {
         enController.enAnimator.SetBool("move", false);
         //enController.enAttackAnimSpeed = .....
+        enController.stunAnimatorVar = "enStunRecover";
     }
 
     void Update()
     {
         IdleAnimCheck();
         MoveAnimCheck();
+        StunnedAnimCheck();
     }
 
     void IdleAnimCheck()
@@ -62,5 +64,16 @@ public class Enemy : MonoBehaviour
                 enController.enAnimator.SetBool("move", false);
             }
         }
+    }
+
+    void StunnedAnimCheck()
+    {
+        if(enController.enStunned)
+            enController.enAnimator.SetTrigger("enStunned");
+    }
+
+    void StunRecoverAnim()
+    {
+        enController.enAnimator.SetTrigger("enStunRecover");
     }
 }

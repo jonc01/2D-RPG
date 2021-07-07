@@ -31,11 +31,15 @@ public class EnemyController : MonoBehaviour
     public float 
         maxHealth = 100,
         maxHeal = 100;
-    [SerializeField] float 
+    [SerializeField] public float 
         aggroRange = 3f, //when to start chasing player
         enAttackRange = .3f; //TODO: .5f //when to start attacking player, stop enemy from clipping into player
     public float moveSpeedDefault = 2f;
     float m_jumpForce = 7.5f; //not in-use
+    [SerializeField] 
+    float coDurationLower = .3f,
+        coDurationUpper = 1f;
+
     public float
         enAttackDamage = 5f,
         enAttackSpeed = 1.0f, //lower value for lower delays between attacks
@@ -64,7 +68,7 @@ public class EnemyController : MonoBehaviour
     public TextPopupsHandler noReScaleTextHandler; //use for text to float above enemy, no re-scaling
 
     [Space]
-    [Header("=== Prefab Handlers referenced at Start() ===")]
+    [Header("=== Prefab Handlers/components referenced at Start() ===")]
     [SerializeField] private TextPopupsHandler TextPopupsHandler;
     [SerializeField] private TextPopupsHandler AttackIndicator;
     [SerializeField] private HitEffectsHandler HitEffectsHandler;
@@ -72,6 +76,7 @@ public class EnemyController : MonoBehaviour
     public SpriteRenderer sr;
     public Rigidbody2D rb;
     private Material mDefault; //grabbed at start
+    public string stunAnimatorVar;
 
     [Space]
     [Header("=== Raycast Checks ===")]
@@ -202,7 +207,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            playerToRight = false;
+            //playerToRight = false;
         }
     }
 
@@ -235,9 +240,9 @@ public class EnemyController : MonoBehaviour
 
             if (!isPatrolling) //when patrolling is ended, random value to idle or move again, and duration of selected action
             {
-                bool switchDir = (Random.value > 0.5f);
-                bool idleSwitch = (Random.value > 0.5f);
-                float coDuration = (Random.Range(0.3f, 1f));
+                bool switchDir = (Random.value > .5f);
+                bool idleSwitch = (Random.value > .5f);
+                float coDuration = (Random.Range(coDurationLower, coDurationUpper));
 
                 if (idleSwitch)
                 {
@@ -304,13 +309,13 @@ public class EnemyController : MonoBehaviour
             {
                 rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
                 enFacingRight = true;
-                Flip(); //TODO: might not be needed
+                //Flip(); //TODO: might not be needed
             }
             else
             {
                 rb.velocity = new Vector2(-moveSpeed, rb.velocity.y);
                 enFacingRight = false;
-                Flip(); //TODO: might not be needed
+                //Flip(); //TODO: might not be needed
             }
         }
     }
@@ -324,6 +329,12 @@ public class EnemyController : MonoBehaviour
     public void StartIdling(float duration, bool switchDir, bool knockbackHitB = false)
     {
         IsIdlingCO = StartCoroutine(Idling(duration, switchDir, knockbackHitB));
+    }
+
+    public void StopIdling()
+    {
+        if (IsIdlingCO != null)
+            StopCoroutine(IsIdlingCO);
     }
 
     IEnumerator Idling(float duration, bool switchDir, bool knockbackHitB)
@@ -352,6 +363,12 @@ public class EnemyController : MonoBehaviour
         IsPatrollingCO = StartCoroutine(Patrolling(duration, switchDir));
     }
 
+    public void StopPatrolling()
+    {
+        if(IsPatrollingCO != null)
+            StopCoroutine(IsPatrollingCO);
+    }
+
     IEnumerator Patrolling(float duration, bool switchDir)
     {
         isPatrolling = true;
@@ -367,7 +384,7 @@ public class EnemyController : MonoBehaviour
 
     public void AttackCheck()
     {
-        playerInRange = Physics2D.Raycast(attackCheck.position, -transform.right, enAttackRange, playerLayer);
+        playerInRange = Physics2D.Raycast(attackCheck.position, -transform.right, attackRange, playerLayer);
 
         if (playerInRange && !overrideAttack)
         {
@@ -553,15 +570,21 @@ public class EnemyController : MonoBehaviour
                     float fullDuration = 1f;
                     fullDuration -= stunResist; //getting percentage of stun based on stunResist
                     duration *= fullDuration;
-                    enAnimator.SetTrigger("enStunned");
+                    //enAnimator.SetTrigger("enStunned");
                     StartCoroutine(StunEnemy(duration));
                 }
                 else
                 {
-                    enAnimator.SetTrigger("enLightStun");
+                    //enAnimator.SetTrigger("enLightStun");
                 }
             }
         }
+    }
+
+    public void StopAttackCO()
+    {
+        if (IsAttackingCO != null)
+            StopCoroutine(IsAttackingCO);
     }
 
     IEnumerator StunEnemy(float stunDuration) //TODO: move to Controller
@@ -598,7 +621,11 @@ public class EnemyController : MonoBehaviour
 
             yield return new WaitForSeconds(stunDuration);
 
-            enAnimator.SetTrigger("enStunRecover");
+            if(stunAnimatorVar != null) //TODO: stunRecover
+            {
+                enAnimator.SetTrigger(stunAnimatorVar);
+            }
+
             yield return new WaitForSeconds(.5f); //time for recover animation
             isAttacking = false;
             enCanAttack = true;
