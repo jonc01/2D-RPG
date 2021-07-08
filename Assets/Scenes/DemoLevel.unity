@@ -1225,6 +1225,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 133666546}
   m_CullTransparentMesh: 1
+--- !u!114 &135806214 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5827493887734094420, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
+  m_PrefabInstance: {fileID: 5827493886737134310}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 286a740d3b6a49847acedd03c65ed0d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &140445896
 GameObject:
   m_ObjectHideFlags: 0
@@ -15809,23 +15820,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1560790813732959709, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4602072025151149631, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7386111251099649902, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
@@ -16422,6 +16433,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 204774832}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
+      propertyPath: hello
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: kbThrust
       value: 0
       objectReference: {fileID: 0}
@@ -16474,6 +16489,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
+      propertyPath: overrideStun
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: enAttackPoint
       value: 
       objectReference: {fileID: 1843020412}
@@ -16511,7 +16530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: wallCheckDistance
-      value: -0.6
+      value: -0.7
       objectReference: {fileID: 0}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: checkPlayerToRight
@@ -16525,6 +16544,10 @@ PrefabInstance:
       propertyPath: playerLayer.m_Bits
       value: 1024
       objectReference: {fileID: 0}
+    - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
+      propertyPath: enemyOverrideScript
+      value: 
+      objectReference: {fileID: 135806214}
     - target: {fileID: 5827493887734094421, guid: e55386f316fa77b43a7bac61fc79b601, type: 3}
       propertyPath: groundCheckDistance
       value: 0.2

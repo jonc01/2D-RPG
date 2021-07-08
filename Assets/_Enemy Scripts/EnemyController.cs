@@ -6,8 +6,13 @@ public class EnemyController : MonoBehaviour
     [Header("! - If using separate script to override")]
     [SerializeField] private bool overrideAttack = false;
     [SerializeField] private bool overrideMove = false;
+    [SerializeField] private bool overrideStun = false;
     [SerializeField] private bool overrideDie = false;
     [SerializeField] private bool checkPlayerToRight = false;
+
+    [Space]
+    [Header("! - If overriding above functions")]
+    public Enemy2 enemyOverrideScript;
 
     [Space]
     [Header("=== Required reference setup ===")]
@@ -390,6 +395,12 @@ public class EnemyController : MonoBehaviour
         {
             IsAttackingCO = StartCoroutine(IsAttacking());
         }
+
+        //TODO: delete this if Enemy2 call works
+        /*if(playerInRange && overrideAttack)
+        {
+            enemyOverrideScript.StartAttack();
+        }*/
     }
 
     public void Attack(float damageMult = 1f)
@@ -556,27 +567,34 @@ public class EnemyController : MonoBehaviour
         //two animations, full stun and light stun (stagger)
         if (isAlive)
         {
-            if (Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
+            if (!overrideStun)
             {
-                knockbackHit = true;
-                if (IsAttackingCO != null)
+                if (Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
                 {
-                    isAttacking = false;
-                    StopCoroutine(IsAttackingCO);
-                }
+                    knockbackHit = true;
+                    if (IsAttackingCO != null)
+                    {
+                        isAttacking = false;
+                        StopCoroutine(IsAttackingCO);
+                    }
 
-                if (fullStun)
-                {
-                    float fullDuration = 1f;
-                    fullDuration -= stunResist; //getting percentage of stun based on stunResist
-                    duration *= fullDuration;
-                    //enAnimator.SetTrigger("enStunned");
-                    StartCoroutine(StunEnemy(duration));
+                    if (fullStun)
+                    {
+                        float fullDuration = 1f;
+                        fullDuration -= stunResist; //getting percentage of stun based on stunResist
+                        duration *= fullDuration;
+                        //enAnimator.SetTrigger("enStunned");
+                        StartCoroutine(StunEnemy(duration));
+                    }
+                    else
+                    {
+                        //enAnimator.SetTrigger("enLightStun");
+                    }
                 }
-                else
-                {
-                    //enAnimator.SetTrigger("enLightStun");
-                }
+            }
+            else if(overrideStun && enemyOverrideScript != null)
+            {
+                enemyOverrideScript.GetStunned(duration);
             }
         }
     }
@@ -587,7 +605,7 @@ public class EnemyController : MonoBehaviour
             StopCoroutine(IsAttackingCO);
     }
 
-    IEnumerator StunEnemy(float stunDuration) //TODO: move to Controller
+    IEnumerator StunEnemy(float stunDuration)
     {
         if (!enStunned)
         {

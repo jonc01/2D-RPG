@@ -35,6 +35,8 @@ public class Enemy2 : MonoBehaviour
     bool isShielded = true;
 
     bool enStunned;
+
+    Coroutine IsComboAttackingCO;
     
     //TODO: this should work??
     //float aggroRange = 3f; //when to start chasing player
@@ -203,7 +205,7 @@ public class Enemy2 : MonoBehaviour
         }
     }
 
-    void StartAttack(int atkVariation = 2)
+    public void StartAttack(int atkVariation = 2) //TODO: delete 
     {
         if (enController.playerInRange)
         {
@@ -214,7 +216,7 @@ public class Enemy2 : MonoBehaviour
                     break;
                 case 2:
                     enController.enCanMove = false;
-                    enController.IsAttackingCO = StartCoroutine(IsComboAttacking());
+                    IsComboAttackingCO = StartCoroutine(IsComboAttacking());
                     break;
                 default:
                     break;
@@ -390,16 +392,18 @@ public class Enemy2 : MonoBehaviour
             //if (Time.time > allowStun && !enStunned) //cooldown timer starts when recovered from stun
             if(allowBreak && !isBroken)
             {
+                if (IsComboAttackingCO != null)
+                {
+                    enController.isAttacking = false;
+                    StopCoroutine(IsComboAttackingCO);
+                }
+
                 float fullDuration = 1f;
                 fullDuration -= enController.stunResist; //getting percentage of stun based on stunResist
                 duration *= fullDuration;
                 enController.enAnimator.SetBool("IdleStunnableB", false);
 
                 enController.isAttacking = false;
-
-
-                if (enController.IsAttackingCO != null)
-                    enController.StopAttackCO(); //stopping attack coroutine when attacking
 
                 StartCoroutine(StunEnemy(duration));
             }
