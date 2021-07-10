@@ -38,7 +38,7 @@ public class EnemyController : MonoBehaviour
         maxHeal = 100;
     [SerializeField] public float 
         aggroRange = 3f, //when to start chasing player
-        enAttackRange = .3f; //TODO: .5f //when to start attacking player, stop enemy from clipping into player
+        enAttackRadius = .3f; //! the radius of the overlap circle hitbox, adjusting this will increase overall range of attack
     public float moveSpeedDefault = 2f;
     float m_jumpForce = 7.5f; //not in-use
     [SerializeField] 
@@ -54,7 +54,7 @@ public class EnemyController : MonoBehaviour
         groundCheckDistance,
         wallCheckDistance,
         playerCheckDistance, //Aggro range
-        attackRange;
+        attackRange; //when to start attacking player, uses a raycast to detect if player is within range
     [Space]
     [Range(0f, 1.0f)]
     public float
@@ -229,7 +229,7 @@ public class EnemyController : MonoBehaviour
         playerDetectFront = Physics2D.Raycast(wallPlayerCheck.position, transform.right, playerCheckDistance, playerLayer);
         playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistance, playerLayer);
 
-        if (groundDetect && !aggroStarted && !isAttacking)
+        if (groundDetect && !aggroStarted && !isAttacking && !enStunned)
         {
             if (isPatrolling)
             {
@@ -314,13 +314,13 @@ public class EnemyController : MonoBehaviour
             {
                 rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
                 enFacingRight = true;
-                //Flip(); //TODO: might not be needed
+                Flip(); //TODO: might not be needed
             }
             else
             {
                 rb.velocity = new Vector2(-moveSpeed, rb.velocity.y);
                 enFacingRight = false;
-                //Flip(); //TODO: might not be needed
+                Flip(); //TODO: might not be needed
             }
         }
     }
@@ -405,7 +405,7 @@ public class EnemyController : MonoBehaviour
 
     public void Attack(float damageMult = 1f)
     {
-        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRange, playerLayer);
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRadius, playerLayer);
 
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
@@ -451,7 +451,7 @@ public class EnemyController : MonoBehaviour
         if (enAttackPoint == null)
             return;
 
-        Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRange);
+        Gizmos.DrawWireSphere(enAttackPoint.position, enAttackRadius);
     }
 
     private void OnDrawGizmos()
@@ -610,9 +610,10 @@ public class EnemyController : MonoBehaviour
         if (!enStunned)
         {
             enStunned = true;
-            StartIdling(stunDuration + .5f, false, true);
+            //StartIdling(stunDuration + .5f, false, true);
             enCanAttack = false;
             enCanMove = false;
+            isIdling = false;
             if (stunLParticlePrefab != null && stunRParticlePrefab != null)
             {
                 Vector3 changeLocation = GetComponent<Transform>().position;
@@ -639,12 +640,8 @@ public class EnemyController : MonoBehaviour
 
             yield return new WaitForSeconds(stunDuration);
 
-            if(stunAnimatorVar != null) //TODO: stunRecover
-            {
-                enAnimator.SetTrigger(stunAnimatorVar);
-            }
-
-            yield return new WaitForSeconds(.5f); //time for recover animation
+            yield return new WaitForSeconds(.3f); //time for recover animation
+            isIdling = true;
             isAttacking = false;
             enCanAttack = true;
             EnEnableMove();
@@ -666,6 +663,9 @@ public class EnemyController : MonoBehaviour
         //give player exp
         //if(playerCombat != null)
         //    playerCombat.GiveXP(experiencePoints);
+
+        //if (IsAttackingCO != null)
+            //StopCoroutine(IsAttackingCO);
 
         StopAllCoroutines(); //stops attack coroutine if dead //TODO: make sure coroutines are saved in this script if started in Enemy.cs
 

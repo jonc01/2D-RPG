@@ -34,7 +34,7 @@ public class Enemy2 : MonoBehaviour
     bool isBroken;
     bool isShielded = true;
 
-    bool enStunned;
+    //bool enStunned;
 
     Coroutine IsComboAttackingCO;
     
@@ -112,13 +112,12 @@ public class Enemy2 : MonoBehaviour
 
     public void MoveCheck() //RaycastChecks
     {
-        Debug.Log("MoveCheck from Enemy2");
         //groundDetect
         //wallDetect
         //playerDetectFront
         //playerDetectBack
 
-        if (enController.groundDetect && !enController.aggroStarted && !enController.isAttacking)
+        if (enController.groundDetect && !enController.aggroStarted && !enController.isAttacking && !enController.enStunned)
         {
             if (enController.isPatrolling)
             {
@@ -158,7 +157,7 @@ public class Enemy2 : MonoBehaviour
 
         //this will hit player through wall and enemy will keep flipping until player leaves range
         //wallDetect logic is met, but is aggro'ing to player
-        if (!enController.wallDetect && enController.groundDetect && !enStunned)
+        if (!enController.wallDetect && enController.groundDetect && !enController.enStunned)
         {
             if (enController.playerDetectFront || enController.playerDetectBack)
             {
@@ -226,10 +225,10 @@ public class Enemy2 : MonoBehaviour
 
     IEnumerator IsAttacking()
     {
-        if (enController.enCanAttack && !enController.isAttacking && !enStunned)
+        if (enController.enCanAttack && !enController.isAttacking && !enController.enStunned)
         {
             enController.isAttacking = true;
-            enStunned = false;
+            enController.enStunned = false;
             enController.enCanAttack = false;
 
             enController.enAnimator.SetTrigger("Attack");
@@ -243,7 +242,7 @@ public class Enemy2 : MonoBehaviour
             yield return new WaitForSeconds(enController.enAttackAnimSpeed); //time when damage is dealt based on animation
 
             enController.rb.velocity = new Vector2(0, enController.rb.velocity.y); //stop enemy from moving
-            enController.Attack();
+            Attack2();
             yield return new WaitForSeconds(enController.enAttackSpeed); //delay between attacks
             enController.enAnimator.SetBool("isAttacking", false);
         
@@ -271,10 +270,10 @@ public class Enemy2 : MonoBehaviour
 
     IEnumerator IsComboAttacking()
     {
-        if(enController.enCanAttack && !enController.isAttacking && !enStunned)
+        if(enController.enCanAttack && !enController.isAttacking && !enController.enStunned)
         {
             enController.isAttacking = true;
-            enStunned = false;
+            enController.enStunned = false;
             enController.enCanAttack = false;
             ShowAttackIndicator();
 
@@ -308,7 +307,7 @@ public class Enemy2 : MonoBehaviour
             LungeOnAttack();
             yield return new WaitForSeconds(.02f);
             enController.enCanMove = false;
-            enController.Attack(1.5f);
+            Attack2();
 
             yield return new WaitForSeconds(.4f);
             //enAnimator.SetTrigger("IdleStunnable");
@@ -412,13 +411,13 @@ public class Enemy2 : MonoBehaviour
 
     IEnumerator StunEnemy(float stunDuration)
     {
-        if (!enStunned)
+        if (!enController.enStunned)
         {
             isBroken = true;
             yield return new WaitForSeconds(.01f);
             enController.enAnimator.SetTrigger("en2Stunned");
 
-            enStunned = true;
+            enController.enStunned = true;
             //StopChase(); //TODO: delete
             enController.enCanAttack = false;
             enController.enCanMove = false;
@@ -446,7 +445,7 @@ public class Enemy2 : MonoBehaviour
 
             enController.enCanMove = true;
             enController.EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
-            enStunned = false;
+            enController.enStunned = false;
 
             //canChase = true;
             enController.enCanAttack = true;

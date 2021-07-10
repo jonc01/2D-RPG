@@ -15767,6 +15767,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 1189371403}
     m_Modifications:
     - target: {fileID: 1560790813732959700, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: wallCheckDistance
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1560790813732959700, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: playerCheckDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1560790813732959700, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: noReScaleTextHandler
       value: 
       objectReference: {fileID: 511853718}
