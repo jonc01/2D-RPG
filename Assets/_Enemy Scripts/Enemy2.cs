@@ -255,7 +255,7 @@ public class Enemy2 : MonoBehaviour
 
     void Attack2() //default, attack player when in melee range
     {
-        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enController.enAttackPoint.position, enController.enAttackRange, enController.playerLayer);
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enController.enAttackPoint.position, enController.enAttackRadius, enController.playerLayer);
 
         //damage enemies
         foreach (Collider2D player in hitPlayer) //loop through enemies hit
@@ -381,7 +381,7 @@ public class Enemy2 : MonoBehaviour
         if (enController.enAttackPoint == null)
             return;
 
-        Gizmos.DrawWireSphere(enController.enAttackPoint.position, enController.enAttackRange);
+        Gizmos.DrawWireSphere(enController.enAttackPoint.position, enController.enAttackRadius);
     }
 
     public void GetStunned(float duration) //allow player to call this function //TODO: this might be more robust than enController's

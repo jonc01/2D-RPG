@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 {
     [Header("*Need Controller")]
     [SerializeField] private EnemyController enController;
+    //
 
     void Start()
     {

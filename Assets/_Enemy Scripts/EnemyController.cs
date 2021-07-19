@@ -229,6 +229,21 @@ public class EnemyController : MonoBehaviour
         playerDetectFront = Physics2D.Raycast(wallPlayerCheck.position, transform.right, playerCheckDistance, playerLayer);
         playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistance, playerLayer);
 
+
+        Vector3 down = transform.TransformDirection(Vector3.down) * groundCheckDistance;
+        Debug.DrawRay(groundCheck.position, down, Color.green);
+
+        Vector3 right = transform.TransformDirection(Vector3.right) * wallCheckDistance;
+        Debug.DrawRay(wallPlayerCheck.position, right, Color.blue);
+
+        Vector3 attackRight = transform.TransformDirection(Vector3.right) * playerCheckDistance;
+        Debug.DrawRay(wallPlayerCheck.position, attackRight, Color.cyan);
+
+        Vector3 attackLeft = transform.TransformDirection(Vector3.left) * playerCheckDistance;
+        Debug.DrawRay(wallPlayerCheck.position, attackLeft, Color.red);
+
+
+
         if (groundDetect && !aggroStarted && !isAttacking && !enStunned)
         {
             if (isPatrolling)
@@ -456,9 +471,9 @@ public class EnemyController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
+        //Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
 
-        if (enFacingRight)
+        /*if (enFacingRight)
         {
             Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x - wallCheckDistance, wallPlayerCheck.position.y));
             Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x - playerCheckDistance, wallPlayerCheck.position.y));
@@ -467,7 +482,7 @@ public class EnemyController : MonoBehaviour
         {
             Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + wallCheckDistance, wallPlayerCheck.position.y));
             Gizmos.DrawLine(wallPlayerCheck.position, new Vector2(wallPlayerCheck.position.x + playerCheckDistance, wallPlayerCheck.position.y));
-        }
+        }*/
 
         //Attack range
         //Gizmos.DrawLine(attackCheck.position, new Vector2(attackCheck.position.x + attackRange, attackCheck.position.y));
