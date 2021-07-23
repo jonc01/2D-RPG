@@ -743,7 +743,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void ManualFlip(bool faceRight){ //manually flip
+    public void ManualFlip(bool faceRight){ //manually flip //TODO: might not need
         if (faceRight)
         {
             transform.localRotation = Quaternion.Euler(0, 180, 0);

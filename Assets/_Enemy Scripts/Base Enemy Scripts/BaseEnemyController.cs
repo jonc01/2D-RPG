@@ -2,14 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyStateController : MonoBehaviour
+public class BaseEnemyController : MonoBehaviour
 {
+    [TextArea]
+    public string Note = "...";
 
+    [Header("=== Required References for setup")]
+    //public Animator enAnimator;
+    
+    [Space]
     private string currentState;
 
-    public Animator enAnimator;
-    //States
-    public const string EN_IDLE = ""; //customizable through inspector?
+    
+    // States 
+    public const string EN_IDLE = ""; //customizable through inspector? //TODO: can these even be edited if const
     public const string EN_MOVE = "";
     public const string EN_HURT = "";
     public const string EN_STUNNED = "";
@@ -20,13 +26,13 @@ public class EnemyStateController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void ChangeState(string newState)
@@ -36,4 +42,6 @@ public class EnemyStateController : MonoBehaviour
         enAnimator.Play(newState); //TODO: can't use this for Attacking trigger, should override other anim states
         currentState = newState;
     }
+
+    
 }

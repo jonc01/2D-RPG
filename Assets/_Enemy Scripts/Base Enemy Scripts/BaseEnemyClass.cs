@@ -4,11 +4,23 @@ using UnityEngine;
 
 public class BaseEnemyClass : MonoBehaviour
 {
-    // TODO:
-    //[SerializeField] EnemyStateController state
+    // REFERENCES GET AT START()
+    //public HealthBar healthBar; //TODO: in Start() healthBarTransform = healthBar.GetComponent<Transform>();
+    //private Transform healthBarTransform (in flip())
+
+    // HEALTH
+    //float maxHealth
+    //float currentHealth
+
+    // ATTACK
+    //float attackRange
+    //float attackSpeed
+    //float attackDamage
+
+    // ANIMATION
+    //float attackAnimSpeed
 
 
-    // Start is called before the first frame update
     void Start()
     {
         
@@ -19,6 +31,7 @@ public class BaseEnemyClass : MonoBehaviour
     {
         
     }
+
 
 
     public void TakeDamage()
