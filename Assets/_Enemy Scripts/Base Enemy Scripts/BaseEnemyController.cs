@@ -4,29 +4,26 @@ using UnityEngine;
 
 public class BaseEnemyController : MonoBehaviour
 {
+    //
     [TextArea]
-    public string Note = "...";
+    public string Note = "Input for Enemy object";
 
     [Header("=== Required References for setup")]
     //public Animator enAnimator;
-    
-    [Space]
-    private string currentState;
+    public int placeholder;
 
-    
-    // States 
-    public const string EN_IDLE = ""; //customizable through inspector? //TODO: can these even be edited if const
-    public const string EN_MOVE = "";
-    public const string EN_HURT = "";
-    public const string EN_STUNNED = "";
-    public const string EN_ATTACKING = ""; //?
 
     //!!
+
+
 
     // Start is called before the first frame update
     void Start()
     {
+        //TODO: get RB
 
+
+        //if(references == null)
     }
 
     // Update is called once per frame
@@ -35,13 +32,14 @@ public class BaseEnemyController : MonoBehaviour
 
     }
 
-    public void ChangeState(string newState)
+    void UpdateCoroutines()
     {
-        if (newState == currentState) return;
-
-        enAnimator.Play(newState); //TODO: can't use this for Attacking trigger, should override other anim states
-        currentState = newState;
+        //TODO: might just update this in BaseEnemyClass
     }
-
     
+    void MoveRight()
+    {
+        //EnemyClass //(BaseEnemyClass OR new class) //TODO: if using inherited script, can I still use "BaseEnemyClass class" or check if override bool
+        
+    }
 }

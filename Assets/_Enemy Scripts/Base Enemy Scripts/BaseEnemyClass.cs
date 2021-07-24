@@ -20,23 +20,66 @@ public class BaseEnemyClass : MonoBehaviour
     // ANIMATION
     //float attackAnimSpeed
 
+    [Space]
+    // COROUTINES //TODO: might not need to be public
+    public Coroutine IsAttackingCO;
+    public Coroutine IsPatrollingCO;
+    public Coroutine IsIdlingCO;
+    public bool
+        isPatrolling,
+        isIdling;
+
+
+    // VARIABLES
+    public bool isAlive;
+
 
     void Start()
     {
-        
+
+
+
+
+
+        isAlive = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+        CoroutineCheck();
     }
 
+    void CoroutineCheck()
+    {
+        if (enStunned)
+        {
+            //Option 1
+            if (IsAttackingCO != null)
+                StopCoroutine(IsAttackingCO);
+
+            //Option 2
+            //StopAttackCO();
+
+
+
+
+            if (IsPatrollingCO != null)
+                StopCoroutine(IsPatrollingCO);
+
+            //TODO: isIdlingCO???
+        }
+    }
 
 
     public void TakeDamage()
     {
-        //state.ChangeState(EN_HURT); //TODO: State Controller should recognize this as the const stored
+        if (isAlive)
+        {
+            //state.ChangeState(EN_HURT); //TODO: State Controller should recognize this as the const stored
+
+        }
     }
 
     public void GetStunned()
@@ -46,6 +89,6 @@ public class BaseEnemyClass : MonoBehaviour
 
     public void Die()
     {
-
+        isAlive = false;
     }
 }
