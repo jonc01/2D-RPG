@@ -8,10 +8,9 @@ public class BaseEnemyController : MonoBehaviour
     [TextArea]
     public string Note = "Input for Enemy object";
 
-    [Header("=== Required References for setup")]
-    //public Animator enAnimator;
-    public int placeholder;
-
+    [Header("=== Required References for setup ===")]
+    public int placeholder; //DELETEME
+    public EnemyRaycast enRaycast;
 
     //!!
 
@@ -20,7 +19,6 @@ public class BaseEnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //TODO: get RB
 
 
         //if(references == null)
@@ -32,14 +30,40 @@ public class BaseEnemyController : MonoBehaviour
 
     }
 
+    /*
+     * 
+     * BaseEnemyClass.MoveRight(true);
+     * 
+     * 
+     */
+
     void UpdateCoroutines()
     {
         //TODO: might just update this in BaseEnemyClass
     }
     
-    void MoveRight()
+    void MoveRight() //move to BaseEnemyClass
     {
         //EnemyClass //(BaseEnemyClass OR new class) //TODO: if using inherited script, can I still use "BaseEnemyClass class" or check if override bool
         
     }
+
+    void Idle()
+    {
+
+    }
+
+    void Patrol()
+    {
+
+    }
+
+    void ChasePlayer() // ????
+    {
+        if (enRaycast.playerToRight)
+        {
+            //
+        }
+    }
+
 }

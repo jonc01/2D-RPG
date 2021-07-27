@@ -283,6 +283,8 @@ public class PlayerCombat : MonoBehaviour
         //damage enemies
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
+
+
             if (enemy.GetComponent<EnemyController>() != null) //TODO: update for all 4 enemies
             {
                 timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze

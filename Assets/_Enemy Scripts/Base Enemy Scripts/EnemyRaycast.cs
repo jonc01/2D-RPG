@@ -5,20 +5,19 @@ using UnityEngine;
 public class EnemyRaycast : MonoBehaviour
 {
     [Header("=== Required reference setup ===")]
-    [SerializeField] public LayerMask
-        playerLayer,
-        groundLayer;
+    public LayerMask playerLayer;
+    public LayerMask groundLayer;
+
+
 
     [SerializeField]
-    private Transform groundCheck;
-    private Transform
+    private Transform groundCheck,
         wallPlayerCheck,
         attackCheck;
 
-    [Header("=== Adjustable Variables ===")]
-    [SerializeField] //Raycast variables
-    private float
-        groundCheckDistance,
+    [Header("=== Adjustable Variables ===")] //Raycast variables
+    [SerializeField] private float groundCheckDistance;
+    [SerializeField] private float
         wallCheckDistance,
         playerCheckDistance, //Aggro range
         attackRange; //when to start attacking player, uses a raycast to detect if player is within range
@@ -35,7 +34,8 @@ public class EnemyRaycast : MonoBehaviour
         wallDetect;
 
 
-    public bool enFacingRight; //TODO: remove 
+    public bool enFacingRight; //TODO: remove, should be in movement script (BaseEnemyClass)
+
 
     void Start()
     {
@@ -77,31 +77,27 @@ public class EnemyRaycast : MonoBehaviour
 
     void UpdatePlayerToRight()
     {
-        if (playerDetectFront)
+        if (playerDetectFront) 
         {
-            if (enFacingRight)
+            if (enFacingRight) // E-> P
             {
                 playerToRight = true;
             }
-            else
+            else if (!enFacingRight) // P <-E
             {
                 playerToRight = false;
             }
         }
-        else if (playerDetectBack)
+        else if (playerDetectBack) //can't use else in case of player jumping above raycast
         {
-            if (enFacingRight)
+            if (enFacingRight) // P E->
             {
                 playerToRight = false;
             }
-            else
+            else if (!enFacingRight) // <-E P
             {
                 playerToRight = true;
             }
-        }
-        else
-        {
-            //playerToRight = false;
         }
     }
 }

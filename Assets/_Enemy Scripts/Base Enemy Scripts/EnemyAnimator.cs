@@ -4,19 +4,21 @@ using UnityEngine;
 
 public class EnemyAnimator : MonoBehaviour
 {
-    [Header("=== Required References for setup")]
+    [Header("=== Required References for setup ===")]
     public Animator enAnimator;
 
     [Space]
     private string currentState;
 
 
-    // States 
-    public const string EN_IDLE = ""; //customizable through inspector? //TODO: can these even be edited if const
-    public const string EN_MOVE = "";
-    public const string EN_HURT = "";
-    public const string EN_STUNNED = "";
-    public const string EN_ATTACKING = ""; //?
+    // Animation States 
+    [SerializeField]
+    private string EN_IDLE = "Idle", //TODO: customizable through inspector?
+        EN_MOVE = "Move",
+        EN_HURT = "Hurt",
+        EN_DEATH = "Death",
+        EN_STUNNED = "Stunned",
+        EN_ATTACKING = "Attacking"; //?
 
     // Start is called before the first frame update
     void Start()
@@ -30,11 +32,16 @@ public class EnemyAnimator : MonoBehaviour
         
     }
 
-    public void ChangeState(string newState)
+    public void ChangeState(string newState) //TODO: might not use
     {
         if (newState == currentState) return;
 
-        //enAnimator.Play(newState); //TODO: can't use this for Attacking trigger, should override other anim states
+        enAnimator.Play(newState); //TODO: can't use this for Attacking trigger, should override other anim states
         currentState = newState;
+    }
+
+    void CheckDeath()
+    {
+        
     }
 }
