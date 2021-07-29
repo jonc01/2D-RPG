@@ -13,7 +13,7 @@ public class EnemyAnimator : MonoBehaviour
 
     // Animation States 
     [SerializeField]
-    private string EN_IDLE = "Idle", //TODO: customizable through inspector?
+    public string EN_IDLE = "Idle", //TODO: customizable through inspector?
         EN_MOVE = "Move",
         EN_HURT = "Hurt",
         EN_DEATH = "Death",
@@ -32,7 +32,7 @@ public class EnemyAnimator : MonoBehaviour
         
     }
 
-    public void ChangeState(string newState) //TODO: might not use
+    public void ChangeState(string newState) //TODO: might not use OR only use for looping animations
     {
         if (newState == currentState) return;
 
@@ -40,7 +40,20 @@ public class EnemyAnimator : MonoBehaviour
         currentState = newState;
     }
 
-    void CheckDeath()
+    public void PlayAnimation(string anim)
+    {
+        enAnimator.Play(anim); //or just grab from array of anims? anim[0] = idle...
+    }
+
+    public void PlayAttackAnim()
+    {
+        enAnimator.SetBool("isAttacking", true); //TODO: ALL PLACEHOLDER
+        enAnimator.SetTrigger("Attack");
+        enAnimator.SetBool("move", false);
+
+    }
+
+    void CheckDeath() //TODO: just manually call from BaseEnemyClass
     {
         
     }

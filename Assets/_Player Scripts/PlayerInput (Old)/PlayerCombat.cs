@@ -283,7 +283,15 @@ public class PlayerCombat : MonoBehaviour
         //damage enemies
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
+            //TODO: update this and AttackHeavy
+            if(enemy.GetComponent<BaseEnemyClass>() != null)
+            {
+                timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze
+                enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
+                enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight, 1f);
+            }
 
+            ///////////
 
             if (enemy.GetComponent<EnemyController>() != null) //TODO: update for all 4 enemies
             {
