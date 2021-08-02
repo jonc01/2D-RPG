@@ -6729,6 +6729,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1189371403}
     m_Modifications:
+    - target: {fileID: 1560790813732959700, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: attackRange
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 1560790813732959708, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -8103,8 +8107,8 @@ MonoBehaviour:
   Note: 'Enemy Behavior/Input
 
 '
-  enRaycast: {fileID: 0}
-  enemyClass: {fileID: 0}
+  enRaycast: {fileID: 1560790814625271278}
+  enemyClass: {fileID: 1062238261}
   CODurationLower: 0.3
   CODurationUpper: 1
   aggroStarted: 0
@@ -8122,16 +8126,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f93b9453de89f24a8fbbd02353bfe5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enAnimator: {fileID: 0}
-  healthBar: {fileID: 0}
-  enAttackPoint: {fileID: 0}
-  mWhiteFlash: {fileID: 0}
+  enAnimator: {fileID: 1560790814625271279}
+  healthBar: {fileID: 7386111250916180661}
+  enAttackPoint: {fileID: 1560790813267320653}
+  mWhiteFlash: {fileID: 2100000, guid: e8655ccdcc83dfb439430390344f0a3c, type: 2}
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   sr: {fileID: 0}
   rb: {fileID: 0}
-  deathParticlesHandler: {fileID: 0}
   TextPopupsHandler: {fileID: 0}
   AttackIndicator: {fileID: 0}
   HitEffectsHandler: {fileID: 0}
@@ -8213,6 +8216,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1189371403}
     m_Modifications:
+    - target: {fileID: 1560790813732959700, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: attackRange
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 1560790813732959708, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -8682,6 +8689,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1189371403}
     m_Modifications:
+    - target: {fileID: 1560790813732959700, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: attackRange
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 1560790813732959708, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -9099,6 +9110,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1189371403}
     m_Modifications:
+    - target: {fileID: 1560790813732959700, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: attackRange
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 1560790813732959708, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -12936,6 +12951,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1189371403}
     m_Modifications:
+    - target: {fileID: 1560790813732959700, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: attackRange
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 1560790813732959708, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -16051,7 +16070,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b652d34c95f4564dbc853c8fa3363b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyClass: {fileID: 0}
+  debugging: 1
+  enemyClass: {fileID: 1062238261}
   playerLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -16061,10 +16081,10 @@ MonoBehaviour:
   groundCheck: {fileID: 1639782668030366273}
   wallPlayerCheck: {fileID: 1639782669209736872}
   attackCheck: {fileID: 1639782669138649763}
-  groundCheckDistance: 0
-  wallCheckDistance: 0
-  playerCheckDistance: 0
-  attackRange: 0
+  groundCheckDistance: 0.2
+  wallCheckDistance: -0.3
+  playerCheckDistance: -3
+  attackRange: 0.3
   playerToRight: 0
   playerDetectFront: 0
   playerDetectBack: 0
@@ -16223,6 +16243,10 @@ PrefabInstance:
     - target: {fileID: 1560790812943296380, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 1560790813732959700, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
+      propertyPath: attackRange
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 1560790813732959700, guid: 31ad5c6008305374db9219bf8e62b134, type: 3}
       propertyPath: wallCheckDistance

@@ -44,6 +44,7 @@ public class BaseEnemyController : MonoBehaviour
         MoveCheck();
         GroundWallLogic();
         PlayerCheck();
+        AttackCheck();
     }
 
     void CoroutineCheck() //TODO: complete
@@ -61,7 +62,7 @@ public class BaseEnemyController : MonoBehaviour
 
     void MoveCheck()
     {
-        if(enRaycast.groundDetect && !aggroStarted && !enemyClass.isAttacking && !enemyClass.enStunned)
+        if(enRaycast.groundDetect && !aggroStarted && !enemyClass.isAttacking && !enemyClass.enStunned && enemyClass.enCanMove)
         {
             //Logic for enemy to decide between Patrolling and Idling
             if (isPatrolling)
@@ -199,7 +200,7 @@ public class BaseEnemyController : MonoBehaviour
     {
         if (enRaycast.playerInRange)
         {
-            //enemyClass.StartAttackCO();
+            enemyClass.StartAttackCO();
         }
     }
 }

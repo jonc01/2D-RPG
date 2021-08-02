@@ -18,7 +18,6 @@ public class BaseEnemyClass : MonoBehaviour
     public SpriteRenderer sr;
     public Rigidbody2D rb;
     private Material mDefault;
-    [SerializeField] private DeathParticlesHandler deathParticlesHandler;
     private Transform healthBarTransform;
 
     // PREFAB HANDLERS (Start())
@@ -102,6 +101,7 @@ public class BaseEnemyClass : MonoBehaviour
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
         HitEffectsHandler = GameObject.Find("ObjectPool(HitEffects)").GetComponent<HitEffectsHandler>();
         DeathParticlesHandler = GameObject.Find("ObjectPool(DeathParticles)").GetComponent<DeathParticlesHandler>();
+        
 
         currentHealth = maxHealth;
         if (healthBar != null)
@@ -124,7 +124,7 @@ public class BaseEnemyClass : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Flip(); //TODO: needs testing use here or only with MoveRight()
+        //Flip(); //TODO: needs testing use here or only with MoveRight() //prevent flipping from knockback
         CoroutineCheck();
     }
 
@@ -137,14 +137,14 @@ public class BaseEnemyClass : MonoBehaviour
             if (moveRight)
             {
                 rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
-                //enFacingRight = true;
-                //Flip();
+                enFacingRight = true;
+                Flip();
             }
             else
             {
                 rb.velocity = new Vector2(-moveSpeed, rb.velocity.y);
-                //enFacingRight = false;
-                //Flip();
+                enFacingRight = false;
+                Flip();
             }
         }
     }
@@ -209,6 +209,11 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
+    public void StartAttackCO()
+    {
+        IsAttackingCO = StartCoroutine(Attacking());
+    }
+
     public void StopAttackCO()
     {
         if (IsAttackingCO != null)
@@ -228,18 +233,18 @@ public class BaseEnemyClass : MonoBehaviour
     #region Flip Update
     void Flip() //Change direction enemy is facing
     {
-        if (enCanMove)
+        /*if (enCanMove) //prevent flipping if receiving knockback
         {
             if(rb.velocity.x > 0) //moving right
             {
-                enFacingRight = true;
+                //enFacingRight = true;
             }
             else if(rb.velocity.x < 0)//moving left
             {
-                enFacingRight = false;
+                //enFacingRight = false;
             }
             //else was making !enFacingRight default when not moving, should only update when moving
-        }
+        }*/
 
         if (enCanFlip)
         {
@@ -424,14 +429,14 @@ public class BaseEnemyClass : MonoBehaviour
 
         StopAllCoroutines();
 
-        if(deathParticlesHandler != null)
+        if(DeathParticlesHandler != null)
         {
             //Vector3 changeLocation = GetComponent<Transform>().position; //TODO: if transform.position doesn't work
             //Vector3 tempLocation = changeLocation;
             Vector3 tempLocation = transform.position;
             tempLocation.y += hitEffectOffset;
 
-            deathParticlesHandler.ShowHitEffect(tempLocation);
+            DeathParticlesHandler.ShowHitEffect(tempLocation);
         }
         StartCoroutine(DeleteEnemyObject());
     }

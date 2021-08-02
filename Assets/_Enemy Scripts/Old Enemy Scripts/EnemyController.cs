@@ -167,7 +167,7 @@ public class EnemyController : MonoBehaviour
         //IdleAnimCheck();
         //MoveAnimCheck();
         
-        Flip();
+        //Flip();
         AttackCheck(); //only updates raycast bool, override will prevent default isAttacking from being called
         
         if(!overrideMove)

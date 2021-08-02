@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyRaycast : MonoBehaviour
 {
     [Header("=== Required reference setup ===")]
-    bool debugging = false;
+    [SerializeField] bool debugging = false;
     [SerializeField] BaseEnemyClass enemyClass;
     public LayerMask playerLayer;
     public LayerMask groundLayer;
@@ -59,20 +59,23 @@ public class EnemyRaycast : MonoBehaviour
         Debug.DrawRay(groundCheck.position, down, Color.green);
 
         Vector3 right = transform.TransformDirection(Vector3.right) * wallCheckDistance;
-        Debug.DrawRay(wallPlayerCheck.position, right, Color.blue);
+        //Debug.DrawRay(wallPlayerCheck.position, right, Color.blue);
 
         Vector3 attackRight = transform.TransformDirection(Vector3.right) * playerCheckDistance;
-        Debug.DrawRay(wallPlayerCheck.position, attackRight, Color.cyan);
+        //Debug.DrawRay(wallPlayerCheck.position, attackRight, Color.cyan);
 
         Vector3 attackLeft = transform.TransformDirection(Vector3.left) * playerCheckDistance;
-        Debug.DrawRay(wallPlayerCheck.position, attackLeft, Color.red);
+        //Debug.DrawRay(wallPlayerCheck.position, attackLeft, Color.red);
+
+        Vector3 playerInAttackRange = transform.TransformDirection(Vector3.left) * attackRange;
+        Debug.DrawRay(attackCheck.position, playerInAttackRange, Color.magenta);
     }
 
     void AttackCheck()
     {
         playerInRange = Physics2D.Raycast(attackCheck.position, -transform.right, attackRange, playerLayer);
         
-        //TODO: delete this if Enemy2 call works
+        //TODO: delete this if Enemy2 inherited call works
         /*if(playerInRange && overrideAttack)
         {
             enemyOverrideScript.StartAttack();
