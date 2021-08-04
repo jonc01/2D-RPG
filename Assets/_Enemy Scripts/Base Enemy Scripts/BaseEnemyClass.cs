@@ -130,7 +130,7 @@ public class BaseEnemyClass : MonoBehaviour
 
     #region MOVEMENT
 
-    public void MoveRight(bool moveRight) 
+    public void MoveRight(bool moveRight)
     {
         if(enCanMove && !isAttacking)
         {
@@ -233,18 +233,23 @@ public class BaseEnemyClass : MonoBehaviour
     #region Flip Update
     void Flip() //Change direction enemy is facing
     {
-        /*if (enCanMove) //prevent flipping if receiving knockback
+        // Switch the way the enemy is labelled as facing.
+        //enFacingRight = !enFacingRight;
+
+        // Multiply the enemy's x local scale by -1
+        //.Vector3 theScale = transform.localScale;
+        if (enCanMove) //prevent flipping if receiving knockback
         {
             if(rb.velocity.x > 0) //moving right
             {
-                //enFacingRight = true;
+                enFacingRight = true;
             }
-            else if(rb.velocity.x < 0)//moving left
+            else// if(rb.velocity.x < 0)//moving left //TODO: not needed?
             {
-                //enFacingRight = false;
+                enFacingRight = false;
             }
             //else was making !enFacingRight default when not moving, should only update when moving
-        }*/
+        }
 
         if (enCanFlip)
         {

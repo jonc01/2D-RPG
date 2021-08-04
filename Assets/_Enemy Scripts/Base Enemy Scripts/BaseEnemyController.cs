@@ -42,7 +42,6 @@ public class BaseEnemyController : MonoBehaviour
     {
         CoroutineCheck();
         MoveCheck();
-        GroundWallLogic();
         PlayerCheck();
         AttackCheck();
     }
@@ -62,7 +61,7 @@ public class BaseEnemyController : MonoBehaviour
 
     void MoveCheck()
     {
-        if(enRaycast.groundDetect && !aggroStarted && !enemyClass.isAttacking && !enemyClass.enStunned && enemyClass.enCanMove)
+        if(enRaycast.groundDetect && !aggroStarted && !enemyClass.isAttacking && !enemyClass.enStunned) //&& enemyClass.enCanMove)
         {
             //Logic for enemy to decide between Patrolling and Idling
             if (isPatrolling)
@@ -93,16 +92,13 @@ public class BaseEnemyController : MonoBehaviour
                 }
             }
         }
-    }
 
-    void GroundWallLogic() //TODO: keep separate? or keep in MoveCheck()
-    {
-        if (enemyClass.enCanMove)
+        //Ledge/Wall check
+        if(!enRaycast.groundDetect || enRaycast.wallDetect)
         {
-            if(!enRaycast.groundDetect || enRaycast.wallDetect)
+            if(enemyClass.rb.velocity.y == 0) //don't flip when falling
             {
-                if (enemyClass.rb.velocity.y == 0) //if grounded
-                    FlipDir();
+                FlipDir();
             }
         }
     }
@@ -171,23 +167,18 @@ public class BaseEnemyController : MonoBehaviour
             if(enRaycast.playerDetectFront || enRaycast.playerDetectBack)
             {
                 aggroStarted = true;
-
                 StopPatrolling();
+
                 if(isIdling) //TODO: might not need, is a check if Idling is interrupted
                 {
                     StopIdling();
                     enemyClass.enCanMove = true;
                 }
-            }
-
-            enemyClass.MoveRight(enRaycast.playerToRight);
-            if (enRaycast.playerToRight) //TODO: might only need this instead of using PlayerDetectFront etc...
-            {
-                //enemyClass.MoveRight(enRaycast.playerToRight);
+                enemyClass.MoveRight(enRaycast.playerToRight);
             }
             else
             {
-                //enemyClass.MoveRight(enRaycast.playerToRight);
+                aggroStarted = false;
             }
         }
         else
