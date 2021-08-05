@@ -291,7 +291,7 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight, 1f);
             }
 
-            ///////////
+            //////////////////////////////////////////////////////////////////////////
 
             if (enemy.GetComponent<EnemyController>() != null) //TODO: update for all 4 enemies
             {
@@ -405,6 +405,19 @@ public class PlayerCombat : MonoBehaviour
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(heavyAttackPoint.position, attackHeavyRange, enemyLayers);
                 foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
                 {
+                    if (enemy.GetComponent<BaseEnemyClass>() != null)
+                    {
+                        timeManager.DoFreezeTime(.15f, .05f); //.1, .05
+
+                        if (enableScreenshake)
+                            screenShake.Shake();
+
+                        enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
+                    }
+
+                    /////////////////////////////////////////////////////////////////////////////
+                    
                     if (enemy.GetComponent<EnemyController>() != null)
                     {
                         timeManager.DoFreezeTime(.15f, .05f); //.1, .05
@@ -438,6 +451,19 @@ public class PlayerCombat : MonoBehaviour
                 Collider2D[] hitEnemiesWide = Physics2D.OverlapBoxAll(heavyAttackPointWide.position, new Vector2(attackHeavyRange*2.7f, .8f), enemyLayers);
                 foreach (Collider2D enemy in hitEnemiesWide) //loop through enemies hit
                 {
+                    if (enemy.GetComponent<BaseEnemyClass>() != null)
+                    {
+                        if (enableScreenshake)
+                            screenShake.Shake();
+
+                        timeManager.DoFreezeTime(.15f, .05f);
+
+                        enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
+                    }
+
+                    ///////////////////////////////////////
+
                     if (enemy.GetComponent<EnemyController>() != null)
                     {
                         if(enableScreenshake)
