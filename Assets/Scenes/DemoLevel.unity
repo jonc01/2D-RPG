@@ -8126,7 +8126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f93b9453de89f24a8fbbd02353bfe5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enAnimator: {fileID: 1560790814625271279}
+  EnAnimator: {fileID: 1560790814625271279}
   healthBar: {fileID: 7386111250916180661}
   enAttackPoint: {fileID: 1560790813267320653}
   mWhiteFlash: {fileID: 2100000, guid: e8655ccdcc83dfb439430390344f0a3c, type: 2}
@@ -8144,6 +8144,7 @@ MonoBehaviour:
   enAttackDamage: 5
   enAttackSpeed: 1
   enAttackAnimSpeed: 0.4
+  enAttackAnimEndBuffer: 0.5
   enAttackRadius: 0.3
   XP: 10
   stunResist: 0
@@ -15721,6 +15722,10 @@ PrefabInstance:
       propertyPath: timeManager
       value: 
       objectReference: {fileID: 1063059738}
+    - target: {fileID: 107596093251239295, guid: af99df69663819f4ea190097c9b5ef1d, type: 3}
+      propertyPath: m_Name
+      value: ParryPoint (TriggerCheck) (script)
+      objectReference: {fileID: 0}
     - target: {fileID: 107596093386943507, guid: af99df69663819f4ea190097c9b5ef1d, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -16103,13 +16108,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45d718dde591d4e43a0ded7ef5a2e550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enAnimator: {fileID: 1560790814625271268}
-  EN_IDLE: 
-  EN_MOVE: 
-  EN_HURT: 
-  EN_DEATH: 
-  EN_STUNNED: 
-  EN_ATTACKING: 
+  enAnimController: {fileID: 1560790814625271268}
+  EN_IDLE: Idle
+  EN_MOVE: Run
+  EN_HURT: Hurt
+  EN_DEATH: Death
+  EN_STUNNED: LightBandit_Stunned
+  EN_ATTACKING: Attack
+  animClips:
+  - Idle
+  - Run
+  - Attack
+  - Hurt
+  - LightBandit_Stunned
+  - Death
 --- !u!1 &1639782668030366272
 GameObject:
   m_ObjectHideFlags: 0

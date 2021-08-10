@@ -5,56 +5,60 @@ using UnityEngine;
 public class EnemyAnimator : MonoBehaviour
 {
     [Header("=== Required References for setup ===")]
-    public Animator enAnimator;
+    public Animator enAnimController;
 
-    [Space]
-    private string currentState;
-
-
-    // Animation States 
+    // Animation Clips 
     [SerializeField]
-    public string EN_IDLE = "Idle", //TODO: customizable through inspector?
+    private string EN_IDLE = "Idle", //TODO: customizable through inspector?
         EN_MOVE = "Move",
+        EN_ATTACKING = "Attacking", //?
         EN_HURT = "Hurt",
-        EN_DEATH = "Death",
         EN_STUNNED = "Stunned",
-        EN_ATTACKING = "Attacking"; //?
+        EN_DEATH = "Death",
+        EN_IDLE_2 = "Combat Idle";
 
-    // Start is called before the first frame update
-    void Start()
+
+    [Space] [Header("=== (optional) New Animations ===")]
+    [SerializeField] private string[] newClips = {"New Anim"}; 
+    //^if using this, need null checks with PlayX functions
+
+    public void PlayAnim(int anim)
     {
-        
+        enAnimController.Play(newClips[anim]); //or just grab from array of anims? anim[0] = idle...
     }
 
-    // Update is called once per frame
-    void Update()
+    ///////////////////////////////////////////////
+
+    public void PlayIdle(bool isAttacking, bool enStunned, bool isHurt)
     {
-        
+        if (!isAttacking && !enStunned && !isHurt)
+            enAnimController.Play(EN_IDLE);
     }
 
-    public void ChangeState(string newState) //TODO: might not use OR only use for looping animations
+    public void PlayMove(bool isHurt)
     {
-        if (newState == currentState) return;
-
-        enAnimator.Play(newState); //TODO: can't use this for Attacking trigger, should override other anim states
-        currentState = newState;
+        if(!isHurt)
+            enAnimController.Play(EN_MOVE);
     }
 
-    public void PlayAnimation(string anim)
+    public void PlayAttack()
     {
-        enAnimator.Play(anim); //or just grab from array of anims? anim[0] = idle...
+        enAnimController.Play(EN_ATTACKING);
     }
 
-    public void PlayAttackAnim()
+    public void PlayHurt()
     {
-        enAnimator.SetBool("isAttacking", true); //TODO: ALL PLACEHOLDER
-        enAnimator.SetTrigger("Attack");
-        enAnimator.SetBool("move", false);
-
+        enAnimController.Play(EN_HURT);
     }
 
-    void CheckDeath() //TODO: just manually call from BaseEnemyClass
+    public void PlayStunned()
     {
-        
+        enAnimController.Play(EN_STUNNED);
+    }
+
+    public void PlayDeathAnim()
+    {
+        if(EN_DEATH != null)
+            enAnimController.Play(EN_DEATH);
     }
 }

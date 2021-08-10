@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class BaseEnemyClass : MonoBehaviour
 {
-    [Space] [Header("=== Required References for setup ===")]
-    public EnemyAnimator enAnimator; //Animator manager script
+    [Space]
+    [Header("=== Required References for setup ===")]
+    public EnemyAnimator EnAnimator;
     public HealthBar healthBar;
     public Transform enAttackPoint;
     [SerializeField] private Material mWhiteFlash;
     public LayerMask playerLayer;
 
     [Space] [Header("=== References get at Start()")]
-    // REFERENCES GET AT START()
-    //public HealthBar healthBar; //TODO: in Start() healthBarTransform = healthBar.GetComponent<Transform>();
-    //private Transform healthBarTransform (in flip())
     public SpriteRenderer sr;
     public Rigidbody2D rb;
     private Material mDefault;
@@ -45,7 +43,6 @@ public class BaseEnemyClass : MonoBehaviour
         enAttackAnimSpeed = .4f,
         enAttackRadius = .3f;
 
-    //TODO: maxHeal //rework, no longer needed
     public float XP = 10f;
     
 
@@ -72,22 +69,19 @@ public class BaseEnemyClass : MonoBehaviour
     // === ANIMATION ===
     //float attackAnimSpeed
 
-    [Space] //TODO: might not need to be public
-    // === COROUTINES ===
-    public Coroutine IsAttackingCO;
-
     [Space] [Header("=== Variables ===")]
     public bool isAlive;
     private float currentHealth;
     public bool enStunned;
+    public bool isHurt;
     public bool enCanMove;
     public bool enCanAttack;
     public bool isAttacking;
     public bool enFacingRight;
     public bool enCanFlip;
     public bool enCanParry;
-
     private float moveSpeed;
+    Coroutine IsAttackingCO;
 
 
     void Start()
@@ -118,14 +112,14 @@ public class BaseEnemyClass : MonoBehaviour
         enCanParry = false;
 
         isAlive = true;
+        isHurt = false;
         enStunned = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Flip(); //TODO: needs testing use here or only with MoveRight() //prevent flipping from knockback
-        CoroutineCheck();
+        CheckMove();
     }
 
     #region MOVEMENT
@@ -149,32 +143,36 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
+    void CheckMove()
+    {
+        if(EnAnimator != null)
+        {
+            if(rb.velocity.x == 0)
+            {
+                EnAnimator.PlayIdle(isAttacking, enStunned, isHurt);
+            }
+            else
+            {
+                EnAnimator.PlayMove(isHurt);
+            }
+        }
+    }
+
     public void KnockbackRecover()
     {
-        enCanMove = false;
+        EnDisableMove();
         StartCoroutine(KnockbackRecovering());
     }
 
     IEnumerator KnockbackRecovering()
     {
-        yield return new WaitForSeconds(.3f);
-        enCanMove = true;
+        yield return new WaitForSeconds(.2f);
+        EnEnableMove();
     }
 
     #endregion
 
     #region Attack functions
-    void CoroutineCheck()
-    {
-        if (enStunned)
-        {
-            //Option 1
-            StopAttackCO();
-
-
-            //TODO: isIdlingCO???
-        }
-    }
 
     void Attack(float damageMult = 1f)
     {
@@ -195,13 +193,11 @@ public class BaseEnemyClass : MonoBehaviour
             enCanAttack = false;
             EnDisableMove();
 
-            //TODO: enAnimator.PlayerAttackAnim
+            EnAnimator.PlayAttack();
 
             yield return new WaitForSeconds(enAttackAnimSpeed);
             Attack();
             yield return new WaitForSeconds(enAttackSpeed); //delay before starting attack again
-
-            //TODO: enAnimator.SetBool("isAttacking", false);
 
             isAttacking = false;
             enCanAttack = true;
@@ -211,13 +207,18 @@ public class BaseEnemyClass : MonoBehaviour
 
     public void StartAttackCO()
     {
-        IsAttackingCO = StartCoroutine(Attacking());
+        if(!isAttacking) //check needed, or else IsAttackingCO doesn't get stopped by StopCoroutine
+            IsAttackingCO = StartCoroutine(Attacking());
     }
 
     public void StopAttackCO()
     {
         if (IsAttackingCO != null)
+        {
+            isAttacking = false;
+            enCanAttack = true;
             StopCoroutine(IsAttackingCO);
+        }
     }
 
     private void OnDrawGizmosSelected()
@@ -244,7 +245,7 @@ public class BaseEnemyClass : MonoBehaviour
             {
                 enFacingRight = true;
             }
-            else// if(rb.velocity.x < 0)//moving left //TODO: not needed?
+            else if(rb.velocity.x < 0) //moving left
             {
                 enFacingRight = false;
             }
@@ -280,9 +281,6 @@ public class BaseEnemyClass : MonoBehaviour
             if (currentHealth > maxHealth)
                 currentHealth = maxHealth;
 
-            //state.ChangeState(EN_HURT); //TODO: State Controller should recognize this as the const stored
-            //state.PlayAnim(HURT);
-
             if (TextPopupsHandler)
             {
                 Vector3 tempPos = transform.position;
@@ -290,16 +288,17 @@ public class BaseEnemyClass : MonoBehaviour
                 TextPopupsHandler.ShowDamage(damageTaken, tempPos);
             }
 
-            if(enAnimator != null && damage > 0)
+            if(damage > 0)
             {
                 Vector3 particleLocation = transform.position;
                 particleLocation.y += hitEffectOffset;
                 HitEffectsHandler.ShowHitEffect(particleLocation);
 
                 if (!isAttacking)
-                    enAnimator.PlayAnimation(enAnimator.EN_HURT); //TODO: placeholder 
+                    EnAnimator.PlayHurt();
 
                 sr.material = mWhiteFlash;
+                isHurt = true;
                 Invoke("ResetMaterial", .1f);
             }
 
@@ -313,6 +312,7 @@ public class BaseEnemyClass : MonoBehaviour
     void ResetMaterial()
     {
         sr.material = mDefault;
+        isHurt = false;
     }
 
     public void GetHealed(float healAmount)
@@ -341,7 +341,6 @@ public class BaseEnemyClass : MonoBehaviour
         //kbThrust - velocity of lunge movement
         //kbDuration - how long to maintain thrust velocity (distance)
 
-        //knockbackHit = true; //TODO: ??
         Vector3 tempOffset = gameObject.transform.position;
 
         if (playerFacingRight) //knockback <- enemy -- player //knockback to direction player is facing
@@ -356,7 +355,7 @@ public class BaseEnemyClass : MonoBehaviour
             Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
-        KnockbackRecover(); //TODO: needs testing
+        KnockbackRecover();
     }
 
     public void GetStunned(float duration = 1f, bool fullStun = true)
@@ -365,7 +364,6 @@ public class BaseEnemyClass : MonoBehaviour
         {
             if(Time.time > allowStun && !enStunned)
             {
-                //TODO: knockbackHit = true;
                 StopAttackCO();
 
                 if (fullStun)
@@ -374,6 +372,10 @@ public class BaseEnemyClass : MonoBehaviour
                     fullDuration -= stunResist;
                     duration *= fullDuration;
                     StartCoroutine(StunEnemy(duration));
+                }
+                else
+                {
+                    //
                 }
             }
         }
@@ -387,11 +389,13 @@ public class BaseEnemyClass : MonoBehaviour
             enCanAttack = false;
             EnDisableMove();
 
+            EnAnimator.PlayStunned();
+
             if (stunLParticlePrefab != null && stunRParticlePrefab != null)
             {
-                //Vector3 changeLocation = GetComponent<Transform>().position; //TODO: remove if not needed
+                //Vector3 changeLocation = GetComponent<Transform>().position;
                 //Vector3 tempLocation = changeLocation;
-                Vector3 tempLocation = transform.position; //TODO: needs testing
+                Vector3 tempLocation = transform.position;
                 tempLocation.y += .5f;
 
                 if (enFacingRight)
@@ -427,17 +431,11 @@ public class BaseEnemyClass : MonoBehaviour
     {
         isAlive = false;
 
-        /*if(enAnimator != null)
-        {
-            enAnimator.ChangeState("EN_DEATH");
-        }*/
-
         StopAllCoroutines();
+        EnAnimator.PlayDeathAnim();
 
-        if(DeathParticlesHandler != null)
+        if (DeathParticlesHandler != null)
         {
-            //Vector3 changeLocation = GetComponent<Transform>().position; //TODO: if transform.position doesn't work
-            //Vector3 tempLocation = changeLocation;
             Vector3 tempLocation = transform.position;
             tempLocation.y += hitEffectOffset;
 
@@ -468,14 +466,14 @@ public class BaseEnemyClass : MonoBehaviour
     public void EnDisableMove()
     {
         enCanMove = false;
-        moveSpeed = 0; //TODO: not needed?
+        moveSpeed = 0; //
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
 
     public void EnEnableMove()
     {
         enCanMove = true;
-        moveSpeed = defaultMoveSpeed; //TODO: not needed?
+        moveSpeed = defaultMoveSpeed; //remove if not lowering movespeed
     }
 
     public void EnEnableParry()

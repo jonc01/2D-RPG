@@ -393,8 +393,8 @@ public class Enemy2 : MonoBehaviour
             {
                 if (IsComboAttackingCO != null)
                 {
-                    enController.isAttacking = false;
                     StopCoroutine(IsComboAttackingCO);
+                    enController.isAttacking = false;
                 }
 
                 float fullDuration = 1f;
