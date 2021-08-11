@@ -211,11 +211,13 @@ public class Enemy2 : MonoBehaviour
             switch (atkVariation)
             {
                 case 1:
-                    enController.IsAttackingCO = StartCoroutine(IsAttacking());
+                    if(!enController.isAttacking)
+                        enController.IsAttackingCO = StartCoroutine(IsAttacking());
                     break;
                 case 2:
                     enController.enCanMove = false;
-                    IsComboAttackingCO = StartCoroutine(IsComboAttacking());
+                    if(!enController.isAttacking)
+                        IsComboAttackingCO = StartCoroutine(IsComboAttacking());
                     break;
                 default:
                     break;

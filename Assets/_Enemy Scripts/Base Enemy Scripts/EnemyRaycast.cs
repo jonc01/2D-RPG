@@ -33,12 +33,6 @@ public class EnemyRaycast : MonoBehaviour
         groundDetect,
         wallDetect;
 
-
-    void Start()
-    {
-        
-    }
-
     
     void Update()
     {

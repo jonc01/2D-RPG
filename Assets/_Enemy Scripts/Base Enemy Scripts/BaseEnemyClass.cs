@@ -149,12 +149,14 @@ public class BaseEnemyClass : MonoBehaviour
         {
             if(rb.velocity.x == 0)
             {
-                EnAnimator.PlayIdle(isAttacking, enStunned, isHurt);
+                EnAnimator.PlayIdle(isAttacking, enStunned, isHurt); 
             }
             else
             {
                 EnAnimator.PlayMove(isHurt);
             }
+            //TODO: if enemy is pushed back by shieldBash, Idle can't play, defaults to Move. causes enemy to run in place
+
         }
     }
 
@@ -194,11 +196,13 @@ public class BaseEnemyClass : MonoBehaviour
             EnDisableMove();
 
             EnAnimator.PlayAttack();
+            EnDisableFlip();
 
             yield return new WaitForSeconds(enAttackAnimSpeed);
             Attack();
             yield return new WaitForSeconds(enAttackSpeed); //delay before starting attack again
 
+            EnEnableFlip();
             isAttacking = false;
             enCanAttack = true;
             EnEnableMove();
@@ -239,7 +243,7 @@ public class BaseEnemyClass : MonoBehaviour
 
         // Multiply the enemy's x local scale by -1
         //.Vector3 theScale = transform.localScale;
-        if (enCanMove) //prevent flipping if receiving knockback
+        if (enCanMove && !isHurt) //prevent flipping if receiving knockback
         {
             if(rb.velocity.x > 0) //moving right
             {

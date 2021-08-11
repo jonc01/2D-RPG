@@ -112,7 +112,8 @@ public class BaseEnemyController : MonoBehaviour
     #region Coroutines - Idle, Patrol
     void StartIdle(float duration, bool switchDir, bool knockbackHitB = false)
     {
-        IsIdlingCO = StartCoroutine(Idling(duration, switchDir, knockbackHitB));
+        if(!isIdling)
+            IsIdlingCO = StartCoroutine(Idling(duration, switchDir, knockbackHitB));
     }
 
     void StopIdling()
@@ -137,7 +138,8 @@ public class BaseEnemyController : MonoBehaviour
 
     void StartPatrol(float duration, bool switchDir)
     {
-        IsPatrollingCO = StartCoroutine(Patrolling(duration, switchDir));
+        if(!isPatrolling)
+            IsPatrollingCO = StartCoroutine(Patrolling(duration, switchDir));
     }
 
     void StopPatrolling()
