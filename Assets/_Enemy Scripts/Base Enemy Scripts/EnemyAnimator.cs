@@ -19,7 +19,7 @@ public class EnemyAnimator : MonoBehaviour
 
 
     [Space] [Header("=== (optional) New Animations ===")]
-    [SerializeField] private string[] newClips = {"New Anim"}; 
+    [SerializeField] private string[] newClips = {"New Anim"};
     //^if using this, need null checks with PlayX functions
 
     public void PlayAnim(int anim)
@@ -35,9 +35,9 @@ public class EnemyAnimator : MonoBehaviour
             enAnimController.Play(EN_IDLE);
     }
 
-    public void PlayMove(bool isHurt)
+    public void PlayMove(bool isAttacking)
     {
-        if(!isHurt)
+        if(!isAttacking) //attacking check prevents Move being played when hit by shieldBash knockback
             enAnimController.Play(EN_MOVE);
     }
 

@@ -149,14 +149,12 @@ public class BaseEnemyClass : MonoBehaviour
         {
             if(rb.velocity.x == 0)
             {
-                EnAnimator.PlayIdle(isAttacking, enStunned, isHurt); 
+                EnAnimator.PlayIdle(isAttacking, enStunned, isHurt);
             }
             else
             {
-                EnAnimator.PlayMove(isHurt);
+                EnAnimator.PlayMove(isAttacking);
             }
-            //TODO: if enemy is pushed back by shieldBash, Idle can't play, defaults to Move. causes enemy to run in place
-
         }
     }
 

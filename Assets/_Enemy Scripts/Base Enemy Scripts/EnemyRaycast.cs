@@ -68,12 +68,6 @@ public class EnemyRaycast : MonoBehaviour
     void AttackCheck()
     {
         playerInRange = Physics2D.Raycast(attackCheck.position, -transform.right, attackRange, playerLayer);
-        
-        //TODO: delete this if Enemy2 inherited call works
-        /*if(playerInRange && overrideAttack)
-        {
-            enemyOverrideScript.StartAttack();
-        }*/
     }
 
     void GroundWallCheck()

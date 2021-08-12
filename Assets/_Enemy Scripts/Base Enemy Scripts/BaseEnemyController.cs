@@ -31,6 +31,7 @@ public class BaseEnemyController : MonoBehaviour
     void Start()
     {
         aggroStarted = false;
+        
 
         bool startDir = (Random.value > 0.5f);
         enemyClass.MoveRight(startDir);
@@ -53,10 +54,6 @@ public class BaseEnemyController : MonoBehaviour
             StopPatrolling();
             StopIdling();
         }
-        else //return back to idling after stun recovery
-        {
-            isIdling = true; //TODO: test pls
-        }
     }
 
     void MoveCheck()
@@ -76,7 +73,7 @@ public class BaseEnemyController : MonoBehaviour
                 }
             }
 
-            if (!isPatrolling)
+            if (!isPatrolling && !isIdling)
             {
                 bool switchDir = (Random.value > .5f);
                 bool idleSwitch = (Random.value > .5f);
