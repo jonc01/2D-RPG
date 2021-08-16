@@ -34,26 +34,21 @@ public class TriggerCheck : MonoBehaviour
             combat.OnSuccessfulBash();
             movement.CancelDash();
 
+            combat.Attack(); //apply damage/aoe to enemies near stunned
+
             if (collider.GetComponent<BaseEnemyClass>() != null)
             {
-                collider.GetComponent<BaseEnemyClass>().TakeDamage(5);
                 collider.GetComponent<BaseEnemyClass>().GetStunned();
                 //collider.GetComponent<EnemyController>().CheckParry();
             }
 
-            ////////////////////////////////////////////////////////////
 
+            ///////////////////////////////////////////////
+            /////////// vvv DELETE ALL vvv ///////////////
             if (collider.GetComponent<EnemyController>() != null)
             {
-                collider.GetComponent<EnemyController>().TakeDamage(5);
                 collider.GetComponent<EnemyController>().GetStunned();
                 //collider.GetComponent<EnemyController>().CheckParry();
-            }
-
-            if (collider.GetComponent<Enemy2>() != null) //TODO: delete all but EnemyController ref
-            {
-                //collider.GetComponent<Enemy2>().TakeDamage(5); //attackDamage + additional damage from parameter
-                //collider.GetComponent<Enemy2>().GetStunned(2);
             }
 
             if (collider.GetComponent<StationaryEnemy>() != null)

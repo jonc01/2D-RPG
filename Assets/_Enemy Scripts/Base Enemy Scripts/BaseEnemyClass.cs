@@ -19,10 +19,10 @@ public class BaseEnemyClass : MonoBehaviour
     private Transform healthBarTransform;
 
     // PREFAB HANDLERS (Start())
-    [SerializeField] private TextPopupsHandler TextPopupsHandler;
-    [SerializeField] private TextPopupsHandler AttackIndicator;
-    [SerializeField] private HitEffectsHandler HitEffectsHandler;
-    [SerializeField] private DeathParticlesHandler DeathParticlesHandler;
+    [SerializeField] protected TextPopupsHandler TextPopupsHandler;
+    [SerializeField] protected TextPopupsHandler AttackIndicator;
+    [SerializeField] protected HitEffectsHandler HitEffectsHandler;
+    [SerializeField] protected DeathParticlesHandler DeathParticlesHandler;
 
 
     // HEALTH
@@ -37,7 +37,7 @@ public class BaseEnemyClass : MonoBehaviour
     [Space] [Header("=== Adjustable Variables ===")]
     [SerializeField] float defaultMoveSpeed = 2.5f;
     [SerializeField] private float maxHealth = 100;
-    [SerializeField] float
+    [SerializeField] protected float
         enAttackDamage = 5f,
         enAttackSpeed = 1.0f,
         enAttackAnimSpeed = .4f,
@@ -48,23 +48,25 @@ public class BaseEnemyClass : MonoBehaviour
 
     [Space]
     [Range(0f, 1.0f)]
-    [SerializeField] float stunResist = 0f; //0f takes full stun duration, 1.0f complete stun resist
-    [SerializeField] float allowStun = 0f;
+    [SerializeField] protected float stunResist = 0f; //0f takes full stun duration, 1.0f complete stun resist
     [SerializeField] float allowStunCD = 0.1f; //how often an enemy can be stunned
+    float allowStun = 0f;
 
     [Space]
-    [SerializeField] float kbThrust = 3.0f;
+    [SerializeField] float kbThrust = 1.0f;
     [SerializeField] float kbDuration = 5.0f;
 
 
     [Space] [Header("=== Adjustable Transforms/Offsets ===")]
-    [SerializeField] float hitEffectOffset = .5f;
-    [SerializeField] float TPOffset = .4f;
+    [SerializeField] protected float hitEffectOffset = .5f;
+    [SerializeField] protected float TPOffset = .4f;
 
-    [Space] [Header("=== Optional Prefabs ===")]
+    [Space] [Header("=== Optional Prefabs/References ===")]
     public GameObject stunLParticlePrefab;
     public GameObject stunRParticlePrefab;
     public TextPopupsHandler noReScaleTextHandler; //use for text to float above enemy, no re-scaling
+    [SerializeField] protected bool useScreenshake;
+    protected ScreenShakeListener screenshake;
 
     // === ANIMATION ===
     //float attackAnimSpeed
@@ -84,18 +86,21 @@ public class BaseEnemyClass : MonoBehaviour
     Coroutine IsAttackingCO;
 
 
-    void Start()
+    protected virtual void Start()
     {
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+
         mDefault = sr.material;
-        healthBarTransform = healthBar.GetComponent<Transform>();
+        healthBarTransform = healthBar.GetComponent<Transform>();        
 
         TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
         HitEffectsHandler = GameObject.Find("ObjectPool(HitEffects)").GetComponent<HitEffectsHandler>();
         DeathParticlesHandler = GameObject.Find("ObjectPool(DeathParticles)").GetComponent<DeathParticlesHandler>();
-        
+
+        if(useScreenshake)
+            screenshake = GameObject.Find("ScreenShakeManager").GetComponent<ScreenShakeListener>();
 
         currentHealth = maxHealth;
         if (healthBar != null)
@@ -117,7 +122,7 @@ public class BaseEnemyClass : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         CheckMove();
     }
@@ -143,7 +148,7 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
-    void CheckMove()
+    void CheckMove() //Idle/Move animations
     {
         if(EnAnimator != null)
         {
@@ -174,7 +179,7 @@ public class BaseEnemyClass : MonoBehaviour
 
     #region Attack functions
 
-    void Attack(float damageMult = 1f)
+    public virtual void Attack(float damageMult = 1f)
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(enAttackPoint.position, enAttackRadius, playerLayer);
 
@@ -185,7 +190,7 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
-    IEnumerator Attacking()
+    protected virtual IEnumerator Attacking()
     {
         if(enCanAttack && !isAttacking && !enStunned)
         {
@@ -195,8 +200,8 @@ public class BaseEnemyClass : MonoBehaviour
 
             EnAnimator.PlayAttack();
             EnDisableFlip();
-
             yield return new WaitForSeconds(enAttackAnimSpeed);
+
             Attack();
             yield return new WaitForSeconds(enAttackSpeed); //delay before starting attack again
 
@@ -207,7 +212,7 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
-    public void StartAttackCO()
+    public virtual void StartAttackCO()
     {
         if(!isAttacking) //check needed, or else IsAttackingCO doesn't get stopped by StopCoroutine
             IsAttackingCO = StartCoroutine(Attacking());
@@ -269,11 +274,27 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
+    public void ManualFlip(bool faceRight) //TODO: delete if not used
+    {
+        if (enCanFlip)
+        {
+            if (faceRight)
+            {
+                transform.localRotation = Quaternion.Euler(0, 180, 0);
+                healthBarTransform.localRotation = Quaternion.Euler(0, 180, 0);
+            }
+            else
+            {
+                transform.localRotation = Quaternion.Euler(0, 0, 0);
+                healthBarTransform.localRotation = Quaternion.Euler(0, 0, 0);
+            }
+        }
+    }
 
     #endregion
 
     #region Interaction References
-    public void TakeDamage(float damage, float damageMultiplier = 1.0f)
+    public virtual void TakeDamage(float damage, float damageMultiplier = 1.0f, bool isCrit = false)
     {
         if (isAlive)
         {
@@ -287,7 +308,11 @@ public class BaseEnemyClass : MonoBehaviour
             {
                 Vector3 tempPos = transform.position;
                 tempPos.y += TPOffset;
-                TextPopupsHandler.ShowDamage(damageTaken, tempPos);
+                TextPopupsHandler.ShowDamage(damageTaken, tempPos, isCrit);
+                if (isCrit && screenshake != null)
+                {
+                    screenshake.Shake(1);
+                }
             }
 
             if(damage > 0)
@@ -337,30 +362,29 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
-    public void GetKnockback(bool playerFacingRight, float kbThrust = 2f, float kbDuration = 5f) //defaults
+    public void GetKnockback(bool playerFacingRight, float thrustMult = 1f)//, float kbDuration = 5f) //defaults
     {
         //playerFacingRight - passed from PlayerCombat when damage is applied
         //kbThrust - velocity of lunge movement
         //kbDuration - how long to maintain thrust velocity (distance)
 
         Vector3 tempOffset = gameObject.transform.position;
-
         if (playerFacingRight) //knockback <- enemy -- player //knockback to direction player is facing
         {
             tempOffset.x += kbDuration;
-            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, (kbThrust * thrustMult) * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
         else //player -- enemy -> knockback
         {
             tempOffset.x -= kbDuration;
-            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, (kbThrust * thrustMult) * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
         KnockbackRecover();
     }
 
-    public void GetStunned(float duration = 1f, bool fullStun = true)
+    public virtual void GetStunned(float duration = 1f, bool fullStun = true)
     {
         if (isAlive)
         {
@@ -370,9 +394,9 @@ public class BaseEnemyClass : MonoBehaviour
 
                 if (fullStun)
                 {
-                    float fullDuration = 1f;
+                    float fullDuration = 1f; //0.0 - 1.0 for % of stun duration reduction
                     fullDuration -= stunResist;
-                    duration *= fullDuration;
+                    duration *= fullDuration; //get adjusted duration with stunResist % reduced
                     StartCoroutine(StunEnemy(duration));
                 }
                 else
@@ -383,7 +407,7 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
-    IEnumerator StunEnemy(float stunDuration)
+    protected virtual IEnumerator StunEnemy(float stunDuration)
     {
         if (!enStunned)
         {

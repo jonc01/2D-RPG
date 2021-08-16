@@ -12,10 +12,10 @@ public class BaseEnemyController : MonoBehaviour
     public EnemyRaycast enRaycast;
     public BaseEnemyClass enemyClass;
 
-    [Space] [Header("=== Adjustable Variables ===")]
-    [SerializeField] float
-        CODurationLower = .3f,
-        CODurationUpper = 1f;
+    [Space]
+    [Header("=== Adjustable Variables ===")]
+    [SerializeField] float CODurationLower = .3f;
+    [SerializeField] float CODurationUpper = 1f;
     //float aggroDuration //TODO: how long to run in last known direction of player until returning to patrolling/idling
 
     //
@@ -28,10 +28,9 @@ public class BaseEnemyController : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         aggroStarted = false;
-        
 
         bool startDir = (Random.value > 0.5f);
         enemyClass.MoveRight(startDir);
@@ -39,12 +38,14 @@ public class BaseEnemyController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         CoroutineCheck();
         MoveCheck();
+        LedgeWallCheck();
         PlayerCheck();
         AttackCheck();
+        AttackFlip();
     }
 
     void CoroutineCheck() //TODO: complete
@@ -56,7 +57,7 @@ public class BaseEnemyController : MonoBehaviour
         }
     }
 
-    void MoveCheck()
+    public virtual void MoveCheck()
     {
         if(enRaycast.groundDetect && !aggroStarted && !enemyClass.isAttacking && !enemyClass.enStunned) //&& enemyClass.enCanMove)
         {
@@ -73,6 +74,7 @@ public class BaseEnemyController : MonoBehaviour
                 }
             }
 
+            //Switch between Patrolling or Idling, and the duration to run the action
             if (!isPatrolling && !isIdling)
             {
                 bool switchDir = (Random.value > .5f);
@@ -89,8 +91,10 @@ public class BaseEnemyController : MonoBehaviour
                 }
             }
         }
+    }
 
-        //Ledge/Wall check
+    void LedgeWallCheck()
+    {
         if(!enRaycast.groundDetect || enRaycast.wallDetect)
         {
             if(enemyClass.rb.velocity.y == 0) //don't flip when falling
@@ -99,7 +103,7 @@ public class BaseEnemyController : MonoBehaviour
             }
         }
     }
-    
+
     void FlipDir() //flip current direction
     {
         bool dir = !enemyClass.enFacingRight;
@@ -191,6 +195,17 @@ public class BaseEnemyController : MonoBehaviour
         if (enRaycast.playerInRange)
         {
             enemyClass.StartAttackCO();
+        }
+    }
+
+    void AttackFlip()
+    {
+        if (enemyClass.isAttacking)
+        {
+            if(enemyClass.enFacingRight != enRaycast.playerToRight)
+            {
+                enemyClass.ManualFlip(enRaycast.playerToRight);
+            }
         }
     }
 }

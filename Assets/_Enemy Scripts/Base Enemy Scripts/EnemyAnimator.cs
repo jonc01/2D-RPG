@@ -56,6 +56,11 @@ public class EnemyAnimator : MonoBehaviour
         enAnimController.Play(EN_STUNNED);
     }
 
+    public void PlayIdle2()
+    {
+        enAnimController.Play(EN_IDLE_2);
+    }
+
     public void PlayDeathAnim()
     {
         if(EN_DEATH != null)

@@ -275,7 +275,7 @@ public class PlayerCombat : MonoBehaviour
         //movement.runSpeed = movement.defaultRunSpeed;
     }
 
-    void Attack(float damageMultiplier = 1.0f) //applying damage, ...
+    public void Attack(float damageMultiplier = 1.0f) //applying damage, ...
     {
         //Attack range, detect enemies in range
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
@@ -288,9 +288,9 @@ public class PlayerCombat : MonoBehaviour
             {
                 timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze
                 enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
-                enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight, 1f);
+                enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
             }
-
+            
             //////////////////////////////////////////////////////////////////////////
 
             if (enemy.GetComponent<EnemyController>() != null) //TODO: update for all 4 enemies
@@ -298,17 +298,12 @@ public class PlayerCombat : MonoBehaviour
                 timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze
                 //screenShake.Shake();
                 enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
-                enemy.GetComponent<EnemyController>().GetKnockback(controller.m_FacingRight, 1f);
+                enemy.GetComponent<EnemyController>().GetKnockback(controller.m_FacingRight);
                 //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
             }
 
             if (enemy.GetComponent<StationaryEnemy>() != null)
                 enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight, damageMultiplier);
-
-            if (enemy.GetComponent<Enemy2>() != null)
-            {
-                //enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
-            }
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
                 enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight, damageMultiplier);
