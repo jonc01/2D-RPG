@@ -46,36 +46,39 @@ public class HeavyBanditClass : BaseEnemyClass
         if(enCanAttack && !isAttacking && !enStunned)
         {
             isAttacking = true;
-            //enStunned = false; //TODO: not sure why this is here, test
             enCanAttack = false;
             EnDisableMove();
             //ShowAttackIndicator();
+        //First Attack Charge Up
+            EnEnableFlip();
             EnAnimator.PlayAttack(); //Play ChargeUp animation
             yield return new WaitForSeconds(1.1f);
-            EnDisableFlip(); //TODO: needs testing
-
             EnAnimator.PlayAnim(1); //TODO: needs more setup
+
+            EnDisableFlip();
             yield return new WaitForSeconds(.2f);
             LungeOnAttack();
             yield return new WaitForSeconds(.02f);
             Attack();
 
-            //Second Attack
+        //Second Attack Charge Up
             yield return new WaitForSeconds(.3f); //delay before starting next attack
             EnAnimator.PlayAttack(); //AttackChargeUp animation
             EnEnableFlip();
+            //Second Attack Swing
             yield return new WaitForSeconds(.3f);
-            EnDisableFlip(); //TODO: needs testing
             EnAnimator.PlayAnim(1); //AttackEnd anim
+            EnDisableFlip();
+            //Lunge with collider
             yield return new WaitForSeconds(.2f);
             LungeOnAttack();
             yield return new WaitForSeconds(.02f);
             Attack();
-
             yield return new WaitForSeconds(.4f);
             EnAnimator.PlayIdle2(); //StunnableIdle
             EnEnableFlip();
-
+        
+        //End: Stunnable, delay before starting 
             yield return new WaitForSeconds(.3f);
             isAttacking = false;
             EnAnimator.PlayIdle(isAttacking, enStunned, isHurt);
@@ -93,13 +96,11 @@ public class HeavyBanditClass : BaseEnemyClass
         //lungeDuration - how long to maintain thrust velocity
         //float distToPlayer = transform.position.x - player.transform.position.x; //TODO: update with raycast
 
-        //Vector3 tempOffset = gameObject.transform.position; //can implement knockup with y offset
-        //TODO: needs testing vvvvvvvvvvvvvvvvvvvvvvv otherwise use this^^
         Vector3 tempOffset = transform.position; //can implement knockup with y offset
 
         if (enFacingRight)
         {
-            tempOffset.x += lungeThrust; //lunge to right //TODO: these variables might be mixed up
+            tempOffset.x += lungeThrust; //lunge to right
         }
         else
         {
@@ -130,7 +131,7 @@ public class HeavyBanditClass : BaseEnemyClass
     {
         if (!enStunned)
         {
-            enStunned = true;
+            enStunned = true; //enStunned is referenced in Controller, even if HeavyBandit uses Break instead
             isBroken = true;
             EnDisableMove();
             enCanAttack = false;

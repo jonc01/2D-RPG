@@ -18,7 +18,7 @@ public class HeavyBanditController : BaseEnemyController
 
     public override void MoveCheck()
     {
-        //base.MoveCheck();
+        base.MoveCheck();
         //Focus on Idle, short durations for Patrol
     }
 }

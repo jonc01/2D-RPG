@@ -48,7 +48,7 @@ public class BaseEnemyController : MonoBehaviour
         AttackFlip();
     }
 
-    void CoroutineCheck() //TODO: complete
+    void CoroutineCheck()
     {
         if (enemyClass.enStunned)
         {
@@ -200,7 +200,7 @@ public class BaseEnemyController : MonoBehaviour
 
     void AttackFlip()
     {
-        if (enemyClass.isAttacking)
+        if (enemyClass.isAttacking && enemyClass.enCanFlip)
         {
             if(enemyClass.enFacingRight != enRaycast.playerToRight)
             {

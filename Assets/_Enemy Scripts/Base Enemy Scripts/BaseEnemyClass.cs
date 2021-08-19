@@ -136,13 +136,13 @@ public class BaseEnemyClass : MonoBehaviour
             if (moveRight)
             {
                 rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
-                enFacingRight = true;
+                //enFacingRight = true;
                 Flip();
             }
             else
             {
                 rb.velocity = new Vector2(-moveSpeed, rb.velocity.y);
-                enFacingRight = false;
+                //enFacingRight = false;
                 Flip();
             }
         }
@@ -259,7 +259,7 @@ public class BaseEnemyClass : MonoBehaviour
             //else was making !enFacingRight default when not moving, should only update when moving
         }
 
-        if (enCanFlip)
+        if (enCanFlip) //separate from velocity/enFacingRight check, because enemy would flip during knockback
         {
             if (enFacingRight)
             {
@@ -274,10 +274,11 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
-    public void ManualFlip(bool faceRight) //TODO: delete if not used
+    public void ManualFlip(bool faceRight) //used in Controller if isAttacking and needs to flip to player direction
     {
         if (enCanFlip)
         {
+            enFacingRight = faceRight;
             if (faceRight)
             {
                 transform.localRotation = Quaternion.Euler(0, 180, 0);
