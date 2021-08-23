@@ -48,7 +48,8 @@ public class EnemyAnimator : MonoBehaviour
 
     public void PlayHurt()
     {
-        enAnimController.Play(EN_HURT);
+        if(EN_HURT != null)
+            enAnimController.Play(EN_HURT);
     }
 
     public void PlayStunned()

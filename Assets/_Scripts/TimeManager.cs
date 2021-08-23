@@ -50,7 +50,7 @@ public class TimeManager : MonoBehaviour
     IEnumerator TimedSlowMotion(float slowdownFactor, float slowdownTimer)
     {
         Time.timeScale = slowdownFactor;
-        yield return new WaitForSeconds(slowdownTimer);
+        yield return new WaitForSecondsRealtime(slowdownTimer); //Realtime, because waitForSeconds would be slowed by slowdown
         ResetTimeScale();
     }
 

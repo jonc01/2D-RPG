@@ -90,7 +90,7 @@ public class PlayerCombat : MonoBehaviour
     public float altAttackTime = .3f;
     bool IsParrying;
     public bool IsShieldBashing;
-    bool canStunPlayer;
+    public bool canStunPlayer;
 
     //Consumables
     public PlayerHealthPotion healthPotion;

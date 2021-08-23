@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class HeavyBanditClass : BaseEnemyClass
 {
-    [Header("=== Particle Reference ===")]
+    [Header("=== HeavyBandit Only ===")]
+    [SerializeField] TimeManager timeManager;
+    [SerializeField] ScreenShakeListener screenShake;
     [SerializeField] GameObject initialStunParticle;
+    [SerializeField] GameObject stunParticleL;
+    [SerializeField] GameObject stunParticleR;
+    [SerializeField] EnemyRaycast enRaycast;
 
     [SerializeField] 
     bool allowBreak,
@@ -53,7 +58,7 @@ public class HeavyBanditClass : BaseEnemyClass
             EnEnableFlip();
             EnAnimator.PlayAttack(); //Play ChargeUp animation
             yield return new WaitForSeconds(1.1f);
-            EnAnimator.PlayAnim(1); //TODO: needs more setup
+            EnAnimator.PlayAnim(1);
 
             EnDisableFlip();
             yield return new WaitForSeconds(.2f);
@@ -90,7 +95,7 @@ public class HeavyBanditClass : BaseEnemyClass
         }
     }
 
-    void LungeOnAttack(float lungeThrust = 5f, float lungeDuration = 3f) //defaults //TODO: update this with raycast
+    void LungeOnAttack(float lungeThrust = 8f, float lungeDuration = 3f) //defaults //TODO: update this with raycast
     {
         //lungeThrust - velocity of lunge movement
         //lungeDuration - how long to maintain thrust velocity
@@ -122,6 +127,7 @@ public class HeavyBanditClass : BaseEnemyClass
                 float fullDuration = 1f;
                 fullDuration -= stunResist;
                 duration *= fullDuration;
+
                 StartCoroutine(StunEnemy(duration));
             }
         }
@@ -135,10 +141,15 @@ public class HeavyBanditClass : BaseEnemyClass
             isBroken = true;
             EnDisableMove();
             enCanAttack = false;
-            yield return new WaitForSeconds(.01f);
+            //yield return new WaitForSeconds(.1f);
             EnAnimator.PlayStunned();
 
-            if(initialStunParticle != null)
+            /*if (timeManager != null)
+            {
+                timeManager.CustomSlowMotion(.02f, .5f);
+            }*/
+
+            if (initialStunParticle != null)
             {
                 Vector3 tempLocation = transform.position;
                 tempLocation.y += .5f;
@@ -168,9 +179,26 @@ public class HeavyBanditClass : BaseEnemyClass
 
     public override void TakeDamage(float damage, float damageMultiplier = 1, bool isCrit = false)
     {
-        if (isBroken)
+        if (isBroken && isAlive)
         {
             base.TakeDamage(damage *= 2f, damageMultiplier, true);
+            if(screenShake != null)
+            {
+                screenShake.Shake(1);
+            }
+            if(enRaycast && stunParticleL && stunParticleL)
+            {
+                Vector3 particleOffset = transform.position;
+                particleOffset.y += hitEffectOffset;
+                if (enRaycast.playerToRight)
+                {
+                    Instantiate(stunParticleL, particleOffset, Quaternion.identity); //TODO: test
+                }
+                else
+                {
+                    Instantiate(stunParticleR, particleOffset, Quaternion.identity); //TODO: test
+                }
+            }
         }
         else
         {

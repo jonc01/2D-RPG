@@ -150,7 +150,6 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && isGrounded) //prevent dodging midair
             {
                 StartCoroutine(DodgeRoll());
-                canMove = false;
             }
         }
     }
@@ -159,10 +158,12 @@ public class PlayerMovement : MonoBehaviour
     {
         //StopAllCoroutines(); //cancel attacks with dodgeRoll
             //IsAttacking,
-             
+            
+        canMove = false;
         abilityUI.StartCooldown(dodgeCD);
         playerCombat.canAttack = false;
         m_rolling = true;
+        playerCombat.canStunPlayer = false;
         animator.SetBool("isRolling", true);
         animator.SetTrigger("Roll");
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
@@ -172,6 +173,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isRolling", false);
         playerCombat.canAttack = true;
         m_rolling = false; //DELETE: if we're still using AE_ResetRoll in animation event
+        playerCombat.canStunPlayer = false;
     }
     
     void AE_ResetRoll() // called in animation event
@@ -238,6 +240,7 @@ public class PlayerMovement : MonoBehaviour
         DisableMove(); //root player in place, stops sliding if colliders intercept
         isDashing = false;
         canDash = true;
+        
         yield return new WaitForSeconds(.5f);
         controller.canFlip = true;
         EnableMove();
