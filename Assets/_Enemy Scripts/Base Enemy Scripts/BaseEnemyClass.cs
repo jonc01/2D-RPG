@@ -133,6 +133,7 @@ public class BaseEnemyClass : MonoBehaviour
     {
         if(enCanMove && !isAttacking)
         {
+            EnEnableFlip();
             if (moveRight)
             {
                 rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
@@ -451,6 +452,11 @@ public class BaseEnemyClass : MonoBehaviour
             EnEnableFlip(); //precaution in case enemy is stunned during attack and can't flip
             allowStun = Time.time + allowStunCD;
         }
+    }
+
+    public Vector3 GetPosition() //for Player abilities to lock on to a specific location (ex; lunge to hit target based on dist)
+    {
+        return transform.position;
     }
     #endregion
 

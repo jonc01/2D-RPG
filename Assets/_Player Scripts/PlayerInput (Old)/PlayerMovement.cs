@@ -173,7 +173,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isRolling", false);
         playerCombat.canAttack = true;
         m_rolling = false; //DELETE: if we're still using AE_ResetRoll in animation event
-        playerCombat.canStunPlayer = false;
+        playerCombat.canStunPlayer = true;
     }
     
     void AE_ResetRoll() // called in animation event

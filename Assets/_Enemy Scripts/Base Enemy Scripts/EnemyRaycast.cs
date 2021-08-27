@@ -19,8 +19,8 @@ public class EnemyRaycast : MonoBehaviour
     [SerializeField] private float groundCheckDistance = 0.2f;
     [SerializeField] private float
         wallCheckDistance = -0.5f, //negative values - enemies are initialized facing left
-        playerCheckDistance = -3f, //Aggro range
-        attackRange = -0.67f; //when to start attacking player, uses a raycast to detect if player is within range
+        playerCheckDistance = -3f; //Aggro range
+    public float attackRange = -0.67f; //when to start attacking player, uses a raycast to detect if player is within range
 
     [Space]
     [Header("=== Raycast Checks ===")]
@@ -32,9 +32,8 @@ public class EnemyRaycast : MonoBehaviour
         playerInRange,
         groundDetect,
         wallDetect;
-
     
-    void Update()
+    void Update() //TODO: Update or Fixed
     {
         AttackCheck();
         GroundWallCheck();

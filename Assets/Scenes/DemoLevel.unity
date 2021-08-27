@@ -16315,6 +16315,10 @@ PrefabInstance:
       propertyPath: timeManager
       value: 
       objectReference: {fileID: 1063059738}
+    - target: {fileID: 2055143821889519470, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: distCheck
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2055143821889519473, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
       propertyPath: m_Name
       value: HeavyBandit

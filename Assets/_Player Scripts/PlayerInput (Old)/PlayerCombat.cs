@@ -419,8 +419,6 @@ public class PlayerCombat : MonoBehaviour
 
                         if(enableScreenshake)
                             screenShake.Shake();
-
-                        //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
                     }
 
                     if (enemy.GetComponent<EnemyController>() != null)
@@ -673,7 +671,7 @@ public class PlayerCombat : MonoBehaviour
     }    
     #endregion
 
-    void DodgeAttackCancel()
+    void DodgeAttackCancel() 
     {
         if (IsLightAttackingCO != null) //allow dodge to cancel attack
         {
@@ -771,7 +769,7 @@ public class PlayerCombat : MonoBehaviour
 
     public void StunPlayer(float stunDuration = 1f)
     {
-        if (Time.time > allowStun && canStunPlayer && !playerStunned)
+        if (Time.time > allowStun && canStunPlayer && !playerStunned && isAlive)
         {
             if(IsLightAttackingCO != null)
                 StopCoroutine(IsLightAttackingCO); // Stop Attacking coroutines
@@ -868,6 +866,11 @@ public class PlayerCombat : MonoBehaviour
     public void ResetMaterial()
     {
         sr.material = mDefault;
+    }
+
+    public Vector3 GetPlayerPosition()
+    {
+        return transform.position;
     }
 
     public void GiveXP(float xp)

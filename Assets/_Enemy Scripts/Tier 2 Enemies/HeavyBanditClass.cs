@@ -16,6 +16,7 @@ public class HeavyBanditClass : BaseEnemyClass
     bool allowBreak,
         isBroken;
 
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -61,9 +62,9 @@ public class HeavyBanditClass : BaseEnemyClass
             EnAnimator.PlayAnim(1);
 
             EnDisableFlip();
-            yield return new WaitForSeconds(.2f);
+            yield return new WaitForSeconds(.15f); //.2
             LungeOnAttack();
-            yield return new WaitForSeconds(.02f);
+            yield return new WaitForSeconds(.07f); //.02
             Attack();
 
         //Second Attack Charge Up
@@ -75,9 +76,9 @@ public class HeavyBanditClass : BaseEnemyClass
             EnAnimator.PlayAnim(1); //AttackEnd anim
             EnDisableFlip();
             //Lunge with collider
-            yield return new WaitForSeconds(.2f);
+            yield return new WaitForSeconds(.15f); //.2
             LungeOnAttack();
-            yield return new WaitForSeconds(.02f);
+            yield return new WaitForSeconds(.07f); //.02
             Attack();
             yield return new WaitForSeconds(.4f);
             EnAnimator.PlayIdle2(); //StunnableIdle
@@ -95,25 +96,37 @@ public class HeavyBanditClass : BaseEnemyClass
         }
     }
 
-    void LungeOnAttack(float lungeThrust = 8f, float lungeDuration = 3f) //defaults //TODO: update this with raycast
+    void LungeOnAttack()
     {
-        //lungeThrust - velocity of lunge movement
-        //lungeDuration - how long to maintain thrust velocity
-        //float distToPlayer = transform.position.x - player.transform.position.x; //TODO: update with raycast
-
-        Vector3 tempOffset = transform.position; //can implement knockup with y offset
-
+        float dir; 
         if (enFacingRight)
         {
-            tempOffset.x += lungeThrust; //lunge to right
+            dir = 1;
         }
         else
         {
-            tempOffset.x -= lungeThrust; //lunge to left
+            dir = -1;
+        }
+        Vector3 targetPos = transform.position;
+        RaycastHit2D hitPlayer = Physics2D.Raycast(enAttackPoint.position, transform.right * dir, enRaycast.attackRange, playerLayer);
+        if(hitPlayer)
+        {
+            if (hitPlayer.transform.gameObject.GetComponent<PlayerCombat>() != null)
+            {
+                targetPos = hitPlayer.transform.gameObject.GetComponent<PlayerCombat>().GetPlayerPosition();
+            }
+        }
+        else
+        {
+            targetPos.x += 3f * dir;
         }
 
-        Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, lungeDuration * Time.fixedDeltaTime);
-        transform.position = smoothPosition;
+        var lungeForce = 15.0f;
+        if(Mathf.Abs(targetPos.x - transform.position.x) <= .3f)
+        {
+            lungeForce = 1f;
+        }
+        rb.AddForce((targetPos - transform.position).normalized * lungeForce, ForceMode2D.Impulse);
     }
 
     public override void GetStunned(float duration = 1f, bool fullStun = true)
@@ -192,11 +205,11 @@ public class HeavyBanditClass : BaseEnemyClass
                 particleOffset.y += hitEffectOffset;
                 if (enRaycast.playerToRight)
                 {
-                    Instantiate(stunParticleL, particleOffset, Quaternion.identity); //TODO: test
+                    Instantiate(stunParticleL, particleOffset, Quaternion.identity);
                 }
                 else
                 {
-                    Instantiate(stunParticleR, particleOffset, Quaternion.identity); //TODO: test
+                    Instantiate(stunParticleR, particleOffset, Quaternion.identity);
                 }
             }
         }
