@@ -33,7 +33,9 @@ public class BaseEnemyController : MonoBehaviour
         aggroStarted = false;
 
         bool startDir = (Random.value > 0.5f);
-        enemyClass.MoveRight(startDir);
+        if(enemyClass != null)
+            enemyClass.MoveRight(startDir);
+
         //if(references == null)
     }
 

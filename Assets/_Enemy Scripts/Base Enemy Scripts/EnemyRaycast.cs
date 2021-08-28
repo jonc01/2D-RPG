@@ -10,7 +10,7 @@ public class EnemyRaycast : MonoBehaviour
     public LayerMask playerLayer;
     public LayerMask groundLayer;
     [SerializeField]
-    private Transform groundCheck,
+    protected Transform groundCheck,
         wallPlayerCheck,
         attackCheck;
 
@@ -33,7 +33,7 @@ public class EnemyRaycast : MonoBehaviour
         groundDetect,
         wallDetect;
     
-    void Update() //TODO: Update or Fixed
+    void Update()
     {
         AttackCheck();
         GroundWallCheck();

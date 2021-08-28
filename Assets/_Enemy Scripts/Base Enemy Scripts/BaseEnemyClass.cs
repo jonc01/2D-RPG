@@ -35,8 +35,8 @@ public class BaseEnemyClass : MonoBehaviour
     //float attackDamage
 
     [Space] [Header("=== Adjustable Variables ===")]
-    [SerializeField] float defaultMoveSpeed = 2.5f;
-    [SerializeField] private float maxHealth = 100;
+    [SerializeField] protected float defaultMoveSpeed = 2.5f;
+    [SerializeField] protected float maxHealth = 100;
     [SerializeField] protected float
         enAttackDamage = 5f,
         enAttackSpeed = 1.0f,
@@ -73,7 +73,7 @@ public class BaseEnemyClass : MonoBehaviour
 
     [Space] [Header("=== Variables ===")]
     public bool isAlive;
-    private float currentHealth;
+    protected float currentHealth;
     public bool enStunned;
     public bool isHurt;
     public bool enCanMove;
@@ -199,7 +199,9 @@ public class BaseEnemyClass : MonoBehaviour
             enCanAttack = false;
             EnDisableMove();
 
-            EnAnimator.PlayAttack();
+            if(EnAnimator != null)
+                EnAnimator.PlayAttack();
+
             EnDisableFlip();
             yield return new WaitForSeconds(enAttackAnimSpeed);
 
@@ -323,7 +325,7 @@ public class BaseEnemyClass : MonoBehaviour
                 particleLocation.y += hitEffectOffset;
                 HitEffectsHandler.ShowHitEffect(particleLocation);
 
-                if (!isAttacking)
+                if (!isAttacking && EnAnimator != null)
                     EnAnimator.PlayHurt();
 
                 sr.material = mWhiteFlash;
@@ -344,7 +346,7 @@ public class BaseEnemyClass : MonoBehaviour
         isHurt = false;
     }
 
-    public void GetHealed(float healAmount)
+    public virtual void GetHealed(float healAmount)
     {
         if (isAlive && currentHealth < maxHealth)
         {
@@ -417,7 +419,8 @@ public class BaseEnemyClass : MonoBehaviour
             enCanAttack = false;
             EnDisableMove();
 
-            EnAnimator.PlayStunned();
+            if(EnAnimator != null)
+                EnAnimator.PlayStunned();
 
             if (stunLParticlePrefab != null && stunRParticlePrefab != null)
             {
@@ -460,12 +463,14 @@ public class BaseEnemyClass : MonoBehaviour
     }
     #endregion
 
-    public void Die()
+    public virtual void Die()
     {
         isAlive = false;
 
         StopAllCoroutines();
-        EnAnimator.PlayDeathAnim();
+
+        if(EnAnimator != null)
+            EnAnimator.PlayDeathAnim();
 
         if (DeathParticlesHandler != null)
         {
@@ -474,6 +479,7 @@ public class BaseEnemyClass : MonoBehaviour
 
             DeathParticlesHandler.ShowHitEffect(tempLocation);
         }
+        //Delay deleting object, otherwise deathparticles or hiteffect will be interrupted
         StartCoroutine(DeleteEnemyObject());
     }
 
