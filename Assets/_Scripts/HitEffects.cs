@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HitEffects : MonoBehaviour
 {
+    //Use ParticlePoolHelper.cs and set StopAction to Callback
     [SerializeField]
     private float DestroyTime = 0.5f;
 

@@ -1515,7 +1515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 7363214383932210406, guid: e3bc24809234e3b49959a6e6a0855d7a, type: 3}
-  poolSize: 15
+  poolSize: 8
   expandable: 1
 --- !u!223 &204774830
 Canvas:
@@ -15901,7 +15901,7 @@ MonoBehaviour:
   allowStunCD: 0
   kbThrust: 0
   kbDuration: 0
-  hitEffectOffset: 0.5
+  hitEffectOffset: 0
   TPOffset: 0.4
   stunLParticlePrefab: {fileID: 0}
   stunRParticlePrefab: {fileID: 0}
@@ -15919,6 +15919,8 @@ MonoBehaviour:
   friendlyLayer:
     serializedVersion: 2
     m_Bits: 4096
+  ownHitParticle: {fileID: 2364812712255308896, guid: e78f3d8bc471d344fa16c1502ca0ce4c, type: 3}
+  healParticle: {fileID: 2935024730887338293, guid: c8c1ce8fda2fd0249a864e5289354511, type: 3}
   buffDamage: 10
   buffCastSpeed: 0.5
   buffRadius: 0.9

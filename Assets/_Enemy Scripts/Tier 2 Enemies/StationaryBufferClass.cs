@@ -7,6 +7,9 @@ public class StationaryBufferClass : BaseEnemyClass
     [Space]
     [Header("=== Stationary Buffer Only ===")]
     public LayerMask friendlyLayer;
+    public GameObject ownHitParticle;
+    public GameObject healParticle;
+
     [SerializeField]
     protected float
         buffDamage = 10f,
@@ -39,8 +42,12 @@ public class StationaryBufferClass : BaseEnemyClass
     IEnumerator Buffing()
     {
         isBuffing = true;
+        //if (healParticle != null)
+        //    healParticle.SetActive(true);
         Buff();
         yield return new WaitForSeconds(buffCastSpeed);
+        //if (healParticle != null)
+        //    healParticle.SetActive(false);
         isBuffing = false;
     }
 
@@ -51,7 +58,13 @@ public class StationaryBufferClass : BaseEnemyClass
         foreach (Collider2D friendly in hitFriendly) //loop through enemies hit
         {
             if (friendly.GetComponent<BaseEnemyClass>() != null)
+            {
+                //if(healParticle != null)
+                //    Instantiate(healParticle, transform.position, Quaternion.identity, transform);
+                //TODO: need to re-add healParticle, or find animation to replace
+
                 friendly.GetComponent<BaseEnemyClass>().GetHealed(buffDamage); //attackDamage + additional damage from parameter
+            }
         
             //if(friendly.GetComponent<PlayerCombat>() != null)
         }
@@ -63,6 +76,18 @@ public class StationaryBufferClass : BaseEnemyClass
             return;
 
         Gizmos.DrawWireSphere(enAttackPoint.position, buffRadius);
+    }
+
+    public override void GetKnockback(bool playerFacingRight, float thrustMult = 1f)//, float kbDuration = 5f) //defaults
+    {
+        //playerFacingRight - passed from PlayerCombat when damage is applied
+        //kbThrust - velocity of lunge movement
+        //kbDuration - how long to maintain thrust velocity (distance)
+        Vector3 particleLocation = transform.position;
+        particleLocation.y -= hitEffectOffset;
+
+        if (ownHitParticle != null)
+            Instantiate(ownHitParticle, particleLocation, Quaternion.identity, transform);
     }
 
     public override void GetHealed(float healAmount)

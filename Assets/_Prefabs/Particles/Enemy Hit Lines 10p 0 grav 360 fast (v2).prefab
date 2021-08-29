@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8123662338123408784}
   - component: {fileID: 5174235703856641229}
   - component: {fileID: 6328643917479102596}
+  - component: {fileID: 4816536771051656939}
   m_Layer: 14
   m_Name: Enemy Hit Lines 10p 0 grav 360 fast (v2)
   m_TagString: Untagged
@@ -42,7 +43,7 @@ ParticleSystem:
   serializedVersion: 7
   lengthInSec: 0.3
   simulationSpeed: 3
-  stopAction: 2
+  stopAction: 3
   cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -4875,3 +4876,16 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &4816536771051656939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845915681777740103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 041450b7a512d844ca674fd954f6f26a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pool: {fileID: 0}

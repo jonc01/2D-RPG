@@ -366,7 +366,7 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
-    public void GetKnockback(bool playerFacingRight, float thrustMult = 1f)//, float kbDuration = 5f) //defaults
+    public virtual void GetKnockback(bool playerFacingRight, float thrustMult = 1f)//, float kbDuration = 5f) //defaults
     {
         //playerFacingRight - passed from PlayerCombat when damage is applied
         //kbThrust - velocity of lunge movement
