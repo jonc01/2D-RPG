@@ -9,11 +9,12 @@ public class StationaryBufferClass : BaseEnemyClass
     public LayerMask friendlyLayer;
     public GameObject ownHitParticle;
     public GameObject healParticle;
+    public EffectAnimatorManager effectAnimator;
 
     [SerializeField]
     protected float
         buffDamage = 10f,
-        buffCastSpeed = 1.0f,
+        buffCastSpeed = .5f,
         buffRadius = .3f;
     bool isBuffing;
     Coroutine BuffingCO = null;
@@ -42,12 +43,10 @@ public class StationaryBufferClass : BaseEnemyClass
     IEnumerator Buffing()
     {
         isBuffing = true;
-        //if (healParticle != null)
-        //    healParticle.SetActive(true);
+        effectAnimator.HealAura();
+        yield return new WaitForSeconds(.4f);
         Buff();
         yield return new WaitForSeconds(buffCastSpeed);
-        //if (healParticle != null)
-        //    healParticle.SetActive(false);
         isBuffing = false;
     }
 

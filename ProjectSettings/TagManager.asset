@@ -27,7 +27,7 @@ TagManager:
   - Patrol
   - CameraBounds
   - PlayerCollisionCheck
-  - BuffTriggerCheck
+  - BufferNeutral
   - 
   - 
   - 
