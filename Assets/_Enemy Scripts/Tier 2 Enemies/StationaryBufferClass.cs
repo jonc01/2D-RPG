@@ -13,8 +13,8 @@ public class StationaryBufferClass : BaseEnemyClass
 
     [SerializeField]
     protected float
-        buffDamage = 10f,
-        buffCastSpeed = .5f,
+        buffAmount = 30f,
+        healCastAnimSpeed = .91f, //based on animation
         buffRadius = .3f;
     bool isBuffing;
     Coroutine BuffingCO = null;
@@ -44,9 +44,9 @@ public class StationaryBufferClass : BaseEnemyClass
     {
         isBuffing = true;
         effectAnimator.HealAura();
-        yield return new WaitForSeconds(.4f);
+        yield return new WaitForSeconds(.4f); //delay (based on animation) before 
         Buff();
-        yield return new WaitForSeconds(buffCastSpeed);
+        yield return new WaitForSeconds(healCastAnimSpeed); 
         isBuffing = false;
     }
 
@@ -62,7 +62,7 @@ public class StationaryBufferClass : BaseEnemyClass
                 //    Instantiate(healParticle, transform.position, Quaternion.identity, transform);
                 //TODO: need to re-add healParticle, or find animation to replace
 
-                friendly.GetComponent<BaseEnemyClass>().GetHealed(buffDamage); //attackDamage + additional damage from parameter
+                friendly.GetComponent<BaseEnemyClass>().GetHealed(buffAmount); //attackDamage + additional damage from parameter
             }
         
             //if(friendly.GetComponent<PlayerCombat>() != null)
@@ -114,7 +114,7 @@ public class StationaryBufferClass : BaseEnemyClass
     {
         sr.enabled = false;
         GetComponentInChildren<Canvas>().enabled = false; //removes health bar
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
         Destroy(this.gameObject);
     }
 }
