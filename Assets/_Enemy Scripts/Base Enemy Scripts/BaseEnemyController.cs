@@ -21,7 +21,7 @@ public class BaseEnemyController : MonoBehaviour
     //
     //public 
     [Header("=== Variables ===")]
-    [SerializeField] bool aggroStarted;
+    [SerializeField] protected bool aggroStarted;
     public Coroutine IsPatrollingCO;
     public Coroutine IsIdlingCO;
     public bool isPatrolling, isIdling;
@@ -113,13 +113,13 @@ public class BaseEnemyController : MonoBehaviour
     }
 
     #region Coroutines - Idle, Patrol
-    void StartIdle(float duration, bool switchDir, bool knockbackHitB = false)
+    protected void StartIdle(float duration, bool switchDir, bool knockbackHitB = false)
     {
         if(!isIdling)
             IsIdlingCO = StartCoroutine(Idling(duration, switchDir, knockbackHitB));
     }
 
-    void StopIdling()
+    protected void StopIdling()
     {
         if (IsIdlingCO != null)
             StopCoroutine(IsIdlingCO);
@@ -139,13 +139,13 @@ public class BaseEnemyController : MonoBehaviour
         enemyClass.enCanMove = true;
     }
 
-    void StartPatrol(float duration, bool switchDir)
+    protected void StartPatrol(float duration, bool switchDir)
     {
         if(!isPatrolling)
             IsPatrollingCO = StartCoroutine(Patrolling(duration, switchDir));
     }
 
-    void StopPatrolling()
+    protected void StopPatrolling()
     {
         if (IsPatrollingCO != null)
             StopCoroutine(IsPatrollingCO);
@@ -165,7 +165,7 @@ public class BaseEnemyController : MonoBehaviour
 
     #endregion
 
-    void PlayerCheck()
+    protected virtual void PlayerCheck()
     {
         if(!enRaycast.wallDetect && enRaycast.groundDetect && !enemyClass.enStunned)
         {
@@ -192,7 +192,7 @@ public class BaseEnemyController : MonoBehaviour
         }
     }
 
-    void AttackCheck()
+    protected virtual void AttackCheck()
     {
         if (enRaycast.playerInRange)
         {

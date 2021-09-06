@@ -16,7 +16,7 @@ public class BaseEnemyClass : MonoBehaviour
     public SpriteRenderer sr;
     public Rigidbody2D rb;
     private Material mDefault;
-    private Transform healthBarTransform;
+    protected Transform healthBarTransform;
 
     // PREFAB HANDLERS (Start())
     [SerializeField] protected TextPopupsHandler TextPopupsHandler;
@@ -83,7 +83,7 @@ public class BaseEnemyClass : MonoBehaviour
     public bool enCanFlip;
     public bool enCanParry;
     private float moveSpeed;
-    Coroutine IsAttackingCO;
+    protected Coroutine IsAttackingCO;
 
 
     protected virtual void Start()
@@ -242,7 +242,7 @@ public class BaseEnemyClass : MonoBehaviour
     #endregion
 
     #region Flip Update
-    void Flip() //Change direction enemy is facing
+    protected virtual void Flip() //Change direction enemy is facing
     {
         // Switch the way the enemy is labelled as facing.
         //enFacingRight = !enFacingRight;
@@ -277,7 +277,7 @@ public class BaseEnemyClass : MonoBehaviour
         }
     }
 
-    public void ManualFlip(bool faceRight) //used in Controller if isAttacking and needs to flip to player direction
+    public virtual void ManualFlip(bool faceRight) //used in Controller if isAttacking and needs to flip to player direction
     {
         if (enCanFlip)
         {
@@ -376,6 +376,7 @@ public class BaseEnemyClass : MonoBehaviour
         if (playerFacingRight) //knockback <- enemy -- player //knockback to direction player is facing
         {
             tempOffset.x += kbDuration;
+            //using fixedDeltaTime to speed up Lerp at beginning
             Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, (kbThrust * thrustMult) * Time.fixedDeltaTime);
             transform.position = smoothPosition;
         }
@@ -466,6 +467,7 @@ public class BaseEnemyClass : MonoBehaviour
     public virtual void Die()
     {
         isAlive = false;
+        EnDisableMove();
 
         StopAllCoroutines();
 
@@ -486,7 +488,9 @@ public class BaseEnemyClass : MonoBehaviour
     IEnumerator DeleteEnemyObject()
     {
         sr.enabled = false;
-        GetComponentInChildren<Canvas>().enabled = false; //removes health bar
+        if(GetComponentInChildren<Canvas>() != null)
+            GetComponentInChildren<Canvas>().enabled = false; //removes health bar
+
         yield return new WaitForSeconds(0.5f);
         Destroy(this.gameObject);
     }

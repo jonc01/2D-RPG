@@ -22,8 +22,16 @@ public class EffectAnimatorManager : MonoBehaviour
         effects.SetTrigger("Pulse");
     }
 
-    public void Vortex()
+    public void Vortex(bool loopAnim = false, bool setAnim = true)
     {
-        effects.SetTrigger("Vortex");
+        if (!loopAnim)
+        {
+            effects.SetTrigger("Vortex");
+        }
+        else
+        {
+            effects.SetBool("LoopVortex", setAnim);
+        }
     }
+
 }

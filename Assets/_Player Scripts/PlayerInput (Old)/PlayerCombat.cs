@@ -293,18 +293,6 @@ public class PlayerCombat : MonoBehaviour
             
             //////////////////////////////////////////////////////////////////////////
 
-            if (enemy.GetComponent<EnemyController>() != null) //TODO: update for all 4 enemies
-            {
-                timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze
-                //screenShake.Shake();
-                enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
-                enemy.GetComponent<EnemyController>().GetKnockback(controller.m_FacingRight);
-                //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
-            }
-
-            if (enemy.GetComponent<StationaryEnemy>() != null)
-                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight, damageMultiplier);
-
             if (enemy.GetComponent<EnemyBossBandit>() != null)
                 enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight, damageMultiplier);
         }
@@ -413,28 +401,9 @@ public class PlayerCombat : MonoBehaviour
 
                     /////////////////////////////////////////////////////////////////////////////
                     
-                    if (enemy.GetComponent<EnemyController>() != null)
-                    {
-                        timeManager.DoFreezeTime(.15f, .05f); //.1, .05
-
-                        if(enableScreenshake)
-                            screenShake.Shake();
-                    }
-
-                    if (enemy.GetComponent<EnemyController>() != null)
-                    {
-                        enemy.GetComponent<EnemyController>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
-                        enemy.GetComponent<EnemyController>().GetKnockback(controller.m_FacingRight);
-                    }
                     
                     //--------------------------
-                    if (enemy.GetComponent<StationaryEnemy>() != null)
-                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy, damageMultiplier);
-
-                    if (enemy.GetComponent<Enemy2>() != null)
-                    {
-                        //enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
-                    }
+                  
 
                     if (enemy.GetComponent<EnemyBossBandit>() != null)
                         enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy, damageMultiplier);
@@ -548,14 +517,7 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<EnemyController>().GetStunned(stunStrength);
             }
             //---------------------------
-            if (enemy.GetComponent<StationaryEnemy>() != null)
-                enemy.GetComponent<StationaryEnemy>().TakeDamage(altDamage);
-
-            if(enemy.GetComponent<Enemy2>() != null)
-            {
-                //enemy.GetComponent<Enemy2>().TakeDamage(altDamage);
-                //enemy.GetComponent<Enemy2>().GetStunned(stunStrength);
-            }
+            
 
             if (enemy.GetComponent<EnemyBossBandit>() != null)
             {

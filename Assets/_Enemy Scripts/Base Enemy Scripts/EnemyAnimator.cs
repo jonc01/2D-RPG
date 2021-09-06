@@ -48,7 +48,7 @@ public class EnemyAnimator : MonoBehaviour
 
     public void PlayHurt()
     {
-        if(EN_HURT != null)
+        if(EN_HURT != null) //null check for certain enemies without hurt animations until stunned
             enAnimController.Play(EN_HURT);
     }
 

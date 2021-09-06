@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class HeavyBanditClass : BaseEnemyClass
 {
-    [Header("=== HeavyBandit Only ===")]
-    [SerializeField] TimeManager timeManager;
+    [Header("=== HeavyBandit ===")]
     [SerializeField] ScreenShakeListener screenShake;
-    [SerializeField] GameObject initialStunParticle;
+    [SerializeField] protected GameObject initialStunParticle;
     [SerializeField] GameObject stunParticleL;
     [SerializeField] GameObject stunParticleR;
     [SerializeField] EnemyRaycast enRaycast;
 
     [SerializeField] 
-    bool allowBreak,
+    protected bool allowBreak,
         isBroken;
 
 
@@ -96,7 +95,7 @@ public class HeavyBanditClass : BaseEnemyClass
         }
     }
 
-    void LungeOnAttack()
+    protected void LungeOnAttack()
     {
         float dir; 
         if (enFacingRight)
@@ -220,12 +219,12 @@ public class HeavyBanditClass : BaseEnemyClass
     }
 
     #region Animation Events/Bool Toggles
-    void DisableShield()
+    protected void DisableShield()
     {
         allowBreak = true;
     }
 
-    void EnableShield()
+    protected void EnableShield()
     {
         allowBreak = false;
     }

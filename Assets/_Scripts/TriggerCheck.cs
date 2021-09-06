@@ -43,18 +43,8 @@ public class TriggerCheck : MonoBehaviour
             }
 
 
-            ///////////////////////////////////////////////
+            //////////////////////////////////////////////
             /////////// vvv DELETE ALL vvv ///////////////
-            if (collider.GetComponent<EnemyController>() != null)
-            {
-                collider.GetComponent<EnemyController>().GetStunned();
-                //collider.GetComponent<EnemyController>().CheckParry();
-            }
-
-            if (collider.GetComponent<StationaryEnemy>() != null)
-            {
-                collider.GetComponent<StationaryEnemy>().TakeDamage(10);
-            }
 
             if (collider.GetComponent<EnemyBossBandit>() != null)
             {

@@ -55,10 +55,10 @@ public class EnemyRaycast : MonoBehaviour
         //Debug.DrawRay(wallPlayerCheck.position, right, Color.blue);
 
         Vector3 attackRight = transform.TransformDirection(Vector3.right) * playerCheckDistance;
-        //Debug.DrawRay(wallPlayerCheck.position, attackRight, Color.cyan);
+        Debug.DrawRay(wallPlayerCheck.position, attackRight, Color.cyan);
 
         Vector3 attackLeft = transform.TransformDirection(Vector3.left) * playerCheckDistance;
-        //Debug.DrawRay(wallPlayerCheck.position, attackLeft, Color.red);
+        Debug.DrawRay(wallPlayerCheck.position, attackLeft, Color.red);
 
         Vector3 playerInAttackRange = transform.TransformDirection(Vector3.left) * attackRange;
         Debug.DrawRay(attackCheck.position, playerInAttackRange, Color.magenta);
