@@ -32,6 +32,8 @@ public class BanditBossClass : HeavyBanditClass
         //healthBar = GameObject.Find("BossHealthBarCanvas").GetComponentInChildren<HealthBar>();
         healthBarTransform = healthBar.GetComponent<Transform>();
 
+        timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
+
         atkSequence = 1;
     }
 
@@ -41,8 +43,6 @@ public class BanditBossClass : HeavyBanditClass
         base.Update();
         HPPhaseCheck();
     }
-
-
 
     public void ShowHealthBar(bool displayHP = true)
     {
@@ -119,7 +119,6 @@ public class BanditBossClass : HeavyBanditClass
 
     protected override IEnumerator Attacking()
     {
-        //TODO: write out code, but comment and test later
         if(enCanAttack && !isAttacking && !enStunned)
         {
             int phase;
@@ -141,7 +140,7 @@ public class BanditBossClass : HeavyBanditClass
             {
                 case 1:
                     atkSequence = 2; //next attack
-                    EnAnimator.PlayAnim(5); //Trigger "Attack1Slow" //TODO: need number
+                    EnAnimator.AnimTrigger("Attack1SlowStart");
                     EnDisableMove();
                     yield return new WaitForSeconds(0.7f);
                     Attack(1.5f);
@@ -158,12 +157,11 @@ public class BanditBossClass : HeavyBanditClass
                         atkSequence = 4;
                     }
 
-                    EnAnimator.PlayAnim(6); //Trigger "Attack2Slow" //TODO:
+                    EnAnimator.AnimTrigger("Attack2SlowStart");
                     EnDisableMove();
                     yield return new WaitForSeconds(0.6f);
                     LungeOnAttack(); //TODO: needs testing with DisableMove
                     yield return new WaitForSeconds(0.02f);
-                    //EnDisableMove(); //TODO: might not need if lunge works and enemy doesn't move after
                     Attack2(1f);
                     yield return new WaitForSeconds(enAttackSpeed);
 
@@ -173,20 +171,22 @@ public class BanditBossClass : HeavyBanditClass
                     ShowAttackIndicator();
 
                     EnDisableMove();
-                    EnAnimator.PlayAnim(7); //Trigger "Attack1SlowStartCombo" //TODO:
+                    EnAnimator.AnimTrigger("Attack1SlowStartCombo");
                     yield return new WaitForSeconds(0.6f);
                     Attack(1.5f);
 
-                    EnAnimator.PlayAnim(6); //Trigger "Attack2Slow" //TODO:
+                    EnAnimator.AnimTrigger("Attack2SlowStart");
                     yield return new WaitForSeconds(0.5f);
                     LungeOnAttack();
                     yield return new WaitForSeconds(0.02f);
                     //EnDisableMove();
                     Attack2(1f);
                     yield return new WaitForSeconds(0.4f);
-                    EnAnimator.PlayAnim(1); //Trigger "IdleLongStunnable" //TODO: 
+                    EnAnimator.AnimBool("IdleLongStunnable", true);
+                    EnAnimator.PlayAnim(1);
                     yield return new WaitForSeconds(1.0f);
-                    //EnAnimator.PlayAnim(); //just play normal IdleAnim //no longer stunnable
+                    EnAnimator.AnimBool("IdleLongStunnable", false);
+                    //EnAnimator.PlayAnim(); //just play normal IdleAnim //no longer stunnable //TODO:
 
                     break;
                 case 4:
@@ -195,55 +195,57 @@ public class BanditBossClass : HeavyBanditClass
                     ShowAttackIndicator2();
 
                     EnDisableMove(); 
-                    EnAnimator.PlayAnim(7); //Attack1 can be stunned //TODO: //SetTrigger("Attack1SlowStartCombo");
+                    EnAnimator.AnimTrigger("Attack1SlowStartCombo");
                     yield return new WaitForSeconds(.6f);
                     LungeOnAttack();
                     yield return new WaitForSeconds(0.02f);
                     Attack(1f);
                     yield return new WaitForSeconds(.4f);
 
-                    EnAnimator.PlayAnim(10); //enAnimator.SetTrigger("Attack2SlowStartCombo"); //Attack2
+                    EnAnimator.AnimTrigger("Attack2SlowStartCombo");
                     yield return new WaitForSeconds(.4f);
                     LungeOnAttack();
                     yield return new WaitForSeconds(0.02f);
                     Attack2(1f);
                     yield return new WaitForSeconds(.3f);
 
-                    EnAnimator.PlayAnim(8); //enAnimator.SetTrigger("Attack1SlowStartCombo2"); //Attack1
+                    EnAnimator.AnimTrigger("Attack1SlowStartCombo2");
                     yield return new WaitForSeconds(.3f);
                     LungeOnAttack();
                     yield return new WaitForSeconds(0.02f);
                     Attack(1.5f);
                     yield return new WaitForSeconds(.2f);
 
-                    EnAnimator.PlayAnim(11); //enAnimator.SetTrigger("Attack2SlowStartCombo2"); //Attack2
+                    EnAnimator.AnimTrigger("Attack2SlowStartCombo2");
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
                     yield return new WaitForSeconds(0.02f);
                     Attack2(1.5f);
                     yield return new WaitForSeconds(.2f);
 
-                    EnAnimator.PlayAnim(9); //enAnimator.SetTrigger("Attack1SlowStartCombo3"); //Attack1
+                    EnAnimator.AnimTrigger("Attack1SlowStartCombo3");
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
                     yield return new WaitForSeconds(0.02f);
                     Attack(2f);
                     yield return new WaitForSeconds(.2f);
 
-                    EnAnimator.PlayAnim(12); //enAnimator.SetTrigger("Attack2SlowStartCombo3"); //Attack2
+                    EnAnimator.AnimTrigger("Attack2SlowStartCombo3");
                     yield return new WaitForSeconds(.2f);
                     LungeOnAttack();
                     yield return new WaitForSeconds(0.02f);
                     Attack2(2f);
 
                     yield return new WaitForSeconds(.4f); //short delay so the Attack2 anim doesn't get cut off
+                    EnAnimator.AnimBool("IdleLongStunnable", true);
                     EnAnimator.PlayAnim(1);  //enAnimator.SetBool("IdleLongStunnable", true);
                     yield return new WaitForSeconds(.5f);
-                    //enAnimator.SetBool("IdleLongStunnable", false);
+                    EnAnimator.AnimBool("IdleLongStunnable", false);
                     //moving from Stunnable idle anim IdleLong anim
-                    EnAnimator.PlayAnim(0); //enAnimator.SetBool("IdleLong", true);
+                    EnAnimator.AnimBool("IdleLong", true);
+                    EnAnimator.PlayAnim(0); 
                     yield return new WaitForSeconds(.5f);
-                    //enAnimator.SetBool("IdleLong", false); //TODO: play normal Idle
+                    EnAnimator.AnimBool("IdleLong", false);
 
                     yield return new WaitForSeconds(enAttackSpeed); //TODO: increase length on this, make sure stun is still encouraged
                     break;
@@ -353,7 +355,8 @@ public class BanditBossClass : HeavyBanditClass
     {
         if (isAlive && isBroken)
         {
-            EnAnimator.PlayAnim(13); //TODO: need number //*just need this, rest is handled in HeavyBanditClass
+            //EnAnimator.PlayAnim(13); //TODO: need number //*just need this, rest is handled in HeavyBanditClass
+            EnAnimator.AnimTrigger("Hit");
 
                 //*PlayHurt() doesn't work, left it null to prevent playing anim when hurt normally
             //HeavyBanditClass should instantiate particles
@@ -365,11 +368,7 @@ public class BanditBossClass : HeavyBanditClass
     public override void Die() //TODO: test
     {
         //base.Die();
-        /*enAnimator.SetBool("IdleLongStunnable", false); //TODO: set up anim
-        enAnimator.SetBool("IdleLong", false);
-        enAnimator.SetBool("Move", false);
-        enAnimator.SetBool("Idle", false);*/ //TODO:
-        EnAnimator.PlayDeathAnim(); //TODO: test
+        EnAnimator.AnimTrigger("Death");
 
         isAlive = false;
         EnDisableMove();

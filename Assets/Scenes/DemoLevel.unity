@@ -16792,7 +16792,7 @@ MonoBehaviour:
   EN_MOVE: Run
   EN_ATTACKING: 
   EN_HURT: 
-  EN_STUNNED: IdleLoopStunned
+  EN_STUNNED: Stunned
   EN_DEATH: Death
   EN_IDLE_2: 
   newClips:

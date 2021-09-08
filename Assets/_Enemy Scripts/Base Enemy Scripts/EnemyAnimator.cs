@@ -67,4 +67,15 @@ public class EnemyAnimator : MonoBehaviour
         if(EN_DEATH != null)
             enAnimController.Play(EN_DEATH);
     }
+
+    // Bools and Trigger sets
+    public void AnimTrigger(string animTrigger)
+    {
+        enAnimController.SetTrigger(animTrigger);
+    }
+
+    public void AnimBool(string animName, bool animBool)
+    {
+        enAnimController.SetBool(animName, animBool);
+    }
 }
