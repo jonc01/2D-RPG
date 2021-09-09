@@ -176,6 +176,7 @@ public class BanditBossClass : HeavyBanditClass
                     EnAnimator.AnimTrigger("Attack1SlowStartCombo");
                     yield return new WaitForSeconds(0.6f);
                     Attack(1.5f);
+                    yield return new WaitForSeconds(.2f);
                     EnAnimator.AnimTrigger("Attack2SlowStart");
                     yield return new WaitForSeconds(0.44f); //.5
                     LungeOnAttack(30f);
@@ -369,17 +370,15 @@ public class BanditBossClass : HeavyBanditClass
     public override void Die() //TODO: test
     {
         //base.Die();
-        EnAnimator.AnimTrigger("Death");
+        StopAllCoroutines(); //stops attack coroutine if dead
+        EnDisableMove();
 
         isAlive = false;
-        EnDisableMove();
         enCanAttack = false;
 
         ShowHealthBar(false);
         
         //give player exp //TODO: removed, reimplement at some point
-
-        StopAllCoroutines(); //stops attack coroutine if dead
 
         if (DeathParticlesHandler != null)
         {
@@ -394,30 +393,18 @@ public class BanditBossClass : HeavyBanditClass
 
     IEnumerator DeleteEnemyObject()
     {
-        Vector3 changeLocation = transform.position;
-        Vector3 tempLocation = changeLocation;
-        //tempLocation.y += .5f;
-
-        int numLoops = 3;
-
-        for (int i = 0; i < numLoops; i++)
-        {
-            //enAnimator.SetTrigger("startDeath"); //TODO: set up animatorController script
-            //Instantiate(deathParticlePrefab, tempLocation, Quaternion.identity); TODO:
-            yield return new WaitForSeconds(.5f);
-        }
-
-        yield return new WaitForSeconds(.5f);
+        EnDisableFlip();
+        yield return new WaitForSeconds(.2f);
+        EnAnimator.PlayDeathAnim();
+        yield return new WaitForSeconds(1.0f);
 
         if (DeathParticlesHandler != null)
         {
             Vector3 deathParticleLocation = transform.position;
-            deathParticleLocation.y += hitEffectOffset;
+            deathParticleLocation.y -= .4f;
 
             DeathParticlesHandler.ShowHitEffect(deathParticleLocation);
         }
-
-        //yield return new WaitForSeconds(.1f);
 
         //Destroy(this.gameObject);
         gameObject.SetActive(false); //TODO: set to false so that EndPortal can reference if isAlive

@@ -28,13 +28,12 @@ public class BanditBossController : BaseEnemyController
         AttackFlip();
         */
 
-        PlayerCheck();
+        //PlayerCheck();
     }
 
     protected override void PlayerCheck()
     {
         //base.PlayerCheck();
-
         if (!enRaycast.wallDetect && enRaycast.groundDetect && !enemyClass.enStunned)
         {
             if (enRaycast.playerDetectFront || enRaycast.playerDetectBack)
@@ -51,6 +50,10 @@ public class BanditBossController : BaseEnemyController
                     enemyClass.enCanMove = true;
                 }
                 enemyClass.MoveRight(enRaycast.playerToRight);
+            }
+            else
+            {
+                aggroStarted = false;
             }
         }
         else
