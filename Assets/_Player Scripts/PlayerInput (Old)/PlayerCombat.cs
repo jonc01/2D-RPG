@@ -283,18 +283,12 @@ public class PlayerCombat : MonoBehaviour
         //damage enemies
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
-            //TODO: update this and AttackHeavy
             if(enemy.GetComponent<BaseEnemyClass>() != null)
             {
                 timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze
                 enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
                 enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
             }
-            
-            //////////////////////////////////////////////////////////////////////////
-
-            if (enemy.GetComponent<EnemyBossBandit>() != null)
-                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight, damageMultiplier);
         }
     }
     #endregion
@@ -398,15 +392,6 @@ public class PlayerCombat : MonoBehaviour
                         enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
                     }
-
-                    /////////////////////////////////////////////////////////////////////////////
-                    
-                    
-                    //--------------------------
-                  
-
-                    if (enemy.GetComponent<EnemyBossBandit>() != null)
-                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy, damageMultiplier);
                 }
                 break;
             case 2:
@@ -423,34 +408,6 @@ public class PlayerCombat : MonoBehaviour
                         enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
                     }
-
-                    ///////////////////////////////////////
-
-                    if (enemy.GetComponent<EnemyController>() != null)
-                    {
-                        if(enableScreenshake)
-                            screenShake.Shake();
-
-                        timeManager.DoFreezeTime(.15f, .05f);
-                        //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
-                    }
-
-                    if (enemy.GetComponent<EnemyController>() != null)
-                    {
-                        enemy.GetComponent<EnemyController>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
-                        enemy.GetComponent<EnemyController>().GetKnockback(controller.m_FacingRight);
-                    }
-
-                    if (enemy.GetComponent<StationaryEnemy>() != null)
-                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy, damageMultiplier);
-
-                    if (enemy.GetComponent<Enemy2>() != null)
-                    {
-                        //enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
-                    }
-
-                    if (enemy.GetComponent<EnemyBossBandit>() != null)
-                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy, damageMultiplier);
                 }
                 break;
             default:
@@ -510,18 +467,11 @@ public class PlayerCombat : MonoBehaviour
         }
         foreach (Collider2D enemy in altHitEnemies) //loop through enemies hit
         {
-            if (enemy.GetComponent<EnemyController>() != null)
+            if (enemy.GetComponent<BaseEnemyClass>() != null)
             {
-                enemy.GetComponent<EnemyController>().TakeDamage(altDamage, 1.0f); //attackDamage + additional damage from parameter
-                enemy.GetComponent<EnemyController>().GetKnockback(controller.m_FacingRight);
-                enemy.GetComponent<EnemyController>().GetStunned(stunStrength);
-            }
-            //---------------------------
-            
-
-            if (enemy.GetComponent<EnemyBossBandit>() != null)
-            {
-                enemy.GetComponent<EnemyBossBandit>().CheckParry();
+                enemy.GetComponent<BaseEnemyClass>().TakeDamage(altDamage, 1.0f); //attackDamage + additional damage from parameter
+                enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
+                enemy.GetComponent<BaseEnemyClass>().GetStunned(stunStrength);
             }
         }
     }
@@ -550,23 +500,15 @@ public class PlayerCombat : MonoBehaviour
 
         foreach (Collider2D enemy in parriedEnemies) // loop through enemies hit
         {
-            if (enemy.GetComponent<EnemyController>() != null)
+            if (enemy.GetComponent<BaseEnemyClass>() != null)
             {
                 /*if (enableScreenshake)
                     screenShake.Shake();*/
 
-                enemy.GetComponent<EnemyController>().GetStunned(1);
+                enemy.GetComponent<BaseEnemyClass>().GetStunned(1);
 
                 //movement.CancelDash();
                 animator.SetTrigger("Block");
-                //screenShake.startShake();
-            }
-
-            if (enemy.GetComponent<EnemyBossBandit>() != null)
-            {
-                enemy.GetComponent<EnemyBossBandit>().CheckParry();
-                //movement.CancelDash();
-                //animator.SetTrigger("Block");
             }
         }
     }

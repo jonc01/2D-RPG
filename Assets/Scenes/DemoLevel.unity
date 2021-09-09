@@ -4053,6 +4053,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistance
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -7084,7 +7088,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 876372766}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.069, y: -0.146, z: 0}
+  m_LocalPosition: {x: 0, y: -0.146, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children: []
   m_Father: {fileID: 385030675}
@@ -7795,6 +7799,14 @@ PrefabInstance:
     - target: {fileID: 2055143821746903294, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2055143821889519470, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: attackRange
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2055143821889519470, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: playerCheckDistance
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 2055143821889519473, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
       propertyPath: m_Name
@@ -8921,10 +8933,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bandit (6)
       objectReference: {fileID: 0}
-    - target: {fileID: 6219244477990243910, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
-      propertyPath: kbThrust
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7607399976641927293, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -9330,6 +9338,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistance
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -9417,7 +9429,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1333720647}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.085, y: -0.171, z: 0}
+  m_LocalPosition: {x: 0, y: -0.171, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children: []
   m_Father: {fileID: 385030675}
@@ -14357,6 +14369,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistance
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -14710,6 +14726,10 @@ PrefabInstance:
     - target: {fileID: 3517184772405496108, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistance
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_RootOrder
@@ -16282,6 +16302,14 @@ PrefabInstance:
       propertyPath: distCheck
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2055143821889519470, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: attackRange
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2055143821889519470, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: playerCheckDistance
+      value: -4
+      objectReference: {fileID: 0}
     - target: {fileID: 2055143821889519473, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
       propertyPath: m_Name
       value: HeavyBandit
@@ -16315,6 +16343,10 @@ PrefabInstance:
     - target: {fileID: 3517184772405496108, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistance
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_RootOrder
@@ -16501,7 +16533,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8100395046773085586}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.287, y: -0.035, z: 0}
+  m_LocalPosition: {x: -0.47, y: -0.035, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8100395047578547495}
@@ -16682,8 +16714,8 @@ MonoBehaviour:
   attackCheck: {fileID: 1333720648}
   groundCheckDistance: 0.2
   wallCheckDistance: -0.5
-  playerCheckDistance: -3
-  attackRange: 0.67
+  playerCheckDistance: -5
+  attackRange: 1
   playerToRight: 0
   playerDetectFront: 0
   playerDetectBack: 0
@@ -16741,7 +16773,7 @@ MonoBehaviour:
   enAttackDamage: 10
   enAttackSpeed: 2
   enAttackAnimSpeed: 0.4
-  enAttackRadius: 0.3
+  enAttackRadius: 0.53
   XP: 80
   stunResist: 0
   allowStunCD: 0.1

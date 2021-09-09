@@ -920,7 +920,6 @@ MonoBehaviour:
   enFacingRight: 0
   enCanFlip: 0
   enCanParry: 0
-  lungeDistance: 0
 --- !u!114 &4892663049998433180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -978,7 +977,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugging: 1
-  distCheck: 0
   enemyClass: {fileID: 6219244477990243910}
   playerLayer:
     serializedVersion: 2
@@ -991,7 +989,7 @@ MonoBehaviour:
   attackCheck: {fileID: 4651827266637173968}
   groundCheckDistance: 0.2
   wallCheckDistance: -0.3
-  playerCheckDistance: -3
+  playerCheckDistance: -5
   attackRange: 0.3
   playerToRight: 0
   playerDetectFront: 0

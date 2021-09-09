@@ -61,9 +61,9 @@ public class HeavyBanditClass : BaseEnemyClass
             EnAnimator.PlayAnim(1);
 
             EnDisableFlip();
-            yield return new WaitForSeconds(.15f); //.2
+            yield return new WaitForSeconds(.14f); //.2
             LungeOnAttack();
-            yield return new WaitForSeconds(.07f); //.02
+            yield return new WaitForSeconds(.08f); //.02
             Attack();
 
         //Second Attack Charge Up
@@ -75,9 +75,9 @@ public class HeavyBanditClass : BaseEnemyClass
             EnAnimator.PlayAnim(1); //AttackEnd anim
             EnDisableFlip();
             //Lunge with collider
-            yield return new WaitForSeconds(.15f); //.2
+            yield return new WaitForSeconds(.14f); //.2
             LungeOnAttack();
-            yield return new WaitForSeconds(.07f); //.02
+            yield return new WaitForSeconds(.08f); //.02
             Attack();
             yield return new WaitForSeconds(.4f);
             EnAnimator.PlayIdle2(); //StunnableIdle
@@ -95,7 +95,7 @@ public class HeavyBanditClass : BaseEnemyClass
         }
     }
 
-    protected void LungeOnAttack()
+    protected void LungeOnAttack(float force = 15.0f)
     {
         float dir; 
         if (enFacingRight)
@@ -120,7 +120,7 @@ public class HeavyBanditClass : BaseEnemyClass
             targetPos.x += 3f * dir;
         }
 
-        var lungeForce = 15.0f;
+        var lungeForce = force;
         if(Mathf.Abs(targetPos.x - transform.position.x) <= .3f)
         {
             lungeForce = 1f;
