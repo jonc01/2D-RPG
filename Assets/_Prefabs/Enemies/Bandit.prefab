@@ -989,7 +989,8 @@ MonoBehaviour:
   attackCheck: {fileID: 4651827266637173968}
   groundCheckDistance: 0.2
   wallCheckDistance: -0.3
-  playerCheckDistance: -5
+  playerCheckDistanceFront: -5
+  playerCheckDistanceBack: -3
   attackRange: 0.3
   playerToRight: 0
   playerDetectFront: 0

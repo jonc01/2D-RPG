@@ -4057,6 +4057,14 @@ PrefabInstance:
       propertyPath: playerCheckDistance
       value: -5
       objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistanceBack
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistanceFront
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -7808,6 +7816,14 @@ PrefabInstance:
       propertyPath: playerCheckDistance
       value: -4
       objectReference: {fileID: 0}
+    - target: {fileID: 2055143821889519470, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: playerCheckDistanceBack
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2055143821889519470, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: playerCheckDistanceFront
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 2055143821889519473, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
       propertyPath: m_Name
       value: HeavyBandit (1)
@@ -8885,6 +8901,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistanceBack
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistanceFront
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -9340,6 +9364,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: playerCheckDistance
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistanceBack
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistanceFront
       value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
@@ -14373,6 +14405,14 @@ PrefabInstance:
       propertyPath: playerCheckDistance
       value: -5
       objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistanceBack
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistanceFront
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -14729,6 +14769,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: playerCheckDistance
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistanceBack
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: playerCheckDistanceFront
       value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
@@ -15655,6 +15703,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2093540807}
     - target: {fileID: 107596093386943519, guid: af99df69663819f4ea190097c9b5ef1d, type: 3}
+      propertyPath: dodgeTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 107596093386943519, guid: af99df69663819f4ea190097c9b5ef1d, type: 3}
+      propertyPath: m_rollForce
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 107596093386943519, guid: af99df69663819f4ea190097c9b5ef1d, type: 3}
       propertyPath: defaultRunSpeed
       value: 12
       objectReference: {fileID: 0}
@@ -16310,6 +16366,14 @@ PrefabInstance:
       propertyPath: playerCheckDistance
       value: -4
       objectReference: {fileID: 0}
+    - target: {fileID: 2055143821889519470, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: playerCheckDistanceBack
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2055143821889519470, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: playerCheckDistanceFront
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 2055143821889519473, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
       propertyPath: m_Name
       value: HeavyBandit
@@ -16343,10 +16407,6 @@ PrefabInstance:
     - target: {fileID: 3517184772405496108, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4892663049998433181, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
-      propertyPath: playerCheckDistance
-      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 4892663049998433182, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_RootOrder
@@ -16714,7 +16774,8 @@ MonoBehaviour:
   attackCheck: {fileID: 1333720648}
   groundCheckDistance: 0.2
   wallCheckDistance: -0.5
-  playerCheckDistance: -5
+  playerCheckDistanceFront: -3
+  playerCheckDistanceBack: -1.5
   attackRange: 1
   playerToRight: 0
   playerDetectFront: 0
@@ -16769,7 +16830,7 @@ MonoBehaviour:
   HitEffectsHandler: {fileID: 0}
   DeathParticlesHandler: {fileID: 0}
   defaultMoveSpeed: 2.5
-  maxHealth: 50
+  maxHealth: 1000
   enAttackDamage: 10
   enAttackSpeed: 2
   enAttackAnimSpeed: 0.4

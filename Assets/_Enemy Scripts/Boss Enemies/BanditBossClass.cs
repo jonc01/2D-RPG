@@ -143,7 +143,9 @@ public class BanditBossClass : HeavyBanditClass
                     EnAnimator.AnimTrigger("Attack1SlowStart");
                     EnDisableMove();
                     //EnDisableFlip();
-                    yield return new WaitForSeconds(0.7f);
+                    yield return new WaitForSeconds(0.4f); //.7f
+                    EnDisableFlip();
+                    yield return new WaitForSeconds(0.3f);
                     Attack(1.5f);
                     yield return new WaitForSeconds(enAttackSpeed);
 

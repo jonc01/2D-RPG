@@ -19,7 +19,8 @@ public class EnemyRaycast : MonoBehaviour
     [SerializeField] private float groundCheckDistance = 0.2f;
     [SerializeField] private float
         wallCheckDistance = -0.5f, //negative values - enemies are initialized facing left
-        playerCheckDistance = -3f; //Aggro range
+        playerCheckDistanceFront = -3f, //Aggro range
+        playerCheckDistanceBack = -1.5f;
     public float attackRange = -0.67f; //when to start attacking player, uses a raycast to detect if player is within range
 
     [Space]
@@ -54,10 +55,10 @@ public class EnemyRaycast : MonoBehaviour
         Vector3 right = transform.TransformDirection(Vector3.right) * wallCheckDistance;
         //Debug.DrawRay(wallPlayerCheck.position, right, Color.blue);
 
-        Vector3 attackRight = transform.TransformDirection(Vector3.right) * playerCheckDistance;
+        Vector3 attackRight = transform.TransformDirection(Vector3.right) * playerCheckDistanceFront;
         Debug.DrawRay(wallPlayerCheck.position, attackRight, Color.cyan);
 
-        Vector3 attackLeft = transform.TransformDirection(Vector3.left) * playerCheckDistance;
+        Vector3 attackLeft = transform.TransformDirection(Vector3.left) * playerCheckDistanceBack;
         Debug.DrawRay(wallPlayerCheck.position, attackLeft, Color.red);
 
         Vector3 playerInAttackRange = transform.TransformDirection(Vector3.left) * attackRange;
@@ -77,8 +78,8 @@ public class EnemyRaycast : MonoBehaviour
 
     void PlayerDetectCheck()
     {
-        playerDetectFront = Physics2D.Raycast(wallPlayerCheck.position, transform.right, playerCheckDistance, playerLayer);
-        playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistance, playerLayer);
+        playerDetectFront = Physics2D.Raycast(wallPlayerCheck.position, transform.right, playerCheckDistanceFront, playerLayer);
+        playerDetectBack = Physics2D.Raycast(wallPlayerCheck.position, -transform.right, playerCheckDistanceBack, playerLayer);
     }
 
     void UpdatePlayerToRight()

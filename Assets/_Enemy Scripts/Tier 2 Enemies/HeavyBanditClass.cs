@@ -121,10 +121,11 @@ public class HeavyBanditClass : BaseEnemyClass
         }
 
         var lungeForce = force;
-        if(Mathf.Abs(targetPos.x - transform.position.x) <= .3f)
+        /*if(Mathf.Abs(targetPos.x - transform.position.x) <= .3f) //if player is too close, lunge can be side-stepped
         {
-            lungeForce = 1f;
-        }
+            lungeForce = 1f; //short range lunge to hit the player within .3f
+        }*/
+        targetPos.y = transform.position.y; //prevents enemy from jump up to lunge at player
         rb.AddForce((targetPos - transform.position).normalized * lungeForce, ForceMode2D.Impulse);
     }
 
