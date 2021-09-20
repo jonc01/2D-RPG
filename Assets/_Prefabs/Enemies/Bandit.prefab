@@ -895,7 +895,7 @@ MonoBehaviour:
   HitEffectsHandler: {fileID: 0}
   DeathParticlesHandler: {fileID: 0}
   defaultMoveSpeed: 2.5
-  maxHealth: 50
+  maxHealth: 40
   enAttackDamage: 5
   enAttackSpeed: 0.8
   enAttackAnimSpeed: 0.4

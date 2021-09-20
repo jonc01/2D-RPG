@@ -27,7 +27,7 @@ public class TimeManager : MonoBehaviour
         if (Time.timeScale < 1f && isSlowed && !PauseMenu.GameIsPaused) //only if Slow Time is called, gradually return back to normal speed
         {
             Time.timeScale += (1f/slowdownLength) * Time.unscaledDeltaTime;
-            Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f); //gradually increases scale until it is back to 1.0
+            Time.timeScale = Mathf.Clamp(Time.timeScale, 0.01f, 1f); //gradually increases scale until it is back to 1.0
 
             //Time.fixedDeltaTime = Mathf.Clamp(Time.timeScale, 0.0004f, .02f); //player move speed uses fixedDeltaTime, need to reset here
         }
@@ -64,7 +64,7 @@ public class TimeManager : MonoBehaviour
         if(delayStart > 0f)
             yield return new WaitForSeconds(delayStart);
 
-        Time.timeScale = 0f;
+        Time.timeScale = 0.01f; //setting to 0 breaks animation transitions
 
         yield return new WaitForSecondsRealtime(freezeDuration); //be careful this actually finishes or else timeScale is stuck at 0
 

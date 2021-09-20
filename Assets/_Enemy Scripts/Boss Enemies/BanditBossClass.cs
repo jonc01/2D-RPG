@@ -332,13 +332,13 @@ public class BanditBossClass : HeavyBanditClass
                 //timeManager.DoSlowMotion();
             }
 
-            Vector3 tempPos = transform.position; //TODO: test positioning
+            Vector3 tempPos = transform.position; 
             tempPos.y += TPOffset;
             AttackIndicator.ShowBreak(tempPos);
 
-            EnAnimator.PlayStunned(); //TODO: needs testing
+            EnAnimator.PlayStunned(); 
             yield return new WaitForSeconds(.5f); //1.1f
-            EnAnimator.PlayAnim(2); //TODO: need number
+            EnAnimator.PlayAnim(2);
             yield return new WaitForSeconds(breakDuration); //1.3f //recoverDuration, is based on current phase
             //EnAnimator.PlayIdle(isAttacking, enStunned, isHurt); //TODO: play StunRecover animation NOT IDLE
 
@@ -360,7 +360,7 @@ public class BanditBossClass : HeavyBanditClass
         if (isAlive && isBroken)
         {
             //EnAnimator.PlayAnim(13); //TODO: need number //*just need this, rest is handled in HeavyBanditClass
-            EnAnimator.AnimTrigger("Hit");
+            //EnAnimator.AnimTrigger("Hit");
 
                 //*PlayHurt() doesn't work, left it null to prevent playing anim when hurt normally
             //HeavyBanditClass should instantiate particles
