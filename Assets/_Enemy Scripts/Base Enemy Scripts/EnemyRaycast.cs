@@ -84,6 +84,7 @@ public class EnemyRaycast : MonoBehaviour
 
     void UpdatePlayerToRight()
     {
+        // Updates 'playerToRight' bool: where the player is in relation to enemy
         if (playerDetectFront) 
         {
             if (enemyClass.enFacingRight) // E-> P

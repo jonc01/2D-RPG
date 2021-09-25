@@ -98,7 +98,7 @@ public class HeavyBanditClass : BaseEnemyClass
     protected void LungeOnAttack(float force = 15.0f)
     {
         float dir; 
-        if (enFacingRight)
+        if (enFacingRight) //Lunge in direction enemy is facing
         {
             dir = 1;
         }
