@@ -305,7 +305,7 @@ MonoBehaviour:
   DeathParticlesHandler: {fileID: 0}
   defaultMoveSpeed: 3.3
   maxHealth: 300
-  enAttackDamage: 8
+  enAttackDamage: 10
   enAttackSpeed: 1
   enAttackAnimSpeed: 0.4
   enAttackRadius: 0.42
@@ -329,7 +329,6 @@ MonoBehaviour:
   enFacingRight: 0
   enCanFlip: 0
   enCanParry: 0
-  timeManager: {fileID: 0}
   screenShake: {fileID: 0}
   initialStunParticle: {fileID: 739723056544264075, guid: 2ecc6a1dea805b147b3a69729badd706, type: 3}
   stunParticleL: {fileID: 6601068581037343418, guid: bbc8d6c487952ee449e949998073dcfd, type: 3}
@@ -382,8 +381,9 @@ MonoBehaviour:
   attackCheck: {fileID: 5501776665538512311}
   groundCheckDistance: 0.2
   wallCheckDistance: -0.5
-  playerCheckDistance: -3
-  attackRange: 2
+  playerCheckDistanceFront: -5
+  playerCheckDistanceBack: -3
+  attackRange: 1.2
   playerToRight: 0
   playerDetectFront: 0
   playerDetectBack: 0

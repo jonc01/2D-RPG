@@ -130,7 +130,7 @@ public class BanditBossClass : HeavyBanditClass
             else //phase 2
             {
                 phase = 2;
-                breakDuration = 1.0f;
+                breakDuration = .75f;
             }
 
             enCanAttack = false;
@@ -161,11 +161,11 @@ public class BanditBossClass : HeavyBanditClass
 
                     EnAnimator.AnimTrigger("Attack2SlowStart"); //0.62f total anim time
                     EnDisableMove();
-                    yield return new WaitForSeconds(0.24f); //.54f
+                    yield return new WaitForSeconds(0.20f); //.54f
                     EnDisableFlip();
-                    yield return new WaitForSeconds(0.3f);
+                    yield return new WaitForSeconds(0.34f);
                     LungeOnAttack(30f);
-                    yield return new WaitForSeconds(0.08f);
+                    yield return new WaitForSeconds(0.08f); //Don't change: is the time it takes to lunge and hit attack
                     Attack2(1f);
                     yield return new WaitForSeconds(enAttackSpeed);
 
@@ -193,14 +193,13 @@ public class BanditBossClass : HeavyBanditClass
                     yield return new WaitForSeconds(0.4f);
                     EnAnimator.AnimBool("IdleLongStunnable", true);
                     EnAnimator.PlayAnim(1);
-                    yield return new WaitForSeconds(1.0f);
+                    yield return new WaitForSeconds(.6f); //TODO: needs testing on duration
                     EnAnimator.AnimBool("IdleLongStunnable", false);
-                    //EnAnimator.PlayAnim(); //just play normal IdleAnim //no longer stunnable //TODO:
 
                     break;
                 case 4:
                     atkSequence = 1;
-                    breakDuration = 1.5f; //TODO: test between 1.5f and 1.0f (set at hp phase check)
+                    breakDuration = .85f; //TODO: test between 1.5f and 1.0f (set at hp phase check)
                     ShowAttackIndicator2();
 
                     EnDisableMove(); 
@@ -361,7 +360,7 @@ public class BanditBossClass : HeavyBanditClass
             EnableShield();
             isBroken = false;
             yield return new WaitForSeconds(.2f);
-            ShowAttackIndicator(); //TODO: needs testing
+            ShowAttackIndicator(); 
             yield return new WaitForSeconds(.5f);
             enCanAttack = true;
             isAttacking = false; //in case of attack interrupted from stun //TODO: might not need, is called earlier ^

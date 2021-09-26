@@ -667,11 +667,11 @@ public class PlayerCombat : MonoBehaviour
                 Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
-            StunPlayer(.3f); //stunDuration //.8f for stun lock on 3rd attack //TODO: test duration
+            StunPlayer(.1f); //.1f is short enough to interrupt player, but not stun lock //TODO: test duration
         }
     }
 
-    public void StunPlayer(float stunDuration = 1f)
+    public void StunPlayer(float stunDuration = .5f)
     {
         if (Time.time > allowStun && canStunPlayer && !playerStunned && isAlive)
         {

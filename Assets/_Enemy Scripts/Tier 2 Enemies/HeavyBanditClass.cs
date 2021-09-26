@@ -40,8 +40,7 @@ public class HeavyBanditClass : BaseEnemyClass
             if (player.GetComponent<PlayerCombat>() != null)
             {
                 player.GetComponent<PlayerCombat>().TakeDamage(enAttackDamage * damageMult); //attackDamage + additional damage from parameter
-                player.GetComponent<PlayerCombat>().StunPlayer(1); //attackDamage + additional damage from parameter
-                //knockback
+                player.GetComponent<PlayerCombat>().StunPlayer(.5f); //attackDamage + additional damage from parameter
             }
         }
     }
