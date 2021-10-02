@@ -474,6 +474,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCombat: {fileID: 982059469}
   numPotionCharges: {fileID: 760692484}
+  currentPotionCharges: 0
+  defaultAmountPotions: 2
+  maxPotions: 5
   chargeSlider: {fileID: 2064149665}
 --- !u!1 &47713272
 GameObject:
@@ -4078,6 +4081,10 @@ PrefabInstance:
       propertyPath: kbThrust
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6219244477990243910, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: mWhiteFlash
+      value: 
+      objectReference: {fileID: 2100000, guid: e27648a5f04e07e44a67a9d89e467991, type: 2}
     - target: {fileID: 7607399976641927293, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -7657,6 +7664,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1368080821}
     m_Modifications:
+    - target: {fileID: 12130671165666323, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 12130671165666323, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2055143821746903294, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -7704,6 +7719,14 @@ PrefabInstance:
     - target: {fileID: 2055143821889519473, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
       propertyPath: m_Name
       value: HeavyBandit (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6446478268414387522, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6446478268414387522, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
@@ -8826,6 +8849,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bandit (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 6219244477990243910, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: mWhiteFlash
+      value: 
+      objectReference: {fileID: 2100000, guid: e27648a5f04e07e44a67a9d89e467991, type: 2}
     - target: {fileID: 7607399976641927293, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -9291,6 +9318,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bandit (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6219244477990243910, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: mWhiteFlash
+      value: 
+      objectReference: {fileID: 2100000, guid: e27648a5f04e07e44a67a9d89e467991, type: 2}
     - target: {fileID: 7607399976641927293, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -11298,6 +11329,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scarecrow (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6223926787818357790, guid: 7630f84b6cd6ae749b111f02fe13f25b, type: 3}
+      propertyPath: mWhiteFlash
+      value: 
+      objectReference: {fileID: 2100000, guid: e27648a5f04e07e44a67a9d89e467991, type: 2}
     - target: {fileID: 6223926788253222146, guid: 7630f84b6cd6ae749b111f02fe13f25b, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -14308,6 +14343,10 @@ PrefabInstance:
       propertyPath: kbThrust
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6219244477990243910, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: mWhiteFlash
+      value: 
+      objectReference: {fileID: 2100000, guid: e27648a5f04e07e44a67a9d89e467991, type: 2}
     - target: {fileID: 7607399976641927293, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -14670,6 +14709,10 @@ PrefabInstance:
       propertyPath: kbThrust
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6219244477990243910, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
+      propertyPath: mWhiteFlash
+      value: 
+      objectReference: {fileID: 2100000, guid: e27648a5f04e07e44a67a9d89e467991, type: 2}
     - target: {fileID: 7607399976641927293, guid: 9e777c0eefba6e84fbf4b091481b5697, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -15362,6 +15405,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1177505292}
     - target: {fileID: 107596093386943514, guid: af99df69663819f4ea190097c9b5ef1d, type: 3}
+      propertyPath: maxHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 107596093386943514, guid: af99df69663819f4ea190097c9b5ef1d, type: 3}
       propertyPath: wepDamage
       value: 10
       objectReference: {fileID: 0}
@@ -15389,6 +15436,10 @@ PrefabInstance:
       propertyPath: ability2Cycle
       value: 
       objectReference: {fileID: 798246996}
+    - target: {fileID: 107596093386943514, guid: af99df69663819f4ea190097c9b5ef1d, type: 3}
+      propertyPath: currentHealth
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 107596093386943514, guid: af99df69663819f4ea190097c9b5ef1d, type: 3}
       propertyPath: experienceBar
       value: 
@@ -16026,6 +16077,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2055143821889519468, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: maxHealth
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 2055143821889519468, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
+      propertyPath: mWhiteFlash
+      value: 
+      objectReference: {fileID: 2100000, guid: e27648a5f04e07e44a67a9d89e467991, type: 2}
+    - target: {fileID: 2055143821889519468, guid: 43f0af5255b38864baf0cb6ba6d8c4f5, type: 3}
       propertyPath: screenShake
       value: 
       objectReference: {fileID: 1370011435}
@@ -16148,6 +16207,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scarecrow
       objectReference: {fileID: 0}
+    - target: {fileID: 6223926787818357790, guid: 7630f84b6cd6ae749b111f02fe13f25b, type: 3}
+      propertyPath: mWhiteFlash
+      value: 
+      objectReference: {fileID: 2100000, guid: e27648a5f04e07e44a67a9d89e467991, type: 2}
     - target: {fileID: 6223926788253222146, guid: 7630f84b6cd6ae749b111f02fe13f25b, type: 3}
       propertyPath: m_RootOrder
       value: 1

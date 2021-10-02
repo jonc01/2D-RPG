@@ -293,7 +293,7 @@ MonoBehaviour:
   EnAnimator: {fileID: 2055143821889519469}
   healthBar: {fileID: 6446478268821575848}
   enAttackPoint: {fileID: 2055143820555368718}
-  mWhiteFlash: {fileID: 2100000, guid: e8655ccdcc83dfb439430390344f0a3c, type: 2}
+  mWhiteFlash: {fileID: 2100000, guid: e27648a5f04e07e44a67a9d89e467991, type: 2}
   playerLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -304,7 +304,7 @@ MonoBehaviour:
   HitEffectsHandler: {fileID: 0}
   DeathParticlesHandler: {fileID: 0}
   defaultMoveSpeed: 3.3
-  maxHealth: 300
+  maxHealth: 250
   enAttackDamage: 10
   enAttackSpeed: 1
   enAttackAnimSpeed: 0.4

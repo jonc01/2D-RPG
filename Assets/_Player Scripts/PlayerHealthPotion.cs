@@ -13,9 +13,9 @@ public class PlayerHealthPotion : MonoBehaviour
 
     //slider if using regenerating charges based on kills
 
-    int currentPotionCharges;
-    int defaultAmountPotions = 3; //placeholder until inventory is implemented
-    int maxPotions = 10;
+    [SerializeField] int currentPotionCharges;
+    [SerializeField] int defaultAmountPotions = 3; //placeholder until inventory is implemented
+    [SerializeField] int maxPotions = 5;
 
     public Slider chargeSlider; //killing enemies adds progress to charge bar
     int maxSliderValue = 50;

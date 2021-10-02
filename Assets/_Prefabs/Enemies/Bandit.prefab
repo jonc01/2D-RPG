@@ -884,7 +884,7 @@ MonoBehaviour:
   EnAnimator: {fileID: 4892663049998433180}
   healthBar: {fileID: 3517184771738006726}
   enAttackPoint: {fileID: 4892663050853067070}
-  mWhiteFlash: {fileID: 2100000, guid: e8655ccdcc83dfb439430390344f0a3c, type: 2}
+  mWhiteFlash: {fileID: 2100000, guid: e27648a5f04e07e44a67a9d89e467991, type: 2}
   playerLayer:
     serializedVersion: 2
     m_Bits: 1024
