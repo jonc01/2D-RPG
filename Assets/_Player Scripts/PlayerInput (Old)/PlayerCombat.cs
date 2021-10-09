@@ -285,7 +285,7 @@ public class PlayerCombat : MonoBehaviour
         {
             if(enemy.GetComponent<BaseEnemyClass>() != null)
             {
-                timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze
+                timeManager.DoFreezeTime(.1f, .05f); //freezeDuration, delayToFreeze
                 enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
                 enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
             }
@@ -384,7 +384,7 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (enemy.GetComponent<BaseEnemyClass>() != null)
                     {
-                        timeManager.DoFreezeTime(.15f, .05f); //.1, .05
+                        timeManager.DoFreezeTime(.12f, .05f); //.1, .05
 
                         if (enableScreenshake)
                             screenShake.Shake();

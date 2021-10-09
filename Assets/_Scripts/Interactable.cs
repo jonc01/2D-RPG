@@ -3,26 +3,15 @@ using UnityEngine.Events;
 
 public class Interactable : MonoBehaviour
 {
+    public GameObject textPrompt;
     public bool isInRange;
     public UnityEvent interactAction;
 
-    public EnemyBossBandit boss;
-    //public bool bossReward = true; //if interactable is only available after boss was defeated
-
-
-    void Start()
-    {
-        boss = GameObject.FindGameObjectWithTag("Boss").GetComponent<EnemyBossBandit>();
-    }
-
     void Update()
     {
-        if (boss && isInRange && !boss.isAlive)
+        if (Input.GetButtonDown("Interact"))
         {
-            if (Input.GetButtonDown("Interact"))
-            {
-                interactAction.Invoke();
-            }
+            interactAction.Invoke();
         }
     }
 
@@ -32,6 +21,7 @@ public class Interactable : MonoBehaviour
         {
             isInRange = true;
             //Debug.Log("Interactable script: in range");
+            textPrompt.SetActive(true);
         }
     }
 
@@ -41,6 +31,7 @@ public class Interactable : MonoBehaviour
         {
             isInRange = false;
             //Debug.Log("Interactable script: not in range");
+            textPrompt.SetActive(false);
         }
     }
 

@@ -17,6 +17,7 @@ public class BaseEnemyClass : MonoBehaviour
     public Rigidbody2D rb;
     private Material mDefault;
     protected Transform healthBarTransform;
+    [SerializeField] private StageClear stageClear;
 
     // PREFAB HANDLERS (Start())
     [SerializeField] protected TextPopupsHandler TextPopupsHandler;
@@ -44,7 +45,7 @@ public class BaseEnemyClass : MonoBehaviour
         enAttackRadius = .3f;
 
     public float XP = 10f;
-    
+    public int gold = 10;
 
     [Space]
     [Range(0f, 1.0f)]
@@ -98,8 +99,11 @@ public class BaseEnemyClass : MonoBehaviour
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
         HitEffectsHandler = GameObject.Find("ObjectPool(HitEffects)").GetComponent<HitEffectsHandler>();
         DeathParticlesHandler = GameObject.Find("ObjectPool(DeathParticles)").GetComponent<DeathParticlesHandler>();
+        
+        if(stageClear == null)
+            stageClear = GameObject.Find("StageClearCheck").GetComponent<StageClear>();
 
-        if(useScreenshake)
+        if (useScreenshake)
             screenshake = GameObject.Find("ScreenShakeManager").GetComponent<ScreenShakeListener>();
 
         currentHealth = maxHealth;
@@ -481,6 +485,9 @@ public class BaseEnemyClass : MonoBehaviour
 
             DeathParticlesHandler.ShowHitEffect(tempLocation);
         }
+
+        stageClear.UpdateEnemyCount(XP, gold);
+
         //Delay deleting object, otherwise deathparticles or hiteffect will be interrupted
         StartCoroutine(DeleteEnemyObject());
     }
