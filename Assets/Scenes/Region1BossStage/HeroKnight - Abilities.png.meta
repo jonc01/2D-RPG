@@ -1,0 +1,885 @@
+fileFormatVersion: 2
+guid: 08d336df1c0964947a1a81b6040022e5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8311601940924533568
+    second: HeroKnight - Abilities_1
+  - first:
+      213: -7425394068244788171
+    second: HeroKnight - Abilities_2
+  - first:
+      213: -2318878062700613402
+    second: HeroKnight - Abilities_4
+  - first:
+      213: -4092776090791828299
+    second: HeroKnight - Abilities_5
+  - first:
+      213: 8010938592155762017
+    second: HeroKnight - Abilities_6
+  - first:
+      213: -7196604618162559036
+    second: HeroKnight - Abilities_7
+  - first:
+      213: 6155000379276994403
+    second: HeroKnight - Abilities_8
+  - first:
+      213: -8470359596250499947
+    second: HeroKnight - Abilities_9
+  - first:
+      213: 686328424483481418
+    second: HeroKnight - Abilities_10
+  - first:
+      213: 3244775704903028869
+    second: HeroKnight - Abilities_12
+  - first:
+      213: -6753099183828921769
+    second: HeroKnight - Abilities_13
+  - first:
+      213: 4647444924554153984
+    second: HeroKnight - Abilities_15
+  - first:
+      213: -1588777071466336280
+    second: HeroKnight - Abilities_16
+  - first:
+      213: -3212530384991637321
+    second: HeroKnight - Abilities_17
+  - first:
+      213: -6909331058411118603
+    second: HeroKnight - Abilities_18
+  - first:
+      213: -2432294239976083630
+    second: HeroKnight - Abilities_19
+  - first:
+      213: 4132504306750569195
+    second: HeroKnight - Abilities_20
+  - first:
+      213: 2180916982496758673
+    second: HeroKnight - Abilities_21
+  - first:
+      213: 3982756713343879239
+    second: HeroKnight - Abilities_22
+  - first:
+      213: 3496394733805792627
+    second: HeroKnight - Abilities_23
+  - first:
+      213: -2957041056422250031
+    second: HeroKnight - Abilities_25
+  - first:
+      213: 5745923500997043652
+    second: HeroKnight - Abilities_27
+  - first:
+      213: -2203638483081919989
+    second: HeroKnight - Abilities_28
+  - first:
+      213: 4833996995144469247
+    second: HeroKnight - Abilities_29
+  - first:
+      213: 8157629710563784443
+    second: HeroKnight - Abilities_30
+  - first:
+      213: 1765022797010048068
+    second: HeroKnight - Abilities_31
+  - first:
+      213: 7138305913635738444
+    second: HeroKnight - Abilities_32
+  - first:
+      213: 3788928398807911422
+    second: HeroKnight - Abilities_33
+  - first:
+      213: -5880325481728123892
+    second: HeroKnight - Abilities_0
+  - first:
+      213: -9045776414725149742
+    second: HeroKnight - Abilities_3
+  - first:
+      213: -6242823124487967717
+    second: HeroKnight - Abilities_11
+  - first:
+      213: 4664172473366944501
+    second: HeroKnight - Abilities_14
+  - first:
+      213: -3124544691055116189
+    second: HeroKnight - Abilities_24
+  - first:
+      213: 2793523156394698348
+    second: HeroKnight - Abilities_26
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_1
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 426
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04b0143bdedb85370800000000000000
+      internalID: 8311601940924533568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_2
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 426
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53c0af4bf63b3f890800000000000000
+      internalID: -7425394068244788171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_4
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 395
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e0b84b10b0b1dfd0800000000000000
+      internalID: -2318878062700613402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_5
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 395
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b4242374d98337c0800000000000000
+      internalID: -4092776090791828299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_6
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 418
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16d79eea4329c2f60800000000000000
+      internalID: 8010938592155762017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_7
+      rect:
+        serializedVersion: 2
+        x: 734
+        y: 418
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c72c71aa36802c90800000000000000
+      internalID: -7196604618162559036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_8
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 418
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 367233ffb34fa6550800000000000000
+      internalID: 6155000379276994403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_9
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 418
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 594faa933dc337a80800000000000000
+      internalID: -8470359596250499947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_10
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 388
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a476794d014568900800000000000000
+      internalID: 686328424483481418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_12
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 380
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5801092ef42c70d20800000000000000
+      internalID: 3244775704903028869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_13
+      rect:
+        serializedVersion: 2
+        x: 734
+        y: 380
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75295ee521c2842a0800000000000000
+      internalID: -6753099183828921769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_0
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 426
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0cdae13123e46ea0800000000000000
+      internalID: -5880325481728123892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_3
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 426
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2db63b20742f67280800000000000000
+      internalID: -9045776414725149742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_11
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 388
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1cec45b1790d59a0800000000000000
+      internalID: -6242823124487967717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_14
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 380
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fa113617287ab040800000000000000
+      internalID: 4664172473366944501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_15
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 350
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0001e31298a0f7040800000000000000
+      internalID: 4647444924554153984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_16
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 350
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8efa6f3dba783f9e0800000000000000
+      internalID: -1588777071466336280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_17
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 338
+        width: 37
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b0bc64b2acca63d0800000000000000
+      internalID: -3212530384991637321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_18
+      rect:
+        serializedVersion: 2
+        x: 547
+        y: 353
+        width: 62
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ffd4d372002d10a0800000000000000
+      internalID: -6909331058411118603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_19
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 342
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25f2ffc8641ce3ed0800000000000000
+      internalID: -2432294239976083630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_20
+      rect:
+        serializedVersion: 2
+        x: 734
+        y: 342
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: beab3a4a5ca995930800000000000000
+      internalID: 4132504306750569195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_21
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 328
+        width: 31
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19b065ac07c244e10800000000000000
+      internalID: 2180916982496758673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_22
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 293
+        width: 37
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7480aa51128954730800000000000000
+      internalID: 3982756713343879239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_23
+      rect:
+        serializedVersion: 2
+        x: 789
+        y: 271
+        width: 31
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37d6a075c70b58030800000000000000
+      internalID: 3496394733805792627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_24
+      rect:
+        serializedVersion: 2
+        x: 838
+        y: 268
+        width: 31
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 360c3d4782363a4d0800000000000000
+      internalID: -3124544691055116189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_25
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 228
+        width: 60
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d9b4b583da76f6d0800000000000000
+      internalID: -2957041056422250031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_26
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 236
+        width: 44
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c66ebb0928694c620800000000000000
+      internalID: 2793523156394698348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_27
+      rect:
+        serializedVersion: 2
+        x: 444
+        y: 217
+        width: 60
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c56f7f1bfe9dbf40800000000000000
+      internalID: 5745923500997043652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_28
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 95
+        width: 63
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b02858a997a1b61e0800000000000000
+      internalID: -2203638483081919989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_29
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 104
+        width: 45
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffa44ecc7aec51340800000000000000
+      internalID: 4833996995144469247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeroKnight - Abilities_30
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 77
+        width: 73
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf6b3533009b53170800000000000000
+      internalID: 8157629710563784443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
