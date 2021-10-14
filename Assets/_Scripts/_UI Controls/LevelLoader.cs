@@ -5,45 +5,174 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
-    public Animator transition;
+    public Animator transition; //TODO: placeholder, separate fade-out and fade-in
+    public float transitionTime = 1f; //TODO: placeholder, use async
 
-    public float transitionTime = 1f;
+    private AsyncOperation sceneAsync;
 
-    // Update is called once per frame
-    void Update()
+    //GameObjects to transfer between scenes //TODO: combine most of these under one GameObject
+    public GameObject MainCameraObject;
+    public GameObject CMvcamObject;
+    public GameObject PlayerObject;
+    public GameObject PlayerUIObject;
+
+    private void Start()
     {
-        /*if (...){
-            LoadNextLevel();
+        if(MainCameraObject == null)
+            MainCameraObject = GameObject.FindGameObjectWithTag("MainCamera");
+
+        if (CMvcamObject == null)
+            CMvcamObject = GameObject.FindGameObjectWithTag("CineMachineCam");
+
+        if (PlayerObject == null)
+        {
+            PlayerObject = GameObject.FindGameObjectWithTag("Player");
+            //PlayerObject = GameObjct.Find("PlayerMainObject"); //Character (Knight, Archer, etc) should be child
+        }
+
+        if (PlayerUIObject == null)
+            PlayerUIObject = GameObject.Find("PlayerUICanvas");
+
+    }
+
+    public void LoadSelectIndexLevel(int buildIndex, bool bringPlayer = true)
+    {
+        //StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
+        StartCoroutine(LoadLevelIndex(buildIndex, bringPlayer));
+    }
+
+    public void LoadSelectLevel(string level, bool bringPlayer = true)
+    {
+        //bringPlayer is only false when restarting, or reloading Tutorial
+        //StartCoroutine(LoadLevel(level, bringPlayer));
+        StartCoroutine(LoadTEST(level, bringPlayer));
+        StartCoroutine(LoadTESTasync(level, bringPlayer));
+    }
+
+    //============================
+    IEnumerator LoadTEST(string sceneName, bool bringPlayer)
+    {
+        Scene activeScene = SceneManager.GetActiveScene();
+
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+
+        Scene nextScene = SceneManager.GetSceneAt(1); //! Not build index, this is from currently loaded scenes
+
+        if (bringPlayer)
+        {
+            if (PlayerObject && PlayerUIObject && MainCameraObject && CMvcamObject)
+            {
+                SceneManager.MoveGameObjectToScene(MainCameraObject, nextScene);
+                SceneManager.MoveGameObjectToScene(CMvcamObject, nextScene);
+                SceneManager.MoveGameObjectToScene(PlayerObject, nextScene);
+                SceneManager.MoveGameObjectToScene(PlayerUIObject, nextScene);
+            }
+        }
+        yield return null;
+
+        SceneManager.UnloadSceneAsync(activeScene);
+
+    }
+
+    //====================== Trying Async again =====================================
+    IEnumerator LoadTESTasync(string sceneName, bool bringPlayer)
+    {
+        yield return null;
+    }
+
+
+    //==================== Loading Scenes with Scene Name ==========================
+
+    IEnumerator LoadLevel(string sceneName, bool bringPlayer)
+    {
+        transition.SetTrigger("Start");
+
+        sceneAsync = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        sceneAsync.allowSceneActivation = false;
+        //sceneAsync = scene;
+
+        /*while(scene.progress < 0.9f)
+        {
+            
+            //yield return null;
         }*/
+
+        while (!sceneAsync.isDone)
+        {
+            Debug.Log("Loading: " + sceneAsync.progress);
+            yield return null;
+        }
+
+        EnableScene(sceneName, bringPlayer);
     }
 
-    public void LoadNextLevel()
+    void EnableScene(string sceneName, bool bringPlayer)
     {
-        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
+        Debug.Log("Done loading scene.");
+        sceneAsync.allowSceneActivation = true;
+        Scene sceneToLoad = SceneManager.GetSceneByName(sceneName);
+
+        if (sceneToLoad.IsValid())
+        {
+            Debug.Log("Scene is valid");
+            if (bringPlayer)
+            {
+                if(PlayerObject && PlayerUIObject && MainCameraObject && CMvcamObject)
+                {
+                    SceneManager.MoveGameObjectToScene(MainCameraObject, sceneToLoad);
+                    SceneManager.MoveGameObjectToScene(CMvcamObject, sceneToLoad);
+                    SceneManager.MoveGameObjectToScene(PlayerObject, sceneToLoad);
+                    SceneManager.MoveGameObjectToScene(PlayerUIObject, sceneToLoad);
+                }
+            }
+            SceneManager.SetActiveScene(sceneToLoad);
+        }
     }
 
-    public void LoadSelectLevel(int level)
+    //==================== Loading Scenes with Build Index ==========================
+
+    IEnumerator LoadLevelIndex(int levelIndex, bool bringPlayer)
     {
-        StartCoroutine(LoadLevel(level));
+        transition.SetTrigger("Start");
+
+        AsyncOperation scene = SceneManager.LoadSceneAsync(levelIndex, LoadSceneMode.Additive);
+        scene.allowSceneActivation = false;
+        sceneAsync = scene;
+
+        while (scene.progress < 0.9f)
+        {
+            Debug.Log("Loading: " + scene.progress);
+            yield return null;
+        }
+        EnableSceneIndex(levelIndex, bringPlayer);
     }
 
-    IEnumerator LoadLevel(int levelIndex)
+    void EnableSceneIndex(int sceneIndex, bool bringPlayer)
+    {
+        Debug.Log("Done loading scene.");
+        sceneAsync.allowSceneActivation = true;
+        Scene sceneToLoad = SceneManager.GetSceneByBuildIndex(sceneIndex);
+
+        if (sceneToLoad.IsValid())
+        {
+            Debug.Log("Scene is valid");
+            if (bringPlayer)
+            {
+                if (PlayerObject && PlayerUIObject)
+                {
+                    SceneManager.MoveGameObjectToScene(PlayerObject, sceneToLoad);
+                    SceneManager.MoveGameObjectToScene(PlayerUIObject, sceneToLoad);
+                }
+            }
+            SceneManager.SetActiveScene(sceneToLoad);
+        }
+    }
+
+    /*IEnumerator LoadLevel(int levelIndex)
     {
         transition.SetTrigger("Start");
         yield return new WaitForSeconds(transitionTime);
         SceneManager.LoadScene(levelIndex);
         PauseMenu.GameIsPaused = false;
-    }
-
-    /*IEnumerator LoadAsynchronously(int sceneIndex)
-    {
-        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneIndex);
-
-        while (!operation.isDone)
-        {
-            Debug.Log(operation.progress);
-
-            yield return null;
-        }
     }*/
 }

@@ -693,7 +693,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6223926787818357787}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.83, y: -0.184, z: 0}
+  m_LocalPosition: {x: 9.83, y: -0.2, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_Children:
   - {fileID: 1417789243256486208}
@@ -841,6 +841,7 @@ MonoBehaviour:
     m_Bits: 1024
   sr: {fileID: 6223926787818357761}
   rb: {fileID: 6223926787818357789}
+  stageClear: {fileID: 0}
   TextPopupsHandler: {fileID: 0}
   AttackIndicator: {fileID: 0}
   HitEffectsHandler: {fileID: 0}
@@ -852,6 +853,7 @@ MonoBehaviour:
   enAttackAnimSpeed: 0
   enAttackRadius: 0
   XP: 20
+  gold: 10
   stunResist: 1
   allowStunCD: 0
   kbThrust: 0

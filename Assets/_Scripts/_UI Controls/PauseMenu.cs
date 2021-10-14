@@ -41,9 +41,12 @@ public class PauseMenu : MonoBehaviour
         GameIsPaused = true;
     }
 
-    public void RestartLevel() //For use with Demo level only
+    public void RestartLevel() //For use with Demo level only //TODO: remove once stages are added
     {
-        SceneManager.LoadScene("DemoLevel");
+        //TODO: load TutorialStage or FirstStage instead, Restart Run
+        SceneManager.LoadScene("TutorialStage"); 
+        //!-This will load Tutorial stage with the Player Object, don't bring an additional Player object
+
         Resume();
     }
 

@@ -71,6 +71,6 @@ public class StageClear : MonoBehaviour
             playerCombat.GiveXP(XP);
         
         if(playerInventory != null)
-            playerInventory.GiveGold(gold); //TODO: need playerInventory script setup
+            playerInventory.GiveGold(gold);
     }
 }

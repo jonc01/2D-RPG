@@ -6,31 +6,18 @@ using UnityEngine.SceneManagement;
 public class EndPortal : MonoBehaviour
 {
     //public EnemyBossBandit boss;
-    public Interactable interactableScript;
     public GameObject portal;
 
     [SerializeField] private string stage1, stage2;
+    public LevelLoader levelLoader;
 
-    void Start()
+    void Start() //Note: this is only called when EndPortal is enabled
     {
+        if (levelLoader == null)
+            levelLoader = GameObject.Find("LevelLoader").GetComponent<LevelLoader>();
+
         portal.SetActive(false);
     }
-
-    /*void Update()
-    {
-        if (boss && !boss.isAlive)
-        {
-            portal.SetActive(true);
-            if (interactableScript.isInRange)
-            {
-                textPrompt.SetActive(true);
-            }
-            else
-            {
-                textPrompt.SetActive(false);
-            }
-        }
-    }*/
     
     public void NextLevel()
     {
@@ -39,11 +26,13 @@ public class EndPortal : MonoBehaviour
         if (randStage)
         {
             Debug.Log("stage1: " + stage1);
+            levelLoader.LoadSelectLevel(stage1);
             //SceneManager.LoadScene(stage1);
         }
         else
         {
             Debug.Log("stage2: " + stage2);
+            levelLoader.LoadSelectLevel(stage2);
             //SceneManager.LoadScene(stage2);
         }
     }

@@ -869,7 +869,7 @@ GameObject:
   - component: {fileID: 133666549}
   - component: {fileID: 133666548}
   m_Layer: 5
-  m_Name: Restart Level Button
+  m_Name: Restart Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8399,6 +8399,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelLoader
       objectReference: {fileID: 0}
+    - target: {fileID: 5455075829633788162, guid: d84eb8f35e6d1ef458ec400e92ec13a0, type: 3}
+      propertyPath: m_TagString
+      value: Stage
+      objectReference: {fileID: 0}
     - target: {fileID: 5455075829633788165, guid: d84eb8f35e6d1ef458ec400e92ec13a0, type: 3}
       propertyPath: m_RootOrder
       value: 16
@@ -8831,7 +8835,7 @@ GameObject:
   - component: {fileID: 1516370769}
   m_Layer: 0
   m_Name: CM vcam1
-  m_TagString: Untagged
+  m_TagString: CineMachineCam
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10766,7 +10770,7 @@ RectTransform:
   - {fileID: 46699786}
   - {fileID: 833820713}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -12432,7 +12436,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 107596093386943507, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 107596093386943507, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12452,15 +12456,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 107596093386943507, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 107596093386943507, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 107596093386943507, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 107596093386943507, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -12624,11 +12628,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 775416076761233106, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6610418268691816176, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
@@ -12658,6 +12662,10 @@ PrefabInstance:
     - target: {fileID: 1182070838774948993, guid: f1f57575d78e43541ab508408f04f58d, type: 3}
       propertyPath: m_Name
       value: StageClearCheck
+      objectReference: {fileID: 0}
+    - target: {fileID: 1182070838774948993, guid: f1f57575d78e43541ab508408f04f58d, type: 3}
+      propertyPath: m_TagString
+      value: Stage
       objectReference: {fileID: 0}
     - target: {fileID: 1182070838774948995, guid: f1f57575d78e43541ab508408f04f58d, type: 3}
       propertyPath: m_RootOrder
@@ -12702,6 +12710,18 @@ PrefabInstance:
     - target: {fileID: 1182070838774948995, guid: f1f57575d78e43541ab508408f04f58d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1182070839694271048, guid: f1f57575d78e43541ab508408f04f58d, type: 3}
+      propertyPath: stage1
+      value: Stage1-1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1182070839694271048, guid: f1f57575d78e43541ab508408f04f58d, type: 3}
+      propertyPath: stage2
+      value: Stage1-2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1182070839694271048, guid: f1f57575d78e43541ab508408f04f58d, type: 3}
+      propertyPath: levelLoader
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1f57575d78e43541ab508408f04f58d, type: 3}

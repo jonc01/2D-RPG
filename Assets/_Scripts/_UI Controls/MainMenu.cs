@@ -16,7 +16,9 @@ public class MainMenu : MonoBehaviour
     public void PlayDemo()
     {
         mainMenuUI.SetActive(false);
-        levelLoader.LoadSelectLevel(1);
+        //levelLoader.LoadSelectIndexLevel(1);
+        levelLoader.LoadSelectLevel("TutorialStage");
+        //SceneManager.LoadScene("TutorialStage");
 
         //SceneManager.LoadScene("DemoLevel");
     }
