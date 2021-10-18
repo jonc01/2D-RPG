@@ -93,7 +93,7 @@ public class BaseEnemyClass : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         mDefault = sr.material;
-        healthBarTransform = healthBar.GetComponent<Transform>();        
+        healthBarTransform = healthBar.GetComponent<Transform>();
 
         TextPopupsHandler = GameObject.Find("ObjectPool(TextPopups)").GetComponent<TextPopupsHandler>();
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();

@@ -60,7 +60,8 @@ public class StageClear : MonoBehaviour
         {
             levelCleared = true;
             EndPortal.SetActive(true);
-            ArrowIndicator.SetActive(true);
+            if(ArrowIndicator != null)
+                ArrowIndicator.SetActive(true);
         }
         //if this breaks, update enemyCount with enemyCount = EnemyList.transform.childCount
     }

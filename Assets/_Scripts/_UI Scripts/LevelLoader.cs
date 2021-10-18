@@ -11,14 +11,17 @@ public class LevelLoader : MonoBehaviour
     private AsyncOperation sceneAsync;
 
     //GameObjects to transfer between scenes //TODO: combine most of these under one GameObject
-    public GameObject MainCameraObject;
+    /*public GameObject MainCameraObject;
     public GameObject CMvcamObject;
     public GameObject PlayerObject;
-    public GameObject PlayerUIObject;
+    public GameObject PlayerUIObject;*/
+
+    //public string sceneName; //TODO: not using
+    bool loaded;
 
     private void Start()
     {
-        if(MainCameraObject == null)
+        /*if(MainCameraObject == null)
             MainCameraObject = GameObject.FindGameObjectWithTag("MainCamera");
 
         if (CMvcamObject == null)
@@ -31,26 +34,52 @@ public class LevelLoader : MonoBehaviour
         }
 
         if (PlayerUIObject == null)
-            PlayerUIObject = GameObject.Find("PlayerUICanvas");
+            PlayerUIObject = GameObject.Find("PlayerUICanvas");*/
 
     }
 
-    public void LoadSelectIndexLevel(int buildIndex, bool bringPlayer = true)
+    public void LoadSelectIndexLevel(int buildIndex, bool bringPlayer = true) //TODO: not using??
     {
         //StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
-        StartCoroutine(LoadLevelIndex(buildIndex, bringPlayer));
+        //StartCoroutine(LoadLevelIndex(buildIndex, bringPlayer));
     }
 
-    public void LoadSelectLevel(string level, bool bringPlayer = true)
+    public void LoadSelectLevel(string sceneName) //TODO: needs testing
     {
         //bringPlayer is only false when restarting, or reloading Tutorial
         //StartCoroutine(LoadLevel(level, bringPlayer));
-        StartCoroutine(LoadTEST(level, bringPlayer));
-        StartCoroutine(LoadTESTasync(level, bringPlayer));
+        //StartCoroutine(LoadTEST(level, bringPlayer));
+        //StartCoroutine(LoadTESTasync(level, bringPlayer));
+
+        if (!loaded)
+        {
+
+            SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
+            loaded = true;
+        }
+    }
+    
+    public void UnloadScene(string sceneName)
+    {
+        StartCoroutine(UnloadSceneCO(sceneName));
     }
 
+    IEnumerator UnloadSceneCO(string sceneName)
+    {
+        yield return null;
+        SceneManager.UnloadScene(sceneName);    //TODO: this is deprecated
+        //SceneManager.UnloadSceneAsync(sceneName); //TODO: needs testing
+    }
+
+    /*IEnumerator LoadTESTasync(string sceneName)
+    {
+
+        yield return null;
+    }*/
+
     //============================
-    IEnumerator LoadTEST(string sceneName, bool bringPlayer)
+    /*IEnumerator LoadTEST(string sceneName, bool bringPlayer)
     {
         Scene activeScene = SceneManager.GetActiveScene();
 
@@ -72,18 +101,12 @@ public class LevelLoader : MonoBehaviour
 
         SceneManager.UnloadSceneAsync(activeScene);
 
-    }
-
-    //====================== Trying Async again =====================================
-    IEnumerator LoadTESTasync(string sceneName, bool bringPlayer)
-    {
-        yield return null;
-    }
+    }*/
 
 
     //==================== Loading Scenes with Scene Name ==========================
 
-    IEnumerator LoadLevel(string sceneName, bool bringPlayer)
+    /*IEnumerator LoadLevel(string sceneName, bool bringPlayer)
     {
         transition.SetTrigger("Start");
 
@@ -96,7 +119,7 @@ public class LevelLoader : MonoBehaviour
             
             //yield return null;
         }*/
-
+    /*
         while (!sceneAsync.isDone)
         {
             Debug.Log("Loading: " + sceneAsync.progress);
@@ -127,11 +150,11 @@ public class LevelLoader : MonoBehaviour
             }
             SceneManager.SetActiveScene(sceneToLoad);
         }
-    }
+    }*/
 
     //==================== Loading Scenes with Build Index ==========================
 
-    IEnumerator LoadLevelIndex(int levelIndex, bool bringPlayer)
+    /*IEnumerator LoadLevelIndex(int levelIndex, bool bringPlayer)
     {
         transition.SetTrigger("Start");
 
@@ -166,7 +189,7 @@ public class LevelLoader : MonoBehaviour
             }
             SceneManager.SetActiveScene(sceneToLoad);
         }
-    }
+    }*/
 
     /*IEnumerator LoadLevel(int levelIndex)
     {

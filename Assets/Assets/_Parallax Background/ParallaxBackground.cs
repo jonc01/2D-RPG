@@ -12,7 +12,7 @@ public class ParallaxBackground : MonoBehaviour
 
     private void Start()
     {
-        cameraTransform = Camera.main.transform;
+        cameraTransform = Camera.main.transform; //TODO: make sure is getting reference from neverUnload scene
         lastCameraPosition = cameraTransform.position;
         Sprite sprite = GetComponent<SpriteRenderer>().sprite;
         Texture2D texture = sprite.texture;

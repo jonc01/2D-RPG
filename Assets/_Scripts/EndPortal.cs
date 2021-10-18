@@ -5,45 +5,39 @@ using UnityEngine.SceneManagement;
 
 public class EndPortal : MonoBehaviour
 {
-    //public EnemyBossBandit boss;
     public GameObject portal;
+    string currentScene;
 
     [SerializeField] private string stage1, stage2;
-    public LevelLoader levelLoader;
 
     void Start() //Note: this is only called when EndPortal is enabled
     {
-        if (levelLoader == null)
-            levelLoader = GameObject.Find("LevelLoader").GetComponent<LevelLoader>();
-
         portal.SetActive(false);
+        //Scene currentScene = SceneManager.GetActiveScene();
+        //string currentSceneName = currentScene.name;
+
+        currentScene = gameObject.scene.name;
+        Debug.Log("Current scene: " + currentScene);
     }
     
     public void NextLevel()
     {
         bool randStage = (Random.value > 0.5f); //50/50 pick random stage from provided
 
+        //Scene currentScene = SceneManager.GetActiveScene(); //TODO: make sure this doesn't pick up NeverUnload
+        //string currentSceneName = currentScene.name;
+
         if (randStage)
         {
             Debug.Log("stage1: " + stage1);
-            levelLoader.LoadSelectLevel(stage1);
-            //SceneManager.LoadScene(stage1);
+            AsyncLevelLoader.asyncLevelLoader.LoadScene(stage1, currentScene);
         }
         else
         {
             Debug.Log("stage2: " + stage2);
-            levelLoader.LoadSelectLevel(stage2);
+            //levelLoader.LoadSelectLevel(stage2);
+            AsyncLevelLoader.asyncLevelLoader.LoadScene(stage2, currentScene);
             //SceneManager.LoadScene(stage2);
         }
     }
-
-    /*public void ReplayLevel() //PLACEHOLDER: end of level should proceed to next level
-    {
-        if (boss && !boss.isAlive)
-        {
-            SceneManager.LoadScene("DemoLevel");
-            textPrompt.SetActive(false);
-        }
-    }*/
-
 }
