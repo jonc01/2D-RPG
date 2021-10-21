@@ -44,7 +44,28 @@ public class PauseMenu : MonoBehaviour
     public void RestartLevel() //For use with Demo level only //TODO: remove once stages are added
     {
         //TODO: load TutorialStage or FirstStage instead, Restart Run
-        SceneManager.LoadScene("TutorialStage"); 
+        AsyncLevelLoader.asyncLevelLoader.LoadPlayer();
+
+        string[] sceneToUnload = null;
+
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            var scene = SceneManager.GetSceneAt(i);
+            if (scene.name != "TutorialStage" || scene.name != "_NeverUnload")
+            {
+                sceneToUnload[i] = scene.name;
+            }
+        }
+        if(sceneToUnload != null)
+        {
+            for(int i=0; i<3; i++)
+            {
+                AsyncLevelLoader.asyncLevelLoader.UnloadScene(sceneToUnload[i]);
+            } //TODO: this is a disaster, it doesn't crash the game, but it breaks all the dependencies
+        }
+
+        AsyncLevelLoader.asyncLevelLoader.LoadScene("TutorialStage");
+        
         //!-This will load Tutorial stage with the Player Object, don't bring an additional Player object
 
         Resume();

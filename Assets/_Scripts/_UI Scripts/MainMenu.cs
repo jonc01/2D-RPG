@@ -11,13 +11,15 @@ public class MainMenu : MonoBehaviour
 
     public GameObject creditsMenuUI;
 
-    public LevelLoader levelLoader;
+    //public LevelLoader levelLoader; //TODO: delete
     
     public void PlayDemo()
     {
         mainMenuUI.SetActive(false);
-        //levelLoader.LoadSelectIndexLevel(1);
-        levelLoader.LoadSelectLevel("TutorialStage");
+        //levelLoader.LoadSelectIndexLevel(1); //TODO: clean up
+        //levelLoader.LoadSelectLevel("TutorialStage");
+        AsyncLevelLoader.asyncLevelLoader.LoadPlayer();
+        AsyncLevelLoader.asyncLevelLoader.LoadScene("TutorialStage", "MainMenu");
         //SceneManager.LoadScene("TutorialStage");
 
         //SceneManager.LoadScene("DemoLevel");

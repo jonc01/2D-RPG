@@ -3872,6 +3872,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelLoader
       objectReference: {fileID: 0}
+    - target: {fileID: 5455075829633788162, guid: b787ff2e1ad0eb346a2f808f565ac7d8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5455075829633788165, guid: b787ff2e1ad0eb346a2f808f565ac7d8, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -3916,7 +3920,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5455075829633788164, guid: b787ff2e1ad0eb346a2f808f565ac7d8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b787ff2e1ad0eb346a2f808f565ac7d8, type: 3}
 --- !u!1001 &1445705439
 PrefabInstance:
