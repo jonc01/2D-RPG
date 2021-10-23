@@ -61,11 +61,11 @@ public class PauseMenu : MonoBehaviour
             for(int i=0; i<3; i++)
             {
                 AsyncLevelLoader.asyncLevelLoader.UnloadScene(sceneToUnload[i]);
-            } //TODO: this is a disaster, it doesn't crash the game, but it breaks all the dependencies
+            } //TODO: this is mostly a disaster, it doesn't crash, but it breaks all the dependencies
         }
 
         AsyncLevelLoader.asyncLevelLoader.LoadScene("TutorialStage");
-        
+
         //!-This will load Tutorial stage with the Player Object, don't bring an additional Player object
 
         Resume();
@@ -90,7 +90,6 @@ public class PauseMenu : MonoBehaviour
         Debug.Log("Quitting...");
         Application.Quit();
     }
-
 
 
     public void SettingsToPauseMenu()

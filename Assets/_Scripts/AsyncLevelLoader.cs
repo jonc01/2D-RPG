@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class AsyncLevelLoader : MonoBehaviour
 {
     public static AsyncLevelLoader asyncLevelLoader;
+    bool playerLoaded;
 
     private void Awake()
     {
@@ -16,19 +17,52 @@ public class AsyncLevelLoader : MonoBehaviour
     {
         //EndPortal script is in the scene we are leaving
         //is passes the name of the scene we want to load, and the current scene to unload after
-        Debug.Log("scene to UNLOAD: " + sceneToUnload);
+        //Debug.Log("scene to UNLOAD: " + sceneToUnload);
 
         //TODO: start loading screen
 
-        Debug.Log("scene to LOAD: " + sceneName);
-        SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        //Debug.Log("LOADING Scene: " + sceneName);
-        //TODO: when done, reposition Player object
+        //Debug.Log("scene to LOAD: " + sceneName);
 
+        StartCoroutine(LoadSceneCO(sceneName, sceneToUnload));
+
+        //SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        //TODO: when done, reposition Player object
+        
         //TODO: end loading screen
 
         // Unload prev scene async
+        //UnloadScene(sceneToUnload);
+    }
+
+    IEnumerator LoadSceneCO(string sceneName, string sceneToUnload)
+    {
+        Debug.Log("LOADING: " + sceneName);
+        //var sceneToLoad = SceneManager.GetSceneByName(sceneName);
+        //SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
+        while (!playerLoaded)
+        {
+            yield return null;
+        }
+
+        AsyncOperation sceneToLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
+        while (!sceneToLoad.isDone)
+        {
+            yield return null;
+        }
+        Debug.Log("LOADED: " + sceneName);
+        yield return new WaitForSeconds(.1f);
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+        //yield return null;
+        Debug.Log("Start Unload");
         UnloadScene(sceneToUnload);
+    }
+
+    public void LoadScene(string sceneName) //TODO: manual call from menu Play(), can combine this into one script (LevelLoader)
+    {
+        Debug.Log("LOADING Scene: " + sceneName);
+        SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
     }
 
     public void UnloadScene(string sceneName)
@@ -41,13 +75,8 @@ public class AsyncLevelLoader : MonoBehaviour
     {
         yield return null; //delay before starting scene unload, otherwise crash
         SceneManager.UnloadSceneAsync(sceneName); //UnloadScene()
+        
         Debug.Log("UNLOADED: " + sceneName);
-    }
-
-    public void LoadScene(string sceneName) //TODO: manual call from menu Play(), can combine this into one script (LevelLoader)
-    {
-        SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        Debug.Log("LOADING Scene: " + sceneName);
     }
 
     public void LoadPlayer()
@@ -57,7 +86,11 @@ public class AsyncLevelLoader : MonoBehaviour
 
     IEnumerator StartLoadPlayer()
     {
-        for(int i=0; i<SceneManager.sceneCount; i++)
+        playerLoaded = false;
+        //In case we already have a Player object loaded, this unloads the old Player scene and loads a new one
+        //Only call this when starting a game, or restarting.
+        //TODO: needs testing for Restart //TODO: can workaround by sending player to MainMenu on death
+        for (int i=0; i<SceneManager.sceneCount; i++)
         {
             var scene = SceneManager.GetSceneAt(i);
             if (scene.name == "_NeverUnload")
@@ -67,11 +100,47 @@ public class AsyncLevelLoader : MonoBehaviour
         }
 
         yield return null;
-        LoadScene("_NeverUnload");
+        var playerScene = SceneManager.LoadSceneAsync("_NeverUnload", LoadSceneMode.Additive);
+
+        while (!playerScene.isDone)
+        {
+            Debug.Log("loading player");
+            yield return null;
+        }
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("_NeverUnload"));
+
+        playerLoaded = true;
     }
 
-    public void StartGame(string startStage)
+    public void StartGame(string startStage, string unloadStage)
     {
-        //TODO: MainMenu gets unloaded while trying to load rest of scenes
+        //1) Load Player scene (_NeverUnload)
+        //2) When loaded, set Player scene as active scene (allows us to unload MainMenu scene)
+        //3) Unload MainMenu
+        //4) Load TutorialStage
+        
+        StartCoroutine(StartGameCO(startStage, unloadStage));
+    }
+
+    IEnumerator StartGameCO(string startStage, string unloadStage)
+    {
+        //TODO: player might fall if TutorialStage doesn't load fast enough
+
+        Debug.Log("Step 1: loading Player...");
+        LoadPlayer();
+
+        while (!playerLoaded)
+        {
+            Debug.Log("loading player");
+            yield return null;
+        }
+
+        Debug.Log("Step 2: Unloading MainMenu...");
+        SceneManager.UnloadSceneAsync(unloadStage);
+
+        //AsyncOperation sceneToLoad = SceneManager.LoadSceneAsync(startStage, LoadSceneMode.Additive);
+        Debug.Log("Step 3: loading TutorialStage...");
+        LoadScene(startStage);
+
     }
 }

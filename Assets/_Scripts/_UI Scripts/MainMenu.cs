@@ -18,8 +18,12 @@ public class MainMenu : MonoBehaviour
         mainMenuUI.SetActive(false);
         //levelLoader.LoadSelectIndexLevel(1); //TODO: clean up
         //levelLoader.LoadSelectLevel("TutorialStage");
-        AsyncLevelLoader.asyncLevelLoader.LoadPlayer();
-        AsyncLevelLoader.asyncLevelLoader.LoadScene("TutorialStage", "MainMenu");
+
+        //AsyncLevelLoader.asyncLevelLoader.LoadPlayer();
+
+        //AsyncLevelLoader.asyncLevelLoader.UnloadScene("MainMenu");
+        AsyncLevelLoader.asyncLevelLoader.StartGame("TutorialStage", "MainMenu");
+        //AsyncLevelLoader.asyncLevelLoader.LoadScene("TutorialStage", "MainMenu");
         //SceneManager.LoadScene("TutorialStage");
 
         //SceneManager.LoadScene("DemoLevel");
