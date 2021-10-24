@@ -4319,7 +4319,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 823432693}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.57, y: -3.8198, z: -14.4909}
+  m_LocalPosition: {x: -3.57, y: -3.82, z: -14.4909}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -8960,12 +8960,12 @@ GameObject:
   - component: {fileID: 2100874888}
   - component: {fileID: 2100874892}
   m_Layer: 5
-  m_Name: Menu UI Canvas
+  m_Name: Menu UI Canvas (only use in-stage scene)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2100874888
 MonoBehaviour:
   m_ObjectHideFlags: 0

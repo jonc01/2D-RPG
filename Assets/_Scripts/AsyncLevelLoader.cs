@@ -17,11 +17,8 @@ public class AsyncLevelLoader : MonoBehaviour
     {
         //EndPortal script is in the scene we are leaving
         //is passes the name of the scene we want to load, and the current scene to unload after
-        //Debug.Log("scene to UNLOAD: " + sceneToUnload);
 
         //TODO: start loading screen
-
-        //Debug.Log("scene to LOAD: " + sceneName);
 
         StartCoroutine(LoadSceneCO(sceneName, sceneToUnload));
 
@@ -124,8 +121,6 @@ public class AsyncLevelLoader : MonoBehaviour
 
     IEnumerator StartGameCO(string startStage, string unloadStage)
     {
-        //TODO: player might fall if TutorialStage doesn't load fast enough
-
         Debug.Log("Step 1: loading Player...");
         LoadPlayer();
 
@@ -138,9 +133,7 @@ public class AsyncLevelLoader : MonoBehaviour
         Debug.Log("Step 2: Unloading MainMenu...");
         SceneManager.UnloadSceneAsync(unloadStage);
 
-        //AsyncOperation sceneToLoad = SceneManager.LoadSceneAsync(startStage, LoadSceneMode.Additive);
         Debug.Log("Step 3: loading TutorialStage...");
         LoadScene(startStage);
-
     }
 }

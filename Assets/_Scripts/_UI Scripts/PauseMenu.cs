@@ -7,9 +7,16 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;
 
+    [SerializeField] string currentStage;
+
     public GameObject pauseMenuUI;
     public GameObject settingsMenuUI;
     public SettingsMenu settingsMenu;
+
+    private void Start()
+    {
+        currentStage = gameObject.scene.name;
+    }
 
     void Update()
     {
@@ -43,30 +50,15 @@ public class PauseMenu : MonoBehaviour
 
     public void RestartLevel() //For use with Demo level only //TODO: remove once stages are added
     {
-        //TODO: load TutorialStage or FirstStage instead, Restart Run
-        AsyncLevelLoader.asyncLevelLoader.LoadPlayer();
+        //TODO: needs more testing
 
-        string[] sceneToUnload = null;
+        //Load TutorialStage or FirstStage instead, Restart Run
+        AsyncLevelLoader.asyncLevelLoader.StartGame("TutorialStage", currentStage);
+        //!TODO: doesn't work 
 
-        for (int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            var scene = SceneManager.GetSceneAt(i);
-            if (scene.name != "TutorialStage" || scene.name != "_NeverUnload")
-            {
-                sceneToUnload[i] = scene.name;
-            }
-        }
-        if(sceneToUnload != null)
-        {
-            for(int i=0; i<3; i++)
-            {
-                AsyncLevelLoader.asyncLevelLoader.UnloadScene(sceneToUnload[i]);
-            } //TODO: this is mostly a disaster, it doesn't crash, but it breaks all the dependencies
-        }
+        //!!TODO: use same approach as LoadPlayer, isn't working now because it doesn't load the duplicate stage
 
-        AsyncLevelLoader.asyncLevelLoader.LoadScene("TutorialStage");
-
-        //!-This will load Tutorial stage with the Player Object, don't bring an additional Player object
+        
 
         Resume();
     }
@@ -74,6 +66,7 @@ public class PauseMenu : MonoBehaviour
     public void LoadMenu()
     {
         Time.timeScale = 1f;
+        GameIsPaused = false;
         SceneManager.LoadScene("MainMenu");
         //SceneManager.LoadScene(0);
     }

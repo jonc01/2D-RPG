@@ -10,29 +10,17 @@ public class MainMenu : MonoBehaviour
     public SettingsMenu settingsMenu;
 
     public GameObject creditsMenuUI;
-
-    //public LevelLoader levelLoader; //TODO: delete
     
     public void PlayDemo()
     {
         mainMenuUI.SetActive(false);
-        //levelLoader.LoadSelectIndexLevel(1); //TODO: clean up
-        //levelLoader.LoadSelectLevel("TutorialStage");
-
-        //AsyncLevelLoader.asyncLevelLoader.LoadPlayer();
-
-        //AsyncLevelLoader.asyncLevelLoader.UnloadScene("MainMenu");
         AsyncLevelLoader.asyncLevelLoader.StartGame("TutorialStage", "MainMenu");
-        //AsyncLevelLoader.asyncLevelLoader.LoadScene("TutorialStage", "MainMenu");
-        //SceneManager.LoadScene("TutorialStage");
-
-        //SceneManager.LoadScene("DemoLevel");
     }
 
     /*public void Play()
     {
         //load next scene in build index
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }*/
 
     public void OpenSettings()
