@@ -6,8 +6,7 @@ using UnityEngine.SceneManagement;
 public class EndPortal : MonoBehaviour
 {
     public GameObject portal;
-    string currentScene;
-
+    [SerializeField] string currentScene;
     [SerializeField] private string stage1, stage2;
 
     void Start() //Note: this is only called when EndPortal is enabled

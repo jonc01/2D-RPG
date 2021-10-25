@@ -57,7 +57,6 @@ public class PauseMenu : MonoBehaviour
         //!TODO: doesn't work 
 
         //!!TODO: use same approach as LoadPlayer, isn't working now because it doesn't load the duplicate stage
-
         
 
         Resume();

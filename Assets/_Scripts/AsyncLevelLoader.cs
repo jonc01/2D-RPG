@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class AsyncLevelLoader : MonoBehaviour
 {
@@ -33,38 +34,23 @@ public class AsyncLevelLoader : MonoBehaviour
 
     IEnumerator LoadSceneCO(string sceneName, string sceneToUnload)
     {
-        Debug.Log("LOADING: " + sceneName);
-        //var sceneToLoad = SceneManager.GetSceneByName(sceneName);
-        //SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-
-        while (!playerLoaded)
-        {
-            yield return null;
-        }
-
         AsyncOperation sceneToLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
         while (!sceneToLoad.isDone)
         {
             yield return null;
         }
-        Debug.Log("LOADED: " + sceneName);
-        yield return new WaitForSeconds(.1f);
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
-        //yield return null;
-        Debug.Log("Start Unload");
+        //SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
         UnloadScene(sceneToUnload);
     }
 
     public void LoadScene(string sceneName) //TODO: manual call from menu Play(), can combine this into one script (LevelLoader)
     {
-        Debug.Log("LOADING Scene: " + sceneName);
         SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
     }
 
     public void UnloadScene(string sceneName)
     {
-        Debug.Log("UNLOADING SCENE: " + sceneName);
         StartCoroutine(Unload(sceneName));
     }
 
@@ -72,8 +58,6 @@ public class AsyncLevelLoader : MonoBehaviour
     {
         yield return null; //delay before starting scene unload, otherwise crash
         SceneManager.UnloadSceneAsync(sceneName); //UnloadScene()
-        
-        Debug.Log("UNLOADED: " + sceneName);
     }
 
     public void LoadPlayer()
@@ -121,7 +105,12 @@ public class AsyncLevelLoader : MonoBehaviour
 
     IEnumerator StartGameCO(string startStage, string unloadStage)
     {
-        Debug.Log("Step 1: loading Player...");
+        //disable MainMenu's Event System
+        //if (SceneManager.GetActiveScene)
+
+        //EventSystem eventSystem = GameObject.Find("EventSystem").GetComponent<EventSystem>();
+        //eventSystem.enabled = false;
+
         LoadPlayer();
 
         while (!playerLoaded)
@@ -130,10 +119,7 @@ public class AsyncLevelLoader : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("Step 2: Unloading MainMenu...");
         SceneManager.UnloadSceneAsync(unloadStage);
-
-        Debug.Log("Step 3: loading TutorialStage...");
         LoadScene(startStage);
     }
 }
