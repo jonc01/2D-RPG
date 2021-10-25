@@ -3875,9 +3875,10 @@ GameObject:
   - component: {fileID: 740972826}
   - component: {fileID: 740972825}
   - component: {fileID: 740972824}
+  - component: {fileID: 740972827}
   m_Layer: 0
-  m_Name: EventSystem
-  m_TagString: Untagged
+  m_Name: EventSystem (managed with DontDestroy.cs)
+  m_TagString: MultiScene
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3938,6 +3939,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &740972827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740972823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c804887fade3c9342a543c35c826ad29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &760692482
 GameObject:
   m_ObjectHideFlags: 0
