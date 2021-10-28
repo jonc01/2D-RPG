@@ -15,6 +15,7 @@ public class PauseMenu : MonoBehaviour
 
     private void Start()
     {
+
         currentStage = gameObject.scene.name;
     }
 
@@ -62,7 +63,7 @@ public class PauseMenu : MonoBehaviour
         Resume();
     }
 
-    public void LoadMenu()
+    public static void LoadMenu()
     {
         Time.timeScale = 1f;
         GameIsPaused = false;

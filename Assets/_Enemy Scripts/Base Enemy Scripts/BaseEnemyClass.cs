@@ -17,7 +17,7 @@ public class BaseEnemyClass : MonoBehaviour
     public Rigidbody2D rb;
     private Material mDefault;
     protected Transform healthBarTransform;
-    [SerializeField] private StageClear stageClear;
+    [SerializeField] protected StageClear stageClear;
 
     // PREFAB HANDLERS (Start())
     [SerializeField] protected TextPopupsHandler TextPopupsHandler;

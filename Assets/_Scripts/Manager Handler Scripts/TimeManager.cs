@@ -8,7 +8,7 @@ public class TimeManager : MonoBehaviour
     public float slowdownFactor = 0.02f;
     public float slowdownLength = 2f;
     bool isSlowed = false; //default slowMotion recover behavior
-    bool isSlowedCustom = false; //custom times inputted
+    //bool isSlowedCustom = false; //custom times inputted
 
     //public float freezeLength = 0.1f;
 

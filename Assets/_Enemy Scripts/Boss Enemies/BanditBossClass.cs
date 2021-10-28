@@ -27,10 +27,11 @@ public class BanditBossClass : HeavyBanditClass
         //aggro should be permanent? or HP bar never goes away until boss is dead
 
         //BossHealthBarCanvas 
+        if(HealthBarCanvas == null)
+            HealthBarCanvas = GameObject.Find("BossHealthBar");
 
-        HealthBarCanvas = GameObject.Find("BossHealthBarCanvas");
-        //healthBar = GameObject.Find("BossHealthBarCanvas").GetComponentInChildren<HealthBar>();
-        healthBarTransform = healthBar.GetComponent<Transform>();
+        if(HealthBarCanvas != null)
+            healthBarTransform = healthBar.GetComponent<Transform>();
 
         timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
 

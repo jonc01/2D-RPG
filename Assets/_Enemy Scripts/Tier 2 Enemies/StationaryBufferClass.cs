@@ -107,6 +107,9 @@ public class StationaryBufferClass : BaseEnemyClass
 
             DeathParticlesHandler.ShowHitEffect(tempLocation);
         }
+
+        stageClear.UpdateEnemyCount(XP, gold);
+
         StartCoroutine(DeleteEnemyObject());
     }
 

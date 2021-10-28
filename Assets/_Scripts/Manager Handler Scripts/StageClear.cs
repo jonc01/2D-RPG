@@ -23,9 +23,10 @@ public class StageClear : MonoBehaviour
         EndPortal.SetActive(false);
 
         if (ArrowIndicator == null)
-            ArrowIndicator = GameObject.Find("ArrowIndicator");
+            ArrowIndicator = GameObject.Find("ArrowIndicatorCanvas");
 
-        ArrowIndicator.SetActive(false);
+        if (ArrowIndicator != null)
+            ArrowIndicator.SetActive(false);
 
         //Count enemies *make sure to put NPCs in separate GameObject
         if(EnemyList == null)

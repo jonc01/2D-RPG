@@ -168,7 +168,8 @@ public class PlayerCombat : MonoBehaviour
                         respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = false;
                     }
                     //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
-                    controller.RespawnPlayerResetLevel();
+                    //controller.RespawnPlayerResetLevel();
+                    PauseMenu.LoadMenu();
                     timeManager.ResetTimeScale();
                 }
             }

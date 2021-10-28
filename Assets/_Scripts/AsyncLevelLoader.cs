@@ -104,12 +104,6 @@ public class AsyncLevelLoader : MonoBehaviour
 
     IEnumerator StartGameCO(string startStage, string unloadStage)
     {
-        //disable MainMenu's Event System
-        //if (SceneManager.GetActiveScene)
-
-        //EventSystem eventSystem = GameObject.Find("EventSystem").GetComponent<EventSystem>();
-        //eventSystem.enabled = false;
-
         LoadPlayer();
 
         while (!playerLoaded)

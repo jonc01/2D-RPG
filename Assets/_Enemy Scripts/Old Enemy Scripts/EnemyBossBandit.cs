@@ -5,6 +5,17 @@ using TMPro;
 
 public class EnemyBossBandit : MonoBehaviour
 {
+    /*
+     * 
+     * 
+     * This script is no longer being used, using BanditBossClass, BanditBossController, and EnemyRaycast
+     * 
+     * 
+     * 
+     */
+
+
+
     [Header("Text Popups")]
     public GameObject TextPopupsPrefab;
     private TextPopupsHandler TextPopupsHandler;
@@ -93,7 +104,6 @@ public class EnemyBossBandit : MonoBehaviour
     {
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
-        //sr.material.SetFloat(2f);
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerCombat = player.GetComponent<PlayerCombat>();
@@ -106,7 +116,6 @@ public class EnemyBossBandit : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         isAlive = true;
-        //enController.enCanMove = true;
         enCanAttack = true;
         allowBreak = false;
         isBroken = false;
@@ -119,7 +128,6 @@ public class EnemyBossBandit : MonoBehaviour
         enStunned = false;
         particleHits = false;
         atkSequence = 1;
-
     }   
 
     void Update()
