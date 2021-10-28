@@ -99,9 +99,11 @@ public class BaseEnemyClass : MonoBehaviour
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
         HitEffectsHandler = GameObject.Find("ObjectPool(HitEffects)").GetComponent<HitEffectsHandler>();
         DeathParticlesHandler = GameObject.Find("ObjectPool(DeathParticles)").GetComponent<DeathParticlesHandler>();
-        
-        if(stageClear == null)
-            stageClear = GameObject.Find("StageClearCheck").GetComponent<StageClear>();
+
+        if (stageClear == null)
+            stageClear = GetComponentInParent<StageClear>();
+            //stageClear = GameObject.Find("StageClearCheck").GetComponent<StageClear>();
+
 
         if (useScreenshake)
             screenshake = GameObject.Find("ScreenShakeManager").GetComponent<ScreenShakeListener>();
