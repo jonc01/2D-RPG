@@ -8,9 +8,15 @@ public class AsyncLevelLoader : MonoBehaviour
     public static AsyncLevelLoader asyncLevelLoader;
     bool playerLoaded;
 
+    [SerializeField] private GameObject playerObject;
+    [SerializeField] private Vector3 spawnPosition; //default: 
+
     private void Awake()
     {
         asyncLevelLoader = this;
+
+        if(playerObject == null)
+            playerObject = GameObject.FindGameObjectWithTag("Player");
     }
 
     public void LoadScene(string sceneName, string sceneToUnload) //TODO: manual call from menu Play(), can combine this into one script (LevelLoader)
@@ -40,6 +46,10 @@ public class AsyncLevelLoader : MonoBehaviour
             yield return null;
         }
         //SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+
+        if(playerObject != null)
+            playerObject.transform.position = spawnPosition;
+
         UnloadScene(sceneToUnload);
     }
 

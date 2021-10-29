@@ -234,6 +234,8 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator IsLightAttacking(int attackNum) // Light Attack Coroutine
     {
+        //Flip enable/disable is handled in animation events
+        //Flip is disabled at the first frame of the attack, and enabled on frame after damage is applied
         if(movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
 
