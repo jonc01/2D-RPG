@@ -28,7 +28,6 @@ public class CharacterController2D : MonoBehaviour
 	public PlayerMovement movement;
 	public Transform TextPopups;
 	//[SerializeField] Transform TextPopupsPrefab;
-	//RectTransform TextPopupsPrefab; //^prefab uses RectTransform, not Transform, need to reference position/rotation
 	public SpriteRenderer playerSR;
 	public Transform attackPoint;
 
@@ -52,9 +51,6 @@ public class CharacterController2D : MonoBehaviour
 
 		if (OnLandEvent == null)
 			OnLandEvent = new UnityEvent();
-
-		//if (OnCrouchEvent == null)
-			//OnCrouchEvent = new BoolEvent();
 	}
 
 	private void FixedUpdate()

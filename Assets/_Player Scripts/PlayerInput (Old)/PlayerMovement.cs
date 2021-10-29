@@ -150,7 +150,6 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && isGrounded) //prevent dodging midair
             {
                 StartCoroutine(DodgeRoll());
-                canMove = false;
             }
         }
     }
@@ -159,19 +158,22 @@ public class PlayerMovement : MonoBehaviour
     {
         //StopAllCoroutines(); //cancel attacks with dodgeRoll
             //IsAttacking,
-             
+            
+        DisableMove();
         abilityUI.StartCooldown(dodgeCD);
         playerCombat.canAttack = false;
         m_rolling = true;
+        playerCombat.canStunPlayer = false;
         animator.SetBool("isRolling", true);
         animator.SetTrigger("Roll");
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
         allowDodge = Time.time + dodgeCD;
         yield return new WaitForSeconds(dodgeTime); //dodge duration
-        canMove = true;
+        EnableMove();
         animator.SetBool("isRolling", false);
         playerCombat.canAttack = true;
-        m_rolling = false; //DELETE: if we're still using AE_ResetRoll in animation event
+        m_rolling = false; //DELETE: if still using AE_ResetRoll in animation event
+        playerCombat.canStunPlayer = true;
     }
     
     void AE_ResetRoll() // called in animation event
@@ -238,9 +240,13 @@ public class PlayerMovement : MonoBehaviour
         DisableMove(); //root player in place, stops sliding if colliders intercept
         isDashing = false;
         canDash = true;
-        yield return new WaitForSeconds(.5f);
+        
+        yield return new WaitForSeconds(.4f);
         controller.canFlip = true;
-        EnableMove();
+
+        if (!m_rolling)
+            EnableMove();
+
     }
 
     public void CancelDash()
@@ -282,9 +288,11 @@ public class PlayerMovement : MonoBehaviour
         canMove = true;
     }
 
-    public void DisableMove()
+    public void DisableMove(bool stopVelocity = true)
     {
-        rb.velocity = new Vector2(0, 0);
+        if(stopVelocity) //set to false if we just need to toggle canMove, but not stop the velocity
+            rb.velocity = new Vector2(0, 0);
+        
         canMove = false;
     }
 

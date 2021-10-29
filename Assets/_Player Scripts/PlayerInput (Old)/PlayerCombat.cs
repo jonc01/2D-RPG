@@ -90,7 +90,7 @@ public class PlayerCombat : MonoBehaviour
     public float altAttackTime = .3f;
     bool IsParrying;
     public bool IsShieldBashing;
-    bool canStunPlayer;
+    public bool canStunPlayer;
 
     //Consumables
     public PlayerHealthPotion healthPotion;
@@ -168,7 +168,8 @@ public class PlayerCombat : MonoBehaviour
                         respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = false;
                     }
                     //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
-                    controller.RespawnPlayerResetLevel();
+                    //controller.RespawnPlayerResetLevel();
+                    PauseMenu.LoadMenu();
                     timeManager.ResetTimeScale();
                 }
             }
@@ -233,6 +234,8 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator IsLightAttacking(int attackNum) // Light Attack Coroutine
     {
+        //Flip enable/disable is handled in animation events
+        //Flip is disabled at the first frame of the attack, and enabled on frame after damage is applied
         if(movement.isGrounded) //should let player attack mid air without stopping movement
             movement.canMove = false;
 
@@ -275,7 +278,7 @@ public class PlayerCombat : MonoBehaviour
         //movement.runSpeed = movement.defaultRunSpeed;
     }
 
-    void Attack(float damageMultiplier = 1.0f) //applying damage, ...
+    public void Attack(float damageMultiplier = 1.0f) //applying damage, ...
     {
         //Attack range, detect enemies in range
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
@@ -283,32 +286,12 @@ public class PlayerCombat : MonoBehaviour
         //damage enemies
         foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
         {
-            if(enemy.GetComponent<EnemyController>() != null) //after migrating below functions into EnemyController
+            if(enemy.GetComponent<BaseEnemyClass>() != null)
             {
-                timeManager.DoFreezeTime(.15f, .05f); //freezeDuration, delayToFreeze
-                //screenShake.Shake();
-                /*enemy.GetComponent<EnemyController>().TakeDamage(attackDamageLight);
-                enemy.GetComponent<EnemyController>().GetKnockback(knockback/2);
-                enemy.GetComponent<EnemyController>().GetStunned(.3f);*/
+                timeManager.DoFreezeTime(.1f, .05f); //freezeDuration, delayToFreeze
+                enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
+                enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
             }
-
-            if (enemy.GetComponent<Enemy>() != null) //TODO: ^ add TakeDamage, etc to EnemyController manually updating for each new enemy
-            {
-                enemy.GetComponent<Enemy>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight, 1f);
-                //enemy.GetComponent<Enemy>().GetStunned(.3f, false);
-            }
-
-            if (enemy.GetComponent<StationaryEnemy>() != null)
-                enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageLight, damageMultiplier);
-
-            if (enemy.GetComponent<Enemy2>() != null)
-            {
-                enemy.GetComponent<Enemy2>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
-            }
-
-            if (enemy.GetComponent<EnemyBossBandit>() != null)
-                enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageLight, damageMultiplier);
         }
     }
     #endregion
@@ -402,63 +385,32 @@ public class PlayerCombat : MonoBehaviour
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(heavyAttackPoint.position, attackHeavyRange, enemyLayers);
                 foreach (Collider2D enemy in hitEnemies) //loop through enemies hit
                 {
-                    if (enemy.GetComponent<EnemyController>() != null)
+                    if (enemy.GetComponent<BaseEnemyClass>() != null)
                     {
-                        timeManager.DoFreezeTime(.15f, .05f); //.1, .05
+                        timeManager.DoFreezeTime(.12f, .05f); //.1, .05
 
-                        if(enableScreenshake)
+                        if (enableScreenshake)
                             screenShake.Shake();
 
-                        //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
+                        enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
                     }
-
-                    if (enemy.GetComponent<Enemy>() != null)
-                    {
-                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
-                        enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
-                    }
-            
-                    if (enemy.GetComponent<StationaryEnemy>() != null)
-                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy, damageMultiplier);
-
-                    if (enemy.GetComponent<Enemy2>() != null)
-                    {
-                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
-                    }
-
-                    if (enemy.GetComponent<EnemyBossBandit>() != null)
-                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy, damageMultiplier);
                 }
                 break;
             case 2:
                 Collider2D[] hitEnemiesWide = Physics2D.OverlapBoxAll(heavyAttackPointWide.position, new Vector2(attackHeavyRange*2.7f, .8f), enemyLayers);
                 foreach (Collider2D enemy in hitEnemiesWide) //loop through enemies hit
                 {
-                    if (enemy.GetComponent<EnemyController>() != null)
+                    if (enemy.GetComponent<BaseEnemyClass>() != null)
                     {
-                        if(enableScreenshake)
+                        if (enableScreenshake)
                             screenShake.Shake();
 
                         timeManager.DoFreezeTime(.15f, .05f);
-                        //TODO: move common enemy scripting to EnemyController, instead of calling individual TakeDamage scripts
+
+                        enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
                     }
-
-                    if (enemy.GetComponent<Enemy>() != null)
-                    {
-                        enemy.GetComponent<Enemy>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
-                        enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
-                    }
-
-                    if (enemy.GetComponent<StationaryEnemy>() != null)
-                        enemy.GetComponent<StationaryEnemy>().TakeDamage(attackDamageHeavy, damageMultiplier);
-
-                    if (enemy.GetComponent<Enemy2>() != null)
-                    {
-                        enemy.GetComponent<Enemy2>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
-                    }
-
-                    if (enemy.GetComponent<EnemyBossBandit>() != null)
-                        enemy.GetComponent<EnemyBossBandit>().TakeDamage(attackDamageHeavy, damageMultiplier);
                 }
                 break;
             default:
@@ -518,25 +470,11 @@ public class PlayerCombat : MonoBehaviour
         }
         foreach (Collider2D enemy in altHitEnemies) //loop through enemies hit
         {
-            if (enemy.GetComponent<Enemy>() != null)
+            if (enemy.GetComponent<BaseEnemyClass>() != null)
             {
-                enemy.GetComponent<Enemy>().TakeDamage(altDamage, 1.0f); //attackDamage + additional damage from parameter
-                enemy.GetComponent<Enemy>().GetKnockback(controller.m_FacingRight);
-                enemy.GetComponent<Enemy>().GetStunned(stunStrength);
-            }
-
-            if (enemy.GetComponent<StationaryEnemy>() != null)
-                enemy.GetComponent<StationaryEnemy>().TakeDamage(altDamage);
-
-            if(enemy.GetComponent<Enemy2>() != null)
-            {
-                enemy.GetComponent<Enemy2>().TakeDamage(altDamage);
-                enemy.GetComponent<Enemy2>().GetStunned(stunStrength);
-            }
-
-            if (enemy.GetComponent<EnemyBossBandit>() != null)
-            {
-                enemy.GetComponent<EnemyBossBandit>().CheckParry();
+                enemy.GetComponent<BaseEnemyClass>().TakeDamage(altDamage, 1.0f); //attackDamage + additional damage from parameter
+                enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
+                enemy.GetComponent<BaseEnemyClass>().GetStunned(stunStrength);
             }
         }
     }
@@ -565,23 +503,15 @@ public class PlayerCombat : MonoBehaviour
 
         foreach (Collider2D enemy in parriedEnemies) // loop through enemies hit
         {
-            if (enemy.GetComponent<Enemy>() != null)
+            if (enemy.GetComponent<BaseEnemyClass>() != null)
             {
                 /*if (enableScreenshake)
                     screenShake.Shake();*/
 
-                enemy.GetComponent<Enemy>().GetStunned(1);
+                enemy.GetComponent<BaseEnemyClass>().GetStunned(1);
 
                 //movement.CancelDash();
                 animator.SetTrigger("Block");
-                //screenShake.startShake();
-            }
-
-            if (enemy.GetComponent<EnemyBossBandit>() != null)
-            {
-                enemy.GetComponent<EnemyBossBandit>().CheckParry();
-                //movement.CancelDash();
-                //animator.SetTrigger("Block");
             }
         }
     }
@@ -648,7 +578,7 @@ public class PlayerCombat : MonoBehaviour
     }    
     #endregion
 
-    void DodgeAttackCancel()
+    void DodgeAttackCancel() 
     {
         if (IsLightAttackingCO != null) //allow dodge to cancel attack
         {
@@ -740,13 +670,13 @@ public class PlayerCombat : MonoBehaviour
                 Vector3 smoothPosition = Vector3.Lerp(transform.position, tempOffset, kbThrust * Time.fixedDeltaTime);
                 transform.position = smoothPosition;
             }
-            StunPlayer(.8f); //stunDuration //.8f for stun lock on 3rd attack
+            StunPlayer(.1f); //.1f is short enough to interrupt player, but not stun lock //TODO: test duration
         }
     }
 
-    public void StunPlayer(float stunDuration = 1f)
+    public void StunPlayer(float stunDuration = .5f)
     {
-        if (Time.time > allowStun && canStunPlayer && !playerStunned)
+        if (Time.time > allowStun && canStunPlayer && !playerStunned && isAlive)
         {
             if(IsLightAttackingCO != null)
                 StopCoroutine(IsLightAttackingCO); // Stop Attacking coroutines
@@ -843,6 +773,11 @@ public class PlayerCombat : MonoBehaviour
     public void ResetMaterial()
     {
         sr.material = mDefault;
+    }
+
+    public Vector3 GetPlayerPosition()
+    {
+        return transform.position;
     }
 
     public void GiveXP(float xp)

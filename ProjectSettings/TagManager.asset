@@ -8,6 +8,10 @@ TagManager:
   - Enemy
   - Boss
   - Managers
+  - UI
+  - Stage
+  - CineMachineCam
+  - MultiScene
   layers:
   - Default
   - TransparentFX
@@ -27,7 +31,7 @@ TagManager:
   - Patrol
   - CameraBounds
   - PlayerCollisionCheck
-  - BuffTriggerCheck
+  - BufferNeutral
   - 
   - 
   - 
@@ -63,9 +67,9 @@ TagManager:
   - name: Foreground
     uniqueID: 1394609115
     locked: 0
-  - name: UI
-    uniqueID: 2150241661
-    locked: 0
   - name: UI Numbers
     uniqueID: 1409379793
+    locked: 0
+  - name: UI
+    uniqueID: 2150241661
     locked: 0

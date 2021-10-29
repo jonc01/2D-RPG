@@ -5,41 +5,38 @@ using UnityEngine.SceneManagement;
 
 public class EndPortal : MonoBehaviour
 {
-    public EnemyBossBandit boss;
-    public GameObject textPrompt;
-    public Interactable interactableScript;
     public GameObject portal;
+    [SerializeField] string currentScene;
+    [SerializeField] private string stage1, stage2;
 
-    void Start()
+    void Start() //Note: this is only called when EndPortal is enabled
     {
-        textPrompt.SetActive(false);
         portal.SetActive(false);
+        //Scene currentScene = SceneManager.GetActiveScene();
+        //string currentSceneName = currentScene.name;
 
-        boss = GameObject.Find("BanditBoss").GetComponent<EnemyBossBandit>();
+        currentScene = gameObject.scene.name;
+        Debug.Log("Current scene: " + currentScene);
     }
-
-    void Update()
+    
+    public void NextLevel()
     {
-        if (boss && !boss.isAlive)
+        bool randStage = (Random.value > 0.5f); //50/50 pick random stage from provided
+
+        //Scene currentScene = SceneManager.GetActiveScene(); //TODO: make sure this doesn't pick up NeverUnload
+        //string currentSceneName = currentScene.name;
+
+        if (randStage)
         {
-            portal.SetActive(true);
-            if (interactableScript.isInRange)
-            {
-                textPrompt.SetActive(true);
-            }
-            else
-            {
-                textPrompt.SetActive(false);
-            }
+            Debug.Log("stage1: " + stage1);
+            AsyncLevelLoader.asyncLevelLoader.LoadScene(stage1, currentScene);
         }
-    }
-
-    public void ReplayLevel() //PLACEHOLDER: end of level should give option to return to town, or proceed to next level
-    {
-        if (boss && !boss.isAlive)
+        else
         {
-            SceneManager.LoadScene("DemoLevel");
-            textPrompt.SetActive(false);
+            Debug.Log("stage2: " + stage2);
+            //levelLoader.LoadSelectLevel(stage2);
+            AsyncLevelLoader.asyncLevelLoader.LoadScene(stage2, currentScene);
+            //SceneManager.LoadScene(stage2);
         }
     }
 }

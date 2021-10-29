@@ -1,0 +1,24 @@
+- Hero Knight - Sven Thole 
+	- https://assetstore.unity.com/packages/2d/characters/hero-knight-pixel-art-165188
+
+- Bandits - Sven Thole
+	- https://assetstore.unity.com/packages/2d/characters/bandits-pixel-art-104130
+
+- Medieval Warrior Pack - Luiz Melo
+	- https://assetstore.unity.com/packages/2d/characters/medieval-warrior-pack-159577
+
+- Pixel Art Forest - Eder
+	- https://assetstore.unity.com/packages/2d/textures-materials/nature/free-pixel-art-forest-133112
+
+- Free Pixel Font - Thaleah
+	- https://assetstore.unity.com/packages/2d/fonts/free-pixel-font-thaleah-140059
+
+- Village Props - Cainos
+	- https://assetstore.unity.com/packages/2d/environments/pixel-art-platformer-village-props-166114
+
+- Pixel Art Icon Pack - Cainos
+	- https://assetstore.unity.com/packages/2d/gui/icons/pixel-art-icon-pack-rpg-158343
+
+- Pixel Effects Pack - CodeManu
+	- https://codemanu.itch.io/pixelart-effect-pack
+

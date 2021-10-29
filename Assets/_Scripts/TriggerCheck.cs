@@ -34,28 +34,23 @@ public class TriggerCheck : MonoBehaviour
             combat.OnSuccessfulBash();
             movement.CancelDash();
 
-            if (collider.GetComponent<Enemy>() != null)
+            combat.Attack(); //apply damage/aoe to enemies near stunned
+
+            if (collider.GetComponent<BaseEnemyClass>() != null)
             {
-                collider.GetComponent<Enemy>().TakeDamage(5);
-                collider.GetComponent<Enemy>().GetStunned();
+                collider.GetComponent<BaseEnemyClass>().GetStunned();
+                //collider.GetComponent<EnemyController>().CheckParry();
             }
 
-            if (collider.GetComponent<Enemy2>() != null)
-            {
-                collider.GetComponent<Enemy2>().TakeDamage(5); //attackDamage + additional damage from parameter
-                collider.GetComponent<Enemy2>().GetStunned(2);
-            }
 
-            if (collider.GetComponent<StationaryEnemy>() != null)
-            {
-                collider.GetComponent<StationaryEnemy>().TakeDamage(10);
-            }
+            ////////////////////////////////////////////////
+            ///////////// vvv DELETE ALL vvv ///////////////
 
-            if (collider.GetComponent<EnemyBossBandit>() != null)
-            {
-                collider.GetComponent<EnemyBossBandit>().TakeDamage(10);
-                collider.GetComponent<EnemyBossBandit>().CheckParry();
-            }
+            //if (collider.GetComponent<EnemyBossBandit>() != null)
+            //{
+            //    collider.GetComponent<EnemyBossBandit>().TakeDamage(10);
+            //    collider.GetComponent<EnemyBossBandit>().CheckParry();
+            //}
         }
     }
 }
