@@ -8,6 +8,9 @@ public class AsyncLevelLoader : MonoBehaviour
     public static AsyncLevelLoader asyncLevelLoader;
     bool playerLoaded;
 
+    [SerializeField] private GameObject LoadScreen;
+    [SerializeField] private Animator LoadScreenAnim;
+
     [SerializeField] private GameObject playerObject;
     [SerializeField] private Vector3 spawnPosition; //default: 
 
@@ -17,21 +20,21 @@ public class AsyncLevelLoader : MonoBehaviour
 
         if(playerObject == null)
             playerObject = GameObject.FindGameObjectWithTag("Player");
+
+        if (LoadScreen == null)
+            LoadScreen = GameObject.Find("FadeIn");
+
+        if (LoadScreenAnim == null)
+            if (LoadScreen != null)
+                LoadScreenAnim = LoadScreen.GetComponent<Animator>();
     }
 
     public void LoadScene(string sceneName, string sceneToUnload) //TODO: manual call from menu Play(), can combine this into one script (LevelLoader)
     {
         //EndPortal script is in the scene we are leaving
         //is passes the name of the scene we want to load, and the current scene to unload after
-
-        //TODO: start loading screen
-
-        StartCoroutine(LoadSceneCO(sceneName, sceneToUnload));
-
-        //SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        //TODO: when done, reposition Player object
         
-        //TODO: end loading screen
+        StartCoroutine(LoadSceneCO(sceneName, sceneToUnload));
 
         // Unload prev scene async
         //UnloadScene(sceneToUnload);
@@ -39,23 +42,40 @@ public class AsyncLevelLoader : MonoBehaviour
 
     IEnumerator LoadSceneCO(string sceneName, string sceneToUnload)
     {
+        //LoadScreen.SetActive(true);
+        LoadScreenAnim.SetTrigger("Start");
+
         AsyncOperation sceneToLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
         while (!sceneToLoad.isDone)
         {
             yield return null;
         }
-        //SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
 
         if(playerObject != null)
             playerObject.transform.position = spawnPosition;
 
         UnloadScene(sceneToUnload);
+
+        LoadScreenAnim.SetTrigger("End");
     }
 
-    public void LoadScene(string sceneName) //TODO: manual call from menu Play(), can combine this into one script (LevelLoader)
+    public void LoadScene(string sceneName)
     {
-        SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        //SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        StartCoroutine(LoadSceneCO(sceneName));
+    }
+
+    IEnumerator LoadSceneCO(string sceneName)
+    {
+        AsyncOperation sceneToLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
+        while (!sceneToLoad.isDone)
+        {
+            yield return null;
+        }
+        LoadScreenAnim.SetTrigger("End");
+        //LoadScreen.SetActive(false);
     }
 
     public void UnloadScene(string sceneName)
@@ -114,6 +134,7 @@ public class AsyncLevelLoader : MonoBehaviour
 
     IEnumerator StartGameCO(string startStage, string unloadStage)
     {
+        LoadScreenAnim.SetTrigger("Start");
         LoadPlayer();
 
         while (!playerLoaded)
