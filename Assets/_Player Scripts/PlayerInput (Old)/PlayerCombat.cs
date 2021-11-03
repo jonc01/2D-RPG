@@ -38,7 +38,7 @@ public class PlayerCombat : MonoBehaviour
     public HealthBar healthBar;
     public ExperienceBar experienceBar;
     public bool isAlive = true;
-    bool canRespawn = false;
+    bool canRespawn;
     float allowStun;
     float allowStunCD = 1f;
 
@@ -111,6 +111,9 @@ public class PlayerCombat : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
+        if (respawnPrompt != null)
+            respawnPrompt.GetComponent<Canvas>().enabled = false;
+
         maxHealth = 100 + ((playerLevel - 1) * 10);
         experienceBar.SetXP(0, playerLevel);
 
@@ -137,6 +140,7 @@ public class PlayerCombat : MonoBehaviour
         IsShieldBashing = false;
         playerStunned = false;
         canStunPlayer = true;
+        canRespawn = false;
 
         shieldBashCollider.enabled = false;
         shieldBashTrigger.enabled = false;
@@ -165,7 +169,7 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if(respawnPrompt != null)
                     {
-                        respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = false;
+                        respawnPrompt.GetComponent<Canvas>().enabled = false;
                     }
                     //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
                     //controller.RespawnPlayerResetLevel();
@@ -539,7 +543,9 @@ public class PlayerCombat : MonoBehaviour
     {
         IsShieldBashing = true; //starting to block damage
         canStunPlayer = false;
-        movement.DisableMove();
+
+        movement.DisableMove(false); //false to preserve current movement
+
         animator.SetTrigger("StartBlock");
         yield return new WaitForSeconds(.2f);
         shieldBashCollider.enabled = true; //
@@ -815,7 +821,7 @@ public class PlayerCombat : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         if (respawnPrompt != null)
         {
-            respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = true;
+            respawnPrompt.GetComponent<Canvas>().enabled = true;
         }
         canRespawn = true;
     }

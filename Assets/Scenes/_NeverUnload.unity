@@ -1973,7 +1973,7 @@ GameObject:
   - component: {fileID: 386487245}
   - component: {fileID: 386487244}
   m_Layer: 5
-  m_Name: Respawn Prompt
+  m_Name: RespawnPrompText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2005,7 +2005,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 386487242}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -2020,7 +2020,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'You have died.
 
-    Press Space to restart.'
+    Press Space to return to Menu.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7663332f3be7b6d4d91defb4e0d5fc76, type: 2}
   m_sharedMaterial: {fileID: 7670113837822391160, guid: 7663332f3be7b6d4d91defb4e0d5fc76, type: 2}
@@ -2047,8 +2047,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60
-  m_fontSizeBase: 60
+  m_fontSize: 52
+  m_fontSizeBase: 52
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -9290,7 +9290,7 @@ PrefabInstance:
     - target: {fileID: 107596093386943514, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: respawnPrompt
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 140445896}
     - target: {fileID: 107596093386943514, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: TextPopupsHandler
       value: 
