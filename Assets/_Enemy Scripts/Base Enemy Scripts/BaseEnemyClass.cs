@@ -475,7 +475,9 @@ public class BaseEnemyClass : MonoBehaviour
         isAlive = false;
         EnDisableMove();
 
+        StopAttackCO(); //StopAllCoroutines doesn't work
         StopAllCoroutines();
+        enCanAttack = false;
 
         if(EnAnimator != null)
             EnAnimator.PlayDeathAnim();
