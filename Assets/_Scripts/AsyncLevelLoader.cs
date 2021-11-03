@@ -27,6 +27,21 @@ public class AsyncLevelLoader : MonoBehaviour
         if (LoadScreenAnim == null)
             if (LoadScreen != null)
                 LoadScreenAnim = LoadScreen.GetComponent<Animator>();
+
+        if (LoadScreenAnim != null)
+            InitialLoadScene();
+    }
+
+    void InitialLoadScene()
+    {
+        StartCoroutine("InitialLoadCO");
+    }
+
+    IEnumerator InitialLoadCO()
+    {
+        LoadScreenAnim.SetTrigger("StartLoop");
+        yield return new WaitForSeconds(.1f);
+        LoadScreenAnim.SetTrigger("End");
     }
 
     public void LoadScene(string sceneName, string sceneToUnload) //TODO: manual call from menu Play(), can combine this into one script (LevelLoader)
@@ -44,6 +59,8 @@ public class AsyncLevelLoader : MonoBehaviour
     {
         //LoadScreen.SetActive(true);
         LoadScreenAnim.SetTrigger("Start");
+        yield return new WaitForSeconds(.1f); //short delay to allow fade out animation to fully fade to load screen 
+        //Without this delay, the player would see scenes being moved around
 
         AsyncOperation sceneToLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
@@ -68,12 +85,14 @@ public class AsyncLevelLoader : MonoBehaviour
 
     IEnumerator LoadSceneCO(string sceneName)
     {
+        LoadScreenAnim.SetTrigger("StartLoop");
         AsyncOperation sceneToLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
         while (!sceneToLoad.isDone)
         {
             yield return null;
         }
+
         LoadScreenAnim.SetTrigger("End");
         //LoadScreen.SetActive(false);
     }
@@ -117,8 +136,8 @@ public class AsyncLevelLoader : MonoBehaviour
             Debug.Log("loading player");
             yield return null;
         }
+        
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("_NeverUnload"));
-
         playerLoaded = true;
     }
 
@@ -135,6 +154,7 @@ public class AsyncLevelLoader : MonoBehaviour
     IEnumerator StartGameCO(string startStage, string unloadStage)
     {
         LoadScreenAnim.SetTrigger("Start");
+        yield return new WaitForSeconds(.3f); //TODO: placeholder, LevelLoader is being deleted when loading
         LoadPlayer();
 
         while (!playerLoaded)
@@ -143,7 +163,7 @@ public class AsyncLevelLoader : MonoBehaviour
             yield return null;
         }
 
-        SceneManager.UnloadSceneAsync(unloadStage);
+        SceneManager.UnloadSceneAsync(unloadStage); //Unload MainMenu
         LoadScene(startStage);
     }
 }
