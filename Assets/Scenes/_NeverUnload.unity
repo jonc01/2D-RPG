@@ -4428,7 +4428,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 823432693}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3c1407bed3477cd47a77fd474e285681, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -9256,10 +9256,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1177505292}
     - target: {fileID: 107596093386943514, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
-      propertyPath: wepDamage
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 107596093386943514, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: screenShake
       value: 
       objectReference: {fileID: 1370011435}
@@ -9458,7 +9454,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &5455075831231226060
 RectTransform:

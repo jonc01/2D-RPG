@@ -59,8 +59,11 @@ public class ExperienceBar : MonoBehaviour
         if (displayPlayerLevel != null) //update level
             displayPlayerLevel.text = currentPlayerLevel.ToString();
 
-        healthBar.SetMaxHealth(100 + ((currentPlayerLevel - 1) * 10f));
+        playerCombat.maxHealth += ((currentPlayerLevel - 1) *10f); //health +10/level
+        healthBar.SetMaxHealth(playerCombat.maxHealth);
         playerCombat.HealPlayer(healthBar.maxHealth);
+
+        playerCombat.wepDamage += ((currentPlayerLevel - 1) * 2); //damage +2/level
 
         xpPopups.ShowText(player.position, "\nLEVEL UP");
     }

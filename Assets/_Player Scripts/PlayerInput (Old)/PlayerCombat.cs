@@ -46,7 +46,7 @@ public class PlayerCombat : MonoBehaviour
     //weapon stats
     public float wepDamage = 10f; //default values, should change based on weapon stats
     public float wepRange = .5f; //
-    public float playerAttackSpeed = .1f; //.3f
+    public float playerAttackSpeed = .2f; //.2f default
     private float playerHeavyAttackSpeed;
 
     public Transform attackPoint;
@@ -55,14 +55,12 @@ public class PlayerCombat : MonoBehaviour
     public Transform parryPoint;
     [SerializeField] float attackRange = .5f;
     [SerializeField] float attackHeavyRange = 0.58f;
-    float attackDamageLight;
-    float attackDamageHeavy;
     [SerializeField] float attackDamageHeavyMultiplier = 2.0f;
     public bool canAttack = true;
     public float stunStrength = 1f;
     [SerializeField] bool playerStunned;
 
-    public float attackTime = 0.25f; //0.25 seems good, give or take .1 seconds
+    public float attackTime = 0.25f; //0.25 seems good, +/- .1 seconds
 
     //armor stats
     public float playerArmor; //temp
@@ -116,6 +114,7 @@ public class PlayerCombat : MonoBehaviour
 
         maxHealth = 100 + ((playerLevel - 1) * 10);
         experienceBar.SetXP(0, playerLevel);
+        wepDamage += ((playerLevel - 1) * 2);
 
         //var keyboard = Keyboard.current; //temp workaround
         currentHealth = maxHealth;
@@ -130,9 +129,6 @@ public class PlayerCombat : MonoBehaviour
         playerHeavyAttackSpeed = (playerAttackSpeed * 1.25f);
         //attackDamageHeavyMultiplier = weapon.wepDamageHeavyMultiplier;
         //attackDamageHeavyMultiplier = 2.0f; //placeholder
-
-        attackDamageLight = wepDamage;
-        attackDamageHeavy = wepDamage*attackDamageHeavyMultiplier;
 
         canAttack = true;
         AltAttacking = false;
@@ -252,29 +248,26 @@ public class PlayerCombat : MonoBehaviour
             case 1:
                 yield return new WaitForSeconds(0.1f);
                 Attack();
-                canSwitch = true;
-                yield return new WaitForSeconds(0.1f);
+                //yield return new WaitForSeconds(playerAttackSpeed);
                 break;
             case 2:
                 yield return new WaitForSeconds(0.05f);
                 Attack();
-                canSwitch = true;
-                yield return new WaitForSeconds(0.1f);
+                //yield return new WaitForSeconds(playerAttackSpeed);
                 break;
             case 3:
                 yield return new WaitForSeconds(0.2f);
                 Attack(1.5f); // damage multiplier
-                canSwitch = true;
-                yield return new WaitForSeconds(0.1f);
+                //yield return new WaitForSeconds(playerAttackSpeed);
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
                 break;
         }
-
+        canSwitch = true;
+        yield return new WaitForSeconds(playerAttackSpeed);
         canSwitch = false;
 
-        //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
         canAttack = true;
         
@@ -292,8 +285,8 @@ public class PlayerCombat : MonoBehaviour
         {
             if(enemy.GetComponent<BaseEnemyClass>() != null)
             {
-                timeManager.DoFreezeTime(.1f, .05f); //freezeDuration, delayToFreeze
-                enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageLight, damageMultiplier); //attackDamage + additional damage from parameter
+                //timeManager.DoFreezeTime(.1f, .05f); //freezeDuration, delayToFreeze
+                enemy.GetComponent<BaseEnemyClass>().TakeDamage(wepDamage, damageMultiplier); //attackDamage + additional damage from parameter
                 enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
             }
         }
@@ -349,28 +342,23 @@ public class PlayerCombat : MonoBehaviour
             case 1:
                 yield return new WaitForSeconds(0.35f);
                 AttackHeavy();
-                canSwitch = true;
-                yield return new WaitForSeconds(0.2f);
                 break;
             case 2:
                 yield return new WaitForSeconds(0.25f); //Attack functions determine damage and attack hitbox
                 AttackHeavy(2); //using hitbox 2
-                canSwitch = true;
-                yield return new WaitForSeconds(0.1f);
                 break;
             case 3:
                 yield return new WaitForSeconds(0.25f);
                 AttackHeavy(1, 1.5f); //default 1, 1.5x damage
-                canSwitch = true;
-                yield return new WaitForSeconds(0.2f);
                 break;
             default:
                 yield return new WaitForSeconds(0.01f); //
                 break;
         }
+        canSwitch = true;
+        yield return new WaitForSeconds(playerAttackSpeed + 0.1f);
         canSwitch = false;
 
-        //yield return new WaitForSeconds(playerAttackSpeed);
         movement.canMove = true;
         canAttack = true;
 
@@ -391,12 +379,12 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (enemy.GetComponent<BaseEnemyClass>() != null)
                     {
-                        timeManager.DoFreezeTime(.12f, .05f); //.1, .05
-
                         if (enableScreenshake)
                             screenShake.Shake();
+                        
+                        timeManager.DoFreezeTime(.1f, .05f); //.1, .05
 
-                        enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<BaseEnemyClass>().TakeDamage(wepDamage * attackDamageHeavyMultiplier, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
                     }
                 }
@@ -410,9 +398,9 @@ public class PlayerCombat : MonoBehaviour
                         if (enableScreenshake)
                             screenShake.Shake();
 
-                        timeManager.DoFreezeTime(.15f, .05f);
+                        timeManager.DoFreezeTime(.1f, .05f);
 
-                        enemy.GetComponent<BaseEnemyClass>().TakeDamage(attackDamageHeavy, damageMultiplier); //attackDamage + additional damage from parameter
+                        enemy.GetComponent<BaseEnemyClass>().TakeDamage(wepDamage * attackDamageHeavyMultiplier, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
                     }
                 }
