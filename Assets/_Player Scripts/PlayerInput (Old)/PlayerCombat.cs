@@ -579,7 +579,7 @@ public class PlayerCombat : MonoBehaviour
 
         yield return new WaitForSeconds(.2f);
         canStunPlayer = true;
-        //Instantiate
+
         movement.EnableMove();
     }    
     #endregion
