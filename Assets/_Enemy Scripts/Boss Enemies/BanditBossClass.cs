@@ -424,8 +424,9 @@ public class BanditBossClass : HeavyBanditClass
             DeathParticlesHandler.ShowHitEffect(deathParticleLocation);
         }
 
-        //Destroy(this.gameObject);
-        gameObject.SetActive(false); //TODO: set to false so that EndPortal can reference if isAlive
+        //gameObject.SetActive(false); //TODO: set to false so that EndPortal can reference if isAlive
+        stageClear.UpdateEnemyCount(100f, 50);
+        Destroy(this.gameObject);
     }
 
     private void OnDrawGizmosSelected()

@@ -804,7 +804,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 140445896}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -1973,7 +1973,7 @@ GameObject:
   - component: {fileID: 386487245}
   - component: {fileID: 386487244}
   m_Layer: 5
-  m_Name: Respawn Prompt
+  m_Name: RespawnPrompText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2005,7 +2005,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 386487242}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -2020,7 +2020,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'You have died.
 
-    Press Space to restart.'
+    Press Space to return to Menu.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7663332f3be7b6d4d91defb4e0d5fc76, type: 2}
   m_sharedMaterial: {fileID: 7670113837822391160, guid: 7663332f3be7b6d4d91defb4e0d5fc76, type: 2}
@@ -2047,8 +2047,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60
-  m_fontSizeBase: 60
+  m_fontSize: 52
+  m_fontSizeBase: 52
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3905,7 +3905,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 685120999}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.333561, y: -2.131967, z: -1}
+  m_LocalPosition: {x: 2.6669002, y: -2.0199995, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4428,7 +4428,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 823432693}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3c1407bed3477cd47a77fd474e285681, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -9256,10 +9256,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1177505292}
     - target: {fileID: 107596093386943514, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
-      propertyPath: wepDamage
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 107596093386943514, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: screenShake
       value: 
       objectReference: {fileID: 1370011435}
@@ -9290,7 +9286,7 @@ PrefabInstance:
     - target: {fileID: 107596093386943514, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: respawnPrompt
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 140445896}
     - target: {fileID: 107596093386943514, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: TextPopupsHandler
       value: 
@@ -9458,7 +9454,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &5455075831231226060
 RectTransform:
