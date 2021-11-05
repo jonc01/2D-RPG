@@ -4,30 +4,28 @@ using UnityEngine;
 
 public class BossPhaseController : MonoBehaviour
 {
-    [SerializeField] int totalDamagePhases;
+    [SerializeField] float[] hpPhases; //health %s to spawn additionals at corresponding index
+    [SerializeField] public int currentPhase; //starts at 0, for use with index
+    [SerializeField] GameObject[] additionals; //holds Enemy adds to spawn at certain hp phases
 
-    [SerializeField] float[] hpThreshold;
-
-    float hpThreshold1 = .25f;
-
-
-    // Start is called before the first frame update
-    void Start()
+    public void UpdateHealth(float currentHP, float maxHP) //TODO: needs testing
     {
-        
-    }
-
-    public void UpdateHealth(float currentHP, float maxHP)
-    {
-        //if currentHP/maxHP
-        if((currentHP/maxHP) <= hpThreshold1)
+        float percentHP = currentHP / maxHP;
+        if (percentHP <= hpPhases[currentPhase]) //compare health % to damage phases
         {
-
+            SpawnEnemies(currentPhase); //spawn enemies at current phase
+            Debug.Log("Spawning Enemies at Phase " + currentPhase);
+            currentPhase++; //progress phase
+            Debug.Log("currentPhase moving to: " + currentPhase);
         }
     }
 
-    private void SpawnEnemies()
+    private void SpawnEnemies(int phase)
     {
-        //Set active selected enemy object
+        //Set active selected enemy object in that corresponding phase
+        //foreach(enemy in additionals[phase]) ... 
+            //GameObject.SetActive(true); //enabled = true
+        //TODO: need null check since enemies are enabled, not instantiated
+        //TODO: make sure both .5 damagePhases correctly enable enemies 1 and 2
     }
 }
