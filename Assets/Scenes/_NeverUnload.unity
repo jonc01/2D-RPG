@@ -3905,7 +3905,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 685120999}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.6669002, y: -2.0199995, z: -1}
+  m_LocalPosition: {x: 2.6668997, y: -1.8821528, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4428,11 +4428,11 @@ BoxCollider2D:
   m_GameObject: {fileID: 823432693}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 3c1407bed3477cd47a77fd474e285681, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -3.3705542, y: -3.3802676}
+  m_Offset: {x: -3.3705542, y: -3.3820016}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -4443,7 +4443,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5541253, y: 0.12029052}
+  m_Size: {x: 0.5541253, y: 0.11682272}
   m_EdgeRadius: 0
 --- !u!4 &823432695
 Transform:
@@ -9255,6 +9255,10 @@ PrefabInstance:
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 1177505292}
+    - target: {fileID: 107596093386943514, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
+      propertyPath: wepDamage
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 107596093386943514, guid: 77594f2070666cc4f86c4e88703164a3, type: 3}
       propertyPath: screenShake
       value: 

@@ -8,24 +8,36 @@ public class BossPhaseController : MonoBehaviour
     [SerializeField] public int currentPhase; //starts at 0, for use with index
     [SerializeField] GameObject[] additionals; //holds Enemy adds to spawn at certain hp phases
 
-    public void UpdateHealth(float currentHP, float maxHP) //TODO: needs testing
+    public void UpdateHealth(float currentHP, float maxHP) //TODO: currently only spawns one enemy at a time
     {
-        float percentHP = currentHP / maxHP;
-        if (percentHP <= hpPhases[currentPhase]) //compare health % to damage phases
+        if(currentPhase <= hpPhases.Length-1) //don't bother if no more phases
         {
-            SpawnEnemies(currentPhase); //spawn enemies at current phase
-            Debug.Log("Spawning Enemies at Phase " + currentPhase);
-            currentPhase++; //progress phase
-            Debug.Log("currentPhase moving to: " + currentPhase);
+            float percentHP = currentHP / maxHP;
+            if (percentHP <= hpPhases[currentPhase]) //compare health % to damage phases
+            {
+                SpawnEnemies(currentPhase); //spawn enemies at current phase
+                currentPhase++; //progress phase
+            }
         }
     }
 
     private void SpawnEnemies(int phase)
     {
-        //Set active selected enemy object in that corresponding phase
-        //foreach(enemy in additionals[phase]) ... 
-            //GameObject.SetActive(true); //enabled = true
-        //TODO: need null check since enemies are enabled, not instantiated
-        //TODO: make sure both .5 damagePhases correctly enable enemies 1 and 2
+        for(int i=0; i <= currentPhase; i++)
+        {
+            if(additionals[i] != null)
+                additionals[i].SetActive(true);
+        }
+    }
+
+    public void BossDead()
+    {
+        foreach(GameObject enemy in additionals)
+        {
+            if(enemy != null)
+            {
+                enemy.GetComponent<BaseEnemyClass>().TakeDamage(999, 1, true);
+            }
+        }
     }
 }

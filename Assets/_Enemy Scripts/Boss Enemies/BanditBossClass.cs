@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BanditBossClass : HeavyBanditClass
 {
+    [Header("=== Optional ===")]
+    [SerializeField] BossPhaseController bossPhase;
+
     [Header("=== Bandit Boss ===")]
     [SerializeField] EffectAnimatorManager effectAnimator;
     [SerializeField] Transform enAttackPoint2;
@@ -383,6 +386,8 @@ public class BanditBossClass : HeavyBanditClass
         }
         //base has isAlive check
         base.TakeDamage(damage, damageMultiplier, isCrit);
+        if(bossPhase != null)
+            bossPhase.UpdateHealth(currentHealth, maxHealth);
     }
 
     public override void Die() //TODO: test
@@ -395,8 +400,6 @@ public class BanditBossClass : HeavyBanditClass
         enCanAttack = false;
 
         ShowHealthBar(false);
-        
-        //give player exp //TODO: removed, reimplement at some point
 
         if (DeathParticlesHandler != null)
         {
@@ -414,6 +417,10 @@ public class BanditBossClass : HeavyBanditClass
         EnDisableFlip();
         yield return new WaitForSeconds(.2f);
         EnAnimator.PlayDeathAnim();
+
+        if (bossPhase != null)
+            bossPhase.BossDead();
+
         yield return new WaitForSeconds(1.0f);
 
         if (DeathParticlesHandler != null)
