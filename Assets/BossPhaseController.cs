@@ -10,20 +10,21 @@ public class BossPhaseController : MonoBehaviour
 
     public void UpdateHealth(float currentHP, float maxHP) //TODO: currently only spawns one enemy at a time
     {
-        if(currentPhase <= hpPhases.Length-1) //don't bother if no more phases
+        if(currentPhase <= hpPhases.Length-1) //stop if no more phases
         {
             float percentHP = currentHP / maxHP;
             if (percentHP <= hpPhases[currentPhase]) //compare health % to damage phases
             {
                 SpawnEnemies(currentPhase); //spawn enemies at current phase
                 currentPhase++; //progress phase
+                UpdateHealth(currentHP, maxHP); //check again
             }
         }
     }
 
     private void SpawnEnemies(int phase)
     {
-        for(int i=0; i <= currentPhase; i++)
+        for (int i=0; i <= phase; i++)
         {
             if(additionals[i] != null)
                 additionals[i].SetActive(true);
@@ -32,11 +33,19 @@ public class BossPhaseController : MonoBehaviour
 
     public void BossDead()
     {
-        foreach(GameObject enemy in additionals)
+        foreach(GameObject enemySpawner in additionals)
         {
-            if(enemy != null)
+            if(enemySpawner != null)
             {
-                enemy.GetComponent<BaseEnemyClass>().TakeDamage(999, 1, true);
+                //if(enemySpawner.transform.childCount > 0)
+                if(enemySpawner.GetComponentInChildren<BaseEnemyClass>() != null)
+                {
+                    enemySpawner.GetComponentInChildren<BaseEnemyClass>().TakeDamage(999, 1, true);
+                }
+                else
+                {
+                    Destroy(this.gameObject);
+                }
             }
         }
     }

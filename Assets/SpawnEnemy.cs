@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SpawnEnemy : MonoBehaviour
 {
+    //Keep this object disabled by default, SetActive(true) with BossPhaseController or something else.
+    //Play GameObject as a child of this object, when this object is enabled, it will play an animation
+    //then enable the child object.
     [SerializeField] public Animator animator;
     [SerializeField] private float timeDelay = 1.0f; //delay before enabling object
     [SerializeField] private string animationName = "StartSpawn";
@@ -32,4 +35,7 @@ public class SpawnEnemy : MonoBehaviour
         if (EnemyObject != null)
             EnemyObject.SetActive(true);
     }
+
+    //if EnemyObject == null, destroy this object
+    //update when calling HealthUpdate
 }
