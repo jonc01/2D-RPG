@@ -5,7 +5,7 @@ using UnityEngine;
 public class HeavyBanditClass : BaseEnemyClass
 {
     [Header("=== HeavyBandit ===")]
-    [SerializeField] ScreenShakeListener screenShake;
+    //[SerializeField] ScreenShakeListener screenShake;
     [SerializeField] protected GameObject initialStunParticle;
     [SerializeField] GameObject stunParticleL;
     [SerializeField] GameObject stunParticleR;
@@ -194,10 +194,9 @@ public class HeavyBanditClass : BaseEnemyClass
         if (isBroken && isAlive)
         {
             base.TakeDamage(damage *= 2f, damageMultiplier, true);
-            if(screenShake != null)
-            {
-                screenShake.Shake(1);
-            }
+
+            ScreenShakeListener.Instance.Shake();
+            
             if(enRaycast && stunParticleL && stunParticleL)
             {
                 Vector3 particleOffset = transform.position;

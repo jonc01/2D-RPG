@@ -35,7 +35,4 @@ public class SpawnEnemy : MonoBehaviour
         if (EnemyObject != null)
             EnemyObject.SetActive(true);
     }
-
-    //if EnemyObject == null, destroy this object
-    //update when calling HealthUpdate
 }

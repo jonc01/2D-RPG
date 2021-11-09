@@ -2179,8 +2179,8 @@ GameObject:
   - component: {fileID: 978661656}
   - component: {fileID: 978661655}
   - component: {fileID: 978661654}
-  - component: {fileID: 978661653}
   - component: {fileID: 978661652}
+  - component: {fileID: 978661653}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: CineMachineCam
@@ -2211,12 +2211,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 978661651}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Script: {fileID: 11500000, guid: 634367e8510c71444862b08a0c2759d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ChannelMask: 1
-  m_Gain: 1
-  m_Use2DDistance: 1
+  placeholderVariable: 
+  presetsIntensity:
+  - 1
+  presetsTime:
+  - 0.1
 --- !u!114 &978661654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3582,6 +3584,7 @@ GameObject:
   - component: {fileID: 1958919545}
   - component: {fileID: 1958919547}
   - component: {fileID: 1958919546}
+  - component: {fileID: 1958919548}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -3658,6 +3661,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1958919548
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1958919544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
+  m_AmplitudeGain: 0
+  m_FrequencyGain: 0
+  mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &1980092036
 GameObject:
   m_ObjectHideFlags: 0

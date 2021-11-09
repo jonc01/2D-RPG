@@ -3,34 +3,56 @@ using Cinemachine;
 
 public class ScreenShakeListener : MonoBehaviour
 {
+    //https://youtu.be/ACf1I27I6Tk
+    //Code Monkey screenshake tutorial
+
+    public static ScreenShakeListener Instance { get; private set; }
+
     [Header("*This uses Cinemachine, camera bounds will affect the screenshake.")]
     public string placeholderVariable = "";
 
     public static bool enableScreenshake = true;
-    //Sources listed in order of impulse strength
-    public CinemachineImpulseSource source1;
-    public CinemachineImpulseSource source2;
-    public CinemachineImpulseSource source3;
 
-    public void Shake(int sourceChoice = 1)
+    [SerializeField] float[] presetsIntensity = { 1f };
+    [SerializeField] float[] presetsTime = { .1f };
+
+    private float shakeTimer;
+    private float startingShakeTimer;
+    private float startingIntensity;
+
+    private CinemachineVirtualCamera CMvcam;
+
+    private void Awake()
     {
-        if (enableScreenshake && source1 != null)
+        Instance = this;
+        CMvcam = GetComponent<CinemachineVirtualCamera>();
+    }
+
+    public void Shake(int choice = 0)
+    {
+        CinemachineBasicMultiChannelPerlin cmBMCP = 
+            CMvcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+        if (enableScreenshake)
         {
-            switch (sourceChoice)
-            {
-                case 1:
-                    source1.GenerateImpulse();
-                    break;
-                case 2:
-                    source2.GenerateImpulse();
-                    break;
-                case 3:
-                    source3.GenerateImpulse();
-                    break;
-                default:
-                    //Debug.Log("No impulse source.");
-                    break;
-            }
+            cmBMCP.m_AmplitudeGain = presetsIntensity[choice];
+
+            startingIntensity = presetsIntensity[choice];
+            shakeTimer = presetsTime[choice];
+            startingShakeTimer = presetsTime[choice];
+        }
+    }
+
+    private void Update()
+    {
+        if(shakeTimer > 0)
+        {
+            shakeTimer -= Time.deltaTime;
+            CinemachineBasicMultiChannelPerlin cmBMCP =
+                CMvcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+            cmBMCP.m_AmplitudeGain = 
+                Mathf.Lerp(startingIntensity, 0f, shakeTimer / startingShakeTimer);
         }
     }
 }

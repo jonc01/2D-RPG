@@ -8,7 +8,7 @@ public class BossPhaseController : MonoBehaviour
     [SerializeField] public int currentPhase; //starts at 0, for use with index
     [SerializeField] GameObject[] additionals; //holds Enemy adds to spawn at certain hp phases
 
-    public void UpdateHealth(float currentHP, float maxHP) //TODO: currently only spawns one enemy at a time
+    public void UpdateHealth(float currentHP, float maxHP)
     {
         if(currentPhase <= hpPhases.Length-1) //stop if no more phases
         {

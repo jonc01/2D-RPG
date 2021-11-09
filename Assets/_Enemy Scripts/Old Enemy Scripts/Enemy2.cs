@@ -14,7 +14,6 @@ public class Enemy2 : MonoBehaviour
     //public float enAttackAnimSpeed = .4f; //lower value for shorter animations
 
     TimeManager timeManager;
-    private ScreenShakeListener screenshake;
 
     //Text Popups
     [SerializeField] private TextPopupsHandler AttackIndicator; //TODO: should be animation or no handler, manual instantiate
@@ -58,8 +57,6 @@ public class Enemy2 : MonoBehaviour
 
     void Start()
     {
-        screenshake = GameObject.Find("ScreenShakeManager").GetComponent<ScreenShakeListener>();
-
         AttackIndicator = GameObject.Find("ObjectPool(Attack/Alert Indicators)").GetComponent<TextPopupsHandler>();
 
         timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();

@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public float dodgeTime = .5f;
     public float dodgeCD = 2;
     private float allowDodge = 0;
+    Coroutine DodgeRollCO;
 
     public bool canDash;
     public float dashCD = 2;
@@ -145,11 +146,14 @@ public class PlayerMovement : MonoBehaviour
     #region DodgeRoll
     void CheckDodge() //player is immune to stun while rolling, check in PlayerCombat during knockback application
     {
-        if (Time.time > allowDodge && canMove)
+        if (Time.time > allowDodge)// && canMove)
         {
-            if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && isGrounded) //prevent dodging midair
+            if(canMove || playerCombat.animator.GetBool("isAttacking") == true)
             {
-                StartCoroutine(DodgeRoll());
+                if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && isGrounded) //prevent dodging midair
+                {
+                    DodgeRollCO = StartCoroutine(DodgeRoll());
+                }
             }
         }
     }
@@ -157,8 +161,8 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator DodgeRoll()
     {
         //StopAllCoroutines(); //cancel attacks with dodgeRoll
-            //IsAttacking,
-            
+        //IsAttacking,
+
         DisableMove();
         abilityUI.StartCooldown(dodgeCD);
         playerCombat.canAttack = false;
@@ -298,6 +302,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void StopCO()
     {
+        if (DodgeRollCO != null)
+            StopCoroutine(DodgeRollCO);
+
         StopAllCoroutines();
     }
 }

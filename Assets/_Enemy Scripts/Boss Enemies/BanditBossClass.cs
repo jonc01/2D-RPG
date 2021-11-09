@@ -378,10 +378,11 @@ public class BanditBossClass : HeavyBanditClass
     {
         if (isAlive && isBroken)
         {
+            ScreenShakeListener.Instance.Shake();
             //EnAnimator.PlayAnim(13); //TODO: need number //*just need this, rest is handled in HeavyBanditClass
             //EnAnimator.AnimTrigger("Hit");
 
-                //*PlayHurt() doesn't work, left it null to prevent playing anim when hurt normally
+            //*PlayHurt() doesn't work, left it null to prevent playing anim when hurt normally
             //HeavyBanditClass should instantiate particles
         }
         //base has isAlive check

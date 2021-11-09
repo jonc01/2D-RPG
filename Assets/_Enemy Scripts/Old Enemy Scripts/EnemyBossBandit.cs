@@ -31,7 +31,6 @@ public class EnemyBossBandit : MonoBehaviour
     public PlayerCombat playerCombat;
 
     public TimeManager timeManager;
-    public ScreenShakeListener screenShake;
     public GameObject hitParticlePrefab;
     public GameObject deathParticlePrefab;
     public GameObject stunLParticlePrefab;
@@ -616,8 +615,8 @@ public class EnemyBossBandit : MonoBehaviour
 
             if(isBroken)
             {
-                screenShake.Shake();
                 enAnimator.SetTrigger("StunHits");
+                ScreenShakeListener.Instance.Shake();
 
                 if (particleHits)
                 {
