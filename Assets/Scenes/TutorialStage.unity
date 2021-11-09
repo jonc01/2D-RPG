@@ -694,6 +694,7 @@ GameObject:
   - component: {fileID: 346333091}
   - component: {fileID: 346333093}
   - component: {fileID: 346333092}
+  - component: {fileID: 346333094}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -770,6 +771,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &346333094
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346333090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
+  m_AmplitudeGain: 0
+  m_FrequencyGain: 0
+  mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &369219657
 GameObject:
   m_ObjectHideFlags: 0
@@ -1775,8 +1793,8 @@ GameObject:
   - component: {fileID: 1472483043}
   - component: {fileID: 1472483042}
   - component: {fileID: 1472483041}
-  - component: {fileID: 1472483040}
   - component: {fileID: 1472483039}
+  - component: {fileID: 1472483044}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: CineMachineCam
@@ -1798,21 +1816,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTarget: {fileID: 0}
   playerTransform: {fileID: 0}
---- !u!114 &1472483040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1472483038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ChannelMask: 1
-  m_Gain: 1
-  m_Use2DDistance: 1
 --- !u!114 &1472483041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1880,6 +1883,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1472483044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472483038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634367e8510c71444862b08a0c2759d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placeholderVariable: 
+  presetsIntensity:
+  - 1
+  presetsTime:
+  - 0.1
 --- !u!850595691 &1534141446
 LightingSettings:
   m_ObjectHideFlags: 0

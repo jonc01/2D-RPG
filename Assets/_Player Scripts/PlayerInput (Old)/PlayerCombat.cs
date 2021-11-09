@@ -15,7 +15,6 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Canvas PlayerHealthBarCanvas;
     [SerializeField] GameObject StatusStunned;
     public TimeManager timeManager;
-    public ScreenShakeListener screenShake;
     public GameObject respawnPrompt;
 
     [Header("Ability UI")]
@@ -240,7 +239,8 @@ public class PlayerCombat : MonoBehaviour
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
-        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //maintaining y velocity, instead of making player float
+        //maintaining y velocity, instead of making player float
+        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); 
         canAttack = false;
 
         switch (attackNum)
@@ -334,7 +334,8 @@ public class PlayerCombat : MonoBehaviour
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
-        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); //maintaining y velocity, instead of making player float
+        //maintaining y velocity, instead of making player float
+        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); 
         canAttack = false;
 
         switch (attackNum)
@@ -379,8 +380,7 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (enemy.GetComponent<BaseEnemyClass>() != null)
                     {
-                        if (enableScreenshake)
-                            screenShake.Shake();
+                        ScreenShakeListener.Instance.Shake();
                         
                         timeManager.DoFreezeTime(.1f, .05f); //.1, .05
 
@@ -395,8 +395,7 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (enemy.GetComponent<BaseEnemyClass>() != null)
                     {
-                        if (enableScreenshake)
-                            screenShake.Shake();
+                        ScreenShakeListener.Instance.Shake();
 
                         timeManager.DoFreezeTime(.1f, .05f);
 
@@ -544,8 +543,7 @@ public class PlayerCombat : MonoBehaviour
     public void OnSuccessfulBash() //called from CollisionCheck //also called at end of Dash()
     {
         //disable collider on hit
-        if (enableScreenshake)
-            screenShake.Shake(2);
+        ScreenShakeListener.Instance.Shake(); //1
 
         timeManager.DoFreezeTime(.1f, .05f);
 
@@ -572,7 +570,7 @@ public class PlayerCombat : MonoBehaviour
     }    
     #endregion
 
-    void DodgeAttackCancel() 
+    public void DodgeAttackCancel() 
     {
         if (IsLightAttackingCO != null) //allow dodge to cancel attack
         {

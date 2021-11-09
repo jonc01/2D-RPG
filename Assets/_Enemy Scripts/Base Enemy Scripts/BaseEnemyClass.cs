@@ -67,7 +67,7 @@ public class BaseEnemyClass : MonoBehaviour
     public GameObject stunRParticlePrefab;
     public TextPopupsHandler noReScaleTextHandler; //use for text to float above enemy, no re-scaling
     [SerializeField] protected bool useScreenshake;
-    protected ScreenShakeListener screenshake;
+    //protected ScreenShakeListener screenshake;
 
     // === ANIMATION ===
     //float attackAnimSpeed
@@ -105,8 +105,8 @@ public class BaseEnemyClass : MonoBehaviour
             //stageClear = GameObject.Find("StageClearCheck").GetComponent<StageClear>();
 
 
-        if (useScreenshake)
-            screenshake = GameObject.Find("ScreenShakeManager").GetComponent<ScreenShakeListener>();
+        //if (useScreenshake)
+        //    screenshake = GameObject.Find("ScreenShakeManager").GetComponent<ScreenShakeListener>();
 
         currentHealth = maxHealth;
         if (healthBar != null)
@@ -319,9 +319,9 @@ public class BaseEnemyClass : MonoBehaviour
                 Vector3 tempPos = transform.position;
                 tempPos.y += TPOffset;
                 TextPopupsHandler.ShowDamage(damageTaken, tempPos, isCrit);
-                if (isCrit && screenshake != null)
+                if (isCrit)// && screenshake != null)
                 {
-                    screenshake.Shake(1);
+                    ScreenShakeListener.Instance.Shake();
                 }
             }
 

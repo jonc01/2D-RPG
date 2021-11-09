@@ -1329,6 +1329,7 @@ GameObject:
   - component: {fileID: 954060030}
   - component: {fileID: 954060032}
   - component: {fileID: 954060031}
+  - component: {fileID: 954060033}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -1405,6 +1406,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &954060033
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954060029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
+  m_AmplitudeGain: 0
+  m_FrequencyGain: 0
+  mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &958653532
 GameObject:
   m_ObjectHideFlags: 0
@@ -1608,8 +1626,8 @@ GameObject:
   - component: {fileID: 1459895444}
   - component: {fileID: 1459895443}
   - component: {fileID: 1459895442}
-  - component: {fileID: 1459895441}
   - component: {fileID: 1459895440}
+  - component: {fileID: 1459895441}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: CineMachineCam
@@ -1640,12 +1658,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1459895439}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Script: {fileID: 11500000, guid: 634367e8510c71444862b08a0c2759d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ChannelMask: 1
-  m_Gain: 1
-  m_Use2DDistance: 1
+  placeholderVariable: 
+  presetsIntensity:
+  - 1
+  presetsTime:
+  - 0.1
 --- !u!114 &1459895442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2476,6 +2496,14 @@ PrefabInstance:
     - target: {fileID: 1182070839655088715, guid: 117ad7ba9874aca4296b38d2e1196ea6, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1182070839694271048, guid: 117ad7ba9874aca4296b38d2e1196ea6, type: 3}
+      propertyPath: stage1
+      value: Stage2-1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1182070839694271048, guid: 117ad7ba9874aca4296b38d2e1196ea6, type: 3}
+      propertyPath: stage2
+      value: Stage2-2
       objectReference: {fileID: 0}
     - target: {fileID: 1182070839694271049, guid: 117ad7ba9874aca4296b38d2e1196ea6, type: 3}
       propertyPath: m_LocalPosition.x
