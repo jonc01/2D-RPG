@@ -299,17 +299,19 @@ MonoBehaviour:
     m_Bits: 1024
   sr: {fileID: 2055143821889519478}
   rb: {fileID: 2055143821148668567}
+  stageClear: {fileID: 0}
   TextPopupsHandler: {fileID: 0}
   AttackIndicator: {fileID: 0}
   HitEffectsHandler: {fileID: 0}
   DeathParticlesHandler: {fileID: 0}
   defaultMoveSpeed: 3.3
-  maxHealth: 250
+  maxHealth: 200
   enAttackDamage: 10
   enAttackSpeed: 1
   enAttackAnimSpeed: 0.4
   enAttackRadius: 0.42
   XP: 20
+  gold: 10
   stunResist: 0
   allowStunCD: 1
   kbThrust: 0
@@ -329,7 +331,6 @@ MonoBehaviour:
   enFacingRight: 0
   enCanFlip: 0
   enCanParry: 0
-  screenShake: {fileID: 0}
   initialStunParticle: {fileID: 739723056544264075, guid: 2ecc6a1dea805b147b3a69729badd706, type: 3}
   stunParticleL: {fileID: 6601068581037343418, guid: bbc8d6c487952ee449e949998073dcfd, type: 3}
   stunParticleR: {fileID: 5348519943208086770, guid: e3a1e983f51bfb2498d695f0c6cd8751, type: 3}

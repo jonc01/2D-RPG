@@ -395,6 +395,7 @@ MonoBehaviour:
   currentPotionCharges: 0
   defaultAmountPotions: 2
   maxPotions: 5
+  healAmount: 20
   chargeSlider: {fileID: 2064149665}
 --- !u!1 &70449125
 GameObject:
@@ -3904,7 +3905,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 685120999}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.6570039, y: -1.7230784, z: -2}
+  m_LocalPosition: {x: 3.4688354, y: -2.020031, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

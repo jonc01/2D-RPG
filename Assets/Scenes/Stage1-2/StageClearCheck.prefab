@@ -1506,10 +1506,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2055143821889519468, guid: 48fe0274897c7b04bac6a6bf2ae8c89c, type: 3}
-      propertyPath: maxHealth
-      value: 250
-      objectReference: {fileID: 0}
-    - target: {fileID: 2055143821889519468, guid: 48fe0274897c7b04bac6a6bf2ae8c89c, type: 3}
       propertyPath: mWhiteFlash
       value: 
       objectReference: {fileID: 2100000, guid: 8a1453e4ab95e7943b6c384a91fd4b7f, type: 2}
