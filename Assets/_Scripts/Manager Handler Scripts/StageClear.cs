@@ -56,11 +56,12 @@ public class StageClear : MonoBehaviour
         enemyCount--; //called in Enemy Die()
 
         UpdatePlayerInventory(XP, gold);
-        ScreenShakeListener.Instance.Shake(); //TODO: move to BaseEnemyClass
+        //ScreenShakeListener.Instance.Shake();
+        TimeManager.Instance.DoFreezeTime(.15f, .05f);
 
         if (enemyCount <= 0)
         {
-
+            TimeManager.Instance.DoSlowMotion();
             levelCleared = true;
             EndPortal.SetActive(true);
             if(ArrowIndicator != null)

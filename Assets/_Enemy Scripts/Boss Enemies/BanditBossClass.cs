@@ -12,15 +12,12 @@ public class BanditBossClass : HeavyBanditClass
     [SerializeField] Transform enAttackPoint2;
     public GameObject HealthBarCanvas;
     [SerializeField] Transform TPOffsetObj;
-    [SerializeField] TimeManager timeManager;
-
 
     [SerializeField] Vector2 enAttackRange2 = new Vector2(1.85f, 0.4f);
 
     float breakDuration;
     int atkSequence;
     //
-
 
     // Start is called before the first frame update
     protected override void Start()
@@ -35,8 +32,6 @@ public class BanditBossClass : HeavyBanditClass
 
         if(HealthBarCanvas != null)
             healthBarTransform = healthBar.GetComponent<Transform>();
-
-        timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
 
         atkSequence = 1;
     }
@@ -345,13 +340,9 @@ public class BanditBossClass : HeavyBanditClass
 
             yield return new WaitForSeconds(.1f); //short delay before starting slow motion
 
-            if (timeManager != null) //
-            {
-                timeManager.CustomSlowMotion(.02f, .5f);
-                //timeManager.DoSlowMotion();
-            }
+            TimeManager.Instance.CustomSlowMotion(.02f, .5f);
 
-            Vector3 tempPos = transform.position; 
+            Vector3 tempPos = transform.position;
             tempPos.y += TPOffset;
             AttackIndicator.ShowBreak(tempPos);
 

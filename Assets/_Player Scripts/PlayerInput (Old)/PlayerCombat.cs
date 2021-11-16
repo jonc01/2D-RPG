@@ -14,7 +14,7 @@ public class PlayerCombat : MonoBehaviour
     public Transform playerLocation;
     [SerializeField] Canvas PlayerHealthBarCanvas;
     [SerializeField] GameObject StatusStunned;
-    public TimeManager timeManager;
+    //public TimeManager timeManager;
     public GameObject respawnPrompt;
 
     [Header("Ability UI")]
@@ -169,7 +169,7 @@ public class PlayerCombat : MonoBehaviour
                     //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
                     //controller.RespawnPlayerResetLevel();
                     PauseMenu.LoadMenu();
-                    timeManager.ResetTimeScale();
+                    TimeManager.Instance.ResetTimeScale();
                 }
             }
 
@@ -381,8 +381,8 @@ public class PlayerCombat : MonoBehaviour
                     if (enemy.GetComponent<BaseEnemyClass>() != null)
                     {
                         ScreenShakeListener.Instance.Shake();
-                        
-                        timeManager.DoFreezeTime(.1f, .05f); //.1, .05
+
+                        TimeManager.Instance.DoFreezeTime(.1f, .05f); //.1, .05
 
                         enemy.GetComponent<BaseEnemyClass>().TakeDamage(wepDamage * attackDamageHeavyMultiplier, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
@@ -397,7 +397,7 @@ public class PlayerCombat : MonoBehaviour
                     {
                         ScreenShakeListener.Instance.Shake();
 
-                        timeManager.DoFreezeTime(.1f, .05f);
+                        TimeManager.Instance.DoFreezeTime(.1f, .05f);
 
                         enemy.GetComponent<BaseEnemyClass>().TakeDamage(wepDamage * attackDamageHeavyMultiplier, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
@@ -545,7 +545,7 @@ public class PlayerCombat : MonoBehaviour
         //disable collider on hit
         ScreenShakeListener.Instance.Shake(); //1
 
-        timeManager.DoFreezeTime(.1f, .05f);
+        TimeManager.Instance.DoFreezeTime(.1f, .05f);
 
         StartCoroutine(ShieldBashEnd());
     }
@@ -775,7 +775,7 @@ public class PlayerCombat : MonoBehaviour
     public void GiveXP(float xp)
     {
         experienceBar.AddXP(xp);
-        timeManager.DoFreezeTime(.05f); //short freeze on kill
+        TimeManager.Instance.DoFreezeTime(.05f); //short freeze on kill
         xpPopups.ShowText(transform.position, "+" + xp + "xp");
         healthPotion.GetChargeFromKill(xp);
     }
@@ -832,8 +832,8 @@ public class PlayerCombat : MonoBehaviour
         movement.rb.velocity = new Vector2(0, 0); //prevent player from moving
         movement.DisableMove();
         canAttack = false;
-        timeManager.DoFreezeTime(.05f, .5f);
-        timeManager.DoSlowMotion();
+        TimeManager.Instance.DoFreezeTime(.05f, .5f);
+        TimeManager.Instance.DoSlowMotion();
         //kill player
 
         StartCoroutine(DelayRespawn());

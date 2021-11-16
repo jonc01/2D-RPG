@@ -117,6 +117,7 @@ public class StationaryBufferClass : BaseEnemyClass
     {
         sr.enabled = false;
         GetComponentInChildren<Canvas>().enabled = false; //removes health bar
+        GetComponent<Collider2D>().enabled = false;
         yield return new WaitForSeconds(1.5f);
         Destroy(this.gameObject);
     }
