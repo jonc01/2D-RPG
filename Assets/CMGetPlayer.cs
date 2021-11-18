@@ -25,8 +25,9 @@ public class CMGetPlayer : MonoBehaviour
             {
                 //If target is found, set variables
                 playerTransform = playerTarget.transform;
-                vCam.LookAt = playerTransform;
-                vCam.Follow = playerTransform;
+                //null checks in case of a transform override for certain stages
+                if(vCam.LookAt == null) vCam.LookAt = playerTransform;
+                if(vCam.Follow == null) vCam.Follow = playerTransform;
             }
         }
     }

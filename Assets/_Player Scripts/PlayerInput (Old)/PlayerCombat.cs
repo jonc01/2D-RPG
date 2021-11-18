@@ -31,8 +31,8 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0f, 0);
 
     [Space]
-    public float playerLevel = 1; //PLACEHOLDER, use save file
-    public float maxHealth = 100;
+    public float playerLevel = 1;
+    public float maxHealth = 50; //base max hp
     public float currentHealth;
     public HealthBar healthBar;
     public ExperienceBar experienceBar;
@@ -60,7 +60,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] bool playerStunned;
 
     public float attackTime = 0.25f; //0.25 seems good, +/- .1 seconds
-
+    public bool isAttacking;
     //armor stats
     public float playerArmor; //temp
 
@@ -111,7 +111,6 @@ public class PlayerCombat : MonoBehaviour
         if (respawnPrompt != null)
             respawnPrompt.GetComponent<Canvas>().enabled = false;
 
-        maxHealth = 100 + ((playerLevel - 1) * 10);
         experienceBar.SetXP(0, playerLevel);
         wepDamage += ((playerLevel - 1) * 2);
 
@@ -130,6 +129,7 @@ public class PlayerCombat : MonoBehaviour
         //attackDamageHeavyMultiplier = 2.0f; //placeholder
 
         canAttack = true;
+        isAttacking = false;
         AltAttacking = false;
         IsParrying = false;
         IsShieldBashing = false;
@@ -239,6 +239,7 @@ public class PlayerCombat : MonoBehaviour
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
+        isAttacking = true;
         //maintaining y velocity, instead of making player float
         movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); 
         canAttack = false;
@@ -266,6 +267,7 @@ public class PlayerCombat : MonoBehaviour
         }
         canSwitch = true;
         yield return new WaitForSeconds(playerAttackSpeed);
+        isAttacking = false;
         canSwitch = false;
 
         movement.canMove = true;
@@ -334,6 +336,7 @@ public class PlayerCombat : MonoBehaviour
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
+        isAttacking = true;
         //maintaining y velocity, instead of making player float
         movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); 
         canAttack = false;
@@ -359,6 +362,7 @@ public class PlayerCombat : MonoBehaviour
         canSwitch = true;
         yield return new WaitForSeconds(playerAttackSpeed + 0.1f);
         canSwitch = false;
+        isAttacking = false;
 
         movement.canMove = true;
         canAttack = true;
@@ -416,6 +420,7 @@ public class PlayerCombat : MonoBehaviour
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
+        isAttacking = true;
         AltAttack(wepDamage*3f, wepRange*3f); //deals 300% weapon damage and applies knockback to enemies
         movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         AltAttacking = true;
@@ -423,6 +428,7 @@ public class PlayerCombat : MonoBehaviour
         allowAltAttack = Time.time + altAttackCD;
         yield return new WaitForSeconds(altAttackTime);
         movement.canMove = true;
+        isAttacking = false;
         animator.SetBool("isAttacking", false);
     }
 
@@ -476,6 +482,7 @@ public class PlayerCombat : MonoBehaviour
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
+        isAttacking = true;
         ParryAttack(); // hit enemies and check if they can be parried
         movement.rb.velocity = new Vector2(0, 0);
         AltAttacking = true;
@@ -484,6 +491,7 @@ public class PlayerCombat : MonoBehaviour
         abilityUI.StartCooldown(altAttackCD);
         yield return new WaitForSeconds(altAttackTime); // parry attack time
         movement.canMove = true;
+        isAttacking = false;
         animator.SetBool("isAttacking", false);
     }
     
@@ -572,21 +580,11 @@ public class PlayerCombat : MonoBehaviour
 
     public void DodgeAttackCancel() 
     {
-        if (IsLightAttackingCO != null) //allow dodge to cancel attack
-        {
-            if (movement.m_rolling) //!!! dodge roll and dash can't be started while attacking because attacking sets canMove to false
-                StopCoroutine(IsLightAttackingCO); //replace canMove as a condition for dodge/dash for this to work
-
-            if (movement.isDashing)
-                StopCoroutine(IsLightAttackingCO);
-
-            /*if (Input.GetButtonDown("Dodge") && animator.GetBool("isAttacking")){
-                StopCoroutine(IsAttackingCO);
-                Debug.Log("Stopping Attack CO");
-            }*/
-        }
-
-        //if(IsHeavyAttackingCO != null)
+        if(IsLightAttackingCO != null)
+            StopCoroutine(IsLightAttackingCO); //replace canMove as a condition for dodge/dash for this to work
+            
+        if(IsHeavyAttackingCO != null)
+            StopCoroutine(IsHeavyAttackingCO);
     }
 
     void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f, bool lunge = true) //defaults, set "lunge" to false for knockback (recoil)
@@ -690,6 +688,7 @@ public class PlayerCombat : MonoBehaviour
         movement.canMove = false;
         animator.SetBool("move", false);
         animator.SetBool("isAttacking", false);
+        isAttacking = true;
         animator.SetBool("Stunned", true);
         ShowStatusStun(true);
         //FlashMaterial();
@@ -700,6 +699,7 @@ public class PlayerCombat : MonoBehaviour
 
         allowStun = Time.time + allowStunCD;
         playerStunned = false;
+        isAttacking = false;
         canAttack = true;
         animator.SetBool("Stunned", false);
         movement.canMove = true;

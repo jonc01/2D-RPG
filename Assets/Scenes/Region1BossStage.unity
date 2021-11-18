@@ -658,6 +658,22 @@ PrefabInstance:
     m_TransformParent: {fileID: 1293815766}
     m_Modifications:
     - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 0
       objectReference: {fileID: 0}
@@ -1697,6 +1713,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1293815766}
     m_Modifications:
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2544478745936961700, guid: d72722211bf3aed45ad4d153937af768, type: 3}
       propertyPath: m_Name
       value: 'Spawner: Bandit (right)'
@@ -1780,6 +1812,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1293815766}
     m_Modifications:
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2544478745936961700, guid: d72722211bf3aed45ad4d153937af768, type: 3}
       propertyPath: m_Name
       value: 'Spawner: Scarecrow (center)'
@@ -2157,6 +2205,22 @@ PrefabInstance:
     m_TransformParent: {fileID: 1293815766}
     m_Modifications:
     - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 0
       objectReference: {fileID: 0}
@@ -2530,6 +2594,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1293815766}
     m_Modifications:
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2544478745936961700, guid: d72722211bf3aed45ad4d153937af768, type: 3}
       propertyPath: m_Name
       value: 'Spawner: Scarecrow (left)'
@@ -2820,7 +2900,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1373731381}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.657, y: -1.0430005, z: -2}
+  m_LocalPosition: {x: 2.657, y: -1.9120004, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 823039438}
@@ -3307,7 +3387,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599150646}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.19, y: -3.1, z: -10.278398}
+  m_LocalPosition: {x: 4.19, y: -3.1, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3333,20 +3413,20 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 1599150650}
     m_ColliderPaths:
-    - - X: 35162183
-        Y: -18848614
-      - X: 35162183
-        Y: 41769220
-      - X: -65966388
-        Y: 41768927
-      - X: -65966095
-        Y: -18848614
+    - - X: 34491411
+        Y: -23933588
+      - X: 34491411
+        Y: 37813528
+      - X: -65107084
+        Y: 37813235
+      - X: -65106791
+        Y: -23933588
   m_CompositePaths:
     m_Paths:
-    - - {x: 3.5161889, y: -1.8848615}
-      - {x: 3.5161889, y: 4.176922}
-      - {x: -6.5966387, y: 4.176863}
-      - {x: -6.59658, y: -1.8848615}
+    - - {x: 3.449112, y: -2.393359}
+      - {x: 3.449112, y: 3.7813528}
+      - {x: -6.5107083, y: 3.7812943}
+      - {x: -6.5106497, y: -2.393359}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
 --- !u!50 &1599150649
@@ -3383,7 +3463,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 1
-  m_Offset: {x: -1.5401955, y: 1.1460302}
+  m_Offset: {x: -1.5307689, y: 0.69399714}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -3394,7 +3474,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 10.112886, y: 6.0617833}
+  m_Size: {x: 9.959879, y: 6.1747117}
   m_EdgeRadius: 0
 --- !u!1 &1630885521
 GameObject:
@@ -4310,7 +4390,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2057511840}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.707, y: -1.991, z: -1}
+  m_LocalPosition: {x: 2.707, y: -2.86, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4454,6 +4534,22 @@ PrefabInstance:
     m_TransformParent: {fileID: 1293815766}
     m_Modifications:
     - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544478745936961688, guid: d72722211bf3aed45ad4d153937af768, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 0
       objectReference: {fileID: 0}
@@ -4580,7 +4676,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 2
   m_Sprite: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.79607844}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

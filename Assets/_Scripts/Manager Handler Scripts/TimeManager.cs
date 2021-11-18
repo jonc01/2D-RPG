@@ -47,7 +47,7 @@ public class TimeManager : MonoBehaviour
         //Time.fixedDeltaTime = Time.timeScale * .02f;
     }
 
-    public void CustomSlowMotion(float slowdownFactorC, float slowdownLengthC)
+    public void CustomSlowMotion(float slowdownFactorC = .02f, float slowdownLengthC = 2f)
     {
         //has custom duration for slow motion, instantly returns to normal time scale after
         StartCoroutine(TimedSlowMotion(slowdownFactorC, slowdownLengthC));
