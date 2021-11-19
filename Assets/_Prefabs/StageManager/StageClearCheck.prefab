@@ -852,6 +852,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1182070839492320556}
     m_Modifications:
+    - target: {fileID: 1261055530405198, guid: ce5cf8b9eb7b68f4eaaa3e4e82823354, type: 3}
+      propertyPath: m_Name
+      value: Spark (emission is bugged)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1261055530405198, guid: ce5cf8b9eb7b68f4eaaa3e4e82823354, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1400517151494326, guid: ce5cf8b9eb7b68f4eaaa3e4e82823354, type: 3}
       propertyPath: m_Name
       value: PF FX Campfire Fire

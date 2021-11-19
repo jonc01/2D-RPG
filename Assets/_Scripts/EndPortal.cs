@@ -11,7 +11,7 @@ public class EndPortal : MonoBehaviour
 
     void Start() //Note: this is only called when EndPortal is enabled
     {
-        portal.SetActive(false);
+        //portal.SetActive(false);
         //Scene currentScene = SceneManager.GetActiveScene();
         //string currentSceneName = currentScene.name;
 
@@ -28,15 +28,13 @@ public class EndPortal : MonoBehaviour
 
         if (randStage)
         {
-            Debug.Log("stage1: " + stage1);
+            //Debug.Log("stage1: " + stage1);
             AsyncLevelLoader.asyncLevelLoader.LoadScene(stage1, currentScene);
         }
         else
         {
-            Debug.Log("stage2: " + stage2);
-            //levelLoader.LoadSelectLevel(stage2);
+            //Debug.Log("stage2: " + stage2);
             AsyncLevelLoader.asyncLevelLoader.LoadScene(stage2, currentScene);
-            //SceneManager.LoadScene(stage2);
         }
     }
 }
