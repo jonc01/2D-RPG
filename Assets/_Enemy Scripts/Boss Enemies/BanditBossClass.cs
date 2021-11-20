@@ -163,7 +163,7 @@ public class BanditBossClass : HeavyBanditClass
                     yield return new WaitForSeconds(0.20f); //.54f
                     EnDisableFlip();
                     yield return new WaitForSeconds(0.34f);
-                    LungeOnAttack(30f);
+                    LungeOnAttack(15f); //30f
                     yield return new WaitForSeconds(0.08f); //Don't change: is the time it takes to lunge and hit attack
                     Attack2(1f);
                     yield return new WaitForSeconds(enAttackSpeed);
@@ -185,7 +185,7 @@ public class BanditBossClass : HeavyBanditClass
                     yield return new WaitForSeconds(0.24f); //.44
                     EnDisableFlip();
                     yield return new WaitForSeconds(0.2f);
-                    LungeOnAttack(30f);
+                    LungeOnAttack(15f);
                     yield return new WaitForSeconds(0.08f); //.08 for lunge
                     //EnDisableMove();
                     Attack2(1f);
@@ -205,8 +205,8 @@ public class BanditBossClass : HeavyBanditClass
                     EnAnimator.AnimTrigger("Attack1SlowStartCombo"); //.6 total
                     yield return new WaitForSeconds(.34f); //.54
                     EnDisableFlip();
-                    yield return new WaitForSeconds(.2f); //TODO: needs testing
-                    LungeOnAttack(20f);
+                    yield return new WaitForSeconds(.2f);
+                    LungeOnAttack(10f);
                     yield return new WaitForSeconds(0.08f);
                     Attack(1f);
                     yield return new WaitForSeconds(.4f);
@@ -215,7 +215,7 @@ public class BanditBossClass : HeavyBanditClass
                     EnAnimator.AnimTrigger("Attack2SlowStartCombo"); 
                     yield return new WaitForSeconds(.34f); //.4 ?
                     EnDisableFlip();
-                    LungeOnAttack(30f);
+                    LungeOnAttack(15f);
                     yield return new WaitForSeconds(0.08f);
                     Attack2(1f);
                     yield return new WaitForSeconds(.3f);
@@ -224,7 +224,7 @@ public class BanditBossClass : HeavyBanditClass
                     EnAnimator.AnimTrigger("Attack1SlowStartCombo2");
                     yield return new WaitForSeconds(.24f); //.3 total
                     EnDisableFlip();
-                    LungeOnAttack(20f);
+                    LungeOnAttack(10f);
                     yield return new WaitForSeconds(0.08f);
                     Attack(1.5f);
                     yield return new WaitForSeconds(.2f);
@@ -233,7 +233,7 @@ public class BanditBossClass : HeavyBanditClass
                     EnAnimator.AnimTrigger("Attack2SlowStartCombo2");
                     yield return new WaitForSeconds(.14f); //.2 total
                     EnDisableFlip();
-                    LungeOnAttack(30f);
+                    LungeOnAttack(15f);
                     yield return new WaitForSeconds(0.08f);
                     Attack2(1.5f);
                     yield return new WaitForSeconds(.2f);
@@ -242,7 +242,7 @@ public class BanditBossClass : HeavyBanditClass
                     EnAnimator.AnimTrigger("Attack1SlowStartCombo3");
                     yield return new WaitForSeconds(.14f); //.2 total
                     EnDisableFlip();
-                    LungeOnAttack(20f);
+                    LungeOnAttack(10f);
                     yield return new WaitForSeconds(0.08f);
                     Attack(2f);
                     yield return new WaitForSeconds(.2f);
@@ -251,7 +251,7 @@ public class BanditBossClass : HeavyBanditClass
                     EnAnimator.AnimTrigger("Attack2SlowStartCombo3");
                     yield return new WaitForSeconds(.14f); //.2 total
                     EnDisableFlip();
-                    LungeOnAttack(30f);
+                    LungeOnAttack(15f);
                     yield return new WaitForSeconds(0.08f);
                     Attack2(2f);
 

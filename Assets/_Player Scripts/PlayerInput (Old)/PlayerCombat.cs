@@ -394,7 +394,7 @@ public class PlayerCombat : MonoBehaviour
                 }
                 break;
             case 2:
-                Collider2D[] hitEnemiesWide = Physics2D.OverlapBoxAll(heavyAttackPointWide.position, new Vector2(attackHeavyRange*2.7f, .8f), enemyLayers);
+                Collider2D[] hitEnemiesWide = Physics2D.OverlapBoxAll(heavyAttackPointWide.position, new Vector2(attackHeavyRange*2.7f, .5f), enemyLayers);
                 foreach (Collider2D enemy in hitEnemiesWide) //loop through enemies hit
                 {
                     if (enemy.GetComponent<BaseEnemyClass>() != null)
@@ -637,7 +637,7 @@ public class PlayerCombat : MonoBehaviour
         //Gizmos.DrawWireCube(newAttackPoint, new Vector3(wepRange * 3, 1, 0));
 
         Vector3 newAttackPoint = heavyAttackPointWide.position;
-        Gizmos.DrawWireCube(newAttackPoint, new Vector3(attackHeavyRange*2.7f, .8f, 0)); //* 2.7f, Collider[] BoxOverlap is 2.3f
+        Gizmos.DrawWireCube(newAttackPoint, new Vector3(attackHeavyRange*2.7f, .5f, 0)); //* 2.7f, Collider[] BoxOverlap is 2.3f
     }
      
     public void GetKnockback(bool pushToRight, float kbThrust = 3f, float kbDuration = 5f) //defaults //short stun on knockback

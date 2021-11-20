@@ -46,12 +46,17 @@ public class PlayerHealthPotion : MonoBehaviour
         if(currentPotionCharges > maxPotions)
         {
             currentPotionCharges = maxPotions;
+            chargeSlider.value = 0; //no overflow when maxed
         }
     }
 
     public void GetChargeFromKill(float chargeAmount = 10)
     {
-        chargeSlider.value += chargeAmount;
+        if(currentPotionCharges < maxPotions) //don't add any charge when maxed
+        {
+            chargeSlider.value += chargeAmount;
+        }
+
         if(chargeSlider.value == maxSliderValue)
         {
             AddPotionCharge();

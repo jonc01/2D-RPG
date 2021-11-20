@@ -146,7 +146,7 @@ public class PlayerMovement : MonoBehaviour
     #region DodgeRoll
     void CheckDodge() //player is immune to stun while rolling, check in PlayerCombat during knockback application
     {
-        if (Time.time > allowDodge)// && canMove)
+        if (Time.time > allowDodge && playerCombat.isAlive)// && canMove)
         {
             if(canMove || playerCombat.isAttacking == true)
             {
@@ -185,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
         m_rolling = false; //DELETE: if still using AE_ResetRoll in animation event
         playerCombat.canStunPlayer = true;
     }
-    
+
     void AE_ResetRoll() // called in animation event
     {
         m_rolling = false;
