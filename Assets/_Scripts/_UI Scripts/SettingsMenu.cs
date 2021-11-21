@@ -22,8 +22,6 @@ public class SettingsMenu : MonoBehaviour
             screenshakeON.SetActive(false);
             screenshakeOFF.SetActive(true);
         }
-
-
     }
 
     public void ToggleScreenShake()

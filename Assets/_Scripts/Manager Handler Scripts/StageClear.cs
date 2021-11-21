@@ -61,7 +61,8 @@ public class StageClear : MonoBehaviour
 
         if (enemyCount <= 0)
         {
-            TimeManager.Instance.DoSlowMotion();
+            StartCoroutine(DelaySlowMo());
+            //TimeManager.Instance.DoSlowMotion();
             levelCleared = true;
             EndPortal.SetActive(true);
             if(ArrowIndicator != null)
@@ -77,5 +78,11 @@ public class StageClear : MonoBehaviour
         
         if(playerInventory != null)
             playerInventory.GiveGold(gold);
+    }
+
+    IEnumerator DelaySlowMo()
+    {
+        yield return new WaitForSeconds(0.1f);
+        TimeManager.Instance.DoSlowMotion();
     }
 }
