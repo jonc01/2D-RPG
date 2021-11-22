@@ -463,10 +463,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1190,8 +1190,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
-  m_fontSizeBase: 72
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3087,17 +3087,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5040420503328431211}
     - target: {fileID: 7730487714719235616, guid: abcb6f24dbda909418c15b2fc62728ba, type: 3}
-      propertyPath: maxHealth
-      value: 1200
-      objectReference: {fileID: 0}
-    - target: {fileID: 7730487714719235616, guid: abcb6f24dbda909418c15b2fc62728ba, type: 3}
       propertyPath: HealthBarCanvas
       value: 
       objectReference: {fileID: 5040420503057490427}
-    - target: {fileID: 7730487714719235616, guid: abcb6f24dbda909418c15b2fc62728ba, type: 3}
-      propertyPath: defaultMoveSpeed
-      value: 2.5
-      objectReference: {fileID: 0}
     - target: {fileID: 7730487714719235618, guid: abcb6f24dbda909418c15b2fc62728ba, type: 3}
       propertyPath: playerCheckDistanceBack
       value: -5
@@ -3321,7 +3313,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -222, y: -355.81}
+  m_AnchoredPosition: {x: -203.8, y: -184.7}
   m_SizeDelta: {x: 529.0247, y: 144.0108}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1449986307
@@ -3371,8 +3363,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 38.8
-  m_fontSizeBase: 38.8
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3527,8 +3519,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 200
-  m_fontSizeBase: 200
+  m_fontSize: 150
+  m_fontSizeBase: 150
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

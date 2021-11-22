@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class SettingsMenu : MonoBehaviour
 {
+    public static SettingsMenu Instance { get; private set; }
+
     public GameObject screenshakeON;
     public GameObject screenshakeOFF;
 
+    private void Awake()
+    {
+        Instance = this;
+        UpdateSettings();
+    }
 
     public void UpdateSettings()
     {
@@ -14,13 +21,13 @@ public class SettingsMenu : MonoBehaviour
         if (ScreenShakeListener.enableScreenshake)
         {
             //update buttons
-            screenshakeON.SetActive(true);
-            screenshakeOFF.SetActive(false);
+            if(screenshakeON != null) screenshakeON.SetActive(true);
+            if(screenshakeOFF != null) screenshakeOFF.SetActive(false);
         }
         else
         {
-            screenshakeON.SetActive(false);
-            screenshakeOFF.SetActive(true);
+            if(screenshakeON != null) screenshakeON.SetActive(false);
+            if(screenshakeOFF != null) screenshakeOFF.SetActive(true);
         }
     }
 

@@ -15,6 +15,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Canvas PlayerHealthBarCanvas;
     [SerializeField] GameObject StatusStunned;
     //public TimeManager timeManager;
+    public GameObject youHaveDied;
     public GameObject respawnPrompt;
 
     [Header("Ability UI")]
@@ -108,8 +109,8 @@ public class PlayerCombat : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
-        if (respawnPrompt != null)
-            respawnPrompt.GetComponent<Canvas>().enabled = false;
+        if (youHaveDied != null)
+            youHaveDied.GetComponent<Canvas>().enabled = false;
 
         experienceBar.SetXP(0, playerLevel);
         wepDamage += ((playerLevel - 1) * 2);
@@ -162,9 +163,9 @@ public class PlayerCombat : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    if(respawnPrompt != null)
+                    if(youHaveDied != null)
                     {
-                        respawnPrompt.GetComponent<Canvas>().enabled = false;
+                        youHaveDied.GetComponent<Canvas>().enabled = false;
                     }
                     //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
                     //controller.RespawnPlayerResetLevel();
@@ -805,9 +806,14 @@ public class PlayerCombat : MonoBehaviour
     {
         //short delay before respawn input is allowed
         yield return new WaitForSeconds(1.0f);
+        if (youHaveDied != null)
+            youHaveDied.GetComponent<Canvas>().enabled = true;
+
+        yield return new WaitForSeconds(1.0f);
+
         if (respawnPrompt != null)
         {
-            respawnPrompt.GetComponent<Canvas>().enabled = true;
+            respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = true;
         }
         canRespawn = true;
     }

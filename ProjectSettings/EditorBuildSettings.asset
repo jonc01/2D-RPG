@@ -15,9 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/TutorialStage.unity
     guid: f25ca566e6f78f641ace81fc3d86ab51
   - enabled: 1
-    path: Assets/Scenes/DemoLevel.unity
-    guid: 0d15b6a6c83c6fe4aafac171accff15e
-  - enabled: 1
     path: Assets/Scenes/Stage1-1.unity
     guid: be2f450d3db15da48a8a6be0bf828c09
   - enabled: 1

@@ -5173,13 +5173,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fullscreenExclusive: 0
-  resWidth: 0005000080070000
-  resHeight: d002000038040000
+  resWidth: c00300000005000080070000
+  resHeight: 1c020000d002000038040000
   resolutionDisplayed: {fileID: 454120396}
-  currentResolution: 0
+  currentResolution: 1
   fullscreenOnButton: {fileID: 880849314}
   fullscreenOffButton: {fileID: 373882859}
-  selectedResolution: 0
+  selectedResolution: 1
   selectedFullscreen: 0
 --- !u!114 &927710319
 MonoBehaviour:

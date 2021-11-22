@@ -141,8 +141,10 @@ public class AsyncLevelLoader : MonoBehaviour
             Debug.Log("loading player");
             yield return null;
         }
-        
+        LoadScreenAnim.SetTrigger("StartLoop");
+
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("_NeverUnload"));
+
         playerLoaded = true;
     }
 

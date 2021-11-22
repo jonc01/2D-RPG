@@ -11,10 +11,10 @@ public class VideoSettingsMenu : MonoBehaviour
     public bool fullscreenExclusive = false;
 
     //Resolutions
-    public int[] resWidth = { 1280, 1920 };
-    public int[] resHeight = { 720, 1080 };
+    public int[] resWidth = { 960, 1280, 1920 };
+    public int[] resHeight = { 540, 720, 1080 };
     public TextMeshProUGUI resolutionDisplayed;
-    public int currentResolution = 0; //TODO: TEMP, setting default to 720, should use savefile
+    public int currentResolution = 1; //TODO: TEMP, setting default to 720, should use savefile
 
     //Toggle Buttons
     public GameObject fullscreenOnButton;
@@ -38,6 +38,13 @@ public class VideoSettingsMenu : MonoBehaviour
 
     void OnEnable()
     {
+        UpdateSettings();
+    }
+
+    public void UpdateSettings() //called on initial Player scene load
+    {
+        fullscreenOnButton.SetActive(fullscreenExclusive);
+        UpdateResDisplayed(currentResolution);
     }
 
     void UpdateResDisplayed(int selected)
