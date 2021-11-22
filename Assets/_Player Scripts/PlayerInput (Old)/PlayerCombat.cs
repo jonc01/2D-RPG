@@ -14,7 +14,8 @@ public class PlayerCombat : MonoBehaviour
     public Transform playerLocation;
     [SerializeField] Canvas PlayerHealthBarCanvas;
     [SerializeField] GameObject StatusStunned;
-    public TimeManager timeManager;
+    //public TimeManager timeManager;
+    public GameObject youHaveDied;
     public GameObject respawnPrompt;
 
     [Header("Ability UI")]
@@ -31,8 +32,8 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Vector3 TPOffset = new Vector3(0, 0f, 0);
 
     [Space]
-    public float playerLevel = 1; //PLACEHOLDER, use save file
-    public float maxHealth = 100;
+    public float playerLevel = 1;
+    public float maxHealth = 50; //base max hp
     public float currentHealth;
     public HealthBar healthBar;
     public ExperienceBar experienceBar;
@@ -60,7 +61,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] bool playerStunned;
 
     public float attackTime = 0.25f; //0.25 seems good, +/- .1 seconds
-
+    public bool isAttacking;
     //armor stats
     public float playerArmor; //temp
 
@@ -108,10 +109,9 @@ public class PlayerCombat : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         mDefault = sr.material;
 
-        if (respawnPrompt != null)
-            respawnPrompt.GetComponent<Canvas>().enabled = false;
+        if (youHaveDied != null)
+            youHaveDied.GetComponent<Canvas>().enabled = false;
 
-        maxHealth = 100 + ((playerLevel - 1) * 10);
         experienceBar.SetXP(0, playerLevel);
         wepDamage += ((playerLevel - 1) * 2);
 
@@ -130,6 +130,7 @@ public class PlayerCombat : MonoBehaviour
         //attackDamageHeavyMultiplier = 2.0f; //placeholder
 
         canAttack = true;
+        isAttacking = false;
         AltAttacking = false;
         IsParrying = false;
         IsShieldBashing = false;
@@ -162,14 +163,14 @@ public class PlayerCombat : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    if(respawnPrompt != null)
+                    if(youHaveDied != null)
                     {
-                        respawnPrompt.GetComponent<Canvas>().enabled = false;
+                        youHaveDied.GetComponent<Canvas>().enabled = false;
                     }
                     //RevivePlayer(1.0f); //1.0 = 100%, 0.5 = 50%
                     //controller.RespawnPlayerResetLevel();
                     PauseMenu.LoadMenu();
-                    timeManager.ResetTimeScale();
+                    TimeManager.Instance.ResetTimeScale();
                 }
             }
 
@@ -239,6 +240,7 @@ public class PlayerCombat : MonoBehaviour
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
+        isAttacking = true;
         //maintaining y velocity, instead of making player float
         movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); 
         canAttack = false;
@@ -266,6 +268,7 @@ public class PlayerCombat : MonoBehaviour
         }
         canSwitch = true;
         yield return new WaitForSeconds(playerAttackSpeed);
+        isAttacking = false;
         canSwitch = false;
 
         movement.canMove = true;
@@ -334,6 +337,7 @@ public class PlayerCombat : MonoBehaviour
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
+        isAttacking = true;
         //maintaining y velocity, instead of making player float
         movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); 
         canAttack = false;
@@ -359,6 +363,7 @@ public class PlayerCombat : MonoBehaviour
         canSwitch = true;
         yield return new WaitForSeconds(playerAttackSpeed + 0.1f);
         canSwitch = false;
+        isAttacking = false;
 
         movement.canMove = true;
         canAttack = true;
@@ -381,8 +386,8 @@ public class PlayerCombat : MonoBehaviour
                     if (enemy.GetComponent<BaseEnemyClass>() != null)
                     {
                         ScreenShakeListener.Instance.Shake();
-                        
-                        timeManager.DoFreezeTime(.1f, .05f); //.1, .05
+
+                        TimeManager.Instance.DoFreezeTime(.1f, .05f); //.1, .05
 
                         enemy.GetComponent<BaseEnemyClass>().TakeDamage(wepDamage * attackDamageHeavyMultiplier, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
@@ -390,14 +395,14 @@ public class PlayerCombat : MonoBehaviour
                 }
                 break;
             case 2:
-                Collider2D[] hitEnemiesWide = Physics2D.OverlapBoxAll(heavyAttackPointWide.position, new Vector2(attackHeavyRange*2.7f, .8f), enemyLayers);
+                Collider2D[] hitEnemiesWide = Physics2D.OverlapBoxAll(heavyAttackPointWide.position, new Vector2(attackHeavyRange*2.7f, .5f), enemyLayers);
                 foreach (Collider2D enemy in hitEnemiesWide) //loop through enemies hit
                 {
                     if (enemy.GetComponent<BaseEnemyClass>() != null)
                     {
                         ScreenShakeListener.Instance.Shake();
 
-                        timeManager.DoFreezeTime(.1f, .05f);
+                        TimeManager.Instance.DoFreezeTime(.1f, .05f);
 
                         enemy.GetComponent<BaseEnemyClass>().TakeDamage(wepDamage * attackDamageHeavyMultiplier, damageMultiplier); //attackDamage + additional damage from parameter
                         enemy.GetComponent<BaseEnemyClass>().GetKnockback(controller.m_FacingRight);
@@ -416,6 +421,7 @@ public class PlayerCombat : MonoBehaviour
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
+        isAttacking = true;
         AltAttack(wepDamage*3f, wepRange*3f); //deals 300% weapon damage and applies knockback to enemies
         movement.rb.velocity = new Vector2(0, 0); //stop player from moving
         AltAttacking = true;
@@ -423,6 +429,7 @@ public class PlayerCombat : MonoBehaviour
         allowAltAttack = Time.time + altAttackCD;
         yield return new WaitForSeconds(altAttackTime);
         movement.canMove = true;
+        isAttacking = false;
         animator.SetBool("isAttacking", false);
     }
 
@@ -476,6 +483,7 @@ public class PlayerCombat : MonoBehaviour
             movement.canMove = false;
 
         animator.SetBool("isAttacking", true);
+        isAttacking = true;
         ParryAttack(); // hit enemies and check if they can be parried
         movement.rb.velocity = new Vector2(0, 0);
         AltAttacking = true;
@@ -484,6 +492,7 @@ public class PlayerCombat : MonoBehaviour
         abilityUI.StartCooldown(altAttackCD);
         yield return new WaitForSeconds(altAttackTime); // parry attack time
         movement.canMove = true;
+        isAttacking = false;
         animator.SetBool("isAttacking", false);
     }
     
@@ -545,7 +554,7 @@ public class PlayerCombat : MonoBehaviour
         //disable collider on hit
         ScreenShakeListener.Instance.Shake(); //1
 
-        timeManager.DoFreezeTime(.1f, .05f);
+        TimeManager.Instance.DoFreezeTime(.1f, .05f);
 
         StartCoroutine(ShieldBashEnd());
     }
@@ -572,21 +581,11 @@ public class PlayerCombat : MonoBehaviour
 
     public void DodgeAttackCancel() 
     {
-        if (IsLightAttackingCO != null) //allow dodge to cancel attack
-        {
-            if (movement.m_rolling) //!!! dodge roll and dash can't be started while attacking because attacking sets canMove to false
-                StopCoroutine(IsLightAttackingCO); //replace canMove as a condition for dodge/dash for this to work
-
-            if (movement.isDashing)
-                StopCoroutine(IsLightAttackingCO);
-
-            /*if (Input.GetButtonDown("Dodge") && animator.GetBool("isAttacking")){
-                StopCoroutine(IsAttackingCO);
-                Debug.Log("Stopping Attack CO");
-            }*/
-        }
-
-        //if(IsHeavyAttackingCO != null)
+        if(IsLightAttackingCO != null)
+            StopCoroutine(IsLightAttackingCO); //replace canMove as a condition for dodge/dash for this to work
+            
+        if(IsHeavyAttackingCO != null)
+            StopCoroutine(IsHeavyAttackingCO);
     }
 
     void LungeOnAttack(float lungeThrust = 3f, float lungeDuration = 5f, bool lunge = true) //defaults, set "lunge" to false for knockback (recoil)
@@ -639,7 +638,7 @@ public class PlayerCombat : MonoBehaviour
         //Gizmos.DrawWireCube(newAttackPoint, new Vector3(wepRange * 3, 1, 0));
 
         Vector3 newAttackPoint = heavyAttackPointWide.position;
-        Gizmos.DrawWireCube(newAttackPoint, new Vector3(attackHeavyRange*2.7f, .8f, 0)); //* 2.7f, Collider[] BoxOverlap is 2.3f
+        Gizmos.DrawWireCube(newAttackPoint, new Vector3(attackHeavyRange*2.7f, .5f, 0)); //* 2.7f, Collider[] BoxOverlap is 2.3f
     }
      
     public void GetKnockback(bool pushToRight, float kbThrust = 3f, float kbDuration = 5f) //defaults //short stun on knockback
@@ -690,6 +689,7 @@ public class PlayerCombat : MonoBehaviour
         movement.canMove = false;
         animator.SetBool("move", false);
         animator.SetBool("isAttacking", false);
+        isAttacking = true;
         animator.SetBool("Stunned", true);
         ShowStatusStun(true);
         //FlashMaterial();
@@ -700,6 +700,7 @@ public class PlayerCombat : MonoBehaviour
 
         allowStun = Time.time + allowStunCD;
         playerStunned = false;
+        isAttacking = false;
         canAttack = true;
         animator.SetBool("Stunned", false);
         movement.canMove = true;
@@ -775,7 +776,7 @@ public class PlayerCombat : MonoBehaviour
     public void GiveXP(float xp)
     {
         experienceBar.AddXP(xp);
-        timeManager.DoFreezeTime(.05f); //short freeze on kill
+        TimeManager.Instance.DoFreezeTime(.05f); //short freeze on kill
         xpPopups.ShowText(transform.position, "+" + xp + "xp");
         healthPotion.GetChargeFromKill(xp);
     }
@@ -805,9 +806,14 @@ public class PlayerCombat : MonoBehaviour
     {
         //short delay before respawn input is allowed
         yield return new WaitForSeconds(1.0f);
+        if (youHaveDied != null)
+            youHaveDied.GetComponent<Canvas>().enabled = true;
+
+        yield return new WaitForSeconds(1.0f);
+
         if (respawnPrompt != null)
         {
-            respawnPrompt.GetComponent<Canvas>().enabled = true;
+            respawnPrompt.GetComponent<TextMeshProUGUI>().enabled = true;
         }
         canRespawn = true;
     }
@@ -832,8 +838,8 @@ public class PlayerCombat : MonoBehaviour
         movement.rb.velocity = new Vector2(0, 0); //prevent player from moving
         movement.DisableMove();
         canAttack = false;
-        timeManager.DoFreezeTime(.05f, .5f);
-        timeManager.DoSlowMotion();
+        TimeManager.Instance.DoFreezeTime(.05f, .5f);
+        TimeManager.Instance.DoSlowMotion();
         //kill player
 
         StartCoroutine(DelayRespawn());

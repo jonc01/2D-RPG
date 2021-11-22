@@ -436,7 +436,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 30
+  m_LinearDrag: 5
   m_AngularDrag: 0.05
   m_GravityScale: 2
   m_Material: {fileID: 6200000, guid: 96c56924af9b3c043a79be33143fe291, type: 2}
@@ -535,17 +535,19 @@ MonoBehaviour:
     m_Bits: 1024
   sr: {fileID: 7730487714719235624}
   rb: {fileID: 7730487714719235631}
+  stageClear: {fileID: 0}
   TextPopupsHandler: {fileID: 0}
   AttackIndicator: {fileID: 0}
   HitEffectsHandler: {fileID: 0}
   DeathParticlesHandler: {fileID: 0}
-  defaultMoveSpeed: 3
-  maxHealth: 1000
+  defaultMoveSpeed: 2.5
+  maxHealth: 1500
   enAttackDamage: 10
   enAttackSpeed: 2.5
   enAttackAnimSpeed: 0.4
   enAttackRadius: 0.53
   XP: 80
+  gold: 10
   stunResist: 0
   allowStunCD: 0.1
   kbThrust: 0
@@ -565,18 +567,17 @@ MonoBehaviour:
   enFacingRight: 0
   enCanFlip: 0
   enCanParry: 0
-  screenShake: {fileID: 0}
   initialStunParticle: {fileID: 739723056544264075, guid: 2ecc6a1dea805b147b3a69729badd706, type: 3}
   stunParticleL: {fileID: 6601068581037343418, guid: bbc8d6c487952ee449e949998073dcfd, type: 3}
   stunParticleR: {fileID: 5348519943208086770, guid: e3a1e983f51bfb2498d695f0c6cd8751, type: 3}
   enRaycast: {fileID: 7730487714719235618}
   allowBreak: 0
   isBroken: 0
+  bossPhase: {fileID: 0}
   effectAnimator: {fileID: 1955221940352344441}
   enAttackPoint2: {fileID: 7730487713901199044}
   HealthBarCanvas: {fileID: 0}
   TPOffsetObj: {fileID: 7730487714515187126}
-  timeManager: {fileID: 0}
   enAttackRange2: {x: 1.8, y: 0.4}
 --- !u!114 &7730487714719235619
 MonoBehaviour:

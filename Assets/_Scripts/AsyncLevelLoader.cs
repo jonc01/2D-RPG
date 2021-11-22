@@ -12,7 +12,7 @@ public class AsyncLevelLoader : MonoBehaviour
     [SerializeField] private Animator LoadScreenAnim;
 
     [SerializeField] private GameObject playerObject;
-    [SerializeField] private Vector3 spawnPosition; //default: 
+    [SerializeField] private Vector3 spawnPosition = new Vector3(0f, -3.35f, 0f ); //default: 
 
     private void Awake()
     {
@@ -70,7 +70,12 @@ public class AsyncLevelLoader : MonoBehaviour
         }
 
         if(playerObject != null)
-            playerObject.transform.position = spawnPosition;
+        {
+            if(playerObject.transform.position != spawnPosition)
+                playerObject.transform.position = spawnPosition; //moves player to spawnPlatform while stages unload
+        }
+
+        //TODO: this isn't working, not moving player
 
         UnloadScene(sceneToUnload);
 
@@ -136,8 +141,10 @@ public class AsyncLevelLoader : MonoBehaviour
             Debug.Log("loading player");
             yield return null;
         }
-        
+        LoadScreenAnim.SetTrigger("StartLoop");
+
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("_NeverUnload"));
+
         playerLoaded = true;
     }
 

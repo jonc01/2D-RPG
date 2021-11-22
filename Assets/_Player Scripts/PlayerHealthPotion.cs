@@ -16,6 +16,7 @@ public class PlayerHealthPotion : MonoBehaviour
     [SerializeField] int currentPotionCharges;
     [SerializeField] int defaultAmountPotions = 3; //placeholder until inventory is implemented
     [SerializeField] int maxPotions = 5;
+    [SerializeField] float healAmount = 25;
 
     public Slider chargeSlider; //killing enemies adds progress to charge bar
     int maxSliderValue = 50;
@@ -45,12 +46,17 @@ public class PlayerHealthPotion : MonoBehaviour
         if(currentPotionCharges > maxPotions)
         {
             currentPotionCharges = maxPotions;
+            chargeSlider.value = 0; //no overflow when maxed
         }
     }
 
     public void GetChargeFromKill(float chargeAmount = 10)
     {
-        chargeSlider.value += chargeAmount;
+        if(currentPotionCharges < maxPotions) //don't add any charge when maxed
+        {
+            chargeSlider.value += chargeAmount;
+        }
+
         if(chargeSlider.value == maxSliderValue)
         {
             AddPotionCharge();
@@ -70,7 +76,7 @@ public class PlayerHealthPotion : MonoBehaviour
             playerCombat.currentHealth < playerCombat.maxHealth && 
             currentPotionCharges > 0)
         {
-            playerCombat.HealPlayer(25);
+            playerCombat.HealPlayer(healAmount);
             currentPotionCharges--;
         }
     }

@@ -7,7 +7,10 @@ public class MainMenu : MonoBehaviour
 {
     public GameObject mainMenuUI;
     public GameObject settingsMenuUI;
+    public GameObject settingsMenuObj;
     public SettingsMenu settingsMenu;
+    public GameObject gameSettings;
+    public GameObject videoSettings;
 
     public GameObject creditsMenuUI;
     
@@ -34,6 +37,26 @@ public class MainMenu : MonoBehaviour
         mainMenuUI.SetActive(true);
         settingsMenuUI.SetActive(false);
     }
+    
+    public void SettingsToGameSettings()
+    {
+        settingsMenuObj.SetActive(false);
+        gameSettings.SetActive(true);
+    }
+
+    public void SettingsToVideoSettings()
+    {
+        settingsMenuObj.SetActive(false);
+        videoSettings.SetActive(true);
+    }
+
+    public void GameOrVideoSettingsToSettingsMenu()
+    {
+        settingsMenuObj.SetActive(true);
+        videoSettings.SetActive(false);
+        gameSettings.SetActive(false);
+    }
+//
 
     public void QuitGame()
     {

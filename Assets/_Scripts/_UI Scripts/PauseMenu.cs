@@ -12,10 +12,12 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuUI;
     public GameObject settingsMenuUI;
     public SettingsMenu settingsMenu;
+    public GameObject settingsMenuObj;
+    public GameObject gameSettings;
+    public GameObject videoSettings;
 
     private void Start()
     {
-
         currentStage = gameObject.scene.name;
     }
 
@@ -38,6 +40,8 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenuUI.SetActive(false);
         settingsMenuUI.SetActive(false);
+        gameSettings.SetActive(false);
+        videoSettings.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
     }
@@ -75,7 +79,28 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenuUI.SetActive(false);
         settingsMenuUI.SetActive(true);
-        settingsMenu.UpdateSettings();
+
+        if(settingsMenu != null)
+            settingsMenu.UpdateSettings();
+    }
+
+    public void SettingsToGameSettings()
+    {
+        settingsMenuObj.SetActive(false);
+        gameSettings.SetActive(true);
+    }
+
+    public void SettingsToVideoSettings()
+    {
+        settingsMenuObj.SetActive(false);
+        videoSettings.SetActive(true);
+    }
+
+    public void GameOrVideoSettingsToSettingsMenu()
+    {
+        settingsMenuObj.SetActive(true);
+        videoSettings.SetActive(false);
+        gameSettings.SetActive(false);
     }
 
     public void QuitGame()

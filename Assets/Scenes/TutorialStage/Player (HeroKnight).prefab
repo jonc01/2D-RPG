@@ -47,7 +47,6 @@ MonoBehaviour:
   solidCollider: {fileID: 107596093872909225}
   movement: {fileID: 107596093386943519}
   combat: {fileID: 107596093386943514}
-  timeManager: {fileID: 0}
 --- !u!70 &107596093251239291
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -270,8 +269,6 @@ MonoBehaviour:
   playerLocation: {fileID: 107596093386943507}
   PlayerHealthBarCanvas: {fileID: 0}
   StatusStunned: {fileID: 0}
-  timeManager: {fileID: 0}
-  screenShake: {fileID: 0}
   respawnPrompt: {fileID: 0}
   abilityUI: {fileID: 0}
   ability1Cycle: {fileID: 0}
@@ -280,8 +277,8 @@ MonoBehaviour:
   TextPopupsHandler: {fileID: 0}
   TPOffset: {x: 0, y: 0.35, z: 0}
   playerLevel: 1
-  maxHealth: 100
-  currentHealth: 100
+  maxHealth: 50
+  currentHealth: 50
   healthBar: {fileID: 0}
   experienceBar: {fileID: 0}
   isAlive: 1
@@ -299,6 +296,7 @@ MonoBehaviour:
   stunStrength: 1
   playerStunned: 0
   attackTime: 0.25
+  isAttacking: 0
   playerArmor: 0
   enemyLayers:
     serializedVersion: 2

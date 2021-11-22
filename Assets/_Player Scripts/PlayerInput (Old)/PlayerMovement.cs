@@ -146,9 +146,9 @@ public class PlayerMovement : MonoBehaviour
     #region DodgeRoll
     void CheckDodge() //player is immune to stun while rolling, check in PlayerCombat during knockback application
     {
-        if (Time.time > allowDodge)// && canMove)
+        if (Time.time > allowDodge && playerCombat.isAlive)// && canMove)
         {
-            if(canMove || playerCombat.animator.GetBool("isAttacking") == true)
+            if(canMove || playerCombat.isAttacking == true)
             {
                 if (Input.GetButtonDown("Dodge") && !m_rolling && !isDashing && isGrounded) //prevent dodging midair
                 {
@@ -160,26 +160,32 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator DodgeRoll()
     {
-        //StopAllCoroutines(); //cancel attacks with dodgeRoll
-        //IsAttacking,
+        playerCombat.DodgeAttackCancel(); //Cancel attacks with dodgeRoll
 
         DisableMove();
         abilityUI.StartCooldown(dodgeCD);
-        playerCombat.canAttack = false;
+
+        playerCombat.canAttack = false; //in case of AttackCancel
+        playerCombat.isAttacking = false;
+
         m_rolling = true;
         playerCombat.canStunPlayer = false;
         animator.SetBool("isRolling", true);
         animator.SetTrigger("Roll");
         rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
-        allowDodge = Time.time + dodgeCD;
+        allowDodge = Time.time + dodgeCD; //setting cooldown
+
         yield return new WaitForSeconds(dodgeTime); //dodge duration
+
         EnableMove();
         animator.SetBool("isRolling", false);
-        playerCombat.canAttack = true;
+
+        playerCombat.canAttack = true; //in case of AttackCancel
+
         m_rolling = false; //DELETE: if still using AE_ResetRoll in animation event
         playerCombat.canStunPlayer = true;
     }
-    
+
     void AE_ResetRoll() // called in animation event
     {
         m_rolling = false;

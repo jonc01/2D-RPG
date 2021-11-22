@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
+    public static TimeManager Instance { get; private set; }
     //slow down time
     public float slowdownFactor = 0.02f;
     public float slowdownLength = 2f;
@@ -15,6 +16,11 @@ public class TimeManager : MonoBehaviour
     //[Space] //freeze time
     //public float freezeLength = .1f;
     //bool isFrozen = false;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Update()
     {
@@ -41,7 +47,7 @@ public class TimeManager : MonoBehaviour
         //Time.fixedDeltaTime = Time.timeScale * .02f;
     }
 
-    public void CustomSlowMotion(float slowdownFactorC, float slowdownLengthC)
+    public void CustomSlowMotion(float slowdownFactorC = .02f, float slowdownLengthC = 2f)
     {
         //has custom duration for slow motion, instantly returns to normal time scale after
         StartCoroutine(TimedSlowMotion(slowdownFactorC, slowdownLengthC));

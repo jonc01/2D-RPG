@@ -13,8 +13,9 @@ public class StageClear : MonoBehaviour
     public GameObject ArrowIndicator;
     public GameObject EndPortal; //opens portal to move player to next stage
 
-    public PlayerCombat playerCombat;
-    public PlayerInventory playerInventory;
+    public PlayerCombat playerCombat; //temp
+
+    public PlayerInventory playerInventory; //TODO: not fully implemented yet, needs testing once items are added
 
     // Start is called before the first frame update
     void Start()
@@ -56,9 +57,13 @@ public class StageClear : MonoBehaviour
         enemyCount--; //called in Enemy Die()
 
         UpdatePlayerInventory(XP, gold);
+        //ScreenShakeListener.Instance.Shake();
+        TimeManager.Instance.DoFreezeTime(.15f, .05f);
 
         if (enemyCount <= 0)
         {
+            StartCoroutine(DelaySlowMo());
+            //TimeManager.Instance.DoSlowMotion();
             levelCleared = true;
             EndPortal.SetActive(true);
             if(ArrowIndicator != null)
@@ -69,10 +74,18 @@ public class StageClear : MonoBehaviour
 
     public void UpdatePlayerInventory(float XP, int gold)
     {
-        if(playerCombat != null)
-            playerCombat.GiveXP(XP);
+        //if(playerCombat != null)
+        //    playerCombat.GiveXP(XP);
+
+        PlayerXPManager.Instance.playerCombat.GiveXP(XP);
         
         if(playerInventory != null)
             playerInventory.GiveGold(gold);
+    }
+
+    IEnumerator DelaySlowMo()
+    {
+        yield return new WaitForSeconds(0.1f);
+        TimeManager.Instance.DoSlowMotion();
     }
 }

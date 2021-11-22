@@ -27,6 +27,7 @@ public class ExperienceBar : MonoBehaviour
     {
         //slider.maxValue = totalLevelXP[currentLevel - 1];
         slider.maxValue = (currentPlayerLevel * 100) * 1.25f;
+
         slider.value = currentXP;
 
         if (displayPlayerLevel != null) //display level
@@ -55,11 +56,11 @@ public class ExperienceBar : MonoBehaviour
     {
         currentPlayerLevel++;
         slider.value = overflowXP; //reset progress and add overflowXP if xp exceeded level up
-        slider.maxValue = (currentPlayerLevel * 100) * 1.25f;
+        slider.maxValue = (currentPlayerLevel * 100) * 1.25f; //XP requirement
         if (displayPlayerLevel != null) //update level
             displayPlayerLevel.text = currentPlayerLevel.ToString();
 
-        playerCombat.maxHealth += ((currentPlayerLevel - 1) *10f); //health +10/level
+        playerCombat.maxHealth += ((currentPlayerLevel - 1) * 10f); //health +10/level
         healthBar.SetMaxHealth(playerCombat.maxHealth);
         playerCombat.HealPlayer(healthBar.maxHealth);
 

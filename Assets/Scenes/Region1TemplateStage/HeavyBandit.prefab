@@ -211,7 +211,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 10
+  m_LinearDrag: 5
   m_AngularDrag: 0.05
   m_GravityScale: 2
   m_Material: {fileID: 6200000, guid: a8ba1c98fca252d4c986d02efd8bc262, type: 2}
@@ -305,7 +305,7 @@ MonoBehaviour:
   HitEffectsHandler: {fileID: 0}
   DeathParticlesHandler: {fileID: 0}
   defaultMoveSpeed: 3.3
-  maxHealth: 250
+  maxHealth: 200
   enAttackDamage: 10
   enAttackSpeed: 1
   enAttackAnimSpeed: 0.4
@@ -331,7 +331,6 @@ MonoBehaviour:
   enFacingRight: 0
   enCanFlip: 0
   enCanParry: 0
-  screenShake: {fileID: 0}
   initialStunParticle: {fileID: 739723056544264075, guid: a6a45ff4984c42946ae6a566827221be, type: 3}
   stunParticleL: {fileID: 6601068581037343418, guid: 85addc1a0107a5f41a8ffb28a729b32d, type: 3}
   stunParticleR: {fileID: 5348519943208086770, guid: fd82bed18d88d584db101d4c48751d6e, type: 3}
