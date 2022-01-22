@@ -67,7 +67,15 @@ public class PlayerMovement : MonoBehaviour
         {
             if (canMove == true)
             {
-                runSpeed = defaultRunSpeed;
+                if (playerCombat.isAttacking)
+                {
+                    //move speed is handled in PlayerCombat.cs
+                }
+                else
+                {
+                    runSpeed = defaultRunSpeed;
+                }
+
                 horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
                 animator.SetBool("Stunned", false);
             }

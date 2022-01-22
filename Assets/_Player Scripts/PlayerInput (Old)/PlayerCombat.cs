@@ -236,13 +236,14 @@ public class PlayerCombat : MonoBehaviour
     {
         //Flip enable/disable is handled in animation events
         //Flip is disabled at the first frame of the attack, and enabled on frame after damage is applied
-        if(movement.isGrounded) //should let player attack mid air without stopping movement
-            movement.canMove = false;
+
+        //if(movement.isGrounded) //should let player attack mid air without stopping movement
+        //    movement.canMove = false;
+        float currentRunSpeed = movement.runSpeed;
+        movement.runSpeed = currentRunSpeed*0.5f;
 
         animator.SetBool("isAttacking", true);
         isAttacking = true;
-        //maintaining y velocity, instead of making player float
-        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y); 
         canAttack = false;
 
         switch (attackNum)
@@ -266,12 +267,17 @@ public class PlayerCombat : MonoBehaviour
                 yield return new WaitForSeconds(0.01f); //
                 break;
         }
+        movement.canMove = false;
+        //maintaining y velocity, instead of making player float
+        movement.rb.velocity = new Vector2(0, movement.rb.velocity.y);
         canSwitch = true;
         yield return new WaitForSeconds(playerAttackSpeed);
         isAttacking = false;
         canSwitch = false;
 
         movement.canMove = true;
+        movement.runSpeed = currentRunSpeed;
+
         canAttack = true;
         
         animator.SetBool("isAttacking", false);

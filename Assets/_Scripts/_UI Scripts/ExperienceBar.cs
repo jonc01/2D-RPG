@@ -61,10 +61,18 @@ public class ExperienceBar : MonoBehaviour
             displayPlayerLevel.text = currentPlayerLevel.ToString();
 
         playerCombat.maxHealth += ((currentPlayerLevel - 1) * 10f); //health +10/level
+        //TODO: pick on of these, these scale correctly
+        //playerCombat.maxHealth += 10f; //health +10/level
+        //playerCombat.maxHealth = ((currentPlayerLevel - 1) * 10f); //health +10/level
+
         healthBar.SetMaxHealth(playerCombat.maxHealth);
         playerCombat.HealPlayer(healthBar.maxHealth);
 
+
         playerCombat.wepDamage += ((currentPlayerLevel - 1) * 2); //damage +2/level
+        //TODO: pick one of these, these scale correctly
+        //playerCombat.wepDamage += 2; //damage +2/level
+        //playerCombat.wepDamage = ((currentPlayerLevel - 1) * 2); //damage +2/level
 
         xpPopups.ShowText(player.position, "\nLEVEL UP");
     }
